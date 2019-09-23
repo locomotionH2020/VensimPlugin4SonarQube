@@ -1,3 +1,5 @@
+package org.sonar.vensim;
+
 import org.sonar.api.Plugin;
 
 public class VensimPlugin implements Plugin {

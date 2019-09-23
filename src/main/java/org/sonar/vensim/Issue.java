@@ -1,4 +1,6 @@
-import rules.VensimCheck;
+package org.sonar.vensim;
+
+import org.sonar.vensim.rules.VensimCheck;
 
 public class Issue {
 

@@ -1,8 +1,8 @@
-
+package org.sonar.vensim;
 
 import org.sonar.api.rule.Severity;
 import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
-import rules.NotEmptyCheck;
+import org.sonar.vensim.rules.NotEmptyCheck;
 
 public final class VensimQualityProfile implements BuiltInQualityProfilesDefinition {
 
@@ -14,10 +14,8 @@ public final class VensimQualityProfile implements BuiltInQualityProfilesDefinit
         profile.setDefault(true);
 
         String REPO_KEY = VensimRuleRepository.REPOSITORY_KEY;
-        profile.activateRule(REPO_KEY, NotEmptyCheck.CHECK_KEY);
-
-
-
+        NewBuiltInActiveRule rule1 = profile.activateRule(REPO_KEY, NotEmptyCheck.CHECK_KEY);
+        rule1.overrideSeverity(Severity.MAJOR);
         profile.done();
     }
 

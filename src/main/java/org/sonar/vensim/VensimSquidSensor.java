@@ -1,3 +1,5 @@
+package org.sonar.vensim;
+
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
@@ -7,7 +9,8 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.issue.NoSonarFilter;
 import org.sonar.api.measures.FileLinesContextFactory;
-import rules.VensimCheck;
+import org.sonar.vensim.rules.NotEmptyCheck;
+import org.sonar.vensim.rules.VensimCheck;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +29,6 @@ public class VensimSquidSensor implements Sensor {
         this.checks = checkFactory
                 .<VensimCheck>create(VensimRuleRepository.REPOSITORY_KEY)
                 .addAnnotatedChecks(VensimRuleRepository.getChecks());
-
 
         this.fileLinesContextFactory = fileLinesContextFactory;
         this.noSonarFilter = noSonarFilter;

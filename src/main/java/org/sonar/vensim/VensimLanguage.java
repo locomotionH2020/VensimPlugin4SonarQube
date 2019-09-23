@@ -1,3 +1,4 @@
+package org.sonar.vensim;
 
 import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
