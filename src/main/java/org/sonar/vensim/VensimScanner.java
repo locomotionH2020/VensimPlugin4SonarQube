@@ -4,14 +4,12 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.TextRange;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.SensorContext;
-
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
-import org.sonar.api.issue.NoSonarFilter;
-import org.sonar.api.measures.FileLinesContextFactory;
-
+import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.rule.RuleKey;
-import org.sonar.vensim.rules.NotEmptyCheck;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.vensim.rules.VensimCheck;
 
 import java.io.IOException;
@@ -20,33 +18,26 @@ import java.util.List;
 
 public class VensimScanner {
 
+    private static final Logger LOG = Loggers.get(VensimScanner.class);
 
     private final SensorContext context;
-    private final List<InputFile> inputFiles;
     private final Checks<VensimCheck> checks;
-    private final FileLinesContextFactory fileLinesContextFactory;
-    private final NoSonarFilter noSonarFilter;
 
-    public VensimScanner(SensorContext context, Checks<VensimCheck> checks,
-                         FileLinesContextFactory fileLinesContextFactory, NoSonarFilter noSonarFilter, List<InputFile> inputFiles) {
+    public VensimScanner(SensorContext context, Checks<VensimCheck> checks) {
         this.context = context;
         this.checks = checks;
-        this.fileLinesContextFactory = fileLinesContextFactory;
-        this.noSonarFilter = noSonarFilter;
-        this.inputFiles = inputFiles;
 
     }
 
-    public void scanFiles() {
+    public void scanFiles(List<InputFile> inputFiles) {
         for (InputFile vensimFile : inputFiles) {
-            System.out.println("Analizando fichero: " + vensimFile.path());
             if (context.isCancelled()) {
                 return;
             }
             try {
                 scanFile(vensimFile);
             } catch (Exception e) {
-                System.out.println("Error" + e.getMessage()); //TODO Add logger
+                LOG.warn("Unable to analyze file '{}'. Error: {}", vensimFile.toString(), e);
             }
         }
 
@@ -63,9 +54,15 @@ public class VensimScanner {
                issues.addAll(check.check(content));
             }
             saveIssues(inputFile,issues);
+
+            int lines = content.split("[\r\n]+").length;
+
+            context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
+
         } catch (IOException e) {
-            e.printStackTrace(); //TODO Log
+            LOG.warn("Unable to analyze file '{}'. Error: {}", inputFile.toString(), e);
         }
+
 
 
     }

@@ -9,12 +9,12 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.issue.NoSonarFilter;
 import org.sonar.api.measures.FileLinesContextFactory;
-import org.sonar.vensim.rules.NotEmptyCheck;
 import org.sonar.vensim.rules.VensimCheck;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 public class VensimSquidSensor implements Sensor {
 
@@ -22,16 +22,12 @@ public class VensimSquidSensor implements Sensor {
     private static final String NAME = "Vensim Squid Sensor";
 
     private final Checks<VensimCheck> checks;
-    private final FileLinesContextFactory fileLinesContextFactory;
-    private final NoSonarFilter noSonarFilter;
 
     public VensimSquidSensor(FileLinesContextFactory fileLinesContextFactory, CheckFactory checkFactory, NoSonarFilter noSonarFilter) {
         this.checks = checkFactory
                 .<VensimCheck>create(VensimRuleRepository.REPOSITORY_KEY)
                 .addAnnotatedChecks(VensimRuleRepository.getChecks());
 
-        this.fileLinesContextFactory = fileLinesContextFactory;
-        this.noSonarFilter = noSonarFilter;
     }
 
 
@@ -50,7 +46,7 @@ public class VensimSquidSensor implements Sensor {
         List<InputFile> list = new ArrayList<>();
         files.forEach(list::add);
         List<InputFile> inputFiles = Collections.unmodifiableList(list);
-        VensimScanner scanner = new VensimScanner(sensorContext, checks, fileLinesContextFactory, noSonarFilter, inputFiles);
-        scanner.scanFiles();
+        VensimScanner scanner = new VensimScanner(sensorContext, checks);
+        scanner.scanFiles(inputFiles);
     }
 }
