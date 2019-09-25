@@ -43,7 +43,7 @@ Equal : '=' ;
 TwoEqual : '==' ;
 NotEqual : '<>' ;
 Exclamation : '!' ;
-Equation: ':=';
+EquationOp: ':=';
 StringAssign: ':IS:';
 
 subscriptId : Id  Exclamation?;

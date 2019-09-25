@@ -2,7 +2,9 @@ grammar Model;
 import Expr;
 
 // A Vensim model is a sequence of equations and subscript ranges.
-model: ( subscriptRange | equation | lookupCall|constraint | macroDefinition )+ ;
+model: ( subscriptRange | equation |
+      lookupCall|constraint | macroDefinition | unchangeableConstant |
+       dataEquation| lookupDefinition )+ ;
 
 // A subscript range definition names subscripts in a dimension.
 subscriptRange : Id ':' ( subscriptIdList | subscriptSequence ) subscriptMappingList? ;
@@ -13,10 +15,13 @@ subscriptMapping : Id | '(' Id ':' subscriptIdList ')' ;
 // An equation has a left-hand side and a right-hand side.
 // The RHS is a formula expression, a constant list, or a Vensim lookup.
 // The RHS is empty for data equations.
-equation : lhs ( assignment_operator ( expr | constList ) | lookup )? (':IGNORE:' exprList)?;
+equation : lhs ( assignment_operator ( expr | constList )) (':IGNORE:' exprList)?;
 lhs : Id ( subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
-assignment_operator: TwoEqual | Equal | Equation | StringAssign;
+assignment_operator:  Equal  | StringAssign;
 
+unchangeableConstant: lhs TwoEqual ( expr | constList );
+dataEquation: lhs ( EquationOp ( expr | constList ) )? (':IGNORE:' exprList)?;
+lookupDefinition: lhs lookup;
 constraint: Id ':THE CONDITION:' expr? ':IMPLIES:' expr;
 
 macroDefinition: ':MACRO:' macroHeader equation+ ':END OF MACRO:';
