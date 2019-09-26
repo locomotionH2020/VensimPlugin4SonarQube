@@ -4,7 +4,7 @@ import Expr;
 // A Vensim model is a sequence of equations and subscript ranges.
 model: ( subscriptRange | equation |
       lookupCall|constraint | macroDefinition | unchangeableConstant |
-       dataEquation| lookupDefinition )+ ;
+       dataEquation| lookupDefinition | stringAssign )+ sketchInfo EOF ;
 
 // A subscript range definition names subscripts in a dimension.
 subscriptRange : Id ':' ( subscriptIdList | subscriptSequence ) subscriptMappingList? ;
@@ -15,15 +15,15 @@ subscriptMapping : Id | '(' Id ':' subscriptIdList ')' ;
 // An equation has a left-hand side and a right-hand side.
 // The RHS is a formula expression, a constant list, or a Vensim lookup.
 // The RHS is empty for data equations.
-equation : lhs ( assignment_operator ( expr | constList )) (':IGNORE:' exprList)?;
+equation : lhs ( Equal ( expr | constList )) (':IGNORE:' exprList)?;
 lhs : Id ( subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
-assignment_operator:  Equal  | StringAssign;
+
 
 unchangeableConstant: lhs TwoEqual ( expr | constList );
 dataEquation: lhs ( EquationOp ( expr | constList ) )? (':IGNORE:' exprList)?;
 lookupDefinition: lhs lookup;
 constraint: Id ':THE CONDITION:' expr? ':IMPLIES:' expr;
-
+stringAssign: lhs StringAssignOp StringConst  (':IGNORE:' exprList)?;
 macroDefinition: ':MACRO:' macroHeader equation+ ':END OF MACRO:';
 
 // The lexer strips some tokens we are not interested in.
@@ -35,5 +35,5 @@ UnitsDoc : '~' ~('|')* '|'->skip ;
 Group : '****' .*? '|' -> skip ;
 
 
-
-SketchInfo: [\\]+[-]+[/]+ Whitespace* 'Sketch information - do not modify anything except names' (.)*? EOF;
+// Backslash tokens are ignored in Expr.g4, so this rule doesn't take them into account.
+sketchInfo: '---///' 'Sketch information - do not modify anything except names' .* ;

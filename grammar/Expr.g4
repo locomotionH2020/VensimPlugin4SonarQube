@@ -44,7 +44,7 @@ TwoEqual : '==' ;
 NotEqual : '<>' ;
 Exclamation : '!' ;
 EquationOp: ':=';
-StringAssign: ':IS:';
+StringAssignOp: ':IS:';
 
 subscriptId : Id  Exclamation?;
 Id: ( ( Nondigit IdChar* ) | ( Nondigit ( IdChar | ' ' )* IdChar ) | StringLiteral );
@@ -121,3 +121,4 @@ Keyword
 Whitespace : [ \t\n\r]+ -> skip ;
 // Backslashes are used as line continuators, so they can be ignored.
 Backslash: [\\] -> skip;
+OtherCaracter: .;
