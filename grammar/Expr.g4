@@ -21,7 +21,7 @@ expr:   Id '(' exprList? ')'              # Call
 
 macroHeader: Id '(' macroArguments? ')';  
 macroArguments: exprList (':' exprList)?;
-lookupCall: Id (subscript)? '(' expr ')';
+lookupCall: Id (subscript)? '(' expr ')' ;
 exprList : expr (',' expr)* ;
 subscriptIdList : subscriptId (',' subscriptId)* ;
 subscript: '[' subscriptId (',' subscriptId)* ']'; 
@@ -122,3 +122,7 @@ Whitespace : [ \t\n\r]+ -> skip ;
 // Backslashes are used as line continuators, so they can be ignored.
 Backslash: [\\] -> skip;
 OtherCaracter: .;
+
+
+unitsDoc : UNITOS ;
+UNITOS: '~' .*? '|';
