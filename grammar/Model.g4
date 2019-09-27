@@ -1,4 +1,5 @@
 grammar Model;
+
 import Expr;
 
 // A Vensim model is a sequence of equations and subscript ranges.
@@ -15,7 +16,7 @@ subscriptMapping : Id | '(' Id ':' subscriptIdList ')' ;
 // An equation has a left-hand side and a right-hand side.
 // The RHS is a formula expression, a constant list, or a Vensim lookup.
 // The RHS is empty for data equations.
-equation : lhs  Equal expr  (':IGNORE:' exprList)? unitsDoc;
+equation : lhs  Equal (expr|constList)  (':IGNORE:' exprList)? unitsDoc;
 lhs : Id ( subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
 
 
@@ -26,6 +27,9 @@ constraint: Id ':THE CONDITION:' expr? ':IMPLIES:' expr unitsDoc;
 stringAssign: lhs StringAssignOp StringConst  (':IGNORE:' exprList)? unitsDoc;
 macroDefinition: ':MACRO:' macroHeader equation+ ':END OF MACRO:' unitsDoc;
 lookupCallEquation: lookupCall unitsDoc;
+
+
+
 // The lexer strips some tokens we are not interested in.
 // The character encoding is given at the start of a Vensim file.
 // The units and documentation sections and group markings are skipped for now.

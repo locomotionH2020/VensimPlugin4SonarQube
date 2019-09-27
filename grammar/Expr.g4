@@ -26,8 +26,9 @@ exprList : expr (',' expr)* ;
 subscriptIdList : subscriptId (',' subscriptId)* ;
 subscript: '[' subscriptId (',' subscriptId)* ']'; 
 lookup : '(' lookupRange? lookupPointList ')' ;
-lookupRange : '[' lookupPoint '-' lookupPoint ']' ',' ;
+lookupRange : '[' lookupPoint '-' lookupPoint referenceLine? ']' ',' ;
 lookupPointList : lookupPoint (',' lookupPoint)* ;
+referenceLine: ',' lookupPointList;
 lookupPoint : '(' expr ',' expr ')' ;
 constList : ( expr ( ',' expr )+ | ( expr ( ',' expr )+ ';' )+ ) ;
 
@@ -46,8 +47,9 @@ Exclamation : '!' ;
 EquationOp: ':=';
 StringAssignOp: ':IS:';
 
+
 subscriptId : Id  Exclamation?;
-Id: ( ( Nondigit IdChar* ) | ( Nondigit ( IdChar | ' ' )* IdChar ) | StringLiteral );
+Id: ( ( Nondigit IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) | StringLiteral );
 
 fragment
 IdChar : [a-zA-Z0-9_$'&%\u00A1-\u00ff\u0100-\u017f\u0180-\u024f\u1e02-\u1ef3] ;
