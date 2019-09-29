@@ -21,7 +21,7 @@ expr:   Id '(' exprList? ')'              # Call
 
 macroHeader: Id '(' macroArguments? ')';  
 macroArguments: exprList (':' exprList)?;
-lookupCall: Id (subscript)? '(' expr ')' ;
+lookupCall: Id (subscript)? '(' expr  | numberList')' ;
 exprList : expr (',' expr)* ;
 subscriptIdList : subscriptId (',' subscriptId)* ;
 subscript: '[' subscriptId (',' subscriptId)* ']'; 
@@ -31,6 +31,9 @@ lookupPointList : lookupPoint (',' lookupPoint)* ;
 referenceLine: ',' lookupPointList;
 lookupPoint : '(' expr ',' expr ')' ;
 constList : ( expr ( ',' expr )+ | ( expr ( ',' expr )+ ';' )+ ) ;
+
+numberList: (IntegerConst | FloatingConst) (',' ( IntegerConst | FloatingConst))*;
+    
 
 Star : '*' ;
 Div : '/' ;
@@ -71,7 +74,7 @@ constVensim
 
 
 IntegerConst
-    :   Digit+
+    :  Sign? Digit+
     ;
 
 fragment
@@ -81,8 +84,8 @@ NonzeroDigit
 
 
 FloatingConst
-    :   FractionalConstant ExponentPart?
-    |   DigitSeq ExponentPart
+    :  Sign? FractionalConstant ExponentPart?
+    |   Sign? DigitSeq ExponentPart
     ;
 
 fragment
