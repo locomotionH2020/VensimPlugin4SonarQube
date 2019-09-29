@@ -34,7 +34,8 @@ lookupCallEquation: lookupCall unitsDoc;
 // The character encoding is given at the start of a Vensim file.
 // The units and documentation sections and group markings are skipped for now.
 // Line continuation characters and the sketch must be stripped by a preprocessor.
-Encoding : '{' [A-Za-z0-9-]+ '}' -> skip ;
+
+CommentOrEncoding: '{' .*? '}' -> skip;
 
 Group : '****' .*? '|' -> skip ;
 

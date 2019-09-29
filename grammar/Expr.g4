@@ -16,12 +16,15 @@ expr:   Id '(' exprList? ')'              # Call
     |   Keyword expr?                        # Keyword
     |   lookup                            # LookupArg
     |   '(' expr ')'                      # Parens
-    |    Star                             # WildCard       
+    |    Star                             # WildCard   
+ 
     ;
+
+
 
 macroHeader: Id '(' macroArguments? ')';  
 macroArguments: exprList (':' exprList)?;
-lookupCall: Id (subscript)? '(' expr  | numberList')' ;
+lookupCall: Id (subscript)? '(' (expr  | numberList) ')' ;
 exprList : expr (',' expr)* ;
 subscriptIdList : subscriptId (',' subscriptId)* ;
 subscript: '[' subscriptId (',' subscriptId)* ']'; 
@@ -32,7 +35,7 @@ referenceLine: ',' lookupPointList;
 lookupPoint : '(' expr ',' expr ')' ;
 constList : ( expr ( ',' expr )+ | ( expr ( ',' expr )+ ';' )+ ) ;
 
-numberList: (IntegerConst | FloatingConst) (',' ( IntegerConst | FloatingConst))*;
+numberList: (integerConst | floatingConst) (',' ( integerConst | floatingConst))*;
     
 
 Star : '*' ;
@@ -67,14 +70,14 @@ Digit
     ;
 
 constVensim
-    :   IntegerConst
-    |   FloatingConst
+    :   integerConst
+    |   floatingConst
     |   StringConst
     ;
 
 
-IntegerConst
-    :  Sign? Digit+
+integerConst
+    :  Sign? DigitSeq
     ;
 
 fragment
@@ -83,29 +86,28 @@ NonzeroDigit
     ;
 
 
-FloatingConst
+floatingConst
     :  Sign? FractionalConstant ExponentPart?
     |   Sign? DigitSeq ExponentPart
     ;
 
-fragment
+
 FractionalConstant
     :   DigitSeq? '.' DigitSeq
     |   DigitSeq '.'
     ;
 
-fragment
+
 ExponentPart
     :   'e' Sign? DigitSeq
     |   'E' Sign? DigitSeq
     ;
 
-fragment
 Sign
     :   '+' | '-'
     ;
 
-fragment
+
 DigitSeq
     :   Digit+
     ;
