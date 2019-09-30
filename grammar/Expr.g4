@@ -1,12 +1,14 @@
 grammar Expr;
 
-expr:   Id '(' exprList? ')'              # Call
+
+
+expr:   call             # CallExpr
     |   lookupCall # exprLookupCall
     |   '-' expr                          # Negative
     |   '+' expr                          # Positive
     |   expr '^' expr                     # Power
     |   expr op=('*'|'/') expr            # MulDiv
-    |   expr op=('+'|'-') expr            # AddSub
+    |   expr op=('+'|Minus) expr            # AddSub
     |   expr op=('<'|'>'|'<='|'>=') expr  # Relational
     |   expr op=('='|'<>') expr           # Equality
     |   expr ':AND:' expr                 # And
@@ -17,8 +19,10 @@ expr:   Id '(' exprList? ')'              # Call
     |   lookup                            # LookupArg
     |   '(' expr ')'                      # Parens
     |    Star                             # WildCard   
- 
+    |   expr ':' expr                     # DelayPArg
+    |  'TABBED ARRAY(' constVensim* ')'   # tabbedArray
     ;
+
 
 
 
@@ -26,10 +30,10 @@ macroHeader: Id '(' macroArguments? ')';
 macroArguments: exprList (':' exprList)?;
 lookupCall: Id (subscript)? '(' (expr  | numberList) ')' ;
 exprList : expr (',' expr)* ;
-subscriptIdList : subscriptId (',' subscriptId)* ;
+subscriptIdList : (subscriptId|subscriptSequence) (',' (subscriptId|subscriptSequence))* ;
 subscript: '[' subscriptId (',' subscriptId)* ']'; 
 lookup : '(' lookupRange? lookupPointList ')' ;
-lookupRange : '[' lookupPoint '-' lookupPoint referenceLine? ']' ',' ;
+lookupRange : '[' lookupPoint Minus lookupPoint referenceLine? ']' ',' ;
 lookupPointList : lookupPoint (',' lookupPoint)* ;
 referenceLine: ',' lookupPointList;
 lookupPoint : '(' expr ',' expr ')' ;
@@ -37,11 +41,12 @@ constList : ( expr ( ',' expr )+ | ( expr ( ',' expr )+ ';' )+ ) ;
 
 numberList: (integerConst | floatingConst) (',' ( integerConst | floatingConst))*;
     
+    
 
 Star : '*' ;
 Div : '/' ;
 Plus : '+' ;
-Minus : '-' ;
+Minus: '-';
 Less : '<' ;
 LessEqual : '<=' ;
 Greater : '>' ;
@@ -77,7 +82,7 @@ constVensim
 
 
 integerConst
-    :  Sign? DigitSeq
+    :  sign? DigitSeq
     ;
 
 fragment
@@ -87,24 +92,24 @@ NonzeroDigit
 
 
 floatingConst
-    :  Sign? FractionalConstant ExponentPart?
-    |   Sign? DigitSeq ExponentPart
+    :  sign? fractionalConstant exponentPart?
+    |   sign? DigitSeq exponentPart
     ;
 
 
-FractionalConstant
+fractionalConstant
     :   DigitSeq? '.' DigitSeq
     |   DigitSeq '.'
     ;
 
 
-ExponentPart
-    :   'e' Sign? DigitSeq
-    |   'E' Sign? DigitSeq
+exponentPart
+    :   'e' sign? DigitSeq
+    |   'E' sign? DigitSeq
     ;
 
-Sign
-    :   '+' | '-'
+sign
+    :   Plus | Minus
     ;
 
 
@@ -129,6 +134,11 @@ Whitespace : [ \t\n\r]+ -> skip ;
 // Backslashes are used as line continuators, so they can be ignored.
 Backslash: [\\] -> skip;
 OtherCaracter: .;
+
+
+
+
+call:  Id '(' exprList? ')';
 
 
 unitsDoc : UNITOS ;

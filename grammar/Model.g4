@@ -5,10 +5,10 @@ import Expr;
 // A Vensim model is a sequence of equations and subscript ranges.
 model: ( subscriptRange | equation |
       lookupCallEquation|constraint | macroDefinition | unchangeableConstant |
-       dataEquation| lookupDefinition | stringAssign )+ sketchInfo+ EOF ;
+       dataEquation| lookupDefinition | stringAssign |subscriptCopy |realityCheck)+ sketchInfo+ EOF ;
 
 // A subscript range definition names subscripts in a dimension.
-subscriptRange : Id ':' ( subscriptIdList | subscriptSequence ) subscriptMappingList? unitsDoc;
+subscriptRange : Id ':' ( subscriptIdList | subscriptSequence | call) subscriptMappingList? unitsDoc;
 subscriptSequence : '(' Id '-' Id ')' ;
 subscriptMappingList : '->' subscriptMapping ( ',' subscriptMapping )* ;
 subscriptMapping : Id | '(' Id ':' subscriptIdList ')' ;
@@ -20,10 +20,14 @@ equation : lhs  Equal (expr|constList)  (':IGNORE:' exprList)? unitsDoc;
 lhs : Id ( subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
 
 
+// https://www.vensim.com/documentation/ref_subscript_mapping.htm
+subscriptCopy: Id '<->' Id unitsDoc;
 unchangeableConstant: lhs TwoEqual ( expr | constList ) unitsDoc;
 dataEquation: lhs ( EquationOp ( expr | constList ) )? (':IGNORE:' exprList)? unitsDoc;
 lookupDefinition: lhs lookup unitsDoc;
 constraint: Id ':THE CONDITION:' expr? ':IMPLIES:' expr unitsDoc;
+realityCheck: Id subscript? ':TEST INPUT:' Id subscript? '=' expr unitsDoc; 
+
 stringAssign: lhs StringAssignOp StringConst  (':IGNORE:' exprList)? unitsDoc;
 macroDefinition: ':MACRO:' macroHeader equation+ ':END OF MACRO:' unitsDoc;
 lookupCallEquation: lookupCall unitsDoc;
