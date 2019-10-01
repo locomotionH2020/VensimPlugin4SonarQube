@@ -5,7 +5,7 @@ import Expr;
 // A Vensim model is a sequence of equations and subscript ranges.
 model: ( subscriptRange | equation |
       lookupCallEquation|constraint | macroDefinition | unchangeableConstant |
-       dataEquation| lookupDefinition | stringAssign |subscriptCopy |realityCheck)+ sketchInfo+ EOF ;
+       dataEquation| lookupDefinition | stringAssign |subscriptCopy |realityCheck)+ sketches EOF ;
 
 // A subscript range definition names subscripts in a dimension.
 subscriptRange : Id ':' ( subscriptIdList | subscriptSequence | call) subscriptMappingList? unitsDoc;
@@ -23,7 +23,7 @@ lhs : Id ( subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
 // https://www.vensim.com/documentation/ref_subscript_mapping.htm
 subscriptCopy: Id '<->' Id unitsDoc;
 unchangeableConstant: lhs TwoEqual ( expr | constList ) unitsDoc;
-dataEquation: lhs ( EquationOp ( expr | constList ) )? (':IGNORE:' exprList)? unitsDoc;
+dataEquation: lhs ( DataEquationOp ( expr | constList ) )? (':IGNORE:' exprList)? unitsDoc;
 lookupDefinition: lhs lookup unitsDoc;
 constraint: Id ':THE CONDITION:' expr? ':IMPLIES:' expr unitsDoc;
 realityCheck: Id subscript? ':TEST INPUT:' Id subscript? '=' expr unitsDoc; 
@@ -45,4 +45,5 @@ Group : '****' .*? '|' -> skip ;
 
 
 // Backslash tokens are ignored in Expr.g4, so this rule doesn't take them into account.
-sketchInfo: '---///' 'Sketch information - do not modify anything except names' .* ;
+sketchInfo: '---///' 'Sketch information - do not modify anything except names' .*? ;
+sketches: sketchInfo+;

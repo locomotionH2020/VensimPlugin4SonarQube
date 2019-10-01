@@ -2,15 +2,14 @@ grammar Expr;
 
 
 
+
 expr:   call             # CallExpr
     |   lookupCall # exprLookupCall
-    |   '-' expr                          # Negative
-    |   '+' expr                          # Positive
     |   expr '^' expr                     # Power
     |   expr op=('*'|'/') expr            # MulDiv
-    |   expr op=('+'|Minus) expr            # AddSub
-    |   expr op=('<'|'>'|'<='|'>=') expr  # Relational
-    |   expr op=('='|'<>') expr           # Equality
+    |   expr op=(Plus|Minus) expr            # AddSub
+    |   expr op=(Less|Greater|LessEqual|GreaterEqual) expr  # Relational
+    |   expr op=(Equal|NotEqual) expr           # Equality
     |   expr ':AND:' expr                 # And
     |   expr ':OR:' expr                  # Or
     |   Id (subscript)?                   # Var
@@ -21,11 +20,11 @@ expr:   call             # CallExpr
     |    Star                             # WildCard   
     |   expr ':' expr                     # DelayPArg
     |  'TABBED ARRAY(' constVensim* ')'   # tabbedArray
+    |   sign expr                          # signExpr
     ;
 
 
-
-
+call:  Id '(' exprList? ')';
 macroHeader: Id '(' macroArguments? ')';  
 macroArguments: exprList (':' exprList)?;
 lookupCall: Id (subscript)? '(' (expr  | numberList) ')' ;
@@ -55,7 +54,7 @@ Equal : '=' ;
 TwoEqual : '==' ;
 NotEqual : '<>' ;
 Exclamation : '!' ;
-EquationOp: ':=';
+DataEquationOp: ':=';
 StringAssignOp: ':IS:';
 
 
@@ -73,7 +72,6 @@ fragment
 Digit
     :   [0-9]
     ;
-
 constVensim
     :   integerConst
     |   floatingConst
@@ -92,9 +90,9 @@ NonzeroDigit
 
 
 floatingConst
-    :  sign? fractionalConstant exponentPart?
-    |   sign? DigitSeq exponentPart
-    ;
+:  sign? fractionalConstant exponentPart?
+|   sign? DigitSeq exponentPart
+;
 
 
 fractionalConstant
@@ -138,8 +136,5 @@ OtherCaracter: .;
 
 
 
-call:  Id '(' exprList? ')';
-
-
-unitsDoc : UNITOS ;
-UNITOS: '~' .*? '|';
+unitsDoc : COMMENTS ;
+COMMENTS: '~' .*? '|';
