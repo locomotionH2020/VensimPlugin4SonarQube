@@ -1,5 +1,6 @@
-package org.sonar.vensim;
+package es.uva.medeas;
 
+import es.uva.medeas.rules.VensimCheck;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
@@ -9,7 +10,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.issue.NoSonarFilter;
 import org.sonar.api.measures.FileLinesContextFactory;
-import org.sonar.vensim.rules.VensimCheck;
 
 import java.util.ArrayList;
 import java.util.Collections;

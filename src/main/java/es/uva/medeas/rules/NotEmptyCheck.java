@@ -1,8 +1,8 @@
-package org.sonar.vensim.rules;
+package es.uva.medeas.rules;
 
 
+import es.uva.medeas.Issue;
 import org.sonar.check.Rule;
-import org.sonar.vensim.Issue;
 
 import java.util.ArrayList;
 import java.util.List;

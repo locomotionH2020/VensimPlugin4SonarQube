@@ -1,8 +1,8 @@
-package org.sonar.vensim;
+package es.uva.medeas;
 
 import org.sonar.api.rule.Severity;
 import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
-import org.sonar.vensim.rules.NotEmptyCheck;
+import es.uva.medeas.rules.NotEmptyCheck;
 
 public final class VensimQualityProfile implements BuiltInQualityProfilesDefinition {
 

@@ -1,4 +1,4 @@
-package org.sonar.vensim;
+package es.uva.medeas;
 
 import org.sonar.api.Plugin;
 

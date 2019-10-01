@@ -1,5 +1,6 @@
-package org.sonar.vensim;
+package es.uva.medeas;
 
+import es.uva.medeas.rules.VensimCheck;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.TextRange;
 import org.sonar.api.batch.rule.Checks;
@@ -10,7 +11,6 @@ import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
-import org.sonar.vensim.rules.VensimCheck;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -18,6 +18,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
+    <antlr4-version>4.7.2</antlr4-version>
   </properties>
 
   <dependencies>
@@ -35,6 +36,11 @@
       <version>7.9.1</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+    <groupId>org.antlr</groupId>
+    <artifactId>antlr4</artifactId>
+    <version>${antlr4-version}</version>
+</dependency>
   </dependencies>
 
   <build>
@@ -46,7 +52,7 @@
         <extensions>true</extensions>
         <configuration>
           <pluginKey>vensim</pluginKey>
-          <pluginClass>org.sonar.vensim.VensimPlugin</pluginClass>
+          <pluginClass>es.uva.medeas.VensimPlugin</pluginClass>
         </configuration>
       </plugin>
       <plugin>
@@ -71,6 +77,34 @@
           </execution>
         </executions>
       </plugin>
+
+
+      <plugin>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-maven-plugin</artifactId>
+        <version>${antlr4-version}</version>
+
+        <configuration>
+          <sourceDirectory>${basedir}/src/main/resources</sourceDirectory>
+          <outputDirectory>${basedir}/src/main/java/es/uva/medeas/parser</outputDirectory>
+          <excludes>Expr.g4</excludes>
+          <arguments>
+            <argument>-package</argument>
+            <argument>es.uva.medeas.parser</argument>
+            <argument>-no-listener</argument>
+            <argument>-visitor</argument>
+          </arguments>
+
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>antlr4</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
 
     </plugins>
   </build>

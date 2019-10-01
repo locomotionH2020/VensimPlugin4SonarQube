@@ -1,7 +1,7 @@
-package org.sonar.vensim;
+package es.uva.medeas;
 
 import org.sonar.api.server.rule.RulesDefinition;
-import org.sonar.vensim.rules.NotEmptyCheck;
+import es.uva.medeas.rules.NotEmptyCheck;
 
 import java.util.HashSet;
 
