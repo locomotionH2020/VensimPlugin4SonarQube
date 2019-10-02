@@ -1,6 +1,13 @@
 package es.uva.medeas;
 
+import es.uva.medeas.parser.ModelLexer;
+import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.rules.VensimCheck;
+
+
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.TextRange;
 import org.sonar.api.batch.rule.Checks;
@@ -50,13 +57,20 @@ public class VensimScanner {
 
             List<Issue> issues = new ArrayList<>();
 
+            ModelLexer lexer = new ModelLexer(CharStreams.fromString(content));
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            ModelParser parser = new ModelParser(tokens);
+            ParseTree root = parser.file();
+            VensimVisitorContext visitorContext = new VensimVisitorContext(root);
+
             for (VensimCheck check : checks.all()) {
-               issues.addAll(check.check(content));
+                check.scan(visitorContext);
+
+                issues.addAll(visitorContext.getIssues());
             }
             saveIssues(inputFile,issues);
 
             int lines = content.split("[\r\n]+").length;
-
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
         } catch (IOException e) {

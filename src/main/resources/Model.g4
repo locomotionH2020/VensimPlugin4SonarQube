@@ -4,9 +4,11 @@ import Expr;
 
 
 // A Vensim model is a sequence of equations and subscript ranges.
+
+file: model? EOF;
 model: ( subscriptRange | equation |
       lookupCallEquation|constraint | macroDefinition | unchangeableConstant |
-       dataEquation| lookupDefinition | stringAssign |subscriptCopy |realityCheck)+ sketches EOF ;
+       dataEquation| lookupDefinition | stringAssign |subscriptCopy |realityCheck)+ sketches ;
 
 // A subscript range definition names subscripts in a dimension.
 subscriptRange : Id ':' ( subscriptIdList | subscriptSequence | call) subscriptMappingList? unitsDoc;

@@ -23,7 +23,7 @@ public class VensimSquidSensor implements Sensor {
 
     private final Checks<VensimCheck> checks;
 
-    public VensimSquidSensor(FileLinesContextFactory fileLinesContextFactory, CheckFactory checkFactory, NoSonarFilter noSonarFilter) {
+    public VensimSquidSensor(CheckFactory checkFactory) {
         this.checks = checkFactory
                 .<VensimCheck>create(VensimRuleRepository.REPOSITORY_KEY)
                 .addAnnotatedChecks(VensimRuleRepository.getChecks());
