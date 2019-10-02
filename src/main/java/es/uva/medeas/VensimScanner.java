@@ -1,12 +1,13 @@
 package es.uva.medeas;
 
+import es.uva.medeas.parser.VensimErrorListener;
 import es.uva.medeas.parser.ModelLexer;
 import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.rules.VensimCheck;
 
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.TextRange;
@@ -56,10 +57,13 @@ public class VensimScanner {
             String content = inputFile.contents();
 
             List<Issue> issues = new ArrayList<>();
-
             ModelLexer lexer = new ModelLexer(CharStreams.fromString(content));
+
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             ModelParser parser = new ModelParser(tokens);
+            parser.removeErrorListeners();
+            parser.addErrorListener(new VensimErrorListener());
+
             ParseTree root = parser.file();
             VensimVisitorContext visitorContext = new VensimVisitorContext(root);
 
@@ -74,8 +78,11 @@ public class VensimScanner {
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
         } catch (IOException e) {
-            LOG.warn("Unable to analyze file '{}'. Error: {}", inputFile.toString(), e);
+            LOG.error("Unable to analyze file '{}'. Error: {}", inputFile.toString(), e);
+        }catch (ParseCancellationException e){
+            LOG.error("Unable to parse the file '{}'. Message {}",inputFile.toString(),e.getLocalizedMessage());
         }
+
 
 
 
