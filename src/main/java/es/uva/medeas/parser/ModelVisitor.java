@@ -11,6 +11,12 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	/**
+	 * Visit a parse tree produced by {@link ModelParser#file}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFile(ModelParser.FileContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ModelParser#model}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -71,12 +77,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDataEquation(ModelParser.DataEquationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ModelParser#lookupDefinition}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLookupDefinition(ModelParser.LookupDefinitionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ModelParser#constraint}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -101,11 +101,11 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMacroDefinition(ModelParser.MacroDefinitionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ModelParser#lookupCallEquation}.
+	 * Visit a parse tree produced by {@link ModelParser#lookupDefinition}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLookupCallEquation(ModelParser.LookupCallEquationContext ctx);
+	T visitLookupDefinition(ModelParser.LookupDefinitionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ModelParser#sketchInfo}.
 	 * @param ctx the parse tree
