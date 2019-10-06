@@ -1,0 +1,8 @@
+country : MEXICO, USA,
+CANADA ->  otherCountries
+~	index
+~	The list of countries represented in the model
+
+|
+
+\\\---/// Sketch information - do not modify anything except names

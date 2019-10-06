@@ -1,0 +1,10 @@
+lookup distribution(
+	[(0,0)-(10,10)],(0,0),(1,1),(2,0.5),(3,1),(4,0))
+	~
+	~	Lookup specifying probability distribution - will be scaled to integrate \
+		to 1, if it does not do so by default.
+	|
+
+
+
+\\\---/// Sketch information - do not modify anything except names

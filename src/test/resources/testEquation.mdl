@@ -1,0 +1,14 @@
+randomSubscript : YES, NO ~		|
+
+var = 100 ~	|
+
+foo = -1.5 / var~	|
+
+constant = -500  ~	|
+
+something[randomSubscript] = -foo[randomSubscript] ~	|
+
+Z = INTEG( var - foo, constant*something^var) ~	|
+
+
+\\\---/// Sketch information - do not modify anything except names

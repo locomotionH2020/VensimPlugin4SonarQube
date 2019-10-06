@@ -34,6 +34,10 @@ public class Symbol {
         return context;
     }
 
+    public int getLine(){
+        return context.start.getLine();
+    }
+
     public Set<Symbol> getDependencies() {
         return dependencies;
     }
