@@ -10,5 +10,6 @@ something[randomSubscript] = -foo[randomSubscript] ~	|
 
 Z = INTEG( var - foo, constant*something^var) ~	|
 
+"data_equation inside quotes":= var + foo~	|
 
 \\\---/// Sketch information - do not modify anything except names

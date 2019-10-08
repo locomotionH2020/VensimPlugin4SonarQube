@@ -1,0 +1,14 @@
+{UTF-8}
+Commodity:
+	GET XLS SUBSCRIPT('?subscriptedInputs', 'subscripts' , 'c1', 'f1', '' )
+	~	dmnl
+	~	Use Model>Settings>XLS Files menu item to manage indirect file references \
+		tagged with ?, as above.
+	|
+
+Dairy:
+	GET DIRECT SUBSCRIPT('?subscriptedInputs', 'subscripts' , 'c1', 'd1', '' )
+	~
+	~		|
+
+\\\---/// Sketch information - do not modify anything except names

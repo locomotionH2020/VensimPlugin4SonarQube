@@ -1,0 +1,23 @@
+:MACRO: VSMOOTH(input,SMOOTH TIME)
+Vsmooth = INTEG((input - Vsmooth)/SMOOTH TIME,
+	       input)
+
+~ input
+
+~ The first order smoothed value of a variable.
+
+|
+
+:END OF MACRO:
+
+:MACRO: MYNPVE(str,dr,in,f)
+
+MYNPVE=(NCUM+str*TIME STEP$*df)*f~str/dr~|
+
+NCUM=INTEG(str*df,in)~str/dr~|
+
+df=INTEG(-df*dr/(1+dr*TIME STEP$),1/(1+dr*TIME STEP$))~Dmnl~|
+
+:END OF MACRO:
+
+\\\---/// Sketch information - do not modify anything except names

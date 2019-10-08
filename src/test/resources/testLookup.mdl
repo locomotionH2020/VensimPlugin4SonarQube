@@ -6,5 +6,12 @@ lookup distribution(
 	|
 
 
+accomplishments per hour lookup(
+	0,0.2,0.4,0.6,0.8,1,
+	0,0.2,0.4,0.6,0.8,1)
+	~	TASKS/HOUR
+	~	TABLE FOR ACCOMPLISHMENTS PER HOUR
+	|
+
 
 \\\---/// Sketch information - do not modify anything except names
