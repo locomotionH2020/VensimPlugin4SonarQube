@@ -18,17 +18,20 @@ public class SymbolTable {
     }
 
 
-    public Symbol getSymbolOrCreate(Token token){
-        String tokenText = token.getText();
+    public Symbol getSymbolOrCreate(String token){
 
-        if(table.containsKey(tokenText))
-            return table.get(tokenText);
+        if(table.containsKey(token))
+            return table.get(token);
 
         else{
-            Symbol symbol = new Symbol(tokenText);
-            table.put(tokenText,symbol);
+            Symbol symbol = new Symbol(token);
+            table.put(token,symbol);
             return symbol;
         }
+
+    }
+    public Symbol getSymbolOrCreate(Token token){
+       return getSymbolOrCreate(token.getText());
 
     }
     public void resolveDependencies(){

@@ -122,7 +122,7 @@ public class TestSymbolGenerator {
         Symbol lookupOtherNotation = table.getSymbol("accomplishments per hour lookup");
         assertSymbol(lookupOtherNotation,SymbolType.LOOKUP,9,NO_DEPENDENCIES);
 
-
+    //TODO testear después que una llamada  a dicho lookup no cambia el tipo del símbolo a función.
 
     }
 
@@ -240,6 +240,7 @@ public class TestSymbolGenerator {
     @Test
     public void testSubscriptSequence() throws IOException{
         SymbolTable table = getSymbolTable("subscriptSequence.mdl");
+        table.print();
 
         Symbol age = table.getSymbol("age");
 

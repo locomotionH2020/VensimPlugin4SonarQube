@@ -25,13 +25,14 @@ expr:   call             # CallExpr
 
 
 call:  Id '(' exprList? ')';
+lookupCall: Id (subscript)? '(' (expr) ')' ;
+
 macroHeader: Id '(' macroArguments? ')';  
 macroArguments: exprList (':' exprList)?;
-lookupCall: Id (subscript)? '(' (expr  | numberList) ')' ;
 exprList : expr (',' expr)* ;
 subscriptIdList : (subscriptId|subscriptSequence) (',' (subscriptId|subscriptSequence))* ;
 subscript: '[' subscriptId (',' subscriptId)* ']'; 
-lookup : '(' lookupRange? lookupPointList ')' ;
+lookup : '(' ((lookupRange? lookupPointList)|numberList) ')' ;
 lookupRange : '[' lookupPoint Minus lookupPoint referenceLine? ']' ',' ;
 lookupPointList : lookupPoint (',' lookupPoint)* ;
 referenceLine: ',' lookupPointList;

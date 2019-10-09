@@ -3,10 +3,7 @@ package es.uva.medeas.parser;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Symbol {
 
@@ -49,6 +46,12 @@ public class Symbol {
     public void addDependency(Symbol symbol){
         dependencies.add(symbol);
 
+    }
+
+    public void addDependencies(Collection<Symbol> symbols){
+        for(Symbol symb: symbols){
+            addDependency(symb);
+        }
     }
 
     public String getToken() {

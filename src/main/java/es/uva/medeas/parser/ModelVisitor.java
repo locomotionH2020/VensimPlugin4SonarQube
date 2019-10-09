@@ -257,6 +257,12 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCall(ModelParser.CallContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ModelParser#lookupCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLookupCall(ModelParser.LookupCallContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ModelParser#macroHeader}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -268,12 +274,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMacroArguments(ModelParser.MacroArgumentsContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#lookupCall}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLookupCall(ModelParser.LookupCallContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ModelParser#exprList}.
 	 * @param ctx the parse tree
