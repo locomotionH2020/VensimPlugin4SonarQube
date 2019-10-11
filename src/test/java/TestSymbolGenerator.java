@@ -8,6 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -78,6 +79,7 @@ public class TestSymbolGenerator {
         assertEquals("Symbol '" + symbol.getToken() +"' expected at line " + expectedLine + " found at: " + symbol.getLine(),
                 expectedLine,symbol.getLine());
         assertEquals(expectedDependencies,symbol.getDependencies());
+        assertFalse(expectedDependencies.contains(null));
     }
 
 
@@ -92,8 +94,6 @@ public class TestSymbolGenerator {
 
         SymbolTable table = getSymbolTable("testSubscript.mdl");
 
-        Symbol country = table.getSymbol("country");
-        assertSymbol(country,SymbolType.SUBSCRIPT_NAME,1,NO_DEPENDENCIES);
 
         Symbol mexico = table.getSymbol("MEXICO");
         assertSymbol(mexico,SymbolType.SUBSCRIPT_VALUE,1,NO_DEPENDENCIES);
@@ -104,16 +104,18 @@ public class TestSymbolGenerator {
         Symbol canada = table.getSymbol("CANADA");
         assertSymbol(canada,SymbolType.SUBSCRIPT_VALUE,2,NO_DEPENDENCIES);
 
+        Symbol country = table.getSymbol("country");
+        assertSymbol(country,SymbolType.SUBSCRIPT_NAME,1,createSet(mexico,USA,canada));
+
         Symbol countryCopy = table.getSymbol("copy");
         assertSymbol(countryCopy,SymbolType.SUBSCRIPT_NAME,8,NO_DEPENDENCIES);
 
-        assertEquals(5,table.getSymbols().size());
     }
 
     @Test
     public void testLookup() throws IOException{
-        SymbolTable table = getSymbolTable("testLookup.mdl");
-        table.print();
+
+        SymbolTable table = getSymbolTable("testLookupEquation.mdl");
 
         Symbol lookup = table.getSymbol("lookup distribution");
         assertSymbol(lookup,SymbolType.LOOKUP,1,NO_DEPENDENCIES);
@@ -122,8 +124,10 @@ public class TestSymbolGenerator {
         Symbol lookupOtherNotation = table.getSymbol("accomplishments per hour lookup");
         assertSymbol(lookupOtherNotation,SymbolType.LOOKUP,9,NO_DEPENDENCIES);
 
-    //TODO testear después que una llamada  a dicho lookup no cambia el tipo del símbolo a función.
+        Symbol getXLSLookup = table.getSymbol("GET XLS LOOKUPS");
+        Symbol xlsLookup = table.getSymbol("testXLSLookup");
 
+        assertSymbol(xlsLookup,SymbolType.LOOKUP,17,createSet(getXLSLookup));
     }
 
     @Test
@@ -175,7 +179,6 @@ public class TestSymbolGenerator {
 
     @Test
     public void testInmediateConstant() throws IOException{
-        //TODO puedo quitarme el IOException?
         SymbolTable table = getSymbolTable("testConstants.mdl");
 
         Symbol pi = table.getSymbol("PI");
@@ -224,12 +227,19 @@ public class TestSymbolGenerator {
     public void testDelayP() throws IOException{
         SymbolTable table = getSymbolTable("testDelayP.mdl");
 
-        fail("Todavía no se cómo gestionar la variable 'DELAYP pipeline");
+        Symbol receivingP = table.getSymbol("receiving P");
+        Symbol delayPipeline = table.getSymbol("DELAYP pipeline");
+        Symbol delayP = table.getSymbol("DELAYP");
+        Symbol shippingTime = table.getSymbol("shipping time");
+        Symbol shipping = table.getSymbol("shipping");
+
+        assertSymbol(delayPipeline,SymbolType.VARIABLE,3,createSet(delayP,shipping,shippingTime));
+        assertSymbol(receivingP, SymbolType.UNDETERMINED,2,createSet(delayP,delayPipeline, shipping,shippingTime));
+
     }
 
     @Test
     public void testTabbedArray() throws  IOException{
-        //TODO Comprobar si puede haber variables dentro de las tabbed arrays.
         SymbolTable table = getSymbolTable("testTabbedArray.mdl");
 
         Symbol population = table.getSymbol("initial population");
@@ -240,7 +250,7 @@ public class TestSymbolGenerator {
     @Test
     public void testSubscriptSequence() throws IOException{
         SymbolTable table = getSymbolTable("subscriptSequence.mdl");
-        table.print();
+
 
         Symbol age = table.getSymbol("age");
 
@@ -254,7 +264,7 @@ public class TestSymbolGenerator {
     public void testDirectSubscripts() throws  IOException{
         SymbolTable table = getSymbolTable("testDirectSubscript.mdl");
 
-        table.print();
+
         Symbol commodity = table.getSymbol("Commodity");
         Symbol dairy = table.getSymbol("Dairy");
         Symbol getXLS = table.getSymbol("GET XLS SUBSCRIPT");
@@ -265,5 +275,11 @@ public class TestSymbolGenerator {
         assertSymbol(dairy,SymbolType.SUBSCRIPT_NAME,9,createSet(getDirect));
     }
 
+        //TODO comprobar que las variables no se sobreescriben por las que haya dentro de una macro.
+        //TODO test #lookupArg
 
+
+    public void testInterpolate() throws IOException{
+        fail(); //TODO
+    }
 }

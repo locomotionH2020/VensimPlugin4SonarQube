@@ -4,28 +4,22 @@ grammar Expr;
 
 
 expr:   call             # CallExpr
-    |   lookupCall # exprLookupCall
     |   expr '^' expr                     # Power
-    |   expr op=('*'|'/') expr            # MulDiv
-    |   expr op=(Plus|Minus) expr            # AddSub
-    |   expr op=(Less|Greater|LessEqual|GreaterEqual) expr  # Relational
-    |   expr op=(Equal|NotEqual) expr           # Equality
-    |   expr ':AND:' expr                 # And
-    |   expr ':OR:' expr                  # Or
+    |   expr op=('*'|'/'|Plus|Minus|Less|Greater|LessEqual|GreaterEqual|Equal|NotEqual| ':AND:' | ':OR:') expr  # exprOperation
     |   Id (subscript)?                   # Var
     |   constVensim                             # const
     |   Keyword expr?                        # Keyword
     |   lookup                            # LookupArg
     |   '(' expr ')'                      # Parens
     |    Star                             # WildCard   
-    |   expr ':' expr                     # DelayPArg
+    |   'DELAYP(' expr  ',' expr ':' Id ')'                     # DelayPArg
     |  'TABBED ARRAY(' constVensim* ')'   # tabbedArray
     |   sign expr                          # signExpr
     ;
 
 
-call:  Id '(' exprList? ')';
-lookupCall: Id (subscript)? '(' (expr) ')' ;
+call:  Id (subscript)? '(' exprList? ')';
+
 
 macroHeader: Id '(' macroArguments? ')';  
 macroArguments: exprList (':' exprList)?;

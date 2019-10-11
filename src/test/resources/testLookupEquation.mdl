@@ -14,4 +14,10 @@ accomplishments per hour lookup(
 	|
 
 
+testXLSLookup[City](
+	GET XLS LOOKUPS('subscriptedInputs.xlsx', 'ssData' , 'a', 'b3' ))
+	~	dmnl
+	~	Vensim will read each successive City of data from a new column
+	|
+
 \\\---/// Sketch information - do not modify anything except names

@@ -107,12 +107,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMacroDefinition(ModelParser.MacroDefinitionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ModelParser#lookupCallEquation}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLookupCallEquation(ModelParser.LookupCallEquationContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ModelParser#sketchInfo}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -124,69 +118,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSketches(ModelParser.SketchesContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Or}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOr(ModelParser.OrContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code const}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitConst(ModelParser.ConstContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Keyword}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitKeyword(ModelParser.KeywordContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code MulDiv}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMulDiv(ModelParser.MulDivContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AddSub}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAddSub(ModelParser.AddSubContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Var}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVar(ModelParser.VarContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Parens}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParens(ModelParser.ParensContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Relational}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRelational(ModelParser.RelationalContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code exprLookupCall}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExprLookupCall(ModelParser.ExprLookupCallContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code DelayPArg}
 	 * labeled alternative in {@link ModelParser#expr}.
@@ -202,6 +133,27 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTabbedArray(ModelParser.TabbedArrayContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code const}
+	 * labeled alternative in {@link ModelParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConst(ModelParser.ConstContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Keyword}
+	 * labeled alternative in {@link ModelParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitKeyword(ModelParser.KeywordContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exprOperation}
+	 * labeled alternative in {@link ModelParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExprOperation(ModelParser.ExprOperationContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code signExpr}
 	 * labeled alternative in {@link ModelParser#expr}.
 	 * @param ctx the parse tree
@@ -209,12 +161,19 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSignExpr(ModelParser.SignExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code And}
+	 * Visit a parse tree produced by the {@code Var}
 	 * labeled alternative in {@link ModelParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAnd(ModelParser.AndContext ctx);
+	T visitVar(ModelParser.VarContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Parens}
+	 * labeled alternative in {@link ModelParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParens(ModelParser.ParensContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code CallExpr}
 	 * labeled alternative in {@link ModelParser#expr}.
@@ -229,13 +188,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitWildCard(ModelParser.WildCardContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Equality}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitEquality(ModelParser.EqualityContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code LookupArg}
 	 * labeled alternative in {@link ModelParser#expr}.
@@ -256,12 +208,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitCall(ModelParser.CallContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#lookupCall}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLookupCall(ModelParser.LookupCallContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ModelParser#macroHeader}.
 	 * @param ctx the parse tree

@@ -8,4 +8,7 @@ CANADA ->  otherCountries
 copy <-> country 	~
                  	~		|
 
+
+a[copy] = 3 ~   ~		|
+
 \\\---/// Sketch information - do not modify anything except names

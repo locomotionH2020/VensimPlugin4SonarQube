@@ -1,0 +1,26 @@
+
+
+
+constVensim = 3 ~|
+
+
+expr_inside_parenthesis = ((((6/constVensim)))) ~|
+
+testWildcard :THE CONDITION: FINAL TIME=101 :IMPLIES:
+	* < 1E9 :AND: * >= -1E3  ~|
+
+
+testWildcardInEquation = IF THEN ELSE(*>6, constVensim,9)  ~ |
+
+testKeywordNA = :NA:  ~|
+
+testKeywordExpr=
+	IF THEN ELSE(constVensim >= expr_inside_parenthesis  :AND: :NOT: testKeywordNA,7,0)
+	~|
+
+
+lookup_inside_expr= WITH LOOKUP (
+	constVensim,
+		([(0,0)-(4,2)],(0,0.9),(1,1),(2,1.2),(3,1.5),(4,2) ))
+	~	Dmnl
+	~		|

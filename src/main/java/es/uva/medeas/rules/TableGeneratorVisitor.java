@@ -32,15 +32,27 @@ public class TableGeneratorVisitor extends VensimCheck {
         symbol.setType(SymbolType.SUBSCRIPT_NAME);
 
 
-        if(ctx.subscriptIdList()!=null)
-            symbol.addDependencies(visitSubscriptIdList(ctx.subscriptIdList()));
+        if(ctx.subscriptIdList()!=null) {
+            for(ModelParser.SubscriptIdContext value:ctx.subscriptIdList().subscriptId()){
+                Symbol subscriptValue = visitSubscriptId(value); //TODO refactor
+                subscriptValue.setType(SymbolType.SUBSCRIPT_VALUE);
+                subscriptValue.setContext(value);
+
+                symbol.addDependency(subscriptValue);
+            }
+            List<Symbol> subscriptNames = visitSubscriptIdList(ctx.subscriptIdList());
+            symbol.addDependencies(subscriptNames);
+
+            for(Symbol subscript: subscriptNames) {
+                subscript.setType(SymbolType.SUBSCRIPT_VALUE);
+            }
+        }
         if(ctx.call()!=null)
-            symbol.addDependencies(visitCall(ctx.call()));
+            symbol.addDependencies(visitCall(ctx.call())); //TODO test subscript
 
         return super.visitSubscriptRange(ctx);
     }
 
-    //TODO Mapping list
 
     @Override
     public Object visitEquation(ModelParser.EquationContext ctx) {
@@ -59,7 +71,7 @@ public class TableGeneratorVisitor extends VensimCheck {
         Symbol symbol = table.getSymbolOrCreate(ctx.Id().getSymbol());
         symbol.setType(SymbolType.REALITY_CHECK);
         symbol.setContext(ctx);
-        // return super.visitConstraint(ctx); TODO Creo que esto no es necesario, pero comprobarlo por si acaso.
+
         return null;
     }
 
@@ -68,7 +80,7 @@ public class TableGeneratorVisitor extends VensimCheck {
         Symbol symbol = table.getSymbolOrCreate(ctx.macroHeader().Id().getSymbol());
         symbol.setType(SymbolType.FUNCTION);
         symbol.setContext(ctx);
-        // return super.visitMacroDefinition(ctx); TODO Creo que esto no es necesario, pero comprobarlo por si acaso.
+
         return null;
     }
 
@@ -101,7 +113,10 @@ public class TableGeneratorVisitor extends VensimCheck {
         symbol.setContext(ctx);
         symbol.setType(SymbolType.LOOKUP);
 
-        symbol.addDependencies( (List<Symbol>) visit(ctx.lookup()));
+        if (ctx.lookup()!=null)
+            symbol.addDependencies(  visitLookup(ctx.lookup()));
+        else
+            symbol.addDependencies(visitCall(ctx.call()));
 
 
         return super.visitLookupDefinition(ctx);
@@ -112,7 +127,7 @@ public class TableGeneratorVisitor extends VensimCheck {
         Symbol symbol = table.getSymbolOrCreate(ctx.lhs().Id().getSymbol());
         symbol.setType(SymbolType.CONSTANT);
         symbol.setContext(ctx);
-        //return super.visitStringAssign(ctx); TODO Buscar contraejemplo en el que esto sea necesario
+
         return null;
     }
 
@@ -132,20 +147,14 @@ public class TableGeneratorVisitor extends VensimCheck {
         symbol.setType(SymbolType.REALITY_CHECK);
         symbol.setContext(ctx);
         return null;
-       // return super.visitRealityCheck(ctx); TODO Creo que esto no es necesario, pero comprobarlo por si acaso.
+
     }
 
 
 
     @Override
     public Symbol visitSubscriptId(ModelParser.SubscriptIdContext ctx) {
-
-        Symbol symbol = table.getSymbolOrCreate(ctx.Id().getSymbol());
-        symbol.setType(SymbolType.SUBSCRIPT_VALUE);
-        symbol.setContext(ctx);
-
-        return symbol; //TODO: ESto no es del todo correcto, debería de cambiarlo. Los subscript ids son tanto el nombre del enum como el valor
-                        // Y tengo que testearlo porque eso no lo estaba comprobando
+        return table.getSymbolOrCreate(ctx.Id().getSymbol());
     }
 
     @Override
@@ -168,7 +177,7 @@ public class TableGeneratorVisitor extends VensimCheck {
 
     @Override
     public Object visitCallExpr(ModelParser.CallExprContext ctx) {
-        return super.visitCallExpr(ctx); //TODO
+             return super.visitCallExpr(ctx); //TODO test
     }
 
 
@@ -180,8 +189,11 @@ public class TableGeneratorVisitor extends VensimCheck {
         return  symbols;
     }
 
+
+
+
     @Override
-    public Object visitMulDiv(ModelParser.MulDivContext ctx) {
+    public List<Symbol> visitExprOperation(ModelParser.ExprOperationContext ctx) {
         List<Symbol> symbols = (List<Symbol>) visit(ctx.expr(0));
         symbols.addAll((List<Symbol>) visit(ctx.expr(1)));
 
@@ -189,57 +201,14 @@ public class TableGeneratorVisitor extends VensimCheck {
     }
 
 
-    @Override
-    public Object visitAddSub(ModelParser.AddSubContext ctx) {
-        List<Symbol> symbols = (List<Symbol>) visit(ctx.expr(0));
-        symbols.addAll((List<Symbol>) visit(ctx.expr(1)));
-
-        return  symbols;
-    }
-
-    @Override
-    public Object visitRelational(ModelParser.RelationalContext ctx) {
-        List<Symbol> symbols = (List<Symbol>) visit(ctx.expr(0));
-        symbols.addAll((List<Symbol>) visit(ctx.expr(1)));
-
-        return  symbols;
-    }
-
-    @Override
-    public Object visitEquality(ModelParser.EqualityContext ctx) {
-        List<Symbol> symbols = (List<Symbol>) visit(ctx.expr(0));
-        symbols.addAll((List<Symbol>) visit(ctx.expr(1)));
-
-        return  symbols;
-    }
-
-    @Override
-    public Object visitAnd(ModelParser.AndContext ctx) {
-        List<Symbol> symbols = (List<Symbol>) visit(ctx.expr(0));
-        symbols.addAll((List<Symbol>) visit(ctx.expr(1)));
-
-        return  symbols;
-    }
-
-    @Override
-    public Object visitOr(ModelParser.OrContext ctx) {
-        List<Symbol> symbols = (List<Symbol>) visit(ctx.expr(0));
-        symbols.addAll((List<Symbol>) visit(ctx.expr(1)));
-
-        return  symbols;
-    }
 
     @Override
     public Object visitVar(ModelParser.VarContext ctx) {
         Symbol id = table.getSymbolOrCreate(ctx.Id().getSymbol());
 
-        List<Symbol> symbols = null;
-        if(ctx.subscript()!=null)
-             symbols = (List<Symbol>)  visit(ctx.subscript());
-        else
-            symbols = new ArrayList<>();
-
+        List<Symbol> symbols = new ArrayList<>();
         symbols.add(id);
+
         return symbols;
     }
 
@@ -255,6 +224,7 @@ public class TableGeneratorVisitor extends VensimCheck {
 
     @Override
     public Object visitLookupArg(ModelParser.LookupArgContext ctx) {
+        System.out.println("PIPO");
         return super.visitLookupArg(ctx); //TODO revisar
     }
 
@@ -270,9 +240,23 @@ public class TableGeneratorVisitor extends VensimCheck {
 
     @Override
     public Object visitDelayPArg(ModelParser.DelayPArgContext ctx) {
-        List<Symbol> symbols = (List<Symbol>) visit(ctx.expr(0));
-        symbols.addAll((List<Symbol>) visit(ctx.expr(1)));
+        List<Symbol> symbols = new ArrayList<>();
+        Symbol delayP = table.getSymbolOrCreate("DELAYP");
+        List<Symbol> input = (List<Symbol>) visit(ctx.expr(0));
+        List<Symbol> delayTime = (List<Symbol>) visit(ctx.expr(1));
+        Symbol pipeline = table.getSymbolOrCreate(ctx.Id().getSymbol());
+        pipeline.setType(SymbolType.VARIABLE);
+        pipeline.setContext(ctx); //TODO ctx.Id no es de tipo parseTree, así que no puede ser parte del contexto. Igual debería
+                                  // Cambiar la clase en la que almaceno el contexto, y crear la mia propia.
 
+
+        symbols.add(delayP);
+        symbols.addAll(input);
+        symbols.addAll(delayTime);
+
+        pipeline.addDependencies(symbols);
+
+        symbols.add(pipeline);
         return  symbols;
     }
 
@@ -301,26 +285,7 @@ public class TableGeneratorVisitor extends VensimCheck {
         return symbols;
     }
 
-    @Override
-    public Object visitLookupCall(ModelParser.LookupCallContext ctx) {
-        Symbol call = table.getSymbolOrCreate(ctx.Id().getSymbol());
-        call.setType(SymbolType.FUNCTION);
 
-
-        List<Symbol> symbols;
-
-         symbols=  (List<Symbol>) visit(ctx.expr());
-
-
-
-        symbols.add(call);
-
-        if(ctx.subscript()!=null)
-            symbols.addAll(visitSubscript(ctx.subscript())); //TODO implement subscript.
-
-
-        return symbols;
-    }
 
     @Override
     public List<Symbol> visitSubscript(ModelParser.SubscriptContext ctx) {
@@ -344,7 +309,7 @@ public class TableGeneratorVisitor extends VensimCheck {
     @Override
     public List<Symbol> visitSubscriptIdList(ModelParser.SubscriptIdListContext ctx) {
         List<Symbol> symbols = new ArrayList<>();
-        //TODO testear si cuando no hay subscriptID, la lista esta vacia o si es null
+
 
         if(!ctx.subscriptId().isEmpty()){
             for(ModelParser.SubscriptIdContext subscript: ctx.subscriptId()){
@@ -362,7 +327,7 @@ public class TableGeneratorVisitor extends VensimCheck {
 
 
     @Override
-    public Object visitLookup(ModelParser.LookupContext ctx) {
+    public List<Symbol> visitLookup(ModelParser.LookupContext ctx) {
         List<Symbol> symbols;
         if(ctx.lookupPointList()!=null) {
             symbols = visitLookupPointList(ctx.lookupPointList());
@@ -423,6 +388,5 @@ public class TableGeneratorVisitor extends VensimCheck {
     public List<Symbol> visitNumberList(ModelParser.NumberListContext ctx) {
         return new ArrayList<>();
     }
-
 
 }

@@ -6,8 +6,7 @@ import Expr;
 // A Vensim model is a sequence of equations and subscript ranges.
 
 file: model? EOF;
-model: ( lookupDefinition | subscriptRange | equation |
-      lookupCallEquation|constraint | macroDefinition | unchangeableConstant |
+model: ( lookupDefinition | subscriptRange | equation |constraint | macroDefinition | unchangeableConstant |
        dataEquation| stringAssign |subscriptCopy |realityCheck)+ sketches ;
 
 // A subscript range definition names subscripts in a dimension.
@@ -27,13 +26,14 @@ lhs : Id ( subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
 subscriptCopy: Id '<->' Id unitsDoc;
 unchangeableConstant: lhs TwoEqual ( expr | constList ) unitsDoc;
 dataEquation: lhs ( DataEquationOp ( expr | constList ) )? (':IGNORE:' exprList)? unitsDoc;
-lookupDefinition: lhs lookup unitsDoc;
+lookupDefinition: lhs (lookup|'('call')') unitsDoc;
+
+
 constraint: Id ':THE CONDITION:' expr? ':IMPLIES:' expr unitsDoc;
 realityCheck: Id subscript? ':TEST INPUT:' Id subscript? '=' expr unitsDoc; 
 
 stringAssign: lhs StringAssignOp StringConst  (':IGNORE:' exprList)? unitsDoc;
 macroDefinition: ':MACRO:' macroHeader equation+ ':END OF MACRO:';
-lookupCallEquation: lookupCall unitsDoc;
 
 
 
