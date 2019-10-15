@@ -7,6 +7,7 @@ import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
 
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -218,13 +219,15 @@ public class TableGeneratorVisitor extends VensimCheck {
     }
 
     @Override
-    public Object visitKeyword(ModelParser.KeywordContext ctx) {
-        return visit(ctx.expr());
+    public List<Symbol> visitKeyword(ModelParser.KeywordContext ctx) {
+        if (ctx.expr()!=null)
+            return (List<Symbol>) visit(ctx.expr());
+        else
+            return new ArrayList<Symbol>();
     }
 
     @Override
     public Object visitLookupArg(ModelParser.LookupArgContext ctx) {
-        System.out.println("PIPO");
         return super.visitLookupArg(ctx); //TODO revisar
     }
 
@@ -277,8 +280,16 @@ public class TableGeneratorVisitor extends VensimCheck {
 
     @Override
     public List<Symbol> visitCall(ModelParser.CallContext ctx) {
-        Symbol call = table.getSymbolOrCreate(ctx.Id().getSymbol());
-        call.setType(SymbolType.FUNCTION);
+        String token = ctx.Id().getSymbol().getText();
+        Symbol call;
+
+        if (table.hasSymbol(token))
+            call = table.getSymbol(token);
+        else{
+            call = table.createSymbol(token);
+            call.setType(SymbolType.FUNCTION);
+        }
+
 
         List<Symbol> symbols =  (List<Symbol>) visit(ctx.exprList());
         symbols.add(call);
@@ -291,7 +302,7 @@ public class TableGeneratorVisitor extends VensimCheck {
     public List<Symbol> visitSubscript(ModelParser.SubscriptContext ctx) {
         List<Symbol> symbols = new ArrayList<>();
         for(ModelParser.SubscriptIdContext subscript: ctx.subscriptId()){
-            symbols.add((Symbol) visitSubscriptId(subscript));
+            symbols.add( visitSubscriptId(subscript));
         }
         return symbols;
     }

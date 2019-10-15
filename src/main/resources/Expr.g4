@@ -4,8 +4,7 @@ grammar Expr;
 
 
 expr:   call             # CallExpr
-    |   expr '^' expr                     # Power
-    |   expr op=('*'|'/'|Plus|Minus|Less|Greater|LessEqual|GreaterEqual|Equal|NotEqual| ':AND:' | ':OR:') expr  # exprOperation
+    |   expr op=('^'|'*'|'/'|Plus|Minus|Less|Greater|LessEqual|GreaterEqual|Equal|NotEqual| ':AND:' | ':OR:') expr  # exprOperation
     |   Id (subscript)?                   # Var
     |   constVensim                             # const
     |   Keyword expr?                        # Keyword

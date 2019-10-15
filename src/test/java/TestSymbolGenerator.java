@@ -74,12 +74,12 @@ public class TestSymbolGenerator {
 
 
     private void assertSymbol(Symbol symbol, SymbolType expectedType, int expectedLine, Set<Symbol> expectedDependencies){
-        assertNotNull(symbol);
+        assertNotNull("The symbol is null",symbol);
         assertEquals(expectedType,symbol.getType());
         assertEquals("Symbol '" + symbol.getToken() +"' expected at line " + expectedLine + " found at: " + symbol.getLine(),
                 expectedLine,symbol.getLine());
         assertEquals(expectedDependencies,symbol.getDependencies());
-        assertFalse(expectedDependencies.contains(null));
+        assertFalse("The symbol depends on null",expectedDependencies.contains(null));
     }
 
 
@@ -96,38 +96,38 @@ public class TestSymbolGenerator {
 
 
         Symbol mexico = table.getSymbol("MEXICO");
-        assertSymbol(mexico,SymbolType.SUBSCRIPT_VALUE,1,NO_DEPENDENCIES);
+        assertSymbol(mexico,SymbolType.SUBSCRIPT_VALUE,6,NO_DEPENDENCIES);
 
         Symbol USA = table.getSymbol("USA");
-        assertSymbol(USA,SymbolType.SUBSCRIPT_VALUE,1,NO_DEPENDENCIES);
+        assertSymbol(USA,SymbolType.SUBSCRIPT_VALUE,6,NO_DEPENDENCIES);
 
         Symbol canada = table.getSymbol("CANADA");
-        assertSymbol(canada,SymbolType.SUBSCRIPT_VALUE,2,NO_DEPENDENCIES);
+        assertSymbol(canada,SymbolType.SUBSCRIPT_VALUE,7,NO_DEPENDENCIES);
 
         Symbol country = table.getSymbol("country");
-        assertSymbol(country,SymbolType.SUBSCRIPT_NAME,1,createSet(mexico,USA,canada));
+        assertSymbol(country,SymbolType.SUBSCRIPT_NAME,6,createSet(mexico,USA,canada));
 
         Symbol countryCopy = table.getSymbol("copy");
-        assertSymbol(countryCopy,SymbolType.SUBSCRIPT_NAME,8,NO_DEPENDENCIES);
+        assertSymbol(countryCopy,SymbolType.SUBSCRIPT_NAME,13,NO_DEPENDENCIES);
 
     }
 
     @Test
     public void testLookup() throws IOException{
 
-        SymbolTable table = getSymbolTable("testLookupEquation.mdl");
+        SymbolTable table = getSymbolTable("testLookupDefinition.mdl");
 
         Symbol lookup = table.getSymbol("lookup distribution");
-        assertSymbol(lookup,SymbolType.LOOKUP,1,NO_DEPENDENCIES);
+        assertSymbol(lookup,SymbolType.LOOKUP,4,NO_DEPENDENCIES);
 
 
         Symbol lookupOtherNotation = table.getSymbol("accomplishments per hour lookup");
-        assertSymbol(lookupOtherNotation,SymbolType.LOOKUP,9,NO_DEPENDENCIES);
+        assertSymbol(lookupOtherNotation,SymbolType.LOOKUP,12,NO_DEPENDENCIES);
 
         Symbol getXLSLookup = table.getSymbol("GET XLS LOOKUPS");
         Symbol xlsLookup = table.getSymbol("testXLSLookup");
 
-        assertSymbol(xlsLookup,SymbolType.LOOKUP,17,createSet(getXLSLookup));
+        assertSymbol(xlsLookup,SymbolType.LOOKUP,20,createSet(getXLSLookup));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class TestSymbolGenerator {
         Symbol z = table.getSymbol("Z");
         assertSymbol(z,SymbolType.UNDETERMINED,11,createSet(var,foo,constant,something,integ));
 
-        Symbol dataEquation = table.getSymbol("\"data_equation inside quotes\"");
+        Symbol dataEquation = table.getSymbol("\"equation inside quotes\"");
         assertSymbol(dataEquation,SymbolType.UNDETERMINED,13,createSet(var,foo));
 
 
@@ -169,10 +169,22 @@ public class TestSymbolGenerator {
         assertSymbol(var,SymbolType.FUNCTION,1,NO_DEPENDENCIES);
 
         Symbol mynpve = table.getSymbol("MYNPVE");
-        assertSymbol(mynpve,SymbolType.FUNCTION,13,NO_DEPENDENCIES);
+        assertSymbol(mynpve,SymbolType.FUNCTION,18,NO_DEPENDENCIES);
+
+        Symbol argumentBefore = table.getSymbol("testArgumentBefore");
+        assertSymbol(argumentBefore,SymbolType.UNDETERMINED,14,NO_DEPENDENCIES);
+
+        Symbol argumentAfter = table.getSymbol("testArgumentAfter");
+        assertSymbol(argumentAfter,SymbolType.UNDETERMINED,29,NO_DEPENDENCIES);
+
+        Symbol valueAfter = table.getSymbol("testValueAfter");
+        assertSymbol(valueAfter,SymbolType.UNDETERMINED,32,NO_DEPENDENCIES);
+
+        Symbol valueBefore = table.getSymbol("testValueBefore");
+        assertSymbol(valueBefore,SymbolType.UNDETERMINED,16,NO_DEPENDENCIES);
 
 
-        assertEquals(2,table.getSymbols().size());
+
 
 
     }
@@ -279,7 +291,59 @@ public class TestSymbolGenerator {
         //TODO test #lookupArg
 
 
-    public void testInterpolate() throws IOException{
-        fail(); //TODO
+    @Test
+    public void testExpr() throws IOException{
+        SymbolTable table = getSymbolTable("testExpr.mdl");
+
+        Symbol constant = table.getSymbol("constVensim");
+        Symbol otherConstant = table.getSymbol("otherConstant");
+        Symbol testCall = table.getSymbol("testCall");
+        Symbol ifThenElse = table.getSymbol("IF THEN ELSE");
+        Symbol madeUpCall = table.getSymbol("MADE UP CALL");
+
+        Symbol testParenthesis = table.getSymbol("expr_inside_parenthesis");
+        Symbol testWildCard = table.getSymbol("testWildcard");
+        Symbol testKeyWordWithoutExpression = table.getSymbol("testKeywordNA");
+        Symbol testKeywordExpr = table.getSymbol("testKeywordExpr");
+        Symbol testOperations = table.getSymbol("testOperations");
+
+        Symbol testComparisonOperators = table.getSymbol("testComparisonOperators");
+        Symbol testNegative = table.getSymbol("testNegative");
+        Symbol testEvenMoreComparisonOperators = table.getSymbol("testEvenMoreComparisonOperators");
+
+
+        assertSymbol(testCall,SymbolType.UNDETERMINED,29,createSet(constant,madeUpCall));
+        assertSymbol(testParenthesis,SymbolType.UNDETERMINED,9,createSet(constant));
+        assertSymbol(testWildCard,SymbolType.REALITY_CHECK,11,NO_DEPENDENCIES);
+        assertSymbol(testKeyWordWithoutExpression,SymbolType.UNDETERMINED,15,NO_DEPENDENCIES);
+        assertSymbol(testKeywordExpr,SymbolType.UNDETERMINED,17,createSet(constant,testParenthesis,testKeyWordWithoutExpression,ifThenElse));
+        assertUndefinedSymbol(madeUpCall,SymbolType.FUNCTION);
+
+
+        assertSymbol(testOperations,SymbolType.UNDETERMINED,32,createSet(constant,testParenthesis,testKeyWordWithoutExpression,testKeywordExpr,testCall,otherConstant));
+        assertSymbol(testComparisonOperators,SymbolType.UNDETERMINED,35,createSet(constant,testParenthesis,otherConstant,testKeyWordWithoutExpression,testOperations,testCall,testNegative,ifThenElse));
+
+        assertSymbol(testEvenMoreComparisonOperators, SymbolType.UNDETERMINED,38,createSet(constant,otherConstant,testNegative,testParenthesis,ifThenElse));
+
+        assertSymbol(testNegative,SymbolType.UNDETERMINED,41,createSet(otherConstant));
+
     }
+
+
+    @Test
+    public void testDataEquation() throws IOException{
+        SymbolTable table = getSymbolTable("testDataEquation.mdl");
+
+        Symbol emptyEquation = table.getSymbol("emptyEquation");
+        assertSymbol(emptyEquation,SymbolType.UNDETERMINED,13,NO_DEPENDENCIES);
+
+        Symbol emptyWithKeyword = table.getSymbol("emptyEquationWithInterpolate");
+        assertSymbol(emptyWithKeyword,SymbolType.UNDETERMINED,9,NO_DEPENDENCIES);
+
+        Symbol dependency = table.getSymbol("planned production raw");
+        Symbol equationWithKeyword = table.getSymbol("production smooth");
+        assertSymbol(equationWithKeyword,SymbolType.UNDETERMINED,3,createSet(dependency));
+    }
+
+    //TODO testear que pilla las dependencias bien a pesar del orden en el que esten puestas.
 }

@@ -1,3 +1,8 @@
+
+subscriptBefore[country] = 7
+~	Test that 'country' doesn't get overridden by another type if it appears before the definition	|
+
+
 country : MEXICO, USA,
 CANADA ->  otherCountries
 ~	index
@@ -10,5 +15,11 @@ copy <-> country 	~
 
 
 a[copy] = 3 ~   ~		|
+
+
+subscriptAfter[country] = 6
+~	Test that 'country' doesn't get overridden by another type if it appears after the definition	|
+
+
 
 \\\---/// Sketch information - do not modify anything except names

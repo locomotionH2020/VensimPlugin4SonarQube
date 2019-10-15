@@ -24,12 +24,18 @@ public class SymbolTable {
             return table.get(token);
 
         else{
-            Symbol symbol = new Symbol(token);
-            table.put(token,symbol);
-            return symbol;
+            return createSymbol(token);
         }
 
     }
+
+
+    public Symbol createSymbol(String token){
+        Symbol symbol = new Symbol(token);
+        table.put(token,symbol);
+        return symbol;
+    }
+
     public Symbol getSymbolOrCreate(Token token){
        return getSymbolOrCreate(token.getText());
 
@@ -55,6 +61,11 @@ public class SymbolTable {
 
     public Collection<Symbol> getSymbols(){
         return table.values();
+    }
+
+
+    public boolean hasSymbol(String token){
+        return table.containsKey(token);
     }
 
 }

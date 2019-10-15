@@ -3,20 +3,20 @@
 
 constVensim = 3 ~|
 
+otherConstant == 7 ~|
+
 
 expr_inside_parenthesis = ((((6/constVensim)))) ~|
 
 testWildcard :THE CONDITION: FINAL TIME=101 :IMPLIES:
-	* < 1E9 :AND: * >= -1E3  ~|
+	* <  6:AND: * >=  1e+007  ~|
 
-
-testWildcardInEquation = IF THEN ELSE(*>6, constVensim,9)  ~ |
 
 testKeywordNA = :NA:  ~|
 
 testKeywordExpr=
 	IF THEN ELSE(constVensim >= expr_inside_parenthesis  :AND: :NOT: testKeywordNA,7,0)
-	~|
+	~ :NOT: testKeywordNA matches the keyword with expr rule|
 
 
 lookup_inside_expr= WITH LOOKUP (
@@ -24,3 +24,20 @@ lookup_inside_expr= WITH LOOKUP (
 		([(0,0)-(4,2)],(0,0.9),(1,1),(2,1.2),(3,1.5),(4,2) ))
 	~	Dmnl
 	~		|
+
+
+testCall = MADE UP CALL(constVensim) ~|
+
+
+testOperations = constVensim *  expr_inside_parenthesis / testKeywordNA + (testKeywordExpr)
+                  - testCall  ^  otherConstant  ~|
+
+testComparisonOperators = IF THEN ELSE (constVensim >= expr_inside_parenthesis :AND: otherConstant <= 3
+                          :OR: testKeywordNA > testOperations :OR: testCall < testNegative )  ~|
+
+testEvenMoreComparisonOperators = IF THEN ELSE( constVensim = otherConstant :OR: testNegative<> expr_inside_parenthesis) ~|
+
+
+testNegative  = - otherConstant ~|
+
+\\\---/// Sketch information - do not modify anything except names

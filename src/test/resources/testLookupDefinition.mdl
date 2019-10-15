@@ -1,3 +1,6 @@
+test lookup call before = accomplishments per hour lookup(3)
+~ Test that the lookup symbol isn't overwritten by the call.|
+
 lookup distribution(
 	[(0,0)-(10,10)],(0,0),(1,1),(2,0.5),(3,1),(4,0))
 	~
@@ -19,5 +22,9 @@ testXLSLookup[City](
 	~	dmnl
 	~	Vensim will read each successive City of data from a new column
 	|
+
+
+test lookup call after = accomplishments per hour lookup(3)
+~ Test that the lookup symbol isn't overwritten.|
 
 \\\---/// Sketch information - do not modify anything except names
