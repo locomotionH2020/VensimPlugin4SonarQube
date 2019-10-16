@@ -1,6 +1,6 @@
 randomSubscript : YES, NO ~		|
 
-var = 100 ~	|
+var = Time ~	|
 
 foo = -1.5 / var~	|
 

@@ -58,4 +58,8 @@ public class Symbol {
         return token;
     }
 
+
+    public boolean hasType(){
+        return getType()!=SymbolType.UNDETERMINED;
+    }
 }

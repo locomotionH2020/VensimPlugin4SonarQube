@@ -2,6 +2,7 @@ package es.uva.medeas.parser;
 import org.antlr.v4.runtime.Token;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SymbolTable {
 
@@ -66,6 +67,11 @@ public class SymbolTable {
 
     public boolean hasSymbol(String token){
         return table.containsKey(token);
+    }
+
+
+    public Set<Symbol> getUndeterminedSymbols(){
+        return getSymbols().stream().filter(symbol -> symbol.getType()==SymbolType.UNDETERMINED).collect(Collectors.toSet());
     }
 
 }
