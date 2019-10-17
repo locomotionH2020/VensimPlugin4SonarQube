@@ -57,6 +57,22 @@ public class TestSymbolGenerator {
         return p;
     }
 
+    private SymbolTable getSymbolTableFromString(String content){
+        ModelLexer lexer = new ModelLexer(CharStreams.fromString(content)); //TODO remove duplication
+
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        ModelParser parser = new ModelParser(tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(new VensimErrorListener());
+
+        ParseTree p = parser.file();
+
+
+        TableGeneratorVisitor visitor = new TableGeneratorVisitor();
+        VensimVisitorContext context = new VensimVisitorContext(p);
+        return visitor.getSymbolTable(context);
+    }
+
 
     private SymbolTable getSymbolTable(String file_path) throws IOException {
         ParseTree tree = getParseTree(file_path);
@@ -146,7 +162,7 @@ public class TestSymbolGenerator {
         assertSymbol(constant,SymbolType.CONSTANT,7,NO_DEPENDENCIES);
 
         Symbol something = table.getSymbol("something");
-        assertSymbol(something,SymbolType.VARIABLE,9,createSet(foo)); //TODO Test constant that depends on another constant
+        assertSymbol(something,SymbolType.VARIABLE,9,createSet(foo));
 
         Symbol integ = table.getSymbol("INTEG");
         assertUndefinedSymbol(integ,SymbolType.FUNCTION);
@@ -289,8 +305,6 @@ public class TestSymbolGenerator {
     }
 
 
-        //TODO test #lookupArg
-
 
     @Test
     public void testExpr() throws IOException{
@@ -312,7 +326,7 @@ public class TestSymbolGenerator {
         Symbol testNegative = table.getSymbol("testNegative");
         Symbol testEvenMoreComparisonOperators = table.getSymbol("testEvenMoreComparisonOperators");
 
-        //TODO Test calling a function that isnt pure
+
         assertSymbol(testCall,SymbolType.CONSTANT,29,createSet(constant,madeUpCall));
         assertSymbol(testParenthesis,SymbolType.CONSTANT,9,createSet(constant));
         assertSymbol(testWildCard,SymbolType.REALITY_CHECK,11,NO_DEPENDENCIES);
@@ -327,7 +341,6 @@ public class TestSymbolGenerator {
         assertSymbol(testEvenMoreComparisonOperators, SymbolType.CONSTANT,38,createSet(constant,otherConstant,testNegative,testParenthesis,ifThenElse));
 
         assertSymbol(testNegative,SymbolType.CONSTANT,41,createSet(otherConstant));
-        //TODO test time
     }
 
 
@@ -346,5 +359,201 @@ public class TestSymbolGenerator {
         assertSymbol(equationWithKeyword,SymbolType.CONSTANT,3,createSet(dependency));
     }
 
-    //TODO testear que pilla las dependencias bien a pesar del orden en el que esten puestas.
+
+    @Test
+    public void testTimeVariableIsCreated() throws IOException{
+        SymbolTable table = getSymbolTable("emptyFile.mdl");
+
+        Symbol time = table.getSymbol("Time");
+
+        assertUndefinedSymbol(time,SymbolType.VARIABLE);
+
+    }
+
+    @Test
+    public void testDependenciesInvertedOrder() throws IOException {
+        SymbolTable table = getSymbolTable("invertedDependencies.mdl");
+
+        Symbol before = table.getSymbol("before");
+        Symbol after = table.getSymbol("after");
+        Symbol variable = table.getSymbol("variable");
+
+        Set<Symbol> dependencies = createSet(before,after);
+
+        assertFalse(dependencies.contains(null));
+        assertEquals(dependencies,variable.getDependencies());
+
+    }
+
+    @Test
+    public void testTypeInferenceInConstantsAndVariables() throws IOException{
+        SymbolTable table = getSymbolTable("testTypeInference1.mdl");
+
+        Symbol directConstant = table.getSymbol("directConstant");
+        Symbol indirectConstant = table.getSymbol("indirectConstant");
+        Symbol directVariable = table.getSymbol("directVariable");
+        Symbol indirectVariable = table.getSymbol("indirectVariable");
+
+        assertEquals(SymbolType.CONSTANT,directConstant.getType());
+        assertEquals(SymbolType.CONSTANT,indirectConstant.getType());
+        assertEquals(SymbolType.VARIABLE,directVariable.getType());
+        assertEquals(SymbolType.VARIABLE,indirectVariable.getType());
+
+
+    }
+
+    @Test
+    public void testFunctionDelayPIsntPure(){
+        String program = "variable = DELAYP( 5, 6 : pipeline)~~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+
+    }
+
+    @Test
+    public void testFunctionDelay1IsntPure(){
+       String program =  "variable =DELAY1(3, 4)~~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+
+    @Test
+    public void testFunctionDelay1WithInitialValueIsntPure(){
+        String program =  "variable = DELAY1I(3, 4, 6)~~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testFunctionDelay3IsntPure(){
+        String program =  "variable = DELAY3(3, 4)~~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testFunctionDelay3WithInitialValueIsntPure(){
+        String program =  "variable = DELAY3I(3, 4, 6)~~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testFunctionForecastIsntPure(){
+        String program =  "variable = FORECAST(3, 4, 5)~~|";
+
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+
+    @Test
+    public void testFunctionSmoothIsntPure(){
+        String program =  "variable = SMOOTH(3, 4)~~|";
+
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testFunctionSmoothWithInitialValueIsntPure(){
+        String program =  "variable = SMOOTHI(3, 4, 6)~~|";
+
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+
+    @Test
+    public void testFunctionSmooth3IsntPure(){
+        String program =  "variable = SMOOTH3(3, 4)~~|";
+
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testFunctionSmooth3WithInitialValueIsntPure(){
+        String program =  "variable = SMOOTH3I(3, 4, 6)~~|";
+
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testFunctionTrendIsntPure(){
+        String program =  "variable = TREND(3, 4, 5)~~|";
+
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testFunctionStepIsntPure(){
+        String program =  "variable = STEP(3, 4)~~|";
+
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
 }

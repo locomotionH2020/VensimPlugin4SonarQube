@@ -196,13 +196,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLookupArg(ModelParser.LookupArgContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code Power}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPower(ModelParser.PowerContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ModelParser#call}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -5,9 +5,9 @@ import Expr;
 
 // A Vensim model is a sequence of equations and subscript ranges.
 
-file: model? EOF;
+file: model EOF;
 model: ( lookupDefinition | subscriptRange | equation |constraint | macroDefinition | unchangeableConstant |
-       dataEquation| stringAssign |subscriptCopy |realityCheck)+ sketches ;
+       dataEquation| stringAssign |subscriptCopy |realityCheck)* sketches;
 
 // A subscript range definition names subscripts in a dimension.
 subscriptRange : Id ':' ( subscriptIdList| call) subscriptMappingList? unitsDoc;
@@ -49,4 +49,4 @@ Group : '****' .*? '|' -> skip ;
 
 // Backslash tokens are ignored in Expr.g4, so this rule doesn't take them into account.
 sketchInfo: '---///' 'Sketch information - do not modify anything except names' .*? ;
-sketches: sketchInfo+;
+sketches: sketchInfo*;

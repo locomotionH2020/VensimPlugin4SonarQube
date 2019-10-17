@@ -1,0 +1,11 @@
+
+
+directConstant = 6   ~~		|
+
+indirectConstant = directConstant + 10 ~~		|
+
+directVariable = Time ~~		|
+
+indirectVariable = directConstant + indirectConstant + directVariable * 60 ~ ~		|
+
+

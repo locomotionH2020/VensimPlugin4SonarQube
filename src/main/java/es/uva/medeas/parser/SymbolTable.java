@@ -41,10 +41,6 @@ public class SymbolTable {
        return getSymbolOrCreate(token.getText());
 
     }
-    public void resolveDependencies(){
-        //TODO método no implementado
-        throw new IllegalStateException("Método no implementado");
-    }
 
     public void print(){
         //TODO Temporal para comprobar visualmente si funciona:

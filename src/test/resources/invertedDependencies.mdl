@@ -1,0 +1,12 @@
+before = 9 	~
+           	~		|
+
+
+
+variable = after - before 	~
+                 	~		|
+
+after = Time 	~
+      	~		|
+
+

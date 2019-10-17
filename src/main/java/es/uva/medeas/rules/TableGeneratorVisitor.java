@@ -15,7 +15,7 @@ public class TableGeneratorVisitor extends VensimCheck {
 
     private SymbolTable table;
     private  final List<String> symbolVariables = Arrays.asList("Time");
-    private final List<String> nonPureFunctions = Arrays.asList("INTEG","STEP","DELAY1", "DELAY1I", "DELAY3", "DELAY3I", "FORECAST", "SMOOTH3", "SMOOTH3I", "SMOOTHI", "TREND");
+    private final List<String> nonPureFunctions = Arrays.asList("INTEG","STEP","DELAY1", "DELAY1I", "DELAY3", "DELAY3I", "FORECAST", "SMOOTH3", "SMOOTH3I", "SMOOTHI", "SMOOTH", "TREND");
 
 
     public SymbolTable getSymbolTable(VensimVisitorContext context){
@@ -39,7 +39,6 @@ public class TableGeneratorVisitor extends VensimCheck {
     }
 
     public void resolveSymbolTable(SymbolTable table){
-        table.print();
 
         Set<Symbol> remainingSymbols = table.getUndeterminedSymbols();
 
@@ -102,7 +101,7 @@ public class TableGeneratorVisitor extends VensimCheck {
 
         if(ctx.subscriptIdList()!=null) {
             for(ModelParser.SubscriptIdContext value:ctx.subscriptIdList().subscriptId()){
-                Symbol subscriptValue = visitSubscriptId(value); //TODO refactor
+                Symbol subscriptValue = visitSubscriptId(value);
                 subscriptValue.setType(SymbolType.SUBSCRIPT_VALUE);
                 subscriptValue.setContext(value);
 
@@ -116,7 +115,7 @@ public class TableGeneratorVisitor extends VensimCheck {
             }
         }
         if(ctx.call()!=null)
-            symbol.addDependencies(visitCall(ctx.call())); //TODO test subscript
+            symbol.addDependencies(visitCall(ctx.call()));
 
         return super.visitSubscriptRange(ctx);
     }
@@ -157,9 +156,6 @@ public class TableGeneratorVisitor extends VensimCheck {
         Symbol symbol = table.getSymbolOrCreate(ctx.lhs().Id().getSymbol());
         symbol.setType(SymbolType.CONSTANT);
         symbol.setContext(ctx);
-        //return super.visitUnchangeableConstant(ctx); TODO Creo que esto no es necesario, pero comprobarlo por si acaso.
-        // Es posible que dentro de la unchangeable constant haya funciones, pero por definicion ya se sabe que es una constante,
-        // asi que no hay por que dejarlo como dependencia?
         return null;
     }
 
@@ -202,7 +198,7 @@ public class TableGeneratorVisitor extends VensimCheck {
 
     @Override
     public Object visitSubscriptCopy(ModelParser.SubscriptCopyContext ctx) {
-        //TODO en todos los ejemplos el elemento nuevo se pone primero, pero no se si se puede hacer al revés.
+
         Symbol symbol = table.getSymbolOrCreate(ctx.Id(0).getSymbol());
         symbol.setType(SymbolType.SUBSCRIPT_NAME);
         symbol.setContext(ctx);
@@ -243,20 +239,6 @@ public class TableGeneratorVisitor extends VensimCheck {
 
 
 
-    @Override
-    public Object visitCallExpr(ModelParser.CallExprContext ctx) {
-             return super.visitCallExpr(ctx); //TODO test
-    }
-
-
-    @Override
-    public Object visitPower(ModelParser.PowerContext ctx) {
-        List<Symbol> symbols = (List<Symbol>) visit(ctx.expr(0));
-        symbols.addAll((List<Symbol>) visit(ctx.expr(1)));
-
-        return  symbols;
-    }
-
 
 
 
@@ -293,10 +275,6 @@ public class TableGeneratorVisitor extends VensimCheck {
             return new ArrayList<Symbol>();
     }
 
-    @Override
-    public Object visitLookupArg(ModelParser.LookupArgContext ctx) {
-        return super.visitLookupArg(ctx); //TODO revisar
-    }
 
     @Override
     public Object visitParens(ModelParser.ParensContext ctx) {
@@ -316,8 +294,7 @@ public class TableGeneratorVisitor extends VensimCheck {
         List<Symbol> delayTime = (List<Symbol>) visit(ctx.expr(1));
         Symbol pipeline = table.getSymbolOrCreate(ctx.Id().getSymbol());
         pipeline.setType(SymbolType.VARIABLE);
-        pipeline.setContext(ctx); //TODO ctx.Id no es de tipo parseTree, así que no puede ser parte del contexto. Igual debería
-                                  // Cambiar la clase en la que almaceno el contexto, y crear la mia propia.
+        pipeline.setContext(ctx);
 
 
         symbols.add(delayP);
