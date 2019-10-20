@@ -1,150 +1,169 @@
-import es.uva.medeas.VensimVisitorContext;
+package es.uva.medeas.tests;
+
 import es.uva.medeas.parser.*;
-import es.uva.medeas.rules.TableGeneratorVisitor;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Ignore;
 import org.junit.Test;
 
 
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.*;
+import static es.uva.medeas.tests.TestUtilities.*;
 
 
 public class TestSymbolGenerator {
 
-    public static final Set<Symbol> NO_DEPENDENCIES = new HashSet<>();
-
-    private ParseTree getParseTree(String file_path) throws IOException {
-        File file = new File(
-                getClass().getClassLoader().getResource(file_path).getFile()
-        );
-
-
-
-        FileInputStream fileInputStream = new FileInputStream(file.getPath());
-        byte[] value = new byte[(int) file.length()];
-        fileInputStream.read(value);
-        fileInputStream.close();
-
-
-
-
-
-        String fileContent = new String(value, StandardCharsets.UTF_8);
-
-
-        ModelLexer lexer = new ModelLexer(CharStreams.fromString(fileContent));
-
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        ModelParser parser = new ModelParser(tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(new VensimErrorListener());
-
-        ParseTree p = parser.file();
-
-
-        return p;
-    }
-
-    private SymbolTable getSymbolTableFromString(String content){
-        ModelLexer lexer = new ModelLexer(CharStreams.fromString(content)); //TODO remove duplication
-
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        ModelParser parser = new ModelParser(tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(new VensimErrorListener());
-
-        ParseTree p = parser.file();
-
-
-        TableGeneratorVisitor visitor = new TableGeneratorVisitor();
-        VensimVisitorContext context = new VensimVisitorContext(p);
-        return visitor.getSymbolTable(context);
-    }
-
-
-    private SymbolTable getSymbolTable(String file_path) throws IOException {
-        ParseTree tree = getParseTree(file_path);
-
-        TableGeneratorVisitor visitor = new TableGeneratorVisitor();
-        VensimVisitorContext context = new VensimVisitorContext(tree);
-        return visitor.getSymbolTable(context);
-    }
-
-    private Set<Symbol> createSet(Symbol... symbols){
-
-        return new HashSet<>(Arrays.asList(symbols));
-
-    }
-
-
-    private void assertSymbol(Symbol symbol, SymbolType expectedType, int expectedLine, Set<Symbol> expectedDependencies){
-        assertNotNull("The symbol is null",symbol);
-        assertEquals(expectedType,symbol.getType());
-        assertEquals("Symbol '" + symbol.getToken() +"' expected at line " + expectedLine + " found at: " + symbol.getLine(),
-                expectedLine,symbol.getLine());
-        assertEquals(expectedDependencies,symbol.getDependencies());
-        assertFalse("The symbol depends on null",expectedDependencies.contains(null));
-    }
-
-
-    private void assertUndefinedSymbol(Symbol symbol, SymbolType expectedType){
-        assertEquals(expectedType,symbol.getType());
-        assertEquals(NO_DEPENDENCIES,symbol.getDependencies());
-        assertNull(symbol.getContext());
-    }
 
     @Test
-    public void testSubscript() throws IOException{
+    public void testSubscript(){
+        String program = "name: OPTION1,\n" +
+                " OPTION2 -> mappedSubscript ~~|";
 
-        SymbolTable table = getSymbolTable("testSubscript.mdl");
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol subscriptName = table.getSymbol("name");
+        Symbol option1 = table.getSymbol("OPTION1");
+        Symbol option2 = table.getSymbol("OPTION2");
+
+        assertSymbol(subscriptName,SymbolType.SUBSCRIPT_NAME,1,NO_DEPENDENCIES);
+        assertSymbol(option1,SymbolType.SUBSCRIPT_VALUE,1,NO_DEPENDENCIES);
+        assertSymbol(option2,SymbolType.SUBSCRIPT_VALUE,2,NO_DEPENDENCIES);
+
+    }
 
 
-        Symbol mexico = table.getSymbol("MEXICO");
-        assertSymbol(mexico,SymbolType.SUBSCRIPT_VALUE,6,NO_DEPENDENCIES);
+    @Test
+    public void testSubscriptNameIsntOverridden() {
+        String program = "subscriptBefore[country] = 7 ~~|\n" +
+                "country : MEXICO, USA,CANADA ->  otherCountries~~|\n" +
+                "subscriptAfter[country] = 6 ~~|\n";
 
-        Symbol USA = table.getSymbol("USA");
-        assertSymbol(USA,SymbolType.SUBSCRIPT_VALUE,6,NO_DEPENDENCIES);
-
-        Symbol canada = table.getSymbol("CANADA");
-        assertSymbol(canada,SymbolType.SUBSCRIPT_VALUE,7,NO_DEPENDENCIES);
+        SymbolTable table = getSymbolTableFromString(program);
 
         Symbol country = table.getSymbol("country");
-        assertSymbol(country,SymbolType.SUBSCRIPT_NAME,6,createSet(mexico,USA,canada));
+        assertSymbolType(country,SymbolType.SUBSCRIPT_NAME);
 
-        Symbol countryCopy = table.getSymbol("copy");
-        assertSymbol(countryCopy,SymbolType.SUBSCRIPT_NAME,13,NO_DEPENDENCIES);
+    }
+
+
+    @Test
+    public void testSubscriptCopy(){
+        String program =  "subscriptBefore[copy] = 7 ~~|\n" +
+                "original: OPTION1 ~~|\n" +
+                "copy <-> original  ~~|\n" +
+                "subscriptAfter[copy] = 6 ~~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol copy = table.getSymbol("copy");
+        assertSymbolType(copy,SymbolType.SUBSCRIPT_NAME);
+        assertSymbolLine(copy,3);
+    }
+
+    @Test
+    public void testSubscriptSequence(){
+        String program = "age: (AGE 15-AGE 45)~~|\n";
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol age15 = table.getSymbol("AGE 15");
+        Symbol age45 = table.getSymbol("AGE 45");
+
+       assertSymbol(age15,SymbolType.SUBSCRIPT_VALUE,1,NO_DEPENDENCIES);
+       assertSymbol(age45,SymbolType.SUBSCRIPT_VALUE,1,NO_DEPENDENCIES);
+    }
+
+    @Test
+    public void testDirectAndXLSSubscript(){
+        String program = "xlsSubscript: GET XLS SUBSCRIPT('?subscriptedInputs', 'subscripts' , 'c1', 'f1', '' )~~|\n" +
+                "directSubscript: GET DIRECT SUBSCRIPT('?subscriptedInputs', 'subscripts' , 'c1', 'd1', '' )~~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol xlsSubscript = table.getSymbol("xlsSubscript");
+        assertSymbolType(xlsSubscript,SymbolType.SUBSCRIPT_NAME);
+
+        Symbol directSubscript = table.getSymbol("directSubscript");
+        assertSymbolType(directSubscript,SymbolType.SUBSCRIPT_NAME);
+    }
+    
+    //TODO Test linked list works
+    @Test
+    public void testLookupNew(){
+        String program = "test lookup call before = myLookup(3)~~|\n" +
+                "myLookup([(0,0)-(10,10)],(0,0),(1,1),(2,0.5),(3,1),(4,0))~~|\n" +
+                "test lookup call after = myLookup(5)~~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol myLookup = table.getSymbol("myLookup");
+        assertSymbol(myLookup,SymbolType.LOOKUP,2,NO_DEPENDENCIES);
 
     }
 
     @Test
-    public void testLookup() throws IOException{
+    public void testLookupOtherFormat() {
+        String program = "myLookup(\n" +
+                         "0,0.2,0.4,0.6,0.8,1,\n" +
+                         "0,0.2,0.4,0.6,0.8,1)~~|";
+        SymbolTable table = getSymbolTableFromString(program);
 
-        SymbolTable table = getSymbolTable("testLookupDefinition.mdl");
-
-        Symbol lookup = table.getSymbol("lookup distribution");
-        assertSymbol(lookup,SymbolType.LOOKUP,4,NO_DEPENDENCIES);
-
-
-        Symbol lookupOtherNotation = table.getSymbol("accomplishments per hour lookup");
-        assertSymbol(lookupOtherNotation,SymbolType.LOOKUP,12,NO_DEPENDENCIES);
-
-        Symbol getXLSLookup = table.getSymbol("GET XLS LOOKUPS");
-        Symbol xlsLookup = table.getSymbol("testXLSLookup");
-
-        assertSymbol(xlsLookup,SymbolType.LOOKUP,20,createSet(getXLSLookup));
+        Symbol myLookup = table.getSymbol("myLookup");
+        assertSymbolType(myLookup,SymbolType.LOOKUP);
     }
+
+    @Test
+    public void testDirectAndXLSLookup(){
+        String program = "testXLSLookup[City]( GET XLS LOOKUPS('subscriptedInputs.xlsx', 'ssData' , 'a', 'b3' ))~~|\n" +
+                "testDirectLookup[City]( GET DIRECT LOOKUPS('subscriptedInputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|\n";
+
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol xlsLookup = table.getSymbol("testXLSLookup");
+        assertSymbolType(xlsLookup,SymbolType.LOOKUP);
+
+        Symbol directLookup = table.getSymbol("testDirectLookup");
+        assertSymbolType(directLookup,SymbolType.LOOKUP);
+    }
+
+    @Test
+    public void testEquationDirectLookup(){
+        String program = "myLookup= GET DIRECT LOOKUPS('simpleInputs.xlsx', 'data' , '1', 'e2' ) ~~|\n";
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol myLookup = table.getSymbol("myLookup");
+        assertSymbolType(myLookup,SymbolType.LOOKUP);
+    }
+
+    @Test
+    public void testEquationXLSLookup(){
+        String program = "myLookup= GET XLS LOOKUPS('simpleInputs.xlsx', 'data' , 'a', 'b2' ) ~~|\n";
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol myLookup = table.getSymbol("myLookup");
+        assertSymbolType(myLookup,SymbolType.LOOKUP);
+    }
+
+    //TODO Testear que pasa si se define la misma ecuación con dos subscripts diferentes  si en uno es variable y en otro constante
+    // (entiendo que pillará ambos como dependencias y al final acabará siendo variable?)
+
+    @Test
+    public void testEquationInsideQuotes(){
+        String program = "\"equation inside quotes\"= 3 ~~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol equation = table.getSymbol("\"equation inside quotes\"");
+        assertNotNull(equation);
+        assertSymbolType(equation,SymbolType.CONSTANT);
+
+
+    }
+    //TODO test nested quotes "\""
+    //TODO test lookup with reference line
+
 
     @Test
     public void testEquation() throws IOException{
@@ -179,42 +198,80 @@ public class TestSymbolGenerator {
     }
 
     @Test
-    public void testMacro() throws IOException{
-        SymbolTable table = getSymbolTable("testMacro.mdl");
+    public void testMacro(){
+        String program = ":MACRO: myMacro(input,timeVar)\n" +
+                "myMacro = INTEG((input - 3)/timeVar, input)\n" +
+                "~~|\n"+
+                ":END OF MACRO:";
 
-        Symbol var = table.getSymbol("VSMOOTH");
-        assertSymbol(var,SymbolType.FUNCTION,1,NO_DEPENDENCIES);
+        SymbolTable table = getSymbolTableFromString(program);
 
-        Symbol mynpve = table.getSymbol("MYNPVE");
-        assertSymbol(mynpve,SymbolType.FUNCTION,18,NO_DEPENDENCIES);
+        Symbol myMacro = table.getSymbol("myMacro");
+        assertSymbol(myMacro,SymbolType.FUNCTION,1,NO_DEPENDENCIES);
 
-        Symbol argumentBefore = table.getSymbol("testArgumentBefore");
-        assertSymbol(argumentBefore,SymbolType.CONSTANT,14,NO_DEPENDENCIES);
-
-        Symbol argumentAfter = table.getSymbol("testArgumentAfter");
-        assertSymbol(argumentAfter,SymbolType.CONSTANT,29,NO_DEPENDENCIES);
-
-        Symbol valueAfter = table.getSymbol("testValueAfter");
-        assertSymbol(valueAfter,SymbolType.CONSTANT,32,NO_DEPENDENCIES);
-
-        Symbol valueBefore = table.getSymbol("testValueBefore");
-        assertSymbol(valueBefore,SymbolType.CONSTANT,16,NO_DEPENDENCIES);
-
-
-
-
-
+        assertNull(table.getSymbol("input1"));
+        assertNull(table.getSymbol("timeVar"));
     }
 
     @Test
-    public void testInmediateConstant() throws IOException{
-        SymbolTable table = getSymbolTable("testConstants.mdl");
+    public void testMacroArgumentsDontOverrideOtherSymbols(){
+        String program = "testArgumentBefore = 5 ~~ |\n" +
+                ":MACRO: myMacro(testArgumentBefore,testArgumentAfter)\n" +
+                "myMacro = INTEG((testArgumentBefore - 3)/testArgumentAfter, testArgumentBefore) ~~|\n" +
+                ":END OF MACRO:\n"+
+                "testArgumentAfter= 10~|\n";
+
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol argumentBefore = table.getSymbol("testArgumentBefore");
+        assertSymbolLine(argumentBefore,1);
+
+        Symbol argumentAfter = table.getSymbol("testArgumentAfter");
+        assertSymbolLine(argumentAfter,5);
+    }
+
+    @Test
+    public void testMacroValuesDontOverrideOtherSymbols(){
+        String program = "testValueBefore = 5 ~~ |\n" +
+                ":MACRO: myMacro(arg1, otherArg)\n" +
+                "myMacro = INTEG((arg1 - 3)/otherArg, arg1) ~~|\n" +
+                "testValueBefore = 9 ~~ |\n" +
+                "testValueAfter = 99 ~~ |\n" +
+                ":END OF MACRO:\n"+
+                "testValueAfter= 10~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol valueBefore = table.getSymbol("testValueBefore");
+        assertSymbolLine(valueBefore,1);
+
+        Symbol valueAfter = table.getSymbol("testValueAfter");
+        assertSymbolLine(valueAfter,7);
+
+    }
+
+
+    //TODO test lines are found correctly for every type
+
+    @Test
+    public void testUnchangeableConstant(){
+        String program = "PI== 3.14159 ~~|";
+        SymbolTable table = getSymbolTableFromString(program);
+
 
         Symbol pi = table.getSymbol("PI");
         assertSymbol(pi,SymbolType.CONSTANT,1,NO_DEPENDENCIES);
+    }
+
+    @Test
+    public void testStringConstant(){
+        String program = "filename:IS: 'simpleInputs.xls'~~|";
+        SymbolTable table = getSymbolTableFromString(program);
+
 
         Symbol filename = table.getSymbol("filename");
-        assertSymbol(filename,SymbolType.CONSTANT, 6,NO_DEPENDENCIES);
+        assertSymbol(filename,SymbolType.CONSTANT,1,NO_DEPENDENCIES);
     }
 
     @Test
@@ -276,33 +333,8 @@ public class TestSymbolGenerator {
         assertSymbol(population,SymbolType.CONSTANT,5,createSet(tabbedArrayFunc));
     }
 
-    @Test
-    public void testSubscriptSequence() throws IOException{
-        SymbolTable table = getSymbolTable("subscriptSequence.mdl");
 
 
-        Symbol age = table.getSymbol("age");
-
-        Symbol age15 = table.getSymbol("AGE 15");
-        Symbol age45 = table.getSymbol("AGE 45");
-
-        assertSymbol(age,SymbolType.SUBSCRIPT_NAME,2,createSet(age15,age45));
-    }
-
-    @Test
-    public void testDirectSubscripts() throws  IOException{
-        SymbolTable table = getSymbolTable("testDirectSubscript.mdl");
-
-
-        Symbol commodity = table.getSymbol("Commodity");
-        Symbol dairy = table.getSymbol("Dairy");
-        Symbol getXLS = table.getSymbol("GET XLS SUBSCRIPT");
-        Symbol getDirect = table.getSymbol("GET DIRECT SUBSCRIPT");
-
-
-        assertSymbol(commodity,SymbolType.SUBSCRIPT_NAME,2,createSet(getXLS));
-        assertSymbol(dairy,SymbolType.SUBSCRIPT_NAME,9,createSet(getDirect));
-    }
 
 
 
@@ -361,8 +393,8 @@ public class TestSymbolGenerator {
 
 
     @Test
-    public void testTimeVariableIsCreated() throws IOException{
-        SymbolTable table = getSymbolTable("emptyFile.mdl");
+    public void testTimeVariableIsCreated(){
+        SymbolTable table = getSymbolTableFromString("");
 
         Symbol time = table.getSymbol("Time");
 
@@ -554,6 +586,45 @@ public class TestSymbolGenerator {
         Symbol variable = table.getSymbol("variable");
 
         assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testFunctionRampIsntPure(){
+        String program =  "variable = RAMP(3, 4,5)~~|";
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+
+
+    @Test
+    public void testIndirectTypesAreResolved() throws IOException {
+        SymbolTable table = getSymbolTable("testResolveIndirectTypes.mdl");
+
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+
+    @Test
+    public void testCyclicDependenciesInLevelType() throws IOException{
+        SymbolTable table = getSymbolTable("testCyclicDependencies.mdl");
+
+        Symbol level = table.getSymbol("level");
+        assertEquals(SymbolType.VARIABLE,level.getType());
+
+        Symbol inputRate = table.getSymbol("inputRate");
+        assertEquals(SymbolType.VARIABLE,inputRate.getType());
+
+        Symbol outputRate = table.getSymbol("outputRate");
+        assertEquals(SymbolType.VARIABLE,outputRate.getType());
 
     }
 }

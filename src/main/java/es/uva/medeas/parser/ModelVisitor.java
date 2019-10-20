@@ -298,24 +298,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFloatingConst(ModelParser.FloatingConstContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ModelParser#fractionalConstant}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFractionalConstant(ModelParser.FractionalConstantContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#exponentPart}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExponentPart(ModelParser.ExponentPartContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#sign}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSign(ModelParser.SignContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ModelParser#unitsDoc}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

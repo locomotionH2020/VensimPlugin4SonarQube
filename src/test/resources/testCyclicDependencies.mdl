@@ -1,0 +1,8 @@
+
+
+
+inputRate = level * 500  ~~|
+
+level = INTEG(outputRate - inputRate,3)  ~~|
+
+outputRate = level * 100  ~~|

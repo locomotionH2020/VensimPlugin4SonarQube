@@ -2,20 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="322bd4ca-7eb1-4e60-9e4c-f7bb4f7c6bb9" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/resources/emptyFile.mdl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/invertedDependencies.mdl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/testTypeInference1.mdl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestUtilities.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/testResolveIndirectTypes.mdl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test.mdl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Model.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Model.interp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Model.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Model.tokens" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelBaseVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelBaseVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelLexer.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelLexer.interp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelLexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelLexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelLexer.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelLexer.tokens" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/TableGeneratorVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/TableGeneratorVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Expr.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Expr.g4" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/Model.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Model.g4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/medeasEU.mdl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestSymbolGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestSymbolGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/test.mdl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/TestSymbolGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/emptyFile.mdl" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/testCyclicDependencies.mdl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/subscriptSequence.mdl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/testConstants.mdl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/testDirectSubscript.mdl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/testLookupDefinition.mdl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/testSubscript.mdl" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -33,91 +41,56 @@
     <option name="OUTPUT_DIRECTORY" value="patopatatao" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.44981414">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/test/java/TestSymbolGenerator.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="395">
-                  <caret line="547" column="32" selection-start-line="547" selection-start-column="32" selection-end-line="547" selection-end-column="32" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/test/resources/testTypeInference1.mdl">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="120">
-                  <caret line="8" column="55" selection-start-line="8" selection-start-column="55" selection-end-line="8" selection-end-column="55" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="367">
-                  <caret line="44" column="20" selection-start-line="44" selection-start-column="16" selection-end-line="44" selection-end-column="21" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/resources/Model.g4">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="105">
-                  <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/TableGeneratorVisitor.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="186">
-                  <caret line="41" selection-start-line="41" selection-end-line="41" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/test/resources/testTypeInference1.mdl">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="120">
-                  <caret line="8" column="55" selection-start-line="8" selection-start-column="55" selection-end-line="8" selection-end-column="55" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/TableGeneratorVisitor.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="165">
-                  <caret line="17" column="164" selection-start-line="17" selection-start-column="164" selection-end-line="17" selection-end-column="164" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="299">
+              <caret line="200" column="25" lean-forward="true" selection-start-line="200" selection-start-column="25" selection-end-line="200" selection-end-column="25" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/resources/testMacro.mdl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/resources/testEquation.mdl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/Model.g4">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="21" column="79" lean-forward="true" selection-start-line="21" selection-start-column="79" selection-end-line="21" selection-end-column="79" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/resources/testExpr.mdl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="21" column="6" selection-start-line="21" selection-end-line="21" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -129,26 +102,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>testEquation</find>
-      <find>pipo</find>
-      <find>MADE UP CALL</find>
-      <find>WildcardInEquat</find>
-      <find>testKeywordExpr</find>
-      <find>testOperations</find>
-      <find>31c88ec8</find>
-      <find>3d51f06e</find>
-      <find>Sym</find>
-      <find>dataEquation</find>
-      <find>print</find>
-      <find>NCUM</find>
-      <find>df</find>
-      <find>testMAcro</find>
-      <find>planned production raw</find>
-      <find>System</find>
-      <find>planned produ</find>
-      <find>testMedeas</find>
-      <find>al final</find>
-      <find>share gases dem</find>
       <find>PES gases</find>
       <find>PES Gases</find>
       <find>PES nat. gas&quot;</find>
@@ -159,6 +112,26 @@
       <find>test.mdl</find>
       <find>System.out.prit¡</find>
       <find>lookup</find>
+      <find>e</find>
+      <find>'e'</find>
+      <find>exponentPart</find>
+      <find>Id</find>
+      <find>sign</find>
+      <find>Minus</find>
+      <find>Sign</find>
+      <find>fractionalConstant</find>
+      <find>floatingConst</find>
+      <find>integerConst</find>
+      <find>print</find>
+      <find>private</find>
+      <find>Subscript</find>
+      <find>emptyFile</find>
+      <find>testConst</find>
+      <find>testLookup</find>
+      <find>accomplishments</find>
+      <find>resolve</find>
+      <find>xls</find>
+      <find>SMOOTH TIME</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src</dir>
@@ -176,11 +149,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/rules/NotEmptyCheck.java" />
-        <option value="$PROJECT_DIR$/src/main/java/VensimLanguage.java" />
-        <option value="$PROJECT_DIR$/src/main/java/VensimScanner.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Issue.java" />
-        <option value="$PROJECT_DIR$/src/main/java/VensimRuleRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/VensimQualityProfile.java" />
         <option value="$PROJECT_DIR$/src/main/java/VensimPlugin.java" />
         <option value="$PROJECT_DIR$/src/main/java/rules/VensimCheck.java" />
@@ -200,33 +168,38 @@
         <option value="$PROJECT_DIR$/src/test/resources/test.mdl" />
         <option value="$PROJECT_DIR$/src/test/java/testInicial.java" />
         <option value="$PROJECT_DIR$/src/test/java/testSymbolGenerator.java" />
-        <option value="$PROJECT_DIR$/src/test/resources/testConstants.mdl" />
         <option value="$PROJECT_DIR$/src/test/resources/testRealityCheck.mdl" />
         <option value="$PROJECT_DIR$/src/main/java/main.java" />
         <option value="$PROJECT_DIR$/src/main/java/Mainu.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/VensimErrorListener.java" />
         <option value="$PROJECT_DIR$/src/test/resources/testTabbedArray.mdl" />
         <option value="$PROJECT_DIR$/src/test/resources/subscriptSequence.mdl" />
-        <option value="$PROJECT_DIR$/src/test/resources/testDirectSubscript.mdl" />
         <option value="$PROJECT_DIR$/src/test/resources/testLookup.mdl" />
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/VensimCheck.java" />
         <option value="$PROJECT_DIR$/src/test/resources/testDelayP.mdl" />
         <option value="$PROJECT_DIR$/src/test/resources/testLookupEquation.mdl" />
-        <option value="$PROJECT_DIR$/src/test/resources/testLookupDefinition.mdl" />
         <option value="$PROJECT_DIR$/src/test/resources/testDataEquation.mdl" />
-        <option value="$PROJECT_DIR$/src/test/resources/testSubscript.mdl" />
-        <option value="$PROJECT_DIR$/src/test/resources/testMacro.mdl" />
         <option value="$PROJECT_DIR$/src/test/resources/testEquation.mdl" />
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Symbol.java" />
         <option value="$PROJECT_DIR$/src/test/resources/medeas1.mdl" />
         <option value="$PROJECT_DIR$/src/test/resources/testExpr.mdl" />
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/Model.g4" />
         <option value="$PROJECT_DIR$/src/test/resources/emptyFile.mdl" />
         <option value="$PROJECT_DIR$/src/test/resources/invertedDependencies.mdl" />
         <option value="$PROJECT_DIR$/src/test/resources/testTypeInference1.mdl" />
-        <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/TableGeneratorVisitor.java" />
+        <option value="$PROJECT_DIR$/src/test/resources/testResolveIndirectTypes.mdl" />
+        <option value="$PROJECT_DIR$/src/main/resources/Model.g4" />
+        <option value="$PROJECT_DIR$/src/main/resources/Expr.g4" />
+        <option value="$PROJECT_DIR$/src/test/resources/testCyclicDependencies.mdl" />
         <option value="$PROJECT_DIR$/src/test/java/TestSymbolGenerator.java" />
+        <option value="$PROJECT_DIR$/src/test/resources/testSubscript.mdl" />
+        <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestUtilities.java" />
+        <option value="$PROJECT_DIR$/src/test/resources/testDirectSubscript.mdl" />
+        <option value="$PROJECT_DIR$/src/test/resources/testConstants.mdl" />
+        <option value="$PROJECT_DIR$/src/test/resources/testLookupDefinition.mdl" />
+        <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/TableGeneratorVisitor.java" />
+        <option value="$PROJECT_DIR$/src/test/resources/testMacro.mdl" />
+        <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java" />
       </list>
     </option>
   </component>
@@ -238,15 +211,18 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="146" />
     <option name="y" value="27" />
-    <option name="width" value="1920" />
-    <option name="height" value="1053" />
+    <option name="width" value="1440" />
+    <option name="height" value="789" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -323,14 +299,20 @@
               <item name="SonarVensim" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SonarVensim" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SonarVensim" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -342,13 +324,13 @@
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/resources" />
-    </key>
     <key name="CreateClassDialog.RecentsKey">
       <recent name="es.uva.medeas.parser" />
       <recent name="" />
       <recent name="rules" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -367,8 +349,8 @@
     <configuration name="TestSymbolGenerator" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
       <output_file path="$USER_HOME$/pipo.txt" is_save="true" />
       <module name="SonarVensim" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestSymbolGenerator" />
+      <option name="PACKAGE_NAME" value="es.uva.medeas.tests" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolGenerator" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
       <option name="PARAMETERS" value="" />
@@ -376,55 +358,65 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestSymbolGenerator.testDataEquation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <output_file path="$USER_HOME$/pipo.txt" is_save="true" />
-      <module name="SonarVensim" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestSymbolGenerator" />
-      <option name="METHOD_NAME" value="testDataEquation" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="PARAMETERS" value="" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="TestSymbolGenerator.testExpr" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SonarVensim" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestSymbolGenerator" />
+      <option name="PACKAGE_NAME" value="es.uva.medeas.tests" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolGenerator" />
       <option name="METHOD_NAME" value="testExpr" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestSymbolGenerator.testInmediateConstant" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SonarVensim" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestSymbolGenerator" />
-      <option name="METHOD_NAME" value="testInmediateConstant" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestSymbolGenerator.testMacro" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestSymbolGenerator.testIndirectTypesAreResolved" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <output_file path="$USER_HOME$/pipo.txt" is_save="true" />
       <module name="SonarVensim" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestSymbolGenerator" />
-      <option name="METHOD_NAME" value="testMacro" />
+      <option name="PACKAGE_NAME" value="es.uva.medeas.tests" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolGenerator" />
+      <option name="METHOD_NAME" value="testIndirectTypesAreResolved" />
       <option name="TEST_OBJECT" value="method" />
       <option name="PARAMETERS" value="" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestSymbolGenerator.testMedeas1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestSymbolGenerator.testInmediateConstant" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SonarVensim" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestSymbolGenerator" />
-      <option name="METHOD_NAME" value="testMedeas1" />
+      <option name="PACKAGE_NAME" value="es.uva.medeas.tests" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolGenerator" />
+      <option name="METHOD_NAME" value="testInmediateConstant" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestSymbolGenerator.testSubscriptNameIsntOverridden" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SonarVensim" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="es.uva.medeas.tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="es.uva.medeas.tests" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolGenerator" />
+      <option name="METHOD_NAME" value="testSubscriptNameIsntOverridden" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestSymbolGenerator.testSubscriptSmall" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SonarVensim" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="es.uva.medeas.tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="es.uva.medeas.tests" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolGenerator" />
+      <option name="METHOD_NAME" value="testSubscriptSmall" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -432,19 +424,19 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.TestSymbolGenerator" />
-      <item itemvalue="JUnit.TestSymbolGenerator.testDataEquation" />
-      <item itemvalue="JUnit.TestSymbolGenerator.testMedeas1" />
-      <item itemvalue="JUnit.TestSymbolGenerator.testMacro" />
       <item itemvalue="JUnit.TestSymbolGenerator.testInmediateConstant" />
       <item itemvalue="JUnit.TestSymbolGenerator.testExpr" />
+      <item itemvalue="JUnit.TestSymbolGenerator.testIndirectTypesAreResolved" />
+      <item itemvalue="JUnit.TestSymbolGenerator.testSubscriptNameIsntOverridden" />
+      <item itemvalue="JUnit.TestSymbolGenerator.testSubscriptSmall" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.TestSymbolGenerator.testExpr" />
+        <item itemvalue="JUnit.TestSymbolGenerator.testSubscriptSmall" />
+        <item itemvalue="JUnit.TestSymbolGenerator.testSubscriptNameIsntOverridden" />
         <item itemvalue="JUnit.TestSymbolGenerator.testInmediateConstant" />
-        <item itemvalue="JUnit.TestSymbolGenerator.testMacro" />
-        <item itemvalue="JUnit.TestSymbolGenerator.testMedeas1" />
-        <item itemvalue="JUnit.TestSymbolGenerator.testDataEquation" />
+        <item itemvalue="JUnit.TestSymbolGenerator.testIndirectTypesAreResolved" />
+        <item itemvalue="JUnit.TestSymbolGenerator.testExpr" />
       </list>
     </recent_temporary>
   </component>
@@ -462,34 +454,34 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="TestSymbolGenerator - 2019.10.17 at 09h 29m 07s.xml">
+    <history-entry file="TestSymbolGenerator - 2019.10.20 at 13h 04m 55s.xml">
       <configuration name="TestSymbolGenerator" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolGenerator - 2019.10.17 at 09h 36m 03s.xml">
+    <history-entry file="TestSymbolGenerator - 2019.10.20 at 13h 07m 52s.xml">
       <configuration name="TestSymbolGenerator" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolGenerator - 2019.10.17 at 09h 37m 57s.xml">
+    <history-entry file="TestSymbolGenerator - 2019.10.20 at 13h 14m 42s.xml">
       <configuration name="TestSymbolGenerator" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolGenerator - 2019.10.17 at 09h 40m 22s.xml">
+    <history-entry file="TestSymbolGenerator - 2019.10.20 at 13h 16m 18s.xml">
       <configuration name="TestSymbolGenerator" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolGenerator - 2019.10.17 at 09h 41m 40s.xml">
+    <history-entry file="TestSymbolGenerator - 2019.10.20 at 13h 21m 23s.xml">
       <configuration name="TestSymbolGenerator" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolGenerator - 2019.10.17 at 09h 44m 51s.xml">
+    <history-entry file="TestSymbolGenerator - 2019.10.20 at 13h 21m 39s.xml">
       <configuration name="TestSymbolGenerator" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolGenerator - 2019.10.17 at 09h 46m 56s.xml">
+    <history-entry file="TestSymbolGenerator - 2019.10.20 at 13h 21m 52s.xml">
       <configuration name="TestSymbolGenerator" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolGenerator - 2019.10.17 at 09h 47m 14s.xml">
+    <history-entry file="TestSymbolGenerator - 2019.10.20 at 13h 21m 57s.xml">
       <configuration name="TestSymbolGenerator" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolGenerator - 2019.10.17 at 09h 47m 51s.xml">
+    <history-entry file="TestSymbolGenerator - 2019.10.20 at 13h 22m 09s.xml">
       <configuration name="TestSymbolGenerator" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolGenerator - 2019.10.17 at 09h 50m 23s.xml">
+    <history-entry file="TestSymbolGenerator - 2019.10.20 at 13h 25m 53s.xml">
       <configuration name="TestSymbolGenerator" configurationId="JUnit" />
     </history-entry>
   </component>
@@ -512,10 +504,10 @@
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="6" visible="true" weight="0.13874066" />
+      <window_info active="true" content_ui="combo" id="Project" order="6" visible="true" weight="0.23425826" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32969433" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.33624455" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.33624455" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3995633" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -541,14 +533,14 @@
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="6" visible="true" weight="0.22038421" />
+      <window_info content_ui="combo" id="Project" order="6" weight="0.23425826" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32969433" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.33624455" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.33624455" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3995633" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.32861805" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286026" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32969433" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32969433" />
@@ -571,27 +563,6 @@
     <SUITE FILE_PATH="coverage/SonarVensim$TestSymbolGenerator.ic" NAME="TestSymbolGenerator Coverage Results" MODIFIED="1570719700842" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2-sources.jar!/org/antlr/v4/runtime/InputMismatchException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/java/jdk-11.0.3/lib/src.zip!/java.base/java/lang/RuntimeException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="42" column="13" selection-start-line="42" selection-start-column="13" selection-end-line="42" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2-sources.jar!/org/antlr/v4/runtime/BailErrorStrategy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="38" column="54" selection-start-line="38" selection-start-column="54" selection-end-line="38" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2-sources.jar!/org/antlr/v4/runtime/Recognizer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3015">
@@ -718,31 +689,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="991" column="95" selection-start-line="991" selection-start-column="95" selection-end-line="991" selection-end-column="95" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2-sources.jar!/org/antlr/v4/runtime/tree/TerminalNode.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/testTabbedArray.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" selection-start-line="8" selection-end-line="8" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.11/junit-4.11.jar!/org/junit/Assert.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="38" selection-start-line="38" selection-end-line="38" />
         </state>
       </provider>
     </entry>
@@ -763,13 +713,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/testLookupDefinition.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="32" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///usr/java/jdk-13/lib/src.zip!/jdk.hotspot.agent/sun/jvm/hotspot/debugger/cdbg/Sym.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -787,20 +730,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/testDirectSubscript.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="66" selection-start-line="13" selection-start-column="66" selection-end-line="13" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/testMacro.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -808,23 +737,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/testSubscript.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" lean-forward="true" selection-start-line="20" selection-start-column="4" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/testEquation.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="11" selection-start-line="2" selection-start-column="11" selection-end-line="2" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/medeasEU.mdl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/medeasEU.mdl" />
     <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Symbol.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="660">
@@ -851,72 +764,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/testConstants.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" selection-start-line="10" selection-end-line="10" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/testDelayP.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="38" selection-start-line="2" selection-start-column="38" selection-end-line="2" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/Expr.g4">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="53" lean-forward="true" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/test.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="331" selection-start-line="331" selection-end-line="332" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/Model.g4">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="44" column="20" selection-start-line="44" selection-start-column="16" selection-end-line="44" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/emptyFile.mdl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/testExpr.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="21" column="6" selection-start-line="21" selection-end-line="21" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/subscriptSequence.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" selection-start-line="3" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/test.mdl" />
     <entry file="file://$PROJECT_DIR$/src/test/resources/invertedDependencies.mdl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testCyclicDependencies.mdl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="36" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2115">
+          <caret line="156" column="24" selection-start-line="156" selection-start-column="24" selection-end-line="156" selection-end-column="24" />
         </state>
       </provider>
     </entry>
@@ -927,20 +793,118 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/TableGeneratorVisitor.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/Expr.g4">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="41" selection-start-line="41" selection-end-line="41" />
+        <state relative-caret-position="45">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/TestSymbolGenerator.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.11/junit-4.11.jar!/org/junit/Assert.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="547" column="32" selection-start-line="547" selection-start-column="32" selection-end-line="547" selection-end-column="32" />
+        <state relative-caret-position="60">
+          <caret line="7" column="7" lean-forward="true" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testSubscript.mdl" />
+    <entry file="file://$PROJECT_DIR$/src/test/resources/emptyFile.mdl" />
+    <entry file="file://$PROJECT_DIR$/src/test/resources/subscriptSequence.mdl" />
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testDirectSubscript.mdl" />
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testConstants.mdl" />
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testDelayP.mdl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="38" selection-start-line="2" selection-start-column="38" selection-end-line="2" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestUtilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1140">
+          <caret line="91" column="44" selection-start-line="91" selection-start-column="44" selection-end-line="91" selection-end-column="44" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/TableGeneratorVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="384">
+          <caret line="75" column="52" selection-start-line="75" selection-start-column="52" selection-end-line="75" selection-end-column="52" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testLookupDefinition.mdl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" selection-start-line="18" selection-end-line="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testResolveIndirectTypes.mdl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="12" lean-forward="true" selection-start-column="12" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testTabbedArray.mdl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="7" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testEquation.mdl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testExpr.mdl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="6" selection-start-line="21" selection-end-line="21" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/Model.g4">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="79" lean-forward="true" selection-start-line="21" selection-start-column="79" selection-end-line="21" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testMacro.mdl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="200" column="25" lean-forward="true" selection-start-line="200" selection-start-column="25" selection-end-line="200" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

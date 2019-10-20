@@ -15,8 +15,8 @@ public class TableGeneratorVisitor extends VensimCheck {
 
     private SymbolTable table;
     private  final List<String> symbolVariables = Arrays.asList("Time");
-    private final List<String> nonPureFunctions = Arrays.asList("INTEG","STEP","DELAY1", "DELAY1I", "DELAY3", "DELAY3I", "FORECAST", "SMOOTH3", "SMOOTH3I", "SMOOTHI", "SMOOTH", "TREND");
-
+    private final List<String> nonPureFunctions = Arrays.asList("INTEG","STEP","DELAY1", "DELAY1I", "DELAY3", "DELAY3I", "FORECAST", "SMOOTH3", "SMOOTH3I", "SMOOTHI", "SMOOTH", "TREND","RAMP");
+    private final List<String> lookupGeneratorFunctions  = Arrays.asList("GET DIRECT LOOKUPS", "GET XLS LOOKUPS");
 
     public SymbolTable getSymbolTable(VensimVisitorContext context){
         table = new SymbolTable();
@@ -38,6 +38,7 @@ public class TableGeneratorVisitor extends VensimCheck {
 
     }
 
+    //TODO Separate classes that generates the table and resolve the table
     public void resolveSymbolTable(SymbolTable table){
 
         Set<Symbol> remainingSymbols = table.getUndeterminedSymbols();
@@ -71,6 +72,8 @@ public class TableGeneratorVisitor extends VensimCheck {
                 if (nonPureFunctions.contains(dependency.getToken())) {
                     symbol.setType(SymbolType.VARIABLE);
                     break;
+                }else if(lookupGeneratorFunctions.contains(dependency.getToken())){
+                    symbol.setType(SymbolType.LOOKUP);
                 }
 
             }else if (dependency.getType() == SymbolType.VARIABLE) {
@@ -105,10 +108,11 @@ public class TableGeneratorVisitor extends VensimCheck {
                 subscriptValue.setType(SymbolType.SUBSCRIPT_VALUE);
                 subscriptValue.setContext(value);
 
-                symbol.addDependency(subscriptValue);
+                //TODO Estoy recorriendo esto dos veces? Primero aquí y después en el visitSubscriptIDList?
             }
             List<Symbol> subscriptNames = visitSubscriptIdList(ctx.subscriptIdList());
-            symbol.addDependencies(subscriptNames);
+
+
 
             for(Symbol subscript: subscriptNames) {
                 subscript.setType(SymbolType.SUBSCRIPT_VALUE);
