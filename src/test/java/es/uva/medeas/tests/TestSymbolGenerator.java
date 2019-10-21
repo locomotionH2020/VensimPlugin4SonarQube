@@ -164,39 +164,6 @@ public class TestSymbolGenerator {
     //TODO test nested quotes "\""
     //TODO test lookup with reference line
 
-
-    @Test
-    public void testEquation() throws IOException{
-        SymbolTable table = getSymbolTable("testEquation.mdl");
-        Symbol time = table.getSymbol("Time");
-
-        Symbol var = table.getSymbol("var");
-        assertSymbol(var,SymbolType.VARIABLE,3,createSet(time));
-
-
-        Symbol foo = table.getSymbol("foo");
-        assertSymbol(foo,SymbolType.VARIABLE,5,createSet(var));
-
-        Symbol constant = table.getSymbol("constant");
-        assertSymbol(constant,SymbolType.CONSTANT,7,NO_DEPENDENCIES);
-
-        Symbol something = table.getSymbol("something");
-        assertSymbol(something,SymbolType.VARIABLE,9,createSet(foo));
-
-        Symbol integ = table.getSymbol("INTEG");
-        assertUndefinedSymbol(integ,SymbolType.FUNCTION);
-
-        Symbol z = table.getSymbol("Z");
-        assertSymbol(z,SymbolType.VARIABLE,11,createSet(var,foo,constant,something,integ));
-
-        Symbol quotedEquation = table.getSymbol("\"equation inside quotes\"");
-        assertSymbol(quotedEquation,SymbolType.VARIABLE,13,createSet(var,foo));
-
-
-
-
-    }
-
     @Test
     public void testMacro(){
         String program = ":MACRO: myMacro(input,timeVar)\n" +
@@ -274,17 +241,6 @@ public class TestSymbolGenerator {
         assertSymbol(filename,SymbolType.CONSTANT,1,NO_DEPENDENCIES);
     }
 
-    @Test
-    public void testRealityChecks() throws  IOException{
-        SymbolTable table = getSymbolTable("testRealityCheck.mdl");
-
-        Symbol rc = table.getSymbol("RC no investment");
-        assertSymbol(rc,SymbolType.REALITY_CHECK,2,NO_DEPENDENCIES);
-
-        Symbol ti = table.getSymbol("TI no capital");
-        assertSymbol(ti,SymbolType.REALITY_CHECK , 8,NO_DEPENDENCIES);
-
-    }
 
 
 
@@ -310,87 +266,162 @@ public class TestSymbolGenerator {
 
 
     @Test
-    public void testDelayP() throws IOException{
-        SymbolTable table = getSymbolTable("testDelayP.mdl");
+    public void testDelayP(){
+        String program = "result= DELAYP( input, delay time: \n" +
+                         "pipeline) ~~|";
 
-        Symbol receivingP = table.getSymbol("receiving P");
-        Symbol delayPipeline = table.getSymbol("DELAYP pipeline");
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol result = table.getSymbol("result");
+        Symbol input = table.getSymbol("input");
+        Symbol delayTime = table.getSymbol("delay time");
+        Symbol pipeline = table.getSymbol("pipeline");
         Symbol delayP = table.getSymbol("DELAYP");
-        Symbol shippingTime = table.getSymbol("shipping time");
-        Symbol shipping = table.getSymbol("shipping");
 
-        assertSymbol(delayPipeline,SymbolType.VARIABLE,3,createSet(delayP,shipping,shippingTime));
-        assertSymbol(receivingP, SymbolType.VARIABLE,2,createSet(delayP,delayPipeline, shipping,shippingTime));
-
+        assertSymbol(result,SymbolType.VARIABLE,1,createSet(input,delayTime,pipeline,delayP));
+        assertSymbol(pipeline,SymbolType.VARIABLE,2, createSet(delayP,input,delayTime));
+        assertNoDependencies(input);
+        assertNoDependencies(delayTime);
     }
 
+
+
     @Test
-    public void testTabbedArray() throws  IOException{
-        SymbolTable table = getSymbolTable("testTabbedArray.mdl");
+    public void testTabbedArray(){
+        String program = "initial population[country,blood type] = TABBED ARRAY(\n" +
+                "       1       2.0        -3.7        4\n" +
+                "       0        6          7          8\n" +
+                "       9       -10        11          12) ~~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
 
         Symbol population = table.getSymbol("initial population");
         Symbol tabbedArrayFunc = table.getSymbol("TABBED ARRAY");
-        assertSymbol(population,SymbolType.CONSTANT,5,createSet(tabbedArrayFunc));
+        assertSymbol(population,SymbolType.CONSTANT,1,createSet(tabbedArrayFunc));
     }
 
 
 
-
-
-
     @Test
-    public void testExpr() throws IOException{
-        SymbolTable table = getSymbolTable("testExpr.mdl");
+    public void testEquationEqualsNA(){
+        String program = "testKeywordNA = :NA:  ~|";
 
-        Symbol constant = table.getSymbol("constVensim");
-        Symbol otherConstant = table.getSymbol("otherConstant");
-        Symbol testCall = table.getSymbol("testCall");
-        Symbol ifThenElse = table.getSymbol("IF THEN ELSE");
-        Symbol madeUpCall = table.getSymbol("MADE UP CALL");
+        SymbolTable table = getSymbolTableFromString(program);
 
-        Symbol testParenthesis = table.getSymbol("expr_inside_parenthesis");
-        Symbol testWildCard = table.getSymbol("testWildcard");
-        Symbol testKeyWordWithoutExpression = table.getSymbol("testKeywordNA");
-        Symbol testKeywordExpr = table.getSymbol("testKeywordExpr");
-        Symbol testOperations = table.getSymbol("testOperations");
-
-        Symbol testComparisonOperators = table.getSymbol("testComparisonOperators");
-        Symbol testNegative = table.getSymbol("testNegative");
-        Symbol testEvenMoreComparisonOperators = table.getSymbol("testEvenMoreComparisonOperators");
-
-
-        assertSymbol(testCall,SymbolType.CONSTANT,29,createSet(constant,madeUpCall));
-        assertSymbol(testParenthesis,SymbolType.CONSTANT,9,createSet(constant));
-        assertSymbol(testWildCard,SymbolType.REALITY_CHECK,11,NO_DEPENDENCIES);
-        assertSymbol(testKeyWordWithoutExpression,SymbolType.CONSTANT,15,NO_DEPENDENCIES);
-        assertSymbol(testKeywordExpr,SymbolType.CONSTANT,17,createSet(constant,testParenthesis,testKeyWordWithoutExpression,ifThenElse));
-        assertUndefinedSymbol(madeUpCall,SymbolType.FUNCTION);
-
-
-        assertSymbol(testOperations,SymbolType.CONSTANT,32,createSet(constant,testParenthesis,testKeyWordWithoutExpression,testKeywordExpr,testCall,otherConstant));
-        assertSymbol(testComparisonOperators,SymbolType.CONSTANT,35,createSet(constant,testParenthesis,otherConstant,testKeyWordWithoutExpression,testOperations,testCall,testNegative,ifThenElse));
-
-        assertSymbol(testEvenMoreComparisonOperators, SymbolType.CONSTANT,38,createSet(constant,otherConstant,testNegative,testParenthesis,ifThenElse));
-
-        assertSymbol(testNegative,SymbolType.CONSTANT,41,createSet(otherConstant));
+        Symbol na = table.getSymbol("testKeywordNA");
+        assertSymbol(na,SymbolType.CONSTANT,1,NO_DEPENDENCIES);
     }
 
+    @Test
+    public void testExprInsideParenthesis(){
+        String program = "variable = ((((someConstant)))/Time)~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol variable = table.getSymbol("variable");
+        assertSymbol(variable,SymbolType.VARIABLE,1,getSymbols(table,"someConstant","Time"));
+
+    }
 
     @Test
-    public void testDataEquation() throws IOException{
-        SymbolTable table = getSymbolTable("testDataEquation.mdl");
+    public void testExprWithSign(){
+        String program = "negativeVariable = -something~|\n" +
+                         "positiveVariable = +something~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+
+        Symbol negativeVariable = table.getSymbol("negativeVariable");
+        assertSymbol(negativeVariable,SymbolType.CONSTANT,1,getSymbols(table,"something"));
+
+        Symbol positiveVariable = table.getSymbol("positiveVariable");
+        assertSymbol(positiveVariable,SymbolType.CONSTANT,2,getSymbols(table,"something"));
+
+    }
+
+    @Test
+    public void testExprLookupCal(){
+        String program = "lookup_inside_expr= WITH LOOKUP ( constVensim,\n" +
+                "([(0,0)-(4,2)],(0,0.9),(1,1),(2,1.2),(3,1.5),(4,2) ))~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol lookupExpr = table.getSymbol("lookup_inside_expr");
+
+        assertSymbol(lookupExpr,SymbolType.CONSTANT,1,getSymbols(table,"WITH LOOKUP","constVensim"));
+    }
+
+    @Test
+    public void testExprOperatorsDependencies(){
+        String program = "testOperators = var1 *  var2 / var3 + (var4)\n" +
+                "                  - var5  ^  var6  ~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol testOperators  = table.getSymbol("testOperators");
+        assertSymbol(testOperators,SymbolType.CONSTANT,1,getSymbols(table,"var1","var2","var3","var4","var5","var6"));
+
+
+    }
+
+    @Test
+    public void testExprComparisonOperatorsDependencies(){
+        String program = " testComparisonOperators = IF THEN ELSE (var1 >= var2 :AND: var3 <= var4\n" +
+                         " :OR: var5 > var6 :OR: var7 < var8 :OR: var9 = var10 :OR: var11<>var12)  ~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol testComparisonOperators  = table.getSymbol("testComparisonOperators");
+        Set<Symbol> dependencies = getSymbols(table,"IF THEN ELSE","var1","var2","var3","var4","var5","var6","var7","var8",
+                "var9","var10","var11","var12");
+
+        assertSymbol(testComparisonOperators,SymbolType.CONSTANT,1,dependencies);
+    }
+
+    @Test
+    public void testExprCall(){
+        String program = "result = MADE UP CALL(arg1,arg2,arg3) ~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol call = table.getSymbol("MADE UP CALL");
+        assertUndefinedSymbol(call,SymbolType.FUNCTION);
+
+        Symbol result = table.getSymbol("result");
+        assertSymbol(result,SymbolType.CONSTANT,1,getSymbols(table,"MADE UP CALL","arg1","arg2","arg3"));
+    }
+    //TODO test reality check
+    //TODO test constant and variables with '=' and ':='
+    //TODO test raw table
+
+    @Test
+    public void testEmptyEquation(){ //TODO Test interpolate or raw isnt a dependency
+        String program = "emptyEquation ~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
 
         Symbol emptyEquation = table.getSymbol("emptyEquation");
-        assertSymbol(emptyEquation,SymbolType.CONSTANT,13,NO_DEPENDENCIES);
-
-        Symbol emptyWithKeyword = table.getSymbol("emptyEquationWithInterpolate");
-        assertSymbol(emptyWithKeyword,SymbolType.CONSTANT,9,NO_DEPENDENCIES);
-
-        Symbol dependency = table.getSymbol("planned production raw");
-        Symbol equationWithKeyword = table.getSymbol("production smooth");
-        assertSymbol(equationWithKeyword,SymbolType.CONSTANT,3,createSet(dependency));
+        assertSymbol(emptyEquation,SymbolType.CONSTANT,1,NO_DEPENDENCIES);
     }
 
+    @Test
+    public void testRealityCheckConditionImplies(){
+        String program = "myCondition :THE CONDITION: firstVariable>100 :IMPLIES: secondVariable<100 ~|";
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol myCondition = table.getSymbol("myCondition");
+        assertSymbol(myCondition,SymbolType.REALITY_CHECK,1,NO_DEPENDENCIES);
+    }
+
+    @Test
+    public void testRealityCheckTestInput(){
+        String program = "myTestInput :TEST INPUT: positiveVariable >= 0 ~~|";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol myTestInput = table.getSymbol("myTestInput");
+        assertSymbol(myTestInput,SymbolType.REALITY_CHECK,1,NO_DEPENDENCIES);
+    }
 
     @Test
     public void testTimeVariableIsCreated(){

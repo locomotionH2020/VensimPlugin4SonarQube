@@ -30,7 +30,7 @@ lookupDefinition: lhs (lookup|'('call')') unitsDoc;
 
 
 constraint: Id ':THE CONDITION:' expr? ':IMPLIES:' expr unitsDoc;
-realityCheck: Id subscript? ':TEST INPUT:' Id subscript? '=' expr unitsDoc; 
+realityCheck: Id subscript? ':TEST INPUT:' expr unitsDoc;
 
 stringAssign: lhs StringAssignOp StringConst  (':IGNORE:' exprList)? unitsDoc;
 macroDefinition: ':MACRO:' macroHeader equation+ ':END OF MACRO:';

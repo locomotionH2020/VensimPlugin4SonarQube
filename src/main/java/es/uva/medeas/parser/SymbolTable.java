@@ -15,6 +15,8 @@ public class SymbolTable {
 
 
     public Symbol getSymbol(String token){
+        //TODO raise exception if token doesnt exist
+        //TODO unit test SymbolTable?
         return table.get(token);
     }
 

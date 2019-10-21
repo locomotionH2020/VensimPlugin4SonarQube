@@ -8,10 +8,10 @@ import es.uva.medeas.parser.SymbolType;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class TableGeneratorVisitor extends VensimCheck {
 
+public class RawSymbolTableVisitor extends VensimCheck {
+    //TODO add javadocs for RawSymbolTableVisitor y SymbolTableGenerator
 
     private SymbolTable table;
     private  final List<String> symbolVariables = Arrays.asList("Time");
@@ -24,76 +24,11 @@ public class TableGeneratorVisitor extends VensimCheck {
 
         visit(context.getRootNode());
 
-        addDefaultSymbols(table);
-        resolveSymbolTable(table);
+
 
         return table;
     }
 
-    public void addDefaultSymbols(SymbolTable table){
-        for(String variable: symbolVariables) {
-           Symbol s =  table.getSymbolOrCreate(variable);
-           s.setType(SymbolType.VARIABLE);
-        }
-
-    }
-
-    //TODO Separate classes that generates the table and resolve the table
-    public void resolveSymbolTable(SymbolTable table){
-
-        Set<Symbol> remainingSymbols = table.getUndeterminedSymbols();
-
-        while(!remainingSymbols.isEmpty()) {
-
-
-            for (Symbol symbol : remainingSymbols) {
-                tryToDetermineType(symbol);
-            }
-
-            Set<Symbol> remainingSymbolsAfter = table.getUndeterminedSymbols();
-
-            if(remainingSymbolsAfter.equals(remainingSymbols)) {
-                String unresolvableSymbol = remainingSymbols.stream().map(Symbol::getToken).collect(Collectors.joining(", "));
-                throw new IllegalStateException("Can't resolve symbols: " + unresolvableSymbol);
-            }
-
-
-            remainingSymbols = remainingSymbolsAfter;
-
-        }
-
-    }
-
-    private void tryToDetermineType(Symbol symbol) {
-        boolean undeterminedDependency = false;
-        for (Symbol dependency : symbol.getDependencies()) {
-
-            if (dependency.getType() == SymbolType.FUNCTION) {
-                if (nonPureFunctions.contains(dependency.getToken())) {
-                    symbol.setType(SymbolType.VARIABLE);
-                    break;
-                }else if(lookupGeneratorFunctions.contains(dependency.getToken())){
-                    symbol.setType(SymbolType.LOOKUP);
-                }
-
-            }else if (dependency.getType() == SymbolType.VARIABLE) {
-                symbol.setType(SymbolType.VARIABLE);
-
-                break;
-            }else if(dependency.getType() == SymbolType.UNDETERMINED) {
-                undeterminedDependency = true;
-                //TODO Normalmente pondría aqui un break, pero es posible que haya un ciclo de dependencias, y
-                // La única forma de romperlo que tengo de momento es asumir que INTEG es uan funcion
-                // Y para ello tengo que leer todas las dependencias, por si no es la primera
-            }
-
-
-        }
-        if(!undeterminedDependency && !symbol.hasType())
-            symbol.setType(SymbolType.CONSTANT);
-
-
-    }
 
     @Override
     public Object visitSubscriptRange(ModelParser.SubscriptRangeContext ctx) {
@@ -211,7 +146,7 @@ public class TableGeneratorVisitor extends VensimCheck {
 
     @Override
     public Object visitRealityCheck(ModelParser.RealityCheckContext ctx) {
-        Symbol symbol = table.getSymbolOrCreate(ctx.Id(0).getSymbol());
+        Symbol symbol = table.getSymbolOrCreate(ctx.Id().getSymbol());
         symbol.setType(SymbolType.REALITY_CHECK);
         symbol.setContext(ctx);
         return null;

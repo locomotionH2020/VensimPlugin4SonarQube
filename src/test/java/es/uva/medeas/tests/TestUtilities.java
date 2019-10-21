@@ -3,7 +3,7 @@ package es.uva.medeas.tests;
 
 import es.uva.medeas.VensimVisitorContext;
 import es.uva.medeas.parser.*;
-import es.uva.medeas.rules.TableGeneratorVisitor;
+import es.uva.medeas.rules.SymbolTableGenerator;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -65,18 +65,17 @@ public class TestUtilities {
         ParseTree p = parser.file();
 
 
-        TableGeneratorVisitor visitor = new TableGeneratorVisitor();
+
         VensimVisitorContext context = new VensimVisitorContext(p);
-        return visitor.getSymbolTable(context);
+        return SymbolTableGenerator.getSymbolTable(context);
     }
 
 
     public static SymbolTable getSymbolTable(String file_path) throws IOException {
         ParseTree tree = getParseTree(file_path);
 
-        TableGeneratorVisitor visitor = new TableGeneratorVisitor();
         VensimVisitorContext context = new VensimVisitorContext(tree);
-        return visitor.getSymbolTable(context);
+        return SymbolTableGenerator.getSymbolTable(context);
     }
 
     public static Set<Symbol> createSet(Symbol... symbols){
@@ -111,4 +110,20 @@ public class TestUtilities {
                 expectedLine,symbol.getLine());
     }
 
+    public static void assertNoDependencies(Symbol symbol){
+        assertEquals("Error: Expected 0 dependencies in symbol " + symbol.getToken() + " found " + symbol.getDependencies().size() + ".",
+                NO_DEPENDENCIES,symbol.getDependencies());
+    }
+
+
+    public static Set<Symbol> getSymbols(SymbolTable table,String... symbols ){
+        Set<Symbol> symbolSet = new HashSet<>();
+
+        for(String symbolStr: symbols){
+            Symbol symbolObject =   table.getSymbol(symbolStr);
+            assertNotNull("The table of symbols doesn't have any symbol called: " + symbolStr + "." ,symbolObject);
+            symbolSet.add(symbolObject);
+        }
+        return  symbolSet;
+    }
 }
