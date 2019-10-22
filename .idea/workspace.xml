@@ -2,13 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="322bd4ca-7eb1-4e60-9e4c-f7bb4f7c6bb9" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolTable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestRawSymbolTableVisitor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolGenerator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Symbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Symbol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/RawSymbolTableVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/RawSymbolTableVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestUtilities.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestUtilities.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -27,11 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolTable.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestRawSymbolTableVisitor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+            <state relative-caret-position="501">
+              <caret line="429" selection-start-line="429" selection-end-line="429" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -39,11 +38,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
+            <state relative-caret-position="195">
+              <caret line="45" column="61" selection-start-line="45" selection-start-column="61" selection-end-line="45" selection-end-column="61" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -51,8 +53,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/RawSymbolTableVisitor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="177">
+              <caret line="16" column="6" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestUtilities.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="7">
+              <caret line="69" column="5" lean-forward="true" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -63,8 +77,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/SymbolTableGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+            <state relative-caret-position="262">
+              <caret line="81" column="18" selection-start-line="81" selection-start-column="18" selection-end-line="81" selection-end-column="18" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -107,17 +121,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>sign</find>
-      <find>Minus</find>
-      <find>Sign</find>
-      <find>fractionalConstant</find>
-      <find>floatingConst</find>
-      <find>integerConst</find>
-      <find>print</find>
-      <find>private</find>
-      <find>Subscript</find>
-      <find>emptyFile</find>
-      <find>testConst</find>
       <find>testLookup</find>
       <find>accomplishments</find>
       <find>resolve</find>
@@ -136,7 +139,18 @@
       <find>SymbolTable table = new SymbolTable();</find>
       <find>testFuncti</find>
       <find>DelayP</find>
+      <find>testCyclickDe</find>
+      <find>getSymbolTableFromString</find>
+      <find>overrid</find>
+      <find>getSymbolTable</find>
       <find>delayP</find>
+      <find>getSymbolTAble</find>
+      <find>visitSubscript</find>
+      <find>visitSubscript(</find>
+      <find>realityCheck</find>
+      <find>lhs</find>
+      <find>reali</find>
+      <find>visitSu</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src</dir>
@@ -154,9 +168,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/org/sonar/vensim/rules/NotEmptyCheck.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/sonar/vensim/VensimSquidSensor.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/sonar/vensim/VensimScanner.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/src/main/resources/ModelBaseVisitor.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/ModelLexer.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
@@ -203,8 +214,11 @@
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java" />
         <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolTable.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/RawSymbolTableVisitor.java" />
-        <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolGenerator.java" />
         <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java" />
+        <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolTable.java" />
+        <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestUtilities.java" />
+        <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolGenerator.java" />
+        <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestRawSymbolTableVisitor.java" />
       </list>
     </option>
   </component>
@@ -215,11 +229,11 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="146" />
+  <component name="ProjectFrameBounds" extendedState="4">
+    <option name="x" value="960" />
     <option name="y" value="27" />
-    <option name="width" value="1440" />
-    <option name="height" value="789" />
+    <option name="width" value="960" />
+    <option name="height" value="1053" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -305,7 +319,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
+              <item name="rules" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="SonarVensim" type="b2602c69:ProjectViewProjectNode" />
@@ -350,64 +364,45 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.TestSymbolTable">
+  <component name="RunManager" selected="JUnit.es.uva.medeas.rules in SonarVensim">
+    <configuration name="TestRawSymbolTableVisitor" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SonarVensim" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="es.uva.medeas.rules.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="es.uva.medeas.rules" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.rules.TestRawSymbolTableVisitor" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestRawSymbolTableVisitor.testDelayPDependencies" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SonarVensim" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="es.uva.medeas.rules.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="es.uva.medeas.rules" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.rules.TestRawSymbolTableVisitor" />
+      <option name="METHOD_NAME" value="testDelayPDependencies" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="TestSymbolGenerator" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
       <output_file path="$USER_HOME$/pipo.txt" is_save="true" />
       <module name="SonarVensim" />
       <option name="PACKAGE_NAME" value="es.uva.medeas.rules" />
-      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolGenerator" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.rules.TestSymbolGenerator" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
-      <option name="PARAMETERS" value="" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestSymbolGenerator.testExprComparisonOperatorsDependencies" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SonarVensim" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="es.uva.medeas.tests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="es.uva.medeas.rules" />
-      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolGenerator" />
-      <option name="METHOD_NAME" value="testExprComparisonOperatorsDependencies" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestSymbolGenerator.testExprOperationDependencies" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SonarVensim" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="es.uva.medeas.tests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="es.uva.medeas.rules" />
-      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolGenerator" />
-      <option name="METHOD_NAME" value="testExprOperationDependencies" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestSymbolGenerator.testNegativeExpr" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <output_file path="$USER_HOME$/pipo.txt" is_save="true" />
-      <module name="SonarVensim" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="es.uva.medeas.tests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="es.uva.medeas.rules" />
-      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolGenerator" />
-      <option name="METHOD_NAME" value="testNegativeExpr" />
-      <option name="TEST_OBJECT" value="method" />
       <option name="PARAMETERS" value="" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -417,12 +412,12 @@
       <module name="SonarVensim" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="es.uva.medeas.tests.*" />
+          <option name="PATTERN" value="es.uva.medeas.rules.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="es.uva.medeas.rules" />
-      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolTable" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.rules.TestSymbolTable" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -432,33 +427,47 @@
       <module name="SonarVensim" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="es.uva.medeas.tests.*" />
+          <option name="PATTERN" value="es.uva.medeas.rules.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="es.uva.medeas.rules" />
-      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.tests.TestSymbolTable" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.rules.TestSymbolTable" />
       <option name="METHOD_NAME" value="testSymbolTableConstructor" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="es.uva.medeas.rules in SonarVensim" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SonarVensim" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="es.uva.medeas.rules.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="es.uva.medeas.rules" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="JUnit.TestSymbolGenerator" />
-      <item itemvalue="JUnit.TestSymbolGenerator.testNegativeExpr" />
-      <item itemvalue="JUnit.TestSymbolGenerator.testExprOperationDependencies" />
-      <item itemvalue="JUnit.TestSymbolGenerator.testExprComparisonOperatorsDependencies" />
       <item itemvalue="JUnit.TestSymbolTable.testSymbolTableConstructor" />
       <item itemvalue="JUnit.TestSymbolTable" />
+      <item itemvalue="JUnit.TestRawSymbolTableVisitor" />
+      <item itemvalue="JUnit.TestRawSymbolTableVisitor.testDelayPDependencies" />
+      <item itemvalue="JUnit.es.uva.medeas.rules in SonarVensim" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.es.uva.medeas.rules in SonarVensim" />
+        <item itemvalue="JUnit.TestRawSymbolTableVisitor" />
+        <item itemvalue="JUnit.TestRawSymbolTableVisitor.testDelayPDependencies" />
         <item itemvalue="JUnit.TestSymbolTable" />
         <item itemvalue="JUnit.TestSymbolTable.testSymbolTableConstructor" />
-        <item itemvalue="JUnit.TestSymbolGenerator.testExprComparisonOperatorsDependencies" />
-        <item itemvalue="JUnit.TestSymbolGenerator.testExprOperationDependencies" />
-        <item itemvalue="JUnit.TestSymbolGenerator.testNegativeExpr" />
       </list>
     </recent_temporary>
   </component>
@@ -476,35 +485,35 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="TestSymbolGenerator - 2019.10.21 at 11h 57m 57s.xml">
-      <configuration name="TestSymbolGenerator" configurationId="JUnit" />
+    <history-entry file="es_uva_medeas_rules_in_SonarVensim - 2019.10.22 at 17h 01m 41s.xml">
+      <configuration name="es.uva.medeas.rules in SonarVensim" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolGenerator - 2019.10.21 at 11h 59m 50s.xml">
-      <configuration name="TestSymbolGenerator" configurationId="JUnit" />
+    <history-entry file="es_uva_medeas_rules_in_SonarVensim - 2019.10.22 at 17h 05m 48s.xml">
+      <configuration name="es.uva.medeas.rules in SonarVensim" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolTable - 2019.10.21 at 12h 00m 00s.xml">
-      <configuration name="TestSymbolTable" configurationId="JUnit" />
+    <history-entry file="es_uva_medeas_rules_in_SonarVensim - 2019.10.22 at 17h 06m 04s.xml">
+      <configuration name="es.uva.medeas.rules in SonarVensim" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolTable - 2019.10.21 at 12h 03m 48s.xml">
-      <configuration name="TestSymbolTable" configurationId="JUnit" />
+    <history-entry file="es_uva_medeas_rules_in_SonarVensim - 2019.10.22 at 17h 06m 53s.xml">
+      <configuration name="es.uva.medeas.rules in SonarVensim" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolTable - 2019.10.21 at 12h 06m 35s.xml">
-      <configuration name="TestSymbolTable" configurationId="JUnit" />
+    <history-entry file="es_uva_medeas_rules_in_SonarVensim - 2019.10.22 at 17h 07m 03s.xml">
+      <configuration name="es.uva.medeas.rules in SonarVensim" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolTable - 2019.10.21 at 12h 06m 52s.xml">
-      <configuration name="TestSymbolTable" configurationId="JUnit" />
+    <history-entry file="es_uva_medeas_rules_in_SonarVensim - 2019.10.22 at 17h 12m 50s.xml">
+      <configuration name="es.uva.medeas.rules in SonarVensim" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolTable - 2019.10.21 at 12h 08m 39s.xml">
-      <configuration name="TestSymbolTable" configurationId="JUnit" />
+    <history-entry file="es_uva_medeas_rules_in_SonarVensim - 2019.10.22 at 17h 13m 05s.xml">
+      <configuration name="es.uva.medeas.rules in SonarVensim" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolTable - 2019.10.21 at 12h 11m 37s.xml">
-      <configuration name="TestSymbolTable" configurationId="JUnit" />
+    <history-entry file="es_uva_medeas_rules_in_SonarVensim - 2019.10.22 at 17h 17m 08s.xml">
+      <configuration name="es.uva.medeas.rules in SonarVensim" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolTable - 2019.10.21 at 12h 12m 41s.xml">
-      <configuration name="TestSymbolTable" configurationId="JUnit" />
+    <history-entry file="es_uva_medeas_rules_in_SonarVensim - 2019.10.22 at 17h 18m 39s.xml">
+      <configuration name="es.uva.medeas.rules in SonarVensim" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestSymbolTable - 2019.10.21 at 12h 14m 18s.xml">
-      <configuration name="TestSymbolTable" configurationId="JUnit" />
+    <history-entry file="es_uva_medeas_rules_in_SonarVensim - 2019.10.22 at 17h 19m 24s.xml">
+      <configuration name="es.uva.medeas.rules in SonarVensim" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TodoView">
@@ -517,7 +526,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
+    <frame x="960" y="27" width="960" height="1053" extended-state="4" />
     <editor active="true" />
     <layout>
       <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
@@ -526,14 +535,14 @@
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="6" visible="true" weight="0.24493062" />
+      <window_info content_ui="combo" id="Project" order="6" visible="true" weight="0.032822758" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32969433" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4213974" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.4213974" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3995633" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286026" />
+      <window_info active="true" anchor="bottom" id="TODO" order="6" visible="true" weight="0.3286026" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32969433" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32969433" />
@@ -548,35 +557,6 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Coverage" order="8" side_tool="true" visible="true" weight="0.032822758" />
     </layout>
-    <layout-to-restore>
-      <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
-      <window_info id="Capture Tool" order="1" />
-      <window_info id="Image Layers" order="2" />
-      <window_info id="Designer" order="3" />
-      <window_info id="UI Designer" order="4" />
-      <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="6" visible="true" weight="0.24493062" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32969433" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4213974" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3995633" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286026" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32969433" />
-      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="9" weight="0.32969433" />
-      <window_info anchor="bottom" id="Messages" order="10" weight="0.32969433" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Maven" order="4" />
-      <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info anchor="right" id="Capture Analysis" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Coverage" order="8" side_tool="true" visible="true" weight="0.032822758" />
-    </layout-to-restore>
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.g4" />
@@ -585,7 +565,7 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java</url>
+          <url>file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolGenerator.java</url>
           <line>394</line>
           <properties />
           <option name="timeStamp" value="1" />
@@ -597,13 +577,6 @@
     <SUITE FILE_PATH="coverage/SonarVensim$TestSymbolGenerator.ic" NAME="TestSymbolGenerator Coverage Results" MODIFIED="1570719700842" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2-sources.jar!/org/antlr/v4/runtime/BaseErrorListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="19" column="42" selection-start-line="19" selection-start-column="42" selection-end-line="19" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2-sources.jar!/org/antlr/v4/runtime/ProxyErrorListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -776,16 +749,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestUtilities.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="461">
-          <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolLocation.java" />
     <entry file="jar:///usr/java/jdk-13/lib/src.zip!/jdk.internal.le/jdk/internal/org/jline/reader/Parser.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -834,9 +797,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolTable.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
+        <state relative-caret-position="-90">
           <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -844,10 +807,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/SymbolTableGenerator.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestUtilities.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        <state relative-caret-position="7">
+          <caret line="69" column="5" lean-forward="true" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -856,18 +819,41 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/RawSymbolTableVisitor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="177">
+          <caret line="16" column="6" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/SymbolTableGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
+        <state relative-caret-position="262">
+          <caret line="81" column="18" selection-start-line="81" selection-start-column="18" selection-end-line="81" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="45" column="61" selection-start-line="45" selection-start-column="61" selection-end-line="45" selection-end-column="61" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestRawSymbolTableVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="501">
+          <caret line="429" selection-start-line="429" selection-end-line="429" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

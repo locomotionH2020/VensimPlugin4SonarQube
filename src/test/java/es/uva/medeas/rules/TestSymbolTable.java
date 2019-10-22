@@ -1,4 +1,4 @@
-package es.uva.medeas.tests;
+package es.uva.medeas.rules;
 
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static es.uva.medeas.tests.TestUtilities.*;
+import static es.uva.medeas.rules.TestUtilities.*;
 
 public class TestSymbolTable {
 

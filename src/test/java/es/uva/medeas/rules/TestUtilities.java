@@ -1,9 +1,8 @@
-package es.uva.medeas.tests;
+package es.uva.medeas.rules;
 
 
 import es.uva.medeas.VensimVisitorContext;
 import es.uva.medeas.parser.*;
-import es.uva.medeas.rules.SymbolTableGenerator;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -70,6 +69,31 @@ public class TestUtilities {
         return SymbolTableGenerator.getSymbolTable(context);
     }
 
+    public static SymbolTable getRAWSymbolTableFromString(String content){
+        ModelLexer lexer = new ModelLexer(CharStreams.fromString(content)); //TODO remove duplication
+
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        ModelParser parser = new ModelParser(tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(new VensimErrorListener());
+
+        ParseTree p = parser.file();
+
+
+        RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
+        VensimVisitorContext context = new VensimVisitorContext(p);
+        return visitor.getSymbolTable(context);
+    }
+
+
+
+    public static SymbolTable getRAWSymbolTable(String file_path) throws IOException {
+        ParseTree tree = getParseTree(file_path);
+
+        RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
+        VensimVisitorContext context = new VensimVisitorContext(tree);
+        return visitor.getSymbolTable(context);
+    }
 
     public static SymbolTable getSymbolTable(String file_path) throws IOException {
         ParseTree tree = getParseTree(file_path);
