@@ -97,7 +97,7 @@ public class TestUtilities {
     public static void assertUndefinedSymbol(Symbol symbol, SymbolType expectedType){
         assertEquals(expectedType,symbol.getType());
         assertEquals(NO_DEPENDENCIES,symbol.getDependencies());
-        assertNull(symbol.getContext());
+        assertEquals(-1,symbol.getLine());
     }
 
     public static void assertSymbolType(Symbol symbol, SymbolType expectedType){

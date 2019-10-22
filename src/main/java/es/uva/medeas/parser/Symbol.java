@@ -1,14 +1,12 @@
 package es.uva.medeas.parser;
 
-import org.antlr.v4.runtime.ParserRuleContext;
-
 
 import java.util.*;
 
 public class Symbol {
 
     private String token;
-    private ParserRuleContext context;
+    private int line;
     private Set<Symbol> dependencies;
     private SymbolType type;
 
@@ -17,22 +15,20 @@ public class Symbol {
         this.token = token;
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
+        line = -1;
     }
 
-    public void setContext(ParserRuleContext context) {
-        this.context = context;
+    public void setLine(int line){ //TODO dejar mas claro que esta es la linea en la que se define, no en la que aparece
+        this.line = line;
     }
 
     public void setType(SymbolType type) {
         this.type = type;
     }
 
-    public ParserRuleContext getContext() {
-        return context;
-    }
 
     public int getLine(){
-        return context.start.getLine();
+        return line;
     }
 
     public Set<Symbol> getDependencies() {

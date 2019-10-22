@@ -1,6 +1,6 @@
 package es.uva.medeas.tests;
 
-import es.uva.medeas.parser.*;
+import es.uva.medeas.parser.*; 
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -176,8 +176,8 @@ public class TestSymbolGenerator {
         Symbol myMacro = table.getSymbol("myMacro");
         assertSymbol(myMacro,SymbolType.FUNCTION,1,NO_DEPENDENCIES);
 
-        assertNull(table.getSymbol("input1"));
-        assertNull(table.getSymbol("timeVar"));
+        assertFalse(table.hasSymbol("input1"));
+        assertFalse(table.hasSymbol("timeVar"));
     }
 
     @Test

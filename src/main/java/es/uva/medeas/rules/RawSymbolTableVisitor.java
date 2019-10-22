@@ -6,17 +6,17 @@ import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
+
 
 import java.util.*;
 
 
-public class RawSymbolTableVisitor extends VensimCheck {
+class RawSymbolTableVisitor extends VensimCheck {
     //TODO add javadocs for RawSymbolTableVisitor y SymbolTableGenerator
 
     private SymbolTable table;
-    private  final List<String> symbolVariables = Arrays.asList("Time");
-    private final List<String> nonPureFunctions = Arrays.asList("INTEG","STEP","DELAY1", "DELAY1I", "DELAY3", "DELAY3I", "FORECAST", "SMOOTH3", "SMOOTH3I", "SMOOTHI", "SMOOTH", "TREND","RAMP");
-    private final List<String> lookupGeneratorFunctions  = Arrays.asList("GET DIRECT LOOKUPS", "GET XLS LOOKUPS");
 
     public SymbolTable getSymbolTable(VensimVisitorContext context){
         table = new SymbolTable();
@@ -30,10 +30,13 @@ public class RawSymbolTableVisitor extends VensimCheck {
     }
 
 
+    private int getStartLine(ParserRuleContext context){
+        return context.start.getLine();
+    }
     @Override
     public Object visitSubscriptRange(ModelParser.SubscriptRangeContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.Id().getSymbol());
-        symbol.setContext(ctx);
+        symbol.setLine(getStartLine(ctx));
         symbol.setType(SymbolType.SUBSCRIPT_NAME);
 
 
@@ -41,7 +44,7 @@ public class RawSymbolTableVisitor extends VensimCheck {
             for(ModelParser.SubscriptIdContext value:ctx.subscriptIdList().subscriptId()){
                 Symbol subscriptValue = visitSubscriptId(value);
                 subscriptValue.setType(SymbolType.SUBSCRIPT_VALUE);
-                subscriptValue.setContext(value);
+                subscriptValue.setLine(getStartLine(value));
 
                 //TODO Estoy recorriendo esto dos veces? Primero aquí y después en el visitSubscriptIDList?
             }
@@ -63,7 +66,7 @@ public class RawSymbolTableVisitor extends VensimCheck {
     @Override
     public Object visitEquation(ModelParser.EquationContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.lhs().Id().getSymbol());
-        symbol.setContext(ctx);
+        symbol.setLine(getStartLine(ctx));
 
         if(ctx.expr()!=null)
             symbol.addDependencies( (List<Symbol>) visit(ctx.expr()));
@@ -76,7 +79,7 @@ public class RawSymbolTableVisitor extends VensimCheck {
     public Object visitConstraint(ModelParser.ConstraintContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.Id().getSymbol());
         symbol.setType(SymbolType.REALITY_CHECK);
-        symbol.setContext(ctx);
+        symbol.setLine(getStartLine(ctx));
 
         return null;
     }
@@ -85,7 +88,7 @@ public class RawSymbolTableVisitor extends VensimCheck {
     public Object visitMacroDefinition(ModelParser.MacroDefinitionContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.macroHeader().Id().getSymbol());
         symbol.setType(SymbolType.FUNCTION);
-        symbol.setContext(ctx);
+        symbol.setLine(getStartLine(ctx));
 
         return null;
     }
@@ -94,14 +97,14 @@ public class RawSymbolTableVisitor extends VensimCheck {
     public Object visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.lhs().Id().getSymbol());
         symbol.setType(SymbolType.CONSTANT);
-        symbol.setContext(ctx);
+        symbol.setLine(getStartLine(ctx));
         return null;
     }
 
     @Override
     public Object visitDataEquation(ModelParser.DataEquationContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.lhs().Id().getSymbol());
-        symbol.setContext(ctx);
+        symbol.setLine(getStartLine(ctx));
 
         if(ctx.expr()!=null)
             symbol.addDependencies( (List<Symbol>) visit(ctx.expr()));
@@ -113,7 +116,7 @@ public class RawSymbolTableVisitor extends VensimCheck {
     @Override
     public Object visitLookupDefinition(ModelParser.LookupDefinitionContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.lhs().Id().getSymbol());
-        symbol.setContext(ctx);
+        symbol.setLine(getStartLine(ctx));
         symbol.setType(SymbolType.LOOKUP);
 
         if (ctx.lookup()!=null)
@@ -129,7 +132,7 @@ public class RawSymbolTableVisitor extends VensimCheck {
     public Object visitStringAssign(ModelParser.StringAssignContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.lhs().Id().getSymbol());
         symbol.setType(SymbolType.CONSTANT);
-        symbol.setContext(ctx);
+        symbol.setLine(getStartLine(ctx));
 
         return null;
     }
@@ -140,7 +143,7 @@ public class RawSymbolTableVisitor extends VensimCheck {
 
         Symbol symbol = table.getSymbolOrCreate(ctx.Id(0).getSymbol());
         symbol.setType(SymbolType.SUBSCRIPT_NAME);
-        symbol.setContext(ctx);
+        symbol.setLine(getStartLine(ctx));
         return super.visitSubscriptCopy(ctx);
     }
 
@@ -148,7 +151,7 @@ public class RawSymbolTableVisitor extends VensimCheck {
     public Object visitRealityCheck(ModelParser.RealityCheckContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.Id().getSymbol());
         symbol.setType(SymbolType.REALITY_CHECK);
-        symbol.setContext(ctx);
+        symbol.setLine(getStartLine(ctx));
         return null;
 
     }
@@ -166,9 +169,9 @@ public class RawSymbolTableVisitor extends VensimCheck {
         Symbol secondSymbol = table.getSymbolOrCreate(ctx.Id(1).getSymbol());
 
         firstSymbol.setType(SymbolType.SUBSCRIPT_VALUE);
-        firstSymbol.setContext(ctx);
+        firstSymbol.setLine(getStartLine(ctx));
         secondSymbol.setType(SymbolType.SUBSCRIPT_VALUE);
-        secondSymbol.setContext(ctx);
+        secondSymbol.setLine(getStartLine(ctx));
 
         return Arrays.asList(firstSymbol,secondSymbol);
 
@@ -233,7 +236,7 @@ public class RawSymbolTableVisitor extends VensimCheck {
         List<Symbol> delayTime = (List<Symbol>) visit(ctx.expr(1));
         Symbol pipeline = table.getSymbolOrCreate(ctx.Id().getSymbol());
         pipeline.setType(SymbolType.VARIABLE);
-        pipeline.setContext(ctx);
+        pipeline.setLine(ctx.Id().getSymbol().getLine());
 
 
         symbols.add(delayP);

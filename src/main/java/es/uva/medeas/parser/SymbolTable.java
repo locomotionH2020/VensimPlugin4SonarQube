@@ -15,9 +15,10 @@ public class SymbolTable {
 
 
     public Symbol getSymbol(String token){
-        //TODO raise exception if token doesnt exist
-        //TODO unit test SymbolTable?
-        return table.get(token);
+        if(table.containsKey(token)) {
+            return table.get(token);
+        }else
+            throw new IllegalArgumentException("Token " + token + " not found");
     }
 
 
@@ -34,6 +35,9 @@ public class SymbolTable {
 
 
     public Symbol createSymbol(String token){
+        if(hasSymbol(token))
+            throw new IllegalArgumentException("The symbol:  "+  token + " already exists.");
+
         Symbol symbol = new Symbol(token);
         table.put(token,symbol);
         return symbol;
@@ -48,8 +52,8 @@ public class SymbolTable {
         //TODO Temporal para comprobar visualmente si funciona:
         for(Symbol symbol: table.values()){
             System.out.println(symbol.getToken() + ": " + symbol.getType());
-            if (symbol.getContext()!=null)
-                System.out.println("Línea: " + symbol.getContext().getStart().getLine());
+            if (symbol.getLine()!=-1)
+                System.out.println("Línea: " + symbol.getLine());
             System.out.print("Dependenencias: ");
             for(Symbol dep: symbol.getDependencies()){
                 System.out.print(dep.getToken() + "  ");
