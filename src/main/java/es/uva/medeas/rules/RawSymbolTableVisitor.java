@@ -34,6 +34,7 @@ class RawSymbolTableVisitor extends VensimCheck {
     private int getStartLine(ParserRuleContext context){
         return context.start.getLine();
     }
+
     @Override
     public Object visitSubscriptRange(ModelParser.SubscriptRangeContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.Id().getSymbol());
@@ -43,18 +44,11 @@ class RawSymbolTableVisitor extends VensimCheck {
 
         if(ctx.subscriptIdList()!=null) {
             for(ModelParser.SubscriptIdContext value:ctx.subscriptIdList().subscriptId()){
+
                 Symbol subscriptValue = visitSubscriptId(value);
                 subscriptValue.setType(SymbolType.SUBSCRIPT_VALUE);
                 subscriptValue.setLine(getStartLine(value));
 
-                //TODO Estoy recorriendo esto dos veces? Primero aquí y después en el visitSubscriptIDList?
-            }
-            List<Symbol> subscriptNames = visitSubscriptIdList(ctx.subscriptIdList());
-
-
-
-            for(Symbol subscript: subscriptNames) {
-                subscript.setType(SymbolType.SUBSCRIPT_VALUE);
             }
         }
         if(ctx.call()!=null)
@@ -216,7 +210,7 @@ class RawSymbolTableVisitor extends VensimCheck {
         if (ctx.expr()!=null)
             return (List<Symbol>) visit(ctx.expr());
         else
-            return new ArrayList<Symbol>();
+            return new ArrayList<>();
     }
 
 
@@ -288,11 +282,7 @@ class RawSymbolTableVisitor extends VensimCheck {
 
     @Override
     public List<Symbol> visitSubscript(ModelParser.SubscriptContext ctx) {
-        List<Symbol> symbols = new ArrayList<>();
-        for(ModelParser.SubscriptIdContext subscript: ctx.subscriptId()){
-            symbols.add( visitSubscriptId(subscript));
-        }
-        return symbols;
+        return visitSubscriptIdList(ctx.subscriptIdList());
     }
 
 
@@ -328,14 +318,11 @@ class RawSymbolTableVisitor extends VensimCheck {
     @Override
     public List<Symbol> visitLookup(ModelParser.LookupContext ctx) {
         List<Symbol> symbols;
-        if(ctx.lookupPointList()!=null) {
-            symbols = visitLookupPointList(ctx.lookupPointList());
-
-            if (ctx.lookupRange() != null)
-                symbols.addAll(visitLookupRange(ctx.lookupRange()));
+        if(ctx.numberList()!=null) {
+            symbols = visitNumberList(ctx.numberList());
 
         }else{
-            symbols = visitNumberList(ctx.numberList());
+            symbols = new ArrayList<>();
         }
         return symbols;
     }
@@ -343,11 +330,13 @@ class RawSymbolTableVisitor extends VensimCheck {
 
     @Override
     public List<Symbol> visitLookupPoint(ModelParser.LookupPointContext ctx) {
-        List<Symbol> symbols = (List<Symbol>) visit(ctx.expr(0));
 
-        symbols.addAll((List<Symbol>) visit(ctx.expr(1)));
+        return  new ArrayList<>();
+    }
 
-        return symbols;
+    @Override
+    public List<Symbol> visitConstList(ModelParser.ConstListContext ctx) {
+        return new ArrayList<>();
     }
 
     @Override

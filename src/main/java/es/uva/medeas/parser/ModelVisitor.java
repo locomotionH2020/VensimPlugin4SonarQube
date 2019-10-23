@@ -262,6 +262,12 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLookupPoint(ModelParser.LookupPointContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ModelParser#constantLine}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstantLine(ModelParser.ConstantLineContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ModelParser#constList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

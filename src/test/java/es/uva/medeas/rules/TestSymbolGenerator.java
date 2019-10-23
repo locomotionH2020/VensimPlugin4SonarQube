@@ -106,6 +106,8 @@ public class TestSymbolGenerator {
 
     }
 
+    //TODO Test subscript mapping doesnt override the original
+
 
     @Test
     public void testTypeInferenceInConstantsAndVariables() throws IOException{

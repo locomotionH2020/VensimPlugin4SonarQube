@@ -100,13 +100,15 @@ macroHeader: Id '(' macroArguments? ')';
 macroArguments: exprList (':' exprList)?;
 exprList : expr (',' expr)* ;
 subscriptIdList : (subscriptId|subscriptSequence) (',' (subscriptId|subscriptSequence))* ;
-subscript: '[' subscriptId (',' subscriptId)* ']'; 
+subscript: '[' subscriptIdList ']'; 
 lookup : '(' ((lookupRange? lookupPointList)|numberList) ')' ;
 lookupRange : '[' lookupPoint '-' lookupPoint referenceLine? ']' ',' ;
 lookupPointList : lookupPoint (',' lookupPoint)* ;
 referenceLine: ',' lookupPointList;
-lookupPoint : '(' expr ',' expr ')' ;
-constList : ( expr ( ',' expr )+ | ( expr ( ',' expr )+ ';' )+ ) ;
+lookupPoint : '(' constVensim ',' constVensim ')' ;
+constantLine: ( constVensim ( ',' constVensim)+) ;
+// Optional semi colon is required for two dimensional arrays https://www.vensim.com/documentation/22070.htm
+constList : (constantLine ';'?)+;
 
 numberList: (integerConst | floatingConst) (',' ( integerConst | floatingConst))*;
     
