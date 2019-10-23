@@ -101,7 +101,8 @@ public class TestSymbolGenerator {
 
         Symbol time = table.getSymbol("Time");
 
-        assertUndefinedSymbol(time,SymbolType.VARIABLE);
+        assertSymbolType(time,SymbolType.VARIABLE);
+        assertSymbolLine(time,Symbol.LINE_NOT_DEFINED);
 
     }
 

@@ -1,4 +1,4 @@
-before = 9 	~
+before = 9 + extraSymbol	~
            	~		|
 
 
@@ -6,7 +6,8 @@ before = 9 	~
 variable = after - before 	~
                  	~		|
 
-after = Time 	~
+after = Time  	~
       	~		|
 
 
+extraSymbol = 5   	~		|

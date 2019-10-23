@@ -34,12 +34,13 @@ public class TestUtilities {
         fileInputStream.close();
 
 
-
-
-
         String fileContent = new String(value, StandardCharsets.UTF_8);
 
 
+        return getParseTreeFromString(fileContent);
+    }
+
+    private static ParseTree getParseTreeFromString(String fileContent) {
         ModelLexer lexer = new ModelLexer(CharStreams.fromString(fileContent));
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -47,37 +48,22 @@ public class TestUtilities {
         parser.removeErrorListeners();
         parser.addErrorListener(new VensimErrorListener());
 
-        ParseTree p = parser.file();
+        return parser.file();
 
-
-        return p;
     }
 
     public static SymbolTable getSymbolTableFromString(String content){
-        ModelLexer lexer = new ModelLexer(CharStreams.fromString(content)); //TODO remove duplication
 
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        ModelParser parser = new ModelParser(tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(new VensimErrorListener());
+        SymbolTable table = getRAWSymbolTableFromString(content);
+        SymbolTableGenerator.resolveSymbolTable(table);
 
-        ParseTree p = parser.file();
-
-
-
-        VensimVisitorContext context = new VensimVisitorContext(p);
-        return SymbolTableGenerator.getSymbolTable(context);
+        return table;
     }
 
     public static SymbolTable getRAWSymbolTableFromString(String content){
-        ModelLexer lexer = new ModelLexer(CharStreams.fromString(content)); //TODO remove duplication
 
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        ModelParser parser = new ModelParser(tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(new VensimErrorListener());
 
-        ParseTree p = parser.file();
+        ParseTree p = getParseTreeFromString(content);
 
 
         RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
@@ -118,11 +104,7 @@ public class TestUtilities {
     }
 
 
-    public static void assertUndefinedSymbol(Symbol symbol, SymbolType expectedType){
-        assertEquals(expectedType,symbol.getType());
-        assertEquals(NO_DEPENDENCIES,symbol.getDependencies());
-        assertEquals(-1,symbol.getLine());
-    }
+
 
     public static void assertSymbolType(Symbol symbol, SymbolType expectedType){
         assertEquals("Expected type: '" + expectedType + "' Actual: '" + symbol.getType() +"' for symbol " + symbol.getToken(),

@@ -33,7 +33,7 @@ public class TestSymbolTable {
 
         assertEquals(symbol.getToken(),"mySymbol");
         assertTrue(table.hasSymbol("mySymbol"));
-        assertSymbolLine(symbol, -1);
+        assertSymbolLine(symbol, Symbol.LINE_NOT_DEFINED);
         assertEquals(NO_DEPENDENCIES,symbol.getDependencies());
         assertSymbolType(symbol, SymbolType.UNDETERMINED);
     }
@@ -51,7 +51,7 @@ public class TestSymbolTable {
 
         assertEquals(symbol.getToken(),"mySymbol");
         assertTrue(table.hasSymbol("mySymbol"));
-        assertSymbolLine(symbol, -1);
+        assertSymbolLine(symbol, Symbol.LINE_NOT_DEFINED);
         assertEquals(NO_DEPENDENCIES,symbol.getDependencies());
         assertSymbolType(symbol, SymbolType.UNDETERMINED);
     }

@@ -6,7 +6,10 @@ import es.uva.medeas.parser.SymbolType;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static es.uva.medeas.rules.TestUtilities.*;
 
@@ -54,7 +57,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testSubscript(){
-        String program = "name: OPTION1,\n" +
+        String program = "\nname: OPTION1,\n" +
                 " OPTION2 -> mappedSubscript ~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
@@ -63,9 +66,9 @@ public class TestRawSymbolTableVisitor {
         Symbol option1 = table.getSymbol("OPTION1");
         Symbol option2 = table.getSymbol("OPTION2");
 
-        assertSymbol(subscriptName, SymbolType.SUBSCRIPT_NAME,1,NO_DEPENDENCIES);
-        assertSymbol(option1,SymbolType.SUBSCRIPT_VALUE,1,NO_DEPENDENCIES);
-        assertSymbol(option2,SymbolType.SUBSCRIPT_VALUE,2,NO_DEPENDENCIES);
+        assertSymbol(subscriptName, SymbolType.SUBSCRIPT_NAME,2,NO_DEPENDENCIES);
+        assertSymbol(option1,SymbolType.SUBSCRIPT_VALUE,2,NO_DEPENDENCIES);
+        assertSymbol(option2,SymbolType.SUBSCRIPT_VALUE,3,NO_DEPENDENCIES);
 
     }
 
@@ -88,7 +91,7 @@ public class TestRawSymbolTableVisitor {
     public void testSubscriptCopy(){
         String program =  "subscriptBefore[copy] = 7 ~~|\n" +
                 "original: OPTION1 ~~|\n" +
-                "copy <-> original  ~~|\n" +
+                "copy\n <-> original  ~~|\n" +
                 "subscriptAfter[copy] = 6 ~~|\n";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
@@ -127,7 +130,7 @@ public class TestRawSymbolTableVisitor {
 
 
     @Test
-    public void testLookupNew(){
+    public void testLookup(){
         String program = "test lookup call before = myLookup(3)~~|\n" +
                 "myLookup([(0,0)-(10,10)],(0,0),(1,1),(2,0.5),(3,1),(4,0))~~|\n" +
                 "test lookup call after = myLookup(5)~~|\n";
@@ -167,7 +170,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testMacro(){
-        String program = ":MACRO: myMacro(input,timeVar)\n" +
+        String program = "\n\n:MACRO: myMacro(input,timeVar)\n" +
                 "myMacro = INTEG((input - 3)/timeVar, input)\n" +
                 "~~|\n"+
                 ":END OF MACRO:";
@@ -175,7 +178,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myMacro = table.getSymbol("myMacro");
-        assertSymbol(myMacro,SymbolType.FUNCTION,1,NO_DEPENDENCIES);
+        assertSymbol(myMacro,SymbolType.FUNCTION,3,NO_DEPENDENCIES);
 
         assertFalse(table.hasSymbol("input1"));
         assertFalse(table.hasSymbol("timeVar"));
@@ -186,22 +189,22 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testUnchangeableConstant(){
-        String program = "PI== 3.14159 ~~|";
+        String program = "\n\n\nPI== 3.14159 ~~|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
 
         Symbol pi = table.getSymbol("PI");
-        assertSymbol(pi,SymbolType.CONSTANT,1,NO_DEPENDENCIES);
+        assertSymbol(pi,SymbolType.CONSTANT,4,NO_DEPENDENCIES);
     }
 
     @Test
     public void testStringConstant(){
-        String program = "filename:IS: 'simpleInputs.xls'~~|";
+        String program = "\n\nfilename:IS: 'simpleInputs.xls'~~|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
 
         Symbol filename = table.getSymbol("filename");
-        assertSymbol(filename,SymbolType.CONSTANT,1,NO_DEPENDENCIES);
+        assertSymbol(filename,SymbolType.CONSTANT,3,NO_DEPENDENCIES);
     }
 
 
@@ -333,32 +336,33 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testEmptyEquation(){
-        String program = "emptyEquation ~|";
+        String program = "\nemptyEquation ~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol emptyEquation = table.getSymbol("emptyEquation");
         assertNoDependencies(emptyEquation);
+        assertSymbolLine(emptyEquation,2);
     }
 
     @Test
     public void testRealityCheckConditionImplies(){
-        String program = "myCondition :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~|";
+        String program = "\n\n\n\n\nmyCondition :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myCondition = table.getSymbol("myCondition");
-        assertSymbol(myCondition,SymbolType.REALITY_CHECK,1,NO_DEPENDENCIES);
+        assertSymbol(myCondition,SymbolType.REALITY_CHECK,6,NO_DEPENDENCIES);
     }
 
 
     @Test
     public void testRealityCheckTestInput(){
-        String program = "myTestInput :TEST INPUT: positiveVariable[subscript] >= 0 ~~|";
+        String program = "\nmyTestInput :TEST INPUT: positiveVariable[subscript] >= 0 ~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myTestInput = table.getSymbol("myTestInput");
-        assertSymbol(myTestInput,SymbolType.REALITY_CHECK,1,NO_DEPENDENCIES);
+        assertSymbol(myTestInput,SymbolType.REALITY_CHECK,2,NO_DEPENDENCIES);
     }
 
     @Test
@@ -416,16 +420,31 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testEquationInsideQuotes(){
-        String program = "\"equation inside quotes\"= 3 ~~|";
+        String program = "\n\n\n\"equation \\\"inside quotes\"= 3 ~~|";
 
         SymbolTable table = getSymbolTableFromString(program);
 
-        Symbol equation = table.getSymbol("\"equation inside quotes\"");
+        Symbol equation = table.getSymbol("\"equation \\\"inside quotes\"");
         assertNotNull(equation);
         assertSymbolType(equation,SymbolType.CONSTANT);
-
+        assertSymbolLine(equation,4);
 
     }
 
 
+    @Test
+    public void testDependenciesCreateALinkedList() throws IOException {
+        SymbolTable table = getRAWSymbolTable("invertedDependencies.mdl");
+
+
+        Symbol variable = table.getSymbol("variable");
+        Symbol extraSymbol = table.getSymbol("extraSymbol");
+
+
+        List<Symbol> before = variable.getDependencies().stream().filter(symbol -> "before".equals(symbol.getToken())).collect(Collectors.toList());
+        List<Symbol> expectedExtraSymbol = before.get(0).getDependencies().stream().filter(symbol -> "extraSymbol".equals(symbol.getToken())).collect(Collectors.toList());
+
+
+        assertSame(extraSymbol,expectedExtraSymbol.get(0));
+    }
 }

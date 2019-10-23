@@ -22,6 +22,7 @@ class RawSymbolTableVisitor extends VensimCheck {
         table = new SymbolTable();
 
 
+
         visit(context.getRootNode());
 
 
@@ -67,6 +68,7 @@ class RawSymbolTableVisitor extends VensimCheck {
     public Object visitEquation(ModelParser.EquationContext ctx) {
         Symbol symbol = table.getSymbolOrCreate(ctx.lhs().Id().getSymbol());
         symbol.setLine(getStartLine(ctx));
+
 
         if(ctx.expr()!=null)
             symbol.addDependencies( (List<Symbol>) visit(ctx.expr()));

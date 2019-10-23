@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Symbol {
 
+    public static int LINE_NOT_DEFINED = -1;
     private String token;
     private int line;
     private Set<Symbol> dependencies;
@@ -15,7 +16,7 @@ public class Symbol {
         this.token = token;
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
-        line = -1;
+        line = LINE_NOT_DEFINED;
     }
 
     public void setLine(int line){ //TODO dejar mas claro que esta es la linea en la que se define, no en la que aparece

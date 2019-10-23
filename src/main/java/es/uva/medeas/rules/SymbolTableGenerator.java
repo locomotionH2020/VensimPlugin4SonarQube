@@ -22,7 +22,7 @@ public class SymbolTableGenerator {
         SymbolTable rawTable = generator.getSymbolTable(context);
 
 
-        addDefaultSymbols(rawTable);
+
         resolveSymbolTable(rawTable);
 
         return rawTable;
@@ -30,6 +30,7 @@ public class SymbolTableGenerator {
 
     public static void resolveSymbolTable(SymbolTable table){
         Set<Symbol> remainingSymbols = table.getUndeterminedSymbols();
+        addDefaultSymbols(table);
 
         while(!remainingSymbols.isEmpty()) {
 
