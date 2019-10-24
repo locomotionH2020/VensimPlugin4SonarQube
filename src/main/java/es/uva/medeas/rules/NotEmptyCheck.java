@@ -6,7 +6,7 @@ import es.uva.medeas.parser.ModelParser;
 import org.sonar.check.Rule;
 
 @Rule(key = NotEmptyCheck.CHECK_KEY)
-public class NotEmptyCheck extends VensimCheck{
+public class NotEmptyCheck extends VensimVisitorCheck {
     public static final String CHECK_KEY = "not-empty";
 
     @Override

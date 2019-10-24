@@ -1,9 +1,12 @@
 package es.uva.medeas;
 
+import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.VensimErrorListener;
 import es.uva.medeas.parser.ModelLexer;
 import es.uva.medeas.parser.ModelParser;
+import es.uva.medeas.rules.SymbolTableGenerator;
 import es.uva.medeas.rules.VensimCheck;
+import es.uva.medeas.rules.VensimVisitorCheck;
 
 
 import org.antlr.v4.runtime.*;
@@ -21,7 +24,6 @@ import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class VensimScanner {
@@ -51,28 +53,33 @@ public class VensimScanner {
 
     }
 
+    private ParseTree getParseTree(String file_content){
+        ModelLexer lexer = new ModelLexer(CharStreams.fromString(file_content));
+
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        ModelParser parser = new ModelParser(tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(new VensimErrorListener());
+
+        return parser.file();
+    }
+
     private void scanFile(InputFile inputFile) {
 
         try {
             String content = inputFile.contents();
 
-            List<Issue> issues = new ArrayList<>();
-            ModelLexer lexer = new ModelLexer(CharStreams.fromString(content));
+            ParseTree root = getParseTree(content);
 
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            ModelParser parser = new ModelParser(tokens);
-            parser.removeErrorListeners();
-            parser.addErrorListener(new VensimErrorListener());
-
-            ParseTree root = parser.file();
             VensimVisitorContext visitorContext = new VensimVisitorContext(root);
+            SymbolTable table = SymbolTableGenerator.getSymbolTable(visitorContext);
+            visitorContext.setSymbolTable(table);
 
             for (VensimCheck check : checks.all()) {
                 check.scan(visitorContext);
-
-                issues.addAll(visitorContext.getIssues());
             }
-            saveIssues(inputFile,issues);
+
+            saveIssues(inputFile,visitorContext.getIssues());
 
             int lines = content.split("[\r\n]+").length;
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();

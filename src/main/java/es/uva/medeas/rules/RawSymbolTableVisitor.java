@@ -1,10 +1,7 @@
 package es.uva.medeas.rules;
 
 import es.uva.medeas.VensimVisitorContext;
-import es.uva.medeas.parser.ModelParser;
-import es.uva.medeas.parser.Symbol;
-import es.uva.medeas.parser.SymbolTable;
-import es.uva.medeas.parser.SymbolType;
+import es.uva.medeas.parser.*;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
@@ -13,7 +10,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import java.util.*;
 
 
-class RawSymbolTableVisitor extends VensimCheck {
+class RawSymbolTableVisitor extends ModelBaseVisitor {
     //TODO add javadocs for RawSymbolTableVisitor y SymbolTableGenerator
 
     private SymbolTable table;

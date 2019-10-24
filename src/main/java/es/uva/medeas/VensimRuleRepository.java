@@ -1,5 +1,6 @@
 package es.uva.medeas;
 
+import es.uva.medeas.rules.SubscriptConventionCheck;
 import org.sonar.api.server.rule.RulesDefinition;
 import es.uva.medeas.rules.NotEmptyCheck;
 
@@ -22,6 +23,7 @@ public class VensimRuleRepository implements RulesDefinition{
                 .setName(REPOSITORY_NAME);
 
         repository.createRule(NotEmptyCheck.CHECK_KEY).setName("NotEmptyCheck").setMarkdownDescription("The file shouldn't be empty");
+        repository.createRule(SubscriptConventionCheck.CHECK_KEY).setName("SubscriptConvention").setMarkdownDescription("Nope");//TODO
         repository.done();
     }
 
@@ -30,6 +32,7 @@ public class VensimRuleRepository implements RulesDefinition{
     public static Iterable<Class> getChecks(){
         HashSet<Class> set = new HashSet<>();
         set.add(NotEmptyCheck.class);
+        set.add(SubscriptConventionCheck.class);
         return set;
     }
 

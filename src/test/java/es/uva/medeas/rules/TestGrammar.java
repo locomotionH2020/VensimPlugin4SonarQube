@@ -13,12 +13,7 @@ public class TestGrammar {
         getParseTreeFromString(program);
     }
 
-    @Test
-    public void testFloatNotation2(){
-        String program = "const = +0.3e+0.43~|";
 
-        getParseTreeFromString(program);
-    }
     @Test
     public void testNegativeFloatsAreDetected(){
         String program = "const = -0.3-4.1 ~|";
