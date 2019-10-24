@@ -159,12 +159,14 @@ NonzeroDigit
     ;
 
 
-floatingConst
-:  ('+'|'-')?? FractionalConstant ExponentPart?
-|   ('+'|'-')?? DigitSeq ExponentPart
+floatingConst:
+    ('+'|'-')? FloatingConstNumber;
+FloatingConstNumber
+: FractionalConstant ExponentPart?
+| DigitSeq ExponentPart
 ;
 
-
+    
 FractionalConstant
     :   DigitSeq? '.' DigitSeq
     |   DigitSeq '.'

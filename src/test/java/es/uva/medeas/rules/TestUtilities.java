@@ -40,7 +40,7 @@ public class TestUtilities {
         return getParseTreeFromString(fileContent);
     }
 
-    private static ParseTree getParseTreeFromString(String fileContent) {
+    public static ParseTree getParseTreeFromString(String fileContent) {
         ModelLexer lexer = new ModelLexer(CharStreams.fromString(fileContent));
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);

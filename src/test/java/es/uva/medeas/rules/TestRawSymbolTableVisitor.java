@@ -447,4 +447,12 @@ public class TestRawSymbolTableVisitor {
 
         assertSame(extraSymbol,expectedExtraSymbol.get(0));
     }
+
+    @Test
+    public void testVariableNameSplitInSeveralLines(){ //TODO Cuando acabe la regla de nombrado, comprobar cómo actua con cada tipo.
+        String program = "my \\ \n variable \\\n name = 7  \n ~~|";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+    }
 }
