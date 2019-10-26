@@ -40,7 +40,7 @@ public class TestUtilities {
         return getParseTreeFromString(fileContent);
     }
 
-    public static ParseTree getParseTreeFromString(String fileContent) {
+    public static ModelParser.FileContext getParseTreeFromString(String fileContent) {
         ModelLexer lexer = new ModelLexer(CharStreams.fromString(fileContent));
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -112,8 +112,8 @@ public class TestUtilities {
     }
 
     public static void assertSymbolLine(Symbol symbol, int expectedLine){
-        assertEquals("Symbol '" + symbol.getToken() +"' expected at line " + expectedLine + " found at: " + symbol.getLine(),
-                expectedLine,symbol.getLine());
+        assertEquals("Symbol '" + symbol.getToken() +"' expected at line " + expectedLine + " found at: " + symbol.getDefinitionLine(),
+                expectedLine,symbol.getDefinitionLine());
     }
 
     public static void assertNoDependencies(Symbol symbol){

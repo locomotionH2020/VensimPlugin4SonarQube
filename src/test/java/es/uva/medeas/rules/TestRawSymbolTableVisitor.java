@@ -449,12 +449,48 @@ public class TestRawSymbolTableVisitor {
         assertSame(extraSymbol,expectedExtraSymbol.get(0));
     }
 
-    @Ignore
+
     @Test
-    public void testVariableNameSplitInSeveralLines(){ //TODO Cuando acabe la regla de nombrado, comprobar cómo actua con cada tipo.
-        String program = "my \\ \n variable \\\n name = 7  \n ~~|";
+    public void testNewLineInsideSubscript(){
+        String program = "\"materials per new capacity installed - wind offshore\"[\"Electric/electronic components\"\\ \n" +
+                "]=5~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
-        //TODO Fix
+
+        Symbol subscript = table.getSymbol("\"Electric/electronic components\"");
+        assertNotNull(subscript);
+    }
+
+
+    @Test
+    public void testNewLineBetweenIdAndSubscript(){
+        String program = "share energy for material consumption for alt techn vs TFEC\\ \n" +
+                "  [scenarios]=Total energy required for total material consumption for alt techn[scenarios]/Real TFEC \\ \n" +
+                "      [scenarios]~~|";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        Symbol subscript = table.getSymbol("share energy for material consumption for alt techn vs TFEC");
+        assertNotNull(subscript);
+    }
+
+
+    @Test
+    public void testVariableCalledE(){
+        // A error in the grammar caused 'e' to be tokenized as a 'e' token (used in scientific notation) rather than as an id.
+        String program = "e = 5~~|";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        assertNotNull(table.getSymbol("e"));
+    }
+
+    @Test
+    public void testVariableCalledE10(){
+        String program = "e10 = 5~~|";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        assertNotNull(table.getSymbol("e10"));
     }
 }

@@ -7,7 +7,7 @@ public class Symbol {
 
     public static int LINE_NOT_DEFINED = -1;
     private String token;
-    private int line;
+    private int lineDefined;
     private Set<Symbol> dependencies;
     private SymbolType type;
 
@@ -16,11 +16,11 @@ public class Symbol {
         this.token = token;
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
-        line = LINE_NOT_DEFINED;
+        lineDefined = LINE_NOT_DEFINED;
     }
 
-    public void setLine(int line){ //TODO dejar mas claro que esta es la linea en la que se define, no en la que aparece
-        this.line = line;
+    public void setDefinitionLine(int line){ 
+        this.lineDefined = line;
     }
 
     public void setType(SymbolType type) {
@@ -28,8 +28,8 @@ public class Symbol {
     }
 
 
-    public int getLine(){
-        return line;
+    public int getDefinitionLine(){
+        return lineDefined;
     }
 
     public Set<Symbol> getDependencies() {

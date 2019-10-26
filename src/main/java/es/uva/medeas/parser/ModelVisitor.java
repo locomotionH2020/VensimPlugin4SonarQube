@@ -119,20 +119,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSketches(ModelParser.SketchesContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code DelayPArg}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDelayPArg(ModelParser.DelayPArgContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code tabbedArray}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTabbedArray(ModelParser.TabbedArrayContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code const}
 	 * labeled alternative in {@link ModelParser#expr}.
 	 * @param ctx the parse tree
@@ -161,27 +147,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSignExpr(ModelParser.SignExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code Var}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVar(ModelParser.VarContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Parens}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParens(ModelParser.ParensContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code CallExpr}
-	 * labeled alternative in {@link ModelParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCallExpr(ModelParser.CallExprContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code WildCard}
 	 * labeled alternative in {@link ModelParser#expr}.
 	 * @param ctx the parse tree
@@ -195,6 +160,41 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitLookupArg(ModelParser.LookupArgContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code CallExpr}
+	 * labeled alternative in {@link ModelParser#exprAllowSign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCallExpr(ModelParser.CallExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code DelayPArg}
+	 * labeled alternative in {@link ModelParser#exprAllowSign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDelayPArg(ModelParser.DelayPArgContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Var}
+	 * labeled alternative in {@link ModelParser#exprAllowSign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVar(ModelParser.VarContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code tabbedArray}
+	 * labeled alternative in {@link ModelParser#exprAllowSign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTabbedArray(ModelParser.TabbedArrayContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Parens}
+	 * labeled alternative in {@link ModelParser#exprAllowSign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParens(ModelParser.ParensContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ModelParser#call}.
 	 * @param ctx the parse tree

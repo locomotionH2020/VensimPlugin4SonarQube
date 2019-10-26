@@ -6,7 +6,6 @@ import es.uva.medeas.parser.ModelLexer;
 import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.rules.SymbolTableGenerator;
 import es.uva.medeas.rules.VensimCheck;
-import es.uva.medeas.rules.VensimVisitorCheck;
 
 
 import org.antlr.v4.runtime.*;
@@ -75,10 +74,7 @@ public class VensimScanner {
             SymbolTable table = SymbolTableGenerator.getSymbolTable(visitorContext);
             visitorContext.setSymbolTable(table);
 
-            for (VensimCheck check : checks.all()) {
-                check.scan(visitorContext);
-            }
-
+            checkIssues(visitorContext);
             saveIssues(inputFile,visitorContext.getIssues());
 
             int lines = content.split("[\r\n]+").length;
@@ -93,6 +89,13 @@ public class VensimScanner {
 
 
 
+    }
+
+    public void checkIssues(VensimVisitorContext fileContext){
+
+        for (VensimCheck check : checks.all()) {
+            check.scan(fileContext);
+        }
     }
 
 

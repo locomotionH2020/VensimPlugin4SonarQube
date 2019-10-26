@@ -48,14 +48,13 @@ public class TestSymbolGenerator {
     }
 
 
-    @Ignore
+
     @Test
     public void testMedeas2() throws IOException{
         getSymbolTable("medeas2.mdl");
 
     }
 
-    @Ignore
     @Test
     public void testMedeasEU() throws IOException{
         getSymbolTable("medeasEU.mdl");

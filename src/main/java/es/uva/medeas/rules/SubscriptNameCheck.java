@@ -10,8 +10,8 @@ import org.sonar.check.Rule;
 
 
 
-@Rule(key = SubscriptConventionCheck.CHECK_KEY)
-public class SubscriptConventionCheck implements VensimCheck {
+@Rule(key = SubscriptNameCheck.CHECK_KEY)
+public class SubscriptNameCheck implements VensimCheck {
     public static final String CHECK_KEY = "subscription-convention" ;
 
 
@@ -19,30 +19,20 @@ public class SubscriptConventionCheck implements VensimCheck {
     public void scan(VensimVisitorContext context) {
         SymbolTable table = context.getSymbolTable();
 
-
-
-
         for(Symbol symbol:table.getSymbols()){
 
             if(symbol.getType()== SymbolType.SUBSCRIPT_NAME && !checkSubscriptNameFollowsConvention(symbol.getToken())){
-                Issue issue = new Issue(this,symbol.getLine(),"The subscript name doesnt match the pattern");
+                Issue issue = new Issue(this,symbol.getDefinitionLine(),"The name of the subscript doesn't follow the naming conventions");
                 context.addIssue(issue);
             }
-            if(symbol.getType()== SymbolType.SUBSCRIPT_VALUE && !checkSubscriptValueFollowsConvention(symbol.getToken())){
-                Issue issue = new Issue(this,symbol.getLine(),"The subscript name doesnt match the pattern");
 
-                context.addIssue(issue);
-            }
         }
     }
 
-    private boolean checkSubscriptValueFollowsConvention(String name) {
-        return name.matches("[A-Z0-9_]+_CASE");
-    }
-
+    //TODO test that parsing a incorrect file doesn't throw an exception
 
     private boolean checkSubscriptNameFollowsConvention(String name){
-        return name.matches("ENUMERATE_[A-Z0-9_]+S");
+        return name.matches("([A-Z0-9]+_)*[A-Z0-9]+S_ENUM");
 
     }
 

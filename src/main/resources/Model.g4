@@ -79,18 +79,21 @@ sketches: sketchInfo*;
 
 
 
-expr:   call             # CallExpr
-    |   expr op=('^'|'*'|'/'|'-'|'+'|Less|Greater|LessEqual|GreaterEqual|Equal|NotEqual| ':AND:' | ':OR:') expr  # exprOperation
-    |   Id (subscript)?                   # Var
+expr:     expr op=('^'|'*'|'/'|'-'|'+'|Less|Greater|LessEqual|GreaterEqual|Equal|NotEqual| ':AND:' | ':OR:') expr  # exprOperation
     |   constVensim                             # const
     |   Keyword expr?                        # Keyword
     |   lookup                            # LookupArg
-    |   '(' expr ')'                      # Parens
-    |    Star                             # WildCard   
-    |   'DELAYP(' expr  ',' expr ':' Id ')'                     # DelayPArg
-    |  'TABBED ARRAY(' constVensim* ')'   # tabbedArray
-    |   ('-'|'+') expr                          # signExpr
+    |    Star                             # WildCard
+    |   ('-'|'+')? exprAllowSign      # signExpr
     ;
+
+exprAllowSign:
+     call             # CallExpr
+     |'DELAYP(' expr  ',' expr ':' Id ')'                     # DelayPArg
+     | Id (subscript)?                   # Var
+     |  'TABBED ARRAY(' constVensim* ')'   # tabbedArray
+     |     '(' expr ')'                      # Parens
+     ;
 
 
 call:  Id (subscript)? '(' exprList? ')';

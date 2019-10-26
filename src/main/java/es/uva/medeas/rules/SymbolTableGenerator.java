@@ -79,10 +79,7 @@ public class SymbolTableGenerator {
 
                 break;
             }else if(dependency.getType() == SymbolType.UNDETERMINED) {
-                undeterminedDependency = true;
-                //TODO Normalmente pondría aqui un break, pero es posible que haya un ciclo de dependencias, y
-                // La única forma de romperlo que tengo de momento es asumir que INTEG es uan funcion
-                // Y para ello tengo que leer todas las dependencias, por si no es la primera
+                undeterminedDependency = true; //TODO test if first dependency is undefined and second is a variable
             }
 
 
