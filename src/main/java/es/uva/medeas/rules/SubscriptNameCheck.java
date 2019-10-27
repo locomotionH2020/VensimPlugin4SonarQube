@@ -13,6 +13,27 @@ import org.sonar.check.Rule;
 @Rule(key = SubscriptNameCheck.CHECK_KEY)
 public class SubscriptNameCheck implements VensimCheck {
     public static final String CHECK_KEY = "subscription-convention" ;
+    public static final String HTML_DESCRIPTION = "" +
+            "<p>This rule checks that all subscript names match the regular expression: \"[A-Z0-9]+_)*[A-Z0-9]+S_ENUM\"</p>\n" +
+            "<ul>" +
+            "   <li>Name must be in upper case (subscripts are constants).</li>\n" +
+            "   <li>Each word must be separated by ONE underscore.</li>\n" +
+            "   <li>The last word must be plural.</li>" +
+            "   <li>The name must have the suffix _ENUM.</li>"+
+            "   <li>The name shouldn't contain any non-english character. </li>"+
+            "</ul>"+
+            "<h2>Noncompliant Code Examples</h2>\n" +
+            "<pre>\n" +
+                "MY_COUNTRIES: COUNTRY1, COUNTRY2  ~~|\n" +
+                "MY_COUNTRY_ENUM: COUNTRY1, COUNTRY2 ~~|\n" +
+                "my_countries_enum: COUNTRY1, COUNTRY2 ~~|\n" +
+            "</pre>\n" +
+            "<h2>Compliant Solution</h2>\n" +
+            "<pre>\n" +
+            "MY_COUNTRIES_ENUM: COUNTRY1, COUNTRY2~|\n"+
+            "</pre>\n";
+
+    public static final String NAME = "SubscriptNameCheck";
 
 
     @Override

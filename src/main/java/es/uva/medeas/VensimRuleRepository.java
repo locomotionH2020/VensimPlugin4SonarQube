@@ -22,9 +22,9 @@ public class VensimRuleRepository implements RulesDefinition{
                 .setName(REPOSITORY_NAME);
 
 
-        repository.createRule(SubscriptNameCheck.CHECK_KEY).setName("SubscriptNameCheck").setMarkdownDescription("Nope");//TODO
-
-        repository.createRule(SubscriptValueNameCheck.CHECK_KEY).setName("SubscriptValueNameCheck").setMarkdownDescription("Nope");//TODO
+        repository.createRule(SubscriptNameCheck.CHECK_KEY).setName(SubscriptNameCheck.NAME).setHtmlDescription(SubscriptNameCheck.HTML_DESCRIPTION);
+        
+        repository.createRule(SubscriptValueNameCheck.CHECK_KEY).setName(SubscriptValueNameCheck.NAME).setHtmlDescription(SubscriptValueNameCheck.HTML_DESCRIPTION);
 
 
 
