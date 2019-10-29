@@ -27,7 +27,7 @@ import java.util.List;
 
 public class VensimScanner {
 
-    private static final Logger LOG = Loggers.get(VensimScanner.class);
+    protected static Logger LOG = Loggers.get(VensimScanner.class);
 
     private final SensorContext context;
     private final Checks<VensimCheck> checks;
@@ -35,6 +35,7 @@ public class VensimScanner {
     public VensimScanner(SensorContext context, Checks<VensimCheck> checks) {
         this.context = context;
         this.checks = checks;
+
 
     }
 
@@ -66,8 +67,8 @@ public class VensimScanner {
     private void scanFile(InputFile inputFile) {
 
         try {
-            String content = inputFile.contents();
 
+            String content = inputFile.contents();
             ParseTree root = getParseTree(content);
 
             VensimVisitorContext visitorContext = new VensimVisitorContext(root);

@@ -79,7 +79,7 @@ public class SymbolTableGenerator {
 
                 break;
             }else if(dependency.getType() == SymbolType.UNDETERMINED) {
-                undeterminedDependency = true; //TODO test if first dependency is undefined and second is a variable
+                undeterminedDependency = true;
             }
 
 

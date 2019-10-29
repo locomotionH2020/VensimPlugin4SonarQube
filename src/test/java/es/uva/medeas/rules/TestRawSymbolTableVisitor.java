@@ -75,6 +75,21 @@ public class TestRawSymbolTableVisitor {
 
 
     @Test
+    public void testSubscriptMappingDoesntOverrideOriginal(){
+        String program = "subscriptBefore: ONE, TWO -> mappedSubscript~~|\n" +
+                "mappedSubscript: ONE, TWO~~|\n" +
+                "subscriptAfter: ONE, TWO -> mappedSubscript~~|\n";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        Symbol mappedSubscript = table.getSymbol("mappedSubscript");
+
+        assertSymbolLine(mappedSubscript,2);
+
+
+    }
+
+    @Test
     public void testSubscriptNameIsntOverridden() {
         String program = "subscriptBefore[country] = 7 ~~|\n" +
                 "country : MEXICO, USA,CANADA ->  otherCountries~~|\n" +
@@ -423,13 +438,26 @@ public class TestRawSymbolTableVisitor {
     public void testEquationInsideQuotes(){
         String program = "\n\n\n\"equation \\\"inside quotes\"= 3 ~~|";
 
-        SymbolTable table = getSymbolTableFromString(program);
+        SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol equation = table.getSymbol("\"equation \\\"inside quotes\"");
         assertNotNull(equation);
-        assertSymbolType(equation,SymbolType.CONSTANT);
         assertSymbolLine(equation,4);
 
+    }
+
+    @Test
+    public void testTabbedArray(){
+        String program = "initial population[country,blood type] = TABBED ARRAY(\n" +
+                "       1       2.0        -3.7        4\n" +
+                "       0        6          7          8\n" +
+                "       9       -10        11          12) ~~|";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        Symbol population = table.getSymbol("initial population");
+        Symbol tabbedArrayFunc = table.getSymbol("TABBED ARRAY");
+        assertSymbol(population,SymbolType.UNDETERMINED,1,createSet(tabbedArrayFunc));
     }
 
 

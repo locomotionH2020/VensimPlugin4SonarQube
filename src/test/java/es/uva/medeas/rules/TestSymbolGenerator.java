@@ -1,7 +1,6 @@
 package es.uva.medeas.rules;
 
 import es.uva.medeas.parser.*;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -42,42 +41,7 @@ public class TestSymbolGenerator {
 
 
 
-    @Test
-    public void testMedeas1() throws IOException{ //TODO move
-        SymbolTable table =getSymbolTable("medeas1.mdl");
-    }
 
-
-
-    @Test
-    public void testMedeas2() throws IOException{
-        getSymbolTable("medeas2.mdl");
-
-    }
-
-    @Test
-    public void testMedeasEU() throws IOException{
-        getSymbolTable("medeasEU.mdl");
-    }
-
-
-
-
-
-
-    @Test
-    public void testTabbedArray(){
-        String program = "initial population[country,blood type] = TABBED ARRAY(\n" +
-                "       1       2.0        -3.7        4\n" +
-                "       0        6          7          8\n" +
-                "       9       -10        11          12) ~~|";
-
-        SymbolTable table = getSymbolTableFromString(program);
-
-        Symbol population = table.getSymbol("initial population");
-        Symbol tabbedArrayFunc = table.getSymbol("TABBED ARRAY");
-        assertSymbol(population,SymbolType.CONSTANT,1,createSet(tabbedArrayFunc));
-    }
 
 
 
@@ -105,7 +69,19 @@ public class TestSymbolGenerator {
 
     }
 
-    //TODO Test subscript mapping doesnt override the original
+    @Test
+    public void testResolveMethodCreatesTimeVariable(){
+        SymbolTable table = new SymbolTable();
+
+        assertFalse(table.hasSymbol("Time"));
+        SymbolTableGenerator.resolveSymbolTable(table);
+
+        Symbol time = table.getSymbol("Time");
+        assertSymbolType(time,SymbolType.VARIABLE);
+        assertSymbolLine(time,Symbol.LINE_NOT_DEFINED);
+    }
+
+
 
 
     @Test
@@ -319,4 +295,88 @@ public class TestSymbolGenerator {
         assertEquals(SymbolType.VARIABLE,outputRate.getType());
 
     }
+
+    @Test
+    public void testVariableTypeInference(){
+        SymbolTable table = new SymbolTable();
+
+        Symbol undeterminedType = table.createSymbol("undeterminedType");
+        Symbol variable = table.createSymbol("variable");
+        variable.setType(SymbolType.VARIABLE);
+
+        undeterminedType.addDependency(variable);
+        SymbolTableGenerator.resolveSymbolTable(table);
+
+        assertSymbolType(undeterminedType,SymbolType.VARIABLE);
+
+
+    }
+
+    @Test
+    public void testInfersVarTypeIfThereAreUndeterminedDependencies(){
+        SymbolTable table = new SymbolTable();
+
+        Symbol undeterminedType = table.createSymbol("undeterminedType");
+        Symbol variable = table.createSymbol("variable");
+        variable.setType(SymbolType.VARIABLE);
+
+        undeterminedType.addDependency(table.createSymbol("undeterminedBefore"));
+        undeterminedType.addDependency(variable);
+        undeterminedType.addDependency(table.createSymbol("undeterminedAfter"));
+        SymbolTableGenerator.resolveSymbolTable(table);
+
+
+        assertSymbolType(undeterminedType,SymbolType.VARIABLE);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testThrowsExceptionIfCantBeResolved(){
+        SymbolTable table = new SymbolTable();
+
+        Symbol undeterminedType = table.createSymbol("undeterminedType");
+        undeterminedType.addDependency(undeterminedType);
+
+        SymbolTableGenerator.resolveSymbolTable(table);
+
+    }
+
+    @Test
+    public void testUndefinedSymbolsAreConsideredConstants(){
+        String program =  "variable = undefined~~|";
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        Symbol undefined = table.getSymbol("undefined");
+
+        assertSymbolType(undefined,SymbolType.UNDETERMINED);
+        SymbolTableGenerator.resolveSymbolTable(table);
+        assertSymbolType(undefined,SymbolType.CONSTANT);
+    }
+
+    @Test
+    public void testRegularFunctionsAreConsideredPure(){
+        String program =  "constant = DELAY(4.7) ~~|"; // Vensim doesn't have a DELAY function, it's made up
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol constant = table.getSymbol("constant");
+
+        assertSymbolType(constant,SymbolType.CONSTANT);
+
+    }
+
+    @Test
+    public void testDependenciesWithSubscriptValues(){
+        SymbolTable table = new SymbolTable();
+
+
+        Symbol constant = table.createSymbol("constant");
+        Symbol subscriptValue = table.createSymbol("subscriptValue");
+        subscriptValue.setType(SymbolType.SUBSCRIPT_VALUE);
+
+        constant.addDependency(subscriptValue);
+        SymbolTableGenerator.resolveSymbolTable(table);
+
+        assertSymbolType(constant,SymbolType.CONSTANT);
+    }
+
+
 }

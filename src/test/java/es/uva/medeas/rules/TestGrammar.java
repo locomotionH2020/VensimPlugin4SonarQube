@@ -2,12 +2,16 @@ package es.uva.medeas.rules;
 
 
 import es.uva.medeas.parser.ModelParser;
+import es.uva.medeas.parser.SymbolTable;
 import org.antlr.v4.runtime.tree.ParseTree;
 import static org.junit.Assert.*;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.IOException;
+
 import static  es.uva.medeas.rules.TestUtilities.*;
 
 public class TestGrammar {
@@ -98,4 +102,25 @@ public class TestGrammar {
 
         getParseTreeFromString(program);
     }
+
+
+
+    @Test
+    public void testMedeas1() throws IOException {
+       getSymbolTable("medeas1.mdl");
+    }
+
+
+
+    @Test
+    public void testMedeas2() throws IOException{
+        getSymbolTable("medeas2.mdl");
+
+    }
+
+    @Test
+    public void testMedeasEU() throws IOException{
+        getSymbolTable("medeasEU.mdl");
+    }
+
 }

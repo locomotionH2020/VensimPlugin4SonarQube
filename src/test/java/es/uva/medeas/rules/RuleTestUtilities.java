@@ -5,6 +5,8 @@ import es.uva.medeas.VensimRuleRepository;
 import es.uva.medeas.VensimScanner;
 import es.uva.medeas.VensimVisitorContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.rule.ActiveRules;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
@@ -14,6 +16,7 @@ import org.sonar.api.batch.rule.internal.NewActiveRule;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.rule.RuleKey;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -87,6 +90,9 @@ public class RuleTestUtilities {
         visitorContext.setSymbolTable(getSymbolTableFromString(program));
         return visitorContext;
     }
+
+
+
 }
 
 

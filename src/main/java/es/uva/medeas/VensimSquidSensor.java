@@ -41,6 +41,8 @@ public class VensimSquidSensor implements Sensor {
     @Override
     public void execute(SensorContext sensorContext) {
         FilePredicates p = sensorContext.fileSystem().predicates();
+     
+
         Iterable<InputFile> files = sensorContext.fileSystem().inputFiles(p.hasLanguage(VensimLanguage.KEY));
         List<InputFile> list = new ArrayList<>();
         files.forEach(list::add);
