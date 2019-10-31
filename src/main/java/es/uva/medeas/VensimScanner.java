@@ -53,7 +53,7 @@ public class VensimScanner {
 
     }
 
-    private ParseTree getParseTree(String file_content){
+    protected ParseTree getParseTree(String file_content){
         ModelLexer lexer = new ModelLexer(CharStreams.fromString(file_content));
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -64,22 +64,25 @@ public class VensimScanner {
         return parser.file();
     }
 
-    private void scanFile(InputFile inputFile) {
+    public void scanFile(InputFile inputFile) {
 
         try {
-
             String content = inputFile.contents();
+
             ParseTree root = getParseTree(content);
 
             VensimVisitorContext visitorContext = new VensimVisitorContext(root);
             SymbolTable table = SymbolTableGenerator.getSymbolTable(visitorContext);
+
             visitorContext.setSymbolTable(table);
 
             checkIssues(visitorContext);
             saveIssues(inputFile,visitorContext.getIssues());
 
             int lines = content.split("[\r\n]+").length;
+
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
+
 
         } catch (IOException e) {
             LOG.error("Unable to analyze file '{}'. Error: {}", inputFile.toString(), e);

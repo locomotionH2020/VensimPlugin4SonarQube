@@ -48,7 +48,7 @@ public class TestAPI {
                 InputStreamReader(process2.getErrorStream()));
 
         String s;
-        
+
         while ((s = stdInput.readLine()) != null) {
             System.out.println(s);
         }

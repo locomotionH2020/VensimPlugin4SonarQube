@@ -21,7 +21,8 @@ public class TestUtilities {
 
     public static final Set<Symbol> NO_DEPENDENCIES = new HashSet<>();
 
-    public static ParseTree getParseTree(String file_path) throws IOException {
+
+    public static String loadFile(String file_path) throws IOException{
         File file = new File(
                 TestUtilities.class.getClassLoader().getResource(file_path).getFile()
         );
@@ -34,10 +35,14 @@ public class TestUtilities {
         fileInputStream.close();
 
 
-        String fileContent = new String(value, StandardCharsets.UTF_8);
+        return new String(value, StandardCharsets.UTF_8);
+
+    }
+
+    public static ParseTree getParseTree(String file_path) throws IOException {
 
 
-        return getParseTreeFromString(fileContent);
+        return getParseTreeFromString(loadFile(file_path));
     }
 
     public static ModelParser.FileContext getParseTreeFromString(String fileContent) {
