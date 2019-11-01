@@ -58,6 +58,8 @@ public class TestVensimScanner
 
 
         Logger logger = Mockito.mock(Logger.class);
+
+        JsonSymbolTableBuilder builder = Mockito.mock(JsonSymbolTableBuilder.class);
         VensimScanner.LOG = logger;
         InputFile fileBefore = Mockito.mock(InputFile.class);
         InputFile wrongFile = Mockito.mock(InputFile.class);
@@ -80,7 +82,7 @@ public class TestVensimScanner
         Mockito.doCallRealMethod().when(scanner).scanFile(Mockito.any());
         Mockito.doCallRealMethod().when(scanner).getParseTree(Mockito.any());
         Mockito.doCallRealMethod().when(scanner).checkIssues(Mockito.any());
-
+        Mockito.doNothing().when(scanner).generateJsonOutput();
 
         SensorContext context = Mockito.mock(SensorContext.class);
         Mockito.when(context.isCancelled()).thenReturn(false);
@@ -91,6 +93,7 @@ public class TestVensimScanner
 
         Mockito.when(context.newMeasure()).thenReturn(measure);
         Whitebox.setInternalState(scanner, "context", context);
+        Whitebox.setInternalState(scanner, "jsonBuilder", builder);
         CheckFactory factory = new CheckFactory(RuleTestUtilities.getAllActiveRules());
         Checks<VensimCheck> checks =  factory.<VensimCheck>create(VensimRuleRepository.REPOSITORY_KEY)
                 .addAnnotatedChecks(VensimRuleRepository.getChecks());

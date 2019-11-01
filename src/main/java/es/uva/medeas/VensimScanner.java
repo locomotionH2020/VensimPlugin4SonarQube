@@ -8,6 +8,7 @@ import es.uva.medeas.rules.SymbolTableGenerator;
 import es.uva.medeas.rules.VensimCheck;
 
 
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -22,6 +23,12 @@ import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -31,24 +38,46 @@ public class VensimScanner {
 
     private final SensorContext context;
     private final Checks<VensimCheck> checks;
+    private  final JsonSymbolTableBuilder jsonBuilder;
 
     public VensimScanner(SensorContext context, Checks<VensimCheck> checks) {
         this.context = context;
         this.checks = checks;
+        this.jsonBuilder = new JsonSymbolTableBuilder();
 
 
     }
 
     public void scanFiles(List<InputFile> inputFiles) {
+
         for (InputFile vensimFile : inputFiles) {
             if (context.isCancelled()) {
                 return;
             }
             try {
+
                 scanFile(vensimFile);
             } catch (Exception e) {
                 LOG.warn("Unable to analyze file '{}'. Error: {}", vensimFile.toString(), e);
             }
+        }
+
+       
+        generateJsonOutput();
+
+    }
+
+    protected void generateJsonOutput() {
+       JsonArray symbolTable =  jsonBuilder.build();
+
+        try {
+
+            File file = new File("symbolTable.json");
+            JsonWriter writer = Json.createWriter(new FileOutputStream(file));
+            writer.writeArray(symbolTable);
+            writer.close();
+        } catch (FileNotFoundException e) {
+            LOG.warn("Unable to create symbolTable.json, Error:{}",e.getMessage() );
         }
 
     }
@@ -73,6 +102,7 @@ public class VensimScanner {
 
             VensimVisitorContext visitorContext = new VensimVisitorContext(root);
             SymbolTable table = SymbolTableGenerator.getSymbolTable(visitorContext);
+            jsonBuilder.addSymbolTable(inputFile.filename(),table);
 
             visitorContext.setSymbolTable(table);
 

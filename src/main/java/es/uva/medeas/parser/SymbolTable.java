@@ -43,6 +43,8 @@ public class SymbolTable {
         return symbol;
     }
 
+
+
     public Symbol getSymbolOrCreate(Token token){
        return getSymbolOrCreate(token.getText());
 

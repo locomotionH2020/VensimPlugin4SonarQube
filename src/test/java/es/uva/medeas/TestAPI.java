@@ -14,6 +14,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -23,6 +25,7 @@ public class TestAPI {
 
 
     private static final String SONAR_TOKEN = System.getenv("SONAR_TOKEN");
+    private static File integrationTestsFolder;
 
     @BeforeClass
     public static void runSonarScanner() throws IOException {
@@ -32,7 +35,7 @@ public class TestAPI {
 
 
 
-       File integrationTestsFolder = new File(file.getParentFile().getParentFile(),"integrationTests");
+       integrationTestsFolder = new File(file.getParentFile().getParentFile(),"integrationTests");
 
         Process process2=Runtime.getRuntime().exec("sonar-scanner " +
                         "  -Dsonar.projectKey=integrationTests " +
@@ -132,5 +135,36 @@ public class TestAPI {
         assertIssueType(issue, SubscriptValueNameCheck.CHECK_KEY);
 
 
+    }
+
+    @Test
+    public void testSymbolTableOutput() throws IOException{
+        File file = new File(integrationTestsFolder,"symbolTable.json");
+
+        InputStream fis = new FileInputStream(file);
+
+        JsonReader reader = Json.createReader(fis);
+
+        JsonArray jsonFile = reader.readArray();
+
+
+        Map<String,JsonObject> filesAnalyzed = new HashMap<>();
+        for(int i=0;i<jsonFile.size();i++){
+            JsonObject object = jsonFile.getJsonObject(i);
+            filesAnalyzed.put(object.getString("file"),object);
+        }
+
+        assertTrue(filesAnalyzed.keySet().contains("testSubscriptName.mdl"));
+
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"COUNTRY1\":\"SUBSCRIPT_VALUE\",\"COUNTRY2\":\"SUBSCRIPT_VALUE\",\"COUNTERY_ENUM\":\"SUBSCRIPT_NAME\",\"Time\":\"VARIABLE\",\"MY_10_FAVORITE_COUNTRIES_ENUM\":\"SUBSCRIPT_NAME\"}"));
+        JsonObject expectedObjectSubscriptName = jsonReader.readObject();
+        jsonReader.close();
+
+        JsonReader jsonReader2 = Json.createReader(new StringReader("{\"SECOND_COUNTRY\":\"SUBSCRIPT_VALUE\",\"OTHER_COUNTRIES_ENUM\":\"SUBSCRIPT_NAME\",\"COUNTRY1\":\"SUBSCRIPT_VALUE\",\"COUNTRIES_ENUM\":\"SUBSCRIPT_NAME\",\"Time\":\"VARIABLE\",\"country2\":\"SUBSCRIPT_VALUE\"}"));
+        JsonObject expectedObjectSubscriptValue = jsonReader2.readObject();
+        jsonReader2.close();
+
+        assertEquals(expectedObjectSubscriptName,filesAnalyzed.get("testSubscriptName.mdl").getJsonObject("symbols"));
+        assertEquals(expectedObjectSubscriptValue,filesAnalyzed.get("testSubscriptValues.mdl").getJsonObject("symbols"));
     }
 }

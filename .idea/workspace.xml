@@ -2,10 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="322bd4ca-7eb1-4e60-9e4c-f7bb4f7c6bb9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/JsonSymbolTableBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/TestJsonSymbolTableBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimScanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/es/uva/medeas/TestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/TestAPI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/es/uva/medeas/TestVensimScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/TestVensimScanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestUtilities.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -29,30 +32,11 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimScanner.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="133">
-                  <caret line="75" selection-start-line="75" selection-end-line="75" />
+                <state relative-caret-position="358">
+                  <caret line="64" column="7" selection-start-line="64" selection-start-column="7" selection-end-line="64" selection-end-column="7" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#2613#2622#0" expanded="true" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="jar://$MAVEN_REPOSITORY$/org/sonarsource/sonarqube/sonar-plugin-api/7.9.1/sonar-plugin-api-7.9.1-sources.jar!/org/sonar/api/batch/sensor/SensorContext.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1140">
-                  <caret line="119" column="91" selection-start-line="119" selection-start-column="81" selection-end-line="119" selection-end-column="91" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/VensimCheck.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="60">
-                  <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
                 </state>
               </provider>
             </entry>
@@ -60,50 +44,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/TestVensimScanner.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="221">
-                  <caret line="87" column="28" selection-start-line="87" selection-start-column="28" selection-end-line="87" selection-end-column="28" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="jar://$MAVEN_REPOSITORY$/org/sonarsource/sonarqube/sonar-plugin-api/7.9.1/sonar-plugin-api-7.9.1-sources.jar!/org/sonar/api/batch/sensor/measure/Measure.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="150">
-                  <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimRuleRepository.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="420">
-                  <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestUtilities.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="148">
-                  <caret line="70" column="10" selection-start-line="70" selection-start-column="8" selection-end-line="70" selection-end-column="10" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/RuleTestUtilities.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="133">
-                  <caret line="60" column="34" lean-forward="true" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="34" />
+                <state relative-caret-position="-7">
+                  <caret line="51" lean-forward="true" selection-start-line="51" selection-end-line="51" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -114,15 +56,37 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/TestVensimScanner.java">
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Symbol.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="623">
-                  <caret line="103" column="81" selection-start-line="103" selection-start-column="81" selection-end-line="103" selection-end-column="81" />
+                <state relative-caret-position="360">
+                  <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+                  <folding>
+                    <element signature="e#778#779#0" expanded="true" />
+                    <element signature="e#805#806#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/JsonSymbolTableBuilder.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="105">
+                  <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolType.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="30">
+                  <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
                 </state>
               </provider>
             </entry>
@@ -142,11 +106,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>lookup</find>
-      <find>call</find>
-      <find>exprOperation</find>
-      <find>ignore</find>
-      <find>expr:</find>
       <find>sign</find>
       <find>remove</find>
       <find>not-empty</find>
@@ -172,6 +131,11 @@
       <find>pa</find>
       <find>newMeasure</find>
       <find>checks</find>
+      <find>junit</find>
+      <find>asserr</find>
+      <find>jdk.i</find>
+      <find>checkissues</find>
+      <find>Unable to analyze file</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src</dir>
@@ -193,8 +157,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/test/resources/emptyFile.mdl" />
-        <option value="$PROJECT_DIR$/src/test/resources/testTypeInference1.mdl" />
         <option value="$PROJECT_DIR$/src/test/resources/testResolveIndirectTypes.mdl" />
         <option value="$PROJECT_DIR$/src/main/resources/Expr.g4" />
         <option value="$PROJECT_DIR$/src/test/resources/testCyclicDependencies.mdl" />
@@ -209,7 +171,6 @@
         <option value="$PROJECT_DIR$/src/test/resources/testRealityCheck.mdl" />
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/RawTableGenerator.java" />
         <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestUtilities.java" />
-        <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java" />
         <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolTable.java" />
         <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/tests/TestSymbolGenerator.java" />
         <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolTable.java" />
@@ -240,10 +201,13 @@
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/SubscriptNameCheck.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimSquidSensor.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/TestAPI.java" />
         <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestUtilities.java" />
-        <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimScanner.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/JsonSymbolTableBuilder.java" />
+        <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/TestJsonSymbolTableBuilder.java" />
+        <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/TestAPI.java" />
         <option value="$PROJECT_DIR$/src/test/java/es/uva/medeas/TestVensimScanner.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimScanner.java" />
       </list>
     </option>
   </component>
@@ -265,6 +229,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -366,8 +332,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -379,19 +343,19 @@
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="es.uva.medeas.parser" />
-      <recent name="" />
-      <recent name="rules" />
-    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="es.uva.medeas" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="es.uva.medeas.rules" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/resources" />
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="es.uva.medeas.parser" />
+      <recent name="" />
+      <recent name="rules" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -407,7 +371,7 @@
     </option>
   </component>
   <component name="RunManager" selected="JUnit.TestVensimScanner.testIfAfileFailsTheRestExecutes">
-    <configuration name="TestAPI" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestAPI.testSymbolTableOutput" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SonarVensim" />
       <extension name="coverage">
         <pattern>
@@ -417,7 +381,39 @@
       </extension>
       <option name="PACKAGE_NAME" value="es.uva.medeas" />
       <option name="MAIN_CLASS_NAME" value="es.uva.medeas.TestAPI" />
+      <option name="METHOD_NAME" value="testSymbolTableOutput" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestJsonSymbolTableBuilder" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SonarVensim" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="es.uva.medeas.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="es.uva.medeas" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.TestJsonSymbolTableBuilder" />
       <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestJsonSymbolTableBuilder.testCompleteSymbolTable" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SonarVensim" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="es.uva.medeas.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="es.uva.medeas" />
+      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.TestJsonSymbolTableBuilder" />
+      <option name="METHOD_NAME" value="testCompleteSymbolTable" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -465,51 +461,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestVensimScanner.testScannerLogMessageParseException" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SonarVensim" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="es.uva.medeas.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="es.uva.medeas" />
-      <option name="MAIN_CLASS_NAME" value="es.uva.medeas.TestVensimScanner" />
-      <option name="METHOD_NAME" value="testScannerLogMessageParseException" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="es.uva.medeas in SonarVensim" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SonarVensim" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="es.uva.medeas.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="es.uva.medeas" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
       <item itemvalue="JUnit.TestSymbolGenerator" />
-      <item itemvalue="JUnit.TestAPI" />
+      <item itemvalue="JUnit.TestJsonSymbolTableBuilder.testCompleteSymbolTable" />
+      <item itemvalue="JUnit.TestJsonSymbolTableBuilder" />
+      <item itemvalue="JUnit.TestAPI.testSymbolTableOutput" />
       <item itemvalue="JUnit.TestVensimScanner" />
-      <item itemvalue="JUnit.TestVensimScanner.testScannerLogMessageParseException" />
-      <item itemvalue="JUnit.es.uva.medeas in SonarVensim" />
       <item itemvalue="JUnit.TestVensimScanner.testIfAfileFailsTheRestExecutes" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.TestVensimScanner.testIfAfileFailsTheRestExecutes" />
         <item itemvalue="JUnit.TestVensimScanner" />
-        <item itemvalue="JUnit.es.uva.medeas in SonarVensim" />
-        <item itemvalue="JUnit.TestVensimScanner.testScannerLogMessageParseException" />
-        <item itemvalue="JUnit.TestAPI" />
+        <item itemvalue="JUnit.TestAPI.testSymbolTableOutput" />
+        <item itemvalue="JUnit.TestJsonSymbolTableBuilder" />
+        <item itemvalue="JUnit.TestJsonSymbolTableBuilder.testCompleteSymbolTable" />
       </list>
     </recent_temporary>
   </component>
@@ -527,34 +493,34 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.10.29 at 17h 51m 49s.xml">
+    <history-entry file="TestAPI_testSymbolTableOutput - 2019.11.01 at 12h 48m 14s.xml">
+      <configuration name="TestAPI.testSymbolTableOutput" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TestVensimScanner - 2019.11.01 at 12h 49m 10s.xml">
+      <configuration name="TestVensimScanner" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TestVensimScanner - 2019.11.01 at 12h 49m 25s.xml">
+      <configuration name="TestVensimScanner" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TestVensimScanner - 2019.11.01 at 12h 51m 22s.xml">
+      <configuration name="TestVensimScanner" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TestVensimScanner - 2019.11.01 at 12h 52m 42s.xml">
+      <configuration name="TestVensimScanner" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.11.01 at 12h 52m 45s.xml">
       <configuration name="TestVensimScanner.testIfAfileFailsTheRestExecutes" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.10.29 at 17h 52m 01s.xml">
+    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.11.01 at 12h 52m 57s.xml">
       <configuration name="TestVensimScanner.testIfAfileFailsTheRestExecutes" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.10.29 at 17h 52m 23s.xml">
+    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.11.01 at 12h 53m 10s.xml">
       <configuration name="TestVensimScanner.testIfAfileFailsTheRestExecutes" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.10.29 at 17h 53m 45s.xml">
+    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.11.01 at 12h 53m 24s.xml">
       <configuration name="TestVensimScanner.testIfAfileFailsTheRestExecutes" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.10.29 at 17h 58m 16s.xml">
-      <configuration name="TestVensimScanner.testIfAfileFailsTheRestExecutes" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.10.29 at 18h 00m 47s.xml">
-      <configuration name="TestVensimScanner.testIfAfileFailsTheRestExecutes" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.10.29 at 18h 01m 08s.xml">
-      <configuration name="TestVensimScanner.testIfAfileFailsTheRestExecutes" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.10.29 at 18h 01m 21s.xml">
-      <configuration name="TestVensimScanner.testIfAfileFailsTheRestExecutes" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.10.29 at 18h 01m 32s.xml">
-      <configuration name="TestVensimScanner.testIfAfileFailsTheRestExecutes" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.10.29 at 18h 02m 05s.xml">
+    <history-entry file="TestVensimScanner_testIfAfileFailsTheRestExecutes - 2019.11.01 at 12h 55m 00s.xml">
       <configuration name="TestVensimScanner.testIfAfileFailsTheRestExecutes" configurationId="JUnit" />
     </history-entry>
   </component>
@@ -569,6 +535,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="1" />
@@ -576,36 +543,7 @@
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="6" visible="true" weight="0.24546425" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32969433" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.4213974" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3995633" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286026" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32969433" />
-      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="9" weight="0.32969433" />
-      <window_info anchor="bottom" id="Messages" order="10" weight="0.32969433" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Maven" order="4" />
-      <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info anchor="right" id="Capture Analysis" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Coverage" order="8" side_tool="true" visible="true" weight="0.032822758" />
-    </layout>
-    <layout-to-restore>
-      <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
-      <window_info id="Capture Tool" order="1" />
-      <window_info id="Image Layers" order="2" />
-      <window_info id="Designer" order="3" />
-      <window_info id="UI Designer" order="4" />
-      <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="6" visible="true" weight="0.23479189" />
+      <window_info content_ui="combo" id="Project" order="6" visible="true" weight="0.24813233" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32969433" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4213974" />
@@ -626,7 +564,7 @@
       <window_info anchor="right" id="Capture Analysis" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Coverage" order="8" side_tool="true" visible="true" weight="0.032822758" />
-    </layout-to-restore>
+    </layout>
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.g4" />
@@ -635,51 +573,6 @@
     <SUITE FILE_PATH="coverage/SonarVensim$TestSymbolGenerator.ic" NAME="TestSymbolGenerator Coverage Results" MODIFIED="1570719700842" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/test/resources/invertedDependencies.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.mdl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="45" lean-forward="true" selection-start-column="45" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimVisitorContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="38" column="21" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#707#708#0" expanded="true" />
-            <element signature="e#741#742#0" expanded="true" />
-            <element signature="e#787#788#0" expanded="true" />
-            <element signature="e#808#809#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/java/jdk-13/lib/src.zip!/java.base/java/io/IOException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="38" column="6" selection-start-line="38" selection-start-column="6" selection-end-line="38" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/rules/VensimVisitorCheck.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -1024,13 +917,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Symbol.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/sonarsource/sonarqube/sonar-plugin-api/7.9.1/sonar-plugin-api-7.9.1-sources.jar!/org/sonar/api/server/profile/BuiltInQualityProfilesDefinition.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="477">
@@ -1135,16 +1021,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestGrammar.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="108" column="50" selection-start-line="108" selection-start-column="50" selection-end-line="108" selection-end-column="50" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/sonarsource/sonarqube/sonar-plugin-api/7.9.1/sonar-plugin-api-7.9.1-sources.jar!/org/sonar/api/batch/fs/InputFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1650">
@@ -1175,35 +1051,6 @@
             <element signature="imports" expanded="true" />
             <element signature="e#571#572#0" expanded="true" />
             <element signature="e#617#618#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="51" column="10" selection-start-line="51" selection-start-column="10" selection-end-line="51" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#217#218#0" expanded="true" />
-            <element signature="e#261#262#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="83" selection-start-line="83" selection-end-line="83" />
-          <folding>
-            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1276,40 +1123,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/TestAPI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="50" selection-start-line="50" selection-end-line="50" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/sonarsource/sonarqube/sonar-plugin-api/7.9.1/sonar-plugin-api-7.9.1-sources.jar!/org/sonar/api/batch/sensor/measure/Measure.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimRuleRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/RuleTestUtilities.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="60" column="34" lean-forward="true" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="34" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/sonarsource/sonarqube/sonar-plugin-api/7.9.1/sonar-plugin-api-7.9.1-sources.jar!/org/sonar/api/batch/sensor/measure/internal/DefaultMeasure.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -1317,16 +1130,6 @@
           <folding>
             <element signature="e#1816#1817#0" expanded="true" />
             <element signature="e#1840#1841#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestUtilities.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="70" column="10" selection-start-line="70" selection-start-column="8" selection-end-line="70" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1345,21 +1148,157 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimScanner.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/sonarsource/sonarqube/sonar-plugin-api/7.9.1/sonar-plugin-api-7.9.1-sources.jar!/org/sonar/api/batch/sensor/measure/Measure.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="75" selection-start-line="75" selection-end-line="75" />
+        <state relative-caret-position="150">
+          <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimRuleRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestUtilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="840">
+          <caret line="70" column="10" selection-start-line="70" selection-start-column="8" selection-end-line="70" selection-end-column="10" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2613#2622#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/RuleTestUtilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="60" column="34" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="34" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="26" column="62" selection-start-line="25" selection-start-column="6" selection-end-line="26" selection-end-column="62" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestGrammar.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1413">
+          <caret line="9" column="11" lean-forward="true" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="302">
+          <caret line="45" selection-start-line="45" selection-end-line="45" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#217#218#0" expanded="true" />
+            <element signature="e#261#262#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/Symbol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+          <folding>
+            <element signature="e#778#779#0" expanded="true" />
+            <element signature="e#805#806#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/JsonSymbolTableBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/glassfish/javax.json/1.0.4/javax.json-1.0.4.jar!/org/glassfish/json/JsonObjectBuilderImpl.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="165" selection-start-line="165" selection-end-line="165" />
+          <folding>
+            <element signature="e#5062#5063#0" expanded="true" />
+            <element signature="e#5119#5120#0" expanded="true" />
+            <element signature="e#5234#5235#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/parser/SymbolType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/java/jdk-13/lib/src.zip!/java.base/java/io/FileOutputStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-79">
+          <caret line="124" column="5" selection-start-line="124" selection-start-column="5" selection-end-line="124" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/rules/TestSymbolTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="96" column="6" lean-forward="true" selection-start-line="96" selection-start-column="6" selection-end-line="99" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/TestJsonSymbolTableBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="91" selection-start-line="91" selection-end-line="91" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/TestAPI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="387">
+          <caret line="162" column="47" selection-start-line="162" selection-start-column="47" selection-end-line="162" selection-end-column="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/es/uva/medeas/TestVensimScanner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="623">
-          <caret line="103" column="81" selection-start-line="103" selection-start-column="81" selection-end-line="103" selection-end-column="81" />
+        <state relative-caret-position="-7">
+          <caret line="51" lean-forward="true" selection-start-line="51" selection-end-line="51" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/uva/medeas/VensimScanner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="358">
+          <caret line="64" column="7" selection-start-line="64" selection-start-column="7" selection-end-line="64" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
