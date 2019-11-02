@@ -6,7 +6,15 @@ import es.uva.medeas.parser.SymbolType;
 import org.junit.Test;
 
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonValue;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -64,7 +72,8 @@ public class TestJsonSymbolTableBuilder {
         JsonObject symbols = jsonTable.getJsonObject(0).getJsonObject("symbols");
 
         for(SymbolType type: SymbolType.values()){
-            assertEquals(type.toString(),symbols.getString(type.toString() + " symbol"));
+            assertEquals("{\"type\":\"" + type.toString() + "\",\"line\":-1,\"dependencies\":[]}",
+                    symbols.getJsonObject(type.toString() + " symbol").toString());
         }
 
     }
@@ -93,5 +102,55 @@ public class TestJsonSymbolTableBuilder {
         assertFalse(firstJson.getJsonObject("symbols").isEmpty());
         assertTrue(secondJson.getJsonObject("symbols").isEmpty());
         assertTrue(thirdJson.getJsonObject("symbols").isEmpty());
+    }
+
+    @Test
+    public void testDefinedLine(){
+        int line = 3;
+        JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
+
+        SymbolTable table = new SymbolTable();
+        Symbol symbol = table.createSymbol("var");
+        symbol.setDefinitionLine(line);
+
+        builder.addSymbolTable("file",table);
+        JsonArray output = builder.build();
+        JsonObject file = output.getJsonObject(0);
+
+        assertEquals(line, file.getJsonObject("symbols").getJsonObject("var").getInt("line"));
+    }
+
+
+    @Test
+    public void testDependencies(){
+        JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
+
+        SymbolTable table = new SymbolTable();
+        Symbol var = table.createSymbol("var");
+        Symbol constant = table.createSymbol("constant");
+        Symbol notFoo = table.createSymbol("notFoo");
+        Symbol anotherOne = table.createSymbol("anotherOne");
+
+        var.addDependencies(Arrays.asList(constant,notFoo));
+        notFoo.addDependency(anotherOne);
+
+        builder.addSymbolTable("file",table);
+        JsonArray output = builder.build();
+        JsonObject file = output.getJsonObject(0);
+
+        JsonArray varDependencies = file.getJsonObject("symbols").getJsonObject("var").getJsonArray("dependencies");
+        JsonArray notFooDependencies = file.getJsonObject("symbols").getJsonObject("notFoo").getJsonArray("dependencies");
+
+        JsonValue[] varDependenciesValues = varDependencies.toArray(new JsonValue[0]);
+        List<JsonValue> varDependenciesList =  Arrays.asList(varDependenciesValues);
+        Set<String> actual  = varDependenciesList.stream().map(JsonValue::toString).collect(Collectors.toSet());
+        Set<String> expected = new HashSet<>(Arrays.asList("\"constant\"","\"notFoo\""));
+
+        assertEquals(expected,actual );
+        assertEquals("[\"anotherOne\"]",notFooDependencies.toString());
+
+
+
+
     }
 }

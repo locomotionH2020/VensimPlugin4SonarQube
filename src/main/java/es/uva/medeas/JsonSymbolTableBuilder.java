@@ -26,10 +26,27 @@ public class JsonSymbolTableBuilder {
     private JsonObject symbolTableToJson(SymbolTable table){
         JsonObjectBuilder tableBuilder = Json.createObjectBuilder();
         for(Symbol symbol: table.getSymbols()){
-            tableBuilder.add(symbol.getToken(),symbol.getType().toString());
+
+            tableBuilder.add(symbol.getToken(),symbolToJson(symbol));
         }
 
         return tableBuilder.build();
+    }
+
+    private JsonObject symbolToJson(Symbol symbol){
+        JsonObjectBuilder symbolBuilder = Json.createObjectBuilder();
+
+        symbolBuilder.add("type",symbol.getType().toString());
+        symbolBuilder.add("line",symbol.getDefinitionLine());
+
+        JsonArrayBuilder dependenciesBuilder = Json.createArrayBuilder();
+        for(Symbol dependency:symbol.getDependencies())
+            dependenciesBuilder.add(dependency.getToken());
+
+        symbolBuilder.add("dependencies",dependenciesBuilder);
+
+        return symbolBuilder.build();
+
     }
 
     public JsonArray build(){

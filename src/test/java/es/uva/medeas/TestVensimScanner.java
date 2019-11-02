@@ -2,21 +2,15 @@ package es.uva.medeas;
 
 
 import es.uva.medeas.rules.RuleTestUtilities;
-import es.uva.medeas.rules.TestUtilities;
 import es.uva.medeas.rules.VensimCheck;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Matchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.batch.sensor.measure.Measure;
 import org.sonar.api.batch.sensor.measure.NewMeasure;
-import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.utils.log.Logger;
 
 
