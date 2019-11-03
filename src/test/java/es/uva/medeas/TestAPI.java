@@ -104,7 +104,7 @@ public class TestAPI {
         JsonReader jsonReader = Json.createReader(new StringReader("{\"COUNTRY1\":{\"type\":\"SUBSCRIPT_VALUE\",\"line\":3,\"dependencies\":[]},\"COUNTRY2\":{\"type\":\"SUBSCRIPT_VALUE\",\"line\":3,\"dependencies\":[]},\"COUNTERY_ENUM\":{\"type\":\"SUBSCRIPT_NAME\",\"line\":3,\"dependencies\":[]},\"Time\":{\"type\":\"VARIABLE\",\"line\":-1,\"dependencies\":[]},\"MY_10_FAVORITE_COUNTRIES_ENUM\":{\"type\":\"SUBSCRIPT_NAME\",\"line\":1,\"dependencies\":[]}}"));
         JsonObject expectedObjectSubscriptName = jsonReader.readObject();
         jsonReader.close();
-        
+
 
         assertEquals(expectedObjectSubscriptName,filesAnalyzed.get("testSubscriptName.mdl").getJsonObject("symbols"));
         assertNotNull(filesAnalyzed.get("testSubscriptValues.mdl").getJsonObject("symbols"));

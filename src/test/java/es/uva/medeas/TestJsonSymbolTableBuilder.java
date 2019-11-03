@@ -153,4 +153,36 @@ public class TestJsonSymbolTableBuilder {
 
 
     }
+
+    @Test
+    public void testSymbolWithoutDependencies(){
+        JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
+
+        SymbolTable table = new SymbolTable();
+        table.createSymbol("constant");
+
+        builder.addSymbolTable("file",table);
+        JsonObject file = builder.build().getJsonObject(0);
+
+        JsonArray dependencies = file.getJsonObject("symbols").getJsonObject("constant").getJsonArray("dependencies");
+
+        assertTrue(dependencies.isEmpty());
+
+    }
+
+    @Test
+    public void testSymbolWithoutDefinedLine(){
+        JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
+
+        SymbolTable table = new SymbolTable();
+        table.createSymbol("constant");
+
+        builder.addSymbolTable("file",table);
+        JsonObject file = builder.build().getJsonObject(0);
+
+        int actualLine = file.getJsonObject("symbols").getJsonObject("constant").getInt("line");
+
+        assertEquals(Symbol.LINE_NOT_DEFINED,actualLine);
+
+    }
 }
