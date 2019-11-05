@@ -3,20 +3,17 @@ package es.uva.medeas.rules;
 
 import es.uva.medeas.VensimScanner;
 import es.uva.medeas.VensimVisitorContext;
-
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-
 import static es.uva.medeas.rules.RuleTestUtilities.*;
+import static org.junit.Assert.assertTrue;
 
-public class TestSubscriptNameCheck {
+public class TestLookupNameCheck {
 
     @Test
     public void testCorrectName() {
 
-        String program = "MY_10_FAVORITE_COUNTRIES_ENUM: COUNTRY1, COUNTRY2~|";
+        String program = "historic3_demand_lt( GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' ))~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -29,171 +26,151 @@ public class TestSubscriptNameCheck {
 
     @Test
     public void testNameCanContainAnyNumber() {
-        String program = "NUMBERS1_2_3_4_5_6_7_8_9S_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "numbers_1_2_3_4_5_6_7_8_9_lt( GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' ))~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
-
 
         scanner.checkIssues(visitorContext);
         assertTrue(visitorContext.getIssues().isEmpty());
     }
 
     @Test
-    public void testLowercaseName() {
+    public void testUpperCaseName() {
 
-        String program = "countrieS_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "\nHISTORICAL_EXTRACTION_LT(  GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssue(visitorContext,LookupNameCheck.class,2);
 
     }
 
     @Test
-    public void testNonPluralName() {
+    public void testUppercaseSuffix(){
 
-
-        String program = "\nCOUNTRY_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "\nhistorical_extraction_LT(  GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
-        scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,2);
 
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext,LookupNameCheck.class,2);
     }
 
     @Test
-    public void testNameWithoutSuffix() {
-
-        String program = "COUNTRIES:\n COUNTRY1, COUNTRY2~|";
+    public void testNameWithoutSuffix(){
+        String program = "historical_extraction(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
-
+        assertHasIssue(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
-    public void testNameWithLowercaseSuffix() {
-
-        String program = "COUNTRIES_enum:\n COUNTRY1, COUNTRY2~|";
+    public void testOnlySuffix(){
+        String program = "lt(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
-
+        assertHasIssue(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
-    public void testOnlySAndSuffix(){
-        String program = "S_ENUM:\n COUNTRY1, COUNTRY2~|";
+    public void testUnderscoreSuffix(){
+        String program = "_lt(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssue(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
     public void testSeveralUnderscore(){
-        String program = "MY__COUNTRIES_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "historical__extraction_lt(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssue(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
     public void testSeveralUnderscoreBeforeSuffix(){
-        String program = "MY_COUNTRIES__ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "historical_extraction__lt(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssue(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
     public void testNameBeginningWithUnderscore(){
-        String program = "_MY_COUNTRIES_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "_historical_extraction_lt(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssue(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
     public void testNameEndingWithUnderscore(){
-        String program = "MY_COUNTRIES_ENUM_:\n COUNTRY1, COUNTRY2~|";
+        String program = "historical_extraction_lt_(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssue(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
-    public void testUnderscoreBeforePlural(){
-        String program = "MY_COUNTRIE_S_ENUM:\n COUNTRY1, COUNTRY2~|";
+    public void testNameBeginsWithNumber(){
+        String program = "\"3_historical_extraction_lt\"(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|\n" +
+                "\"3historical_extraction_lt\"(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+        assertHasIssue(visitorContext,LookupNameCheck.class,2);
     }
 
     @Test
-    public void testWeirdCharacters(){
-        String program = "A_WEIRD_È_ENUM:\n COUNTRY1, COUNTRY2~|";
+    public void testNameEndsWithNumberr(){
+        String program = "historical_extraction_lt3(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+
     }
-
-    @Test
-    public void testBeginsWithNumber(){
-        String program = "\"2_COUNTRIES_ENUM\": COUNTRY1, COUNTRY2~|\n" +
-                        " \"3_COUNTRIES_ENUM\": COUNTRY1, COUNTRY2, COUNTRY3~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-
-        scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,2);
-
-    }//TODO test ends with number
-
-
 
 }

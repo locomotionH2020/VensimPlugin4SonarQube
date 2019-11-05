@@ -2,3 +2,6 @@ target/
 deploy.sh
 testGrammar.sh
 vensimExamples/
+.idea/
+symbolTable.json
+.scannerwork/

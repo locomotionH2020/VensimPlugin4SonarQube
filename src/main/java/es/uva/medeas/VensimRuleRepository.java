@@ -1,17 +1,21 @@
 package es.uva.medeas;
 
+import es.uva.medeas.rules.LookupNameCheck;
 import es.uva.medeas.rules.SubscriptNameCheck;
 import es.uva.medeas.rules.SubscriptValueNameCheck;
+import es.uva.medeas.rules.VariableNameCheck;
 import org.sonar.api.server.rule.RulesDefinition;
+import org.sonar.api.server.rule.RulesDefinitionAnnotationLoader;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 
 public class VensimRuleRepository implements RulesDefinition{
 
     private static final String REPOSITORY_NAME = "VensimRules";
     public static final String REPOSITORY_KEY = "vensim";
-
 
 
     @Override
@@ -22,9 +26,12 @@ public class VensimRuleRepository implements RulesDefinition{
                 .setName(REPOSITORY_NAME);
 
 
-        repository.createRule(SubscriptNameCheck.CHECK_KEY).setName(SubscriptNameCheck.NAME).setHtmlDescription(SubscriptNameCheck.HTML_DESCRIPTION);
-        
-        repository.createRule(SubscriptValueNameCheck.CHECK_KEY).setName(SubscriptValueNameCheck.NAME).setHtmlDescription(SubscriptValueNameCheck.HTML_DESCRIPTION);
+        RulesDefinitionAnnotationLoader loader = new RulesDefinitionAnnotationLoader();
+        List<Class> checks = new ArrayList<>();
+        getChecks().forEach(checks::add);
+
+        loader.load(repository, checks.toArray(new Class[0]));
+
 
 
 
@@ -37,6 +44,8 @@ public class VensimRuleRepository implements RulesDefinition{
         HashSet<Class> set = new HashSet<>();
         set.add(SubscriptNameCheck.class);
         set.add(SubscriptValueNameCheck.class);
+        set.add(LookupNameCheck.class);
+        set.add(VariableNameCheck.class);
         return set;
     }
 

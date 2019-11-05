@@ -1,20 +1,18 @@
 package es.uva.medeas.rules;
 
-
 import es.uva.medeas.VensimScanner;
 import es.uva.medeas.VensimVisitorContext;
 import org.junit.Test;
-import org.sonar.api.server.rule.RulesDefinitionAnnotationLoader;
 
 import static es.uva.medeas.rules.RuleTestUtilities.*;
 import static org.junit.Assert.assertTrue;
 
-public class TestSubscriptValueNameCheck {
+public class TestVariableNameCheck {
 
     @Test
     public void testCorrectName() {
 
-        String program = "MY_COUNTRIES_ENUM: FIRST_COUNTRY, COUNTRY2~|";
+        String program = "expected_consumption_2020 = Time ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -22,12 +20,11 @@ public class TestSubscriptValueNameCheck {
         scanner.checkIssues(visitorContext);
         assertTrue(visitorContext.getIssues().isEmpty());
 
-
     }
 
     @Test
-    public void testNameCanContainAnyNumber() {
-        String program = "NUMBERS_INSIDE_SUBSCRIPTS_ENUM:\n COUNTRY_0_1_2_3_4_5_6_7_8_9, COUNTRY2~|";
+    public void testNameCanContainAnyNumber(){
+        String program = "numbers0_1_2_3_4_5_6_7_8_9 = Time ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -37,85 +34,70 @@ public class TestSubscriptValueNameCheck {
     }
 
     @Test
-    public void testLowerCaseValueName() {
-
-        String program = "COUNTRIES_ENUM: COUNTRY1,\n country2~|";
+    public void testUppercaseName(){
+        String program = "EXPECTED_consumption_2020 = Time ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
-
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptValueNameCheck.class,2);
-
+        assertHasIssue(visitorContext,VariableNameCheck.class,1);
     }
 
     @Test
     public void testSeveralUnderscore(){
-        String program = "MY_COUNTRIES_ENUM: ONE__COUNTRY,\n COUNTRY2~|";
+        String program = "\nexpected__consumption_2020 = Time ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
-
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptValueNameCheck.class,1);
+        assertHasIssue(visitorContext,VariableNameCheck.class,2);
     }
-
 
     @Test
     public void testNameBeginningWithUnderscore(){
-        String program = "MY_COUNTRIES_ENUM:\n _COUNTRY1\n, COUNTRY2~|";
+        String program = "_expected_consumption_2020 = Time ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
-
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptValueNameCheck.class,2);
+        assertHasIssue(visitorContext,VariableNameCheck.class,1);
     }
 
     @Test
     public void testNameEndingWithUnderscore(){
-        String program = "MY_COUNTRIES_ENUM_:\n COUNTRY1_, COUNTRY2~|";
+        String program = "expected_consumption_2020_ = Time ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
-
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptValueNameCheck.class,2);
+        assertHasIssue(visitorContext,VariableNameCheck.class,1);
     }
-
 
     @Test
     public void testWeirdCharacters(){
-        String program = "COUNTRIES_ENUM:\n WEIRD_È, COUNTRY2~|";
+        String program = "wèird= Time~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptValueNameCheck.class,2);
+        assertHasIssue(visitorContext,VariableNameCheck.class,1);
     }
 
     @Test
-    public void testBeginsWithNumber(){
-        String program = "COUNTRIES_ENUM: \"1_COUNTRY\", COUNTRY2~|\n" +
-                         "ANOTHER_ENUM: \"1COUNTRY\"~|";
+    public void testNameBeginsWithNumber(){
+        String program = "\"2020_expected_consumption\" = Time ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
-
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptValueNameCheck.class,1);
-        assertHasIssue(visitorContext,SubscriptValueNameCheck.class,2);
-
+        assertHasIssue(visitorContext,VariableNameCheck.class,1);
     }
-
-
-
 
 }

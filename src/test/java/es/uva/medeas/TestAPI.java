@@ -2,10 +2,7 @@ package es.uva.medeas;
 
 import static org.junit.Assert.*;
 
-import es.uva.medeas.rules.SubscriptNameCheck;
-import es.uva.medeas.rules.SubscriptValueNameCheck;
-import es.uva.medeas.rules.TestUtilities;
-import es.uva.medeas.rules.VensimCheck;
+import es.uva.medeas.rules.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -81,6 +78,31 @@ public class TestAPI {
 
 
     }
+
+    @Test
+    public void testSonarLookupName() throws IOException{
+        JsonArray issues =   getIssues("testLookupName.mdl",SONAR_TOKEN);
+
+
+        assertEquals(1,issues.size());
+        JsonObject issue = issues.getJsonObject(0);
+
+        assertIssueLine(issue,3);
+        assertIssueType(issue, LookupNameCheck.CHECK_KEY);
+    }
+
+    @Test
+    public void testSonarVariableName() throws IOException{
+        JsonArray issues =   getIssues("testVariableName.mdl",SONAR_TOKEN);
+
+
+        assertEquals(1,issues.size());
+        JsonObject issue = issues.getJsonObject(0);
+
+        assertIssueLine(issue,2);
+        assertIssueType(issue, VariableNameCheck.CHECK_KEY);
+    }
+
 
     @Test
     public void testSymbolTableOutput() throws IOException{

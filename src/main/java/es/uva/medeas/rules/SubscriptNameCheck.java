@@ -10,7 +10,7 @@ import org.sonar.check.Rule;
 
 
 
-@Rule(key = SubscriptNameCheck.CHECK_KEY)
+@Rule(key = SubscriptNameCheck.CHECK_KEY, name = SubscriptNameCheck.NAME, description = SubscriptNameCheck.HTML_DESCRIPTION)
 public class SubscriptNameCheck implements VensimCheck {
     public static final String CHECK_KEY = "subscript-convention" ;
     public static final String HTML_DESCRIPTION = "" +
@@ -20,7 +20,8 @@ public class SubscriptNameCheck implements VensimCheck {
             "   <li>Each word must be separated by ONE underscore.</li>\n" +
             "   <li>The last word must be plural.</li>" +
             "   <li>The name must have the suffix _ENUM.</li>"+
-            "   <li>The name shouldn't contain any non-english character. </li>"+
+            "   <li>The name shouldn't start with a number</li>"+
+            "   <li>The name shouldn't contain non-english characters. </li>"+
             "</ul>"+
             "<h2>Noncompliant Code Examples</h2>\n" +
             "<pre>\n" +
