@@ -1,9 +1,6 @@
 package es.uva.medeas;
 
-import es.uva.medeas.rules.LookupNameCheck;
-import es.uva.medeas.rules.SubscriptNameCheck;
-import es.uva.medeas.rules.SubscriptValueNameCheck;
-import es.uva.medeas.rules.VariableNameCheck;
+import es.uva.medeas.rules.*;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionAnnotationLoader;
 
@@ -46,6 +43,8 @@ public class VensimRuleRepository implements RulesDefinition{
         set.add(SubscriptValueNameCheck.class);
         set.add(LookupNameCheck.class);
         set.add(VariableNameCheck.class);
+        set.add(ConstantNameCheck.class);
+        set.add(RealityCheckNameRule.class);
         return set;
     }
 

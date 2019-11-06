@@ -8,7 +8,7 @@ import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
 import org.sonar.check.Rule;
 
-@Rule(key = LookupNameCheck.CHECK_KEY,name=LookupNameCheck.CHECK_KEY,description = LookupNameCheck.HTML_DESCRIPTION)
+@Rule(key = LookupNameCheck.CHECK_KEY,name=LookupNameCheck.NAME,description = LookupNameCheck.HTML_DESCRIPTION)
 public class LookupNameCheck implements VensimCheck{
     public static final String CHECK_KEY = "lookup-name-convention" ;
 

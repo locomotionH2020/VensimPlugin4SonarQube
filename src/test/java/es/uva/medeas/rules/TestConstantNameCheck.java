@@ -7,12 +7,12 @@ import org.junit.Test;
 import static es.uva.medeas.rules.RuleTestUtilities.*;
 import static org.junit.Assert.assertTrue;
 
-public class TestVariableNameCheck {
+public class TestConstantNameCheck {
 
     @Test
     public void testCorrectName() {
 
-        String program = "expected_consumption_2020 = Time ~|";
+        String program = "STARTING_PRODUCTIVITY = -99999 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -24,7 +24,7 @@ public class TestVariableNameCheck {
 
     @Test
     public void testNameCanContainAnyNumber(){
-        String program = "numbers0_1_2_3_4_5_6_7_8_9 = Time ~|";
+        String program = "NUMBERS0_1_2_3_4_5_6_7_8_9 = 3 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -34,73 +34,96 @@ public class TestVariableNameCheck {
     }
 
     @Test
-    public void testUppercaseName(){
-        String program = "EXPECTED_consumption_2020 = Time ~|";
+    public void testLowerCaseAnyWord(){
+        String program = "starting_PRODUCTIVITY = -99999 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,VariableNameCheck.class,1);
+        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
+    }
+
+    @Test
+    public void testLowerCaseLastWord(){ //TODO Diferenciarlo también en los otros tests
+        String program = "STARTING_productivity = -999 ~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
     }
 
     @Test
     public void testSeveralUnderscore(){
-        String program = "\nexpected__consumption_2020 = Time ~|";
+        String program = "\nSTARTING__CONSUMPTION = 100 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,VariableNameCheck.class,2);
+        assertHasIssue(visitorContext,ConstantNameCheck.class,2);
     }
 
     @Test
     public void testNameBeginningWithUnderscore(){
-        String program = "_expected_consumption_2020 = Time ~|";
+        String program = "_EXPECTED_PRODUCT_2020 = 1 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,VariableNameCheck.class,1);
+        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
     }
 
     @Test
     public void testNameEndingWithUnderscore(){
-        String program = "expected_consumption_2020_ = Time ~|";
+        String program = "EXPECTED_PRODUCT_2020_ = 2 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,VariableNameCheck.class,1);
+        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
     }
 
     @Test
     public void testWeirdCharacters(){
-        String program = "wèird= Time~|";
+        String program = "WÉIRD= 3~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,VariableNameCheck.class,1);
+        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
     }
 
     @Test
     public void testNameBeginsWithNumber(){
-        String program = "\"2020_expected_consumption\" = Time ~|\n"+
-                "\"2020expected_consumption\" = Time ~|";
+        String program = "\"2020_EXPECTED_PRODUCT\" = 5 ~|\n"+
+                "\"2020EXPECTED_PRODUCT\" = 5 ~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,VariableNameCheck.class,1);
-        assertHasIssue(visitorContext,VariableNameCheck.class,2);
+        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
+        assertHasIssue(visitorContext,ConstantNameCheck.class,2);
 
     }
+
+    @Test
+    public void testDoesntGenerateIssuesInUndefinedSymbols(){
+        String program = "CONSTANT= undefINED~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());    }
+
 
 }

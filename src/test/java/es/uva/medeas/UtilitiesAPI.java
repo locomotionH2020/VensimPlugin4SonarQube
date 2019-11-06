@@ -17,11 +17,7 @@ import java.net.http.HttpResponse;
 public class UtilitiesAPI {
 
     public static void runSonarScanner(File folder,String token) throws IOException {
-        Process process2=Runtime.getRuntime().exec("sonar-scanner " +
-                        "  -Dsonar.projectKey=integrationTests " +
-                        "  -Dsonar.sources=." +
-                        "  -Dsonar.host.url=http://localhost:9000 " +
-                        "  -Dsonar.login="+token,
+        Process process2=Runtime.getRuntime().exec("sonar-scanner -Dsonar.login="+token,
                 null, folder);
 
         BufferedReader stdInput = new BufferedReader(new

@@ -51,7 +51,7 @@ public class SubscriptNameCheck implements VensimCheck {
         }
     }
 
-    //TODO test that parsing a incorrect file doesn't throw an exception
+
 
     private boolean checkSubscriptNameFollowsConvention(String name){
         return name.matches("([A-Z0-9]+_)*[A-Z0-9]+S_ENUM");

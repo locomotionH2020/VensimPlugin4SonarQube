@@ -42,7 +42,7 @@ public class VariableNameCheck implements VensimCheck{
 
         for(Symbol symbol:table.getSymbols()){
             if(symbol.getType()== SymbolType.VARIABLE && !"Time".equals(symbol.getToken()) && !checkVariableFollowsConvention(symbol.getToken())){
-                Issue issue = new Issue(this,symbol.getDefinitionLine(),"The value of the subscript doesn't follow the naming conventions");
+                Issue issue = new Issue(this,symbol.getDefinitionLine(),"The name of the variable doesn't follow the naming convention.");
 
                 context.addIssue(issue);
             }

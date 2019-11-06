@@ -103,6 +103,30 @@ public class TestAPI {
         assertIssueType(issue, VariableNameCheck.CHECK_KEY);
     }
 
+    @Test
+    public void testSonarConstantName() throws IOException{
+        JsonArray issues =   getIssues("testConstantName.mdl",SONAR_TOKEN);
+
+
+        assertEquals(1,issues.size());
+        JsonObject issue = issues.getJsonObject(0);
+
+        assertIssueLine(issue,5);
+        assertIssueType(issue, ConstantNameCheck.CHECK_KEY);
+    }
+
+    @Test
+    public void testRealityCheckName() throws IOException{
+        JsonArray issues =   getIssues("testRealityCheckName.mdl",SONAR_TOKEN);
+
+
+        assertEquals(1,issues.size());
+        JsonObject issue = issues.getJsonObject(0);
+
+        assertIssueLine(issue,1);
+        assertIssueType(issue, RealityCheckNameRule.CHECK_KEY);
+    }
+
 
     @Test
     public void testSymbolTableOutput() throws IOException{
