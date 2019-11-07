@@ -54,7 +54,8 @@ public class SubscriptNameCheck implements VensimCheck {
 
 
     private boolean checkSubscriptNameFollowsConvention(String name){
-        return name.matches("([A-Z0-9]+_)*[0-9]*[A-Z]+S_ENUM]");
+        return name.matches("([A-Z0-9]+_)*[0-9]*[A-Z]+S_ENUM");
+
 
     }
 

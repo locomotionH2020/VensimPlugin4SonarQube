@@ -29,7 +29,7 @@ public class TestSubscriptNameCheck {
 
     @Test
     public void testNameCanContainAnyNumber() {
-        String program = "NUMBERS1_2_3_4_5_6_7_8_9S_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "NUMBERS1_2_3_4_5_6_7_8_9NUMBERS_ENUM:\n COUNTRY1, COUNTRY2~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
