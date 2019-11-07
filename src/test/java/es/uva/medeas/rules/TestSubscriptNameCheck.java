@@ -40,7 +40,21 @@ public class TestSubscriptNameCheck {
     }
 
     @Test
-    public void testLowercaseName() {
+    public void testLowercaseAnyWord() {
+
+        String program = "some_COUNTRIES_ENUM:\n COUNTRY1, COUNTRY2~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+
+    }
+
+    @Test
+    public void testLowercaseLastWord() {
 
         String program = "countrieS_ENUM:\n COUNTRY1, COUNTRY2~|";
 
@@ -195,5 +209,18 @@ public class TestSubscriptNameCheck {
     }
 
 
+    @Test
+    public void testEndsWithNumber(){
+        String program = "MY_SUBSCRIPT10S_ENUM:\n COUNTRY1, COUNTRY2~|\n"+
+                    "MY_10SUBSCRIPTS_ENUM:\n COUNTRY1, COUNTRY2~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertDoesntHaveIssue(visitorContext,SubscriptNameCheck.class,2);
+    }
 
 }

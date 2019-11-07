@@ -2,6 +2,7 @@ package es.uva.medeas.rules;
 
 
 import es.uva.medeas.parser.ModelParser;
+import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import org.antlr.v4.runtime.tree.ParseTree;
 import static org.junit.Assert.*;
@@ -121,6 +122,19 @@ public class TestGrammar {
     @Test
     public void testMedeasEU() throws IOException{
         getSymbolTable("medeasEU.mdl");
+    }
+
+
+
+    @Test
+    public void testNewLineInsideSubscript(){
+        String program = "\"materials per new capacity installed - wind offshore\"[\"Electric/electronic components\"\\ \n" +
+                "]=5~~|";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        ModelParser.FileContext file = getParseTreeFromString(program);
+
+        assertEquals("\"Electric/electronic components\"",file.model().equation(0).lhs().subscript(0).subscriptIdList().subscriptId(0).getText());
     }
 
 }

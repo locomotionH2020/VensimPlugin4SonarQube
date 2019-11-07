@@ -36,9 +36,9 @@ public class TestLookupNameCheck {
     }
 
     @Test
-    public void testUpperCaseName() {
+    public void testUpperCaseAnyWord() {
 
-        String program = "\nHISTORICAL_EXTRACTION_LT(  GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
+        String program = "\nHISTORICAL_extraction_lt(  GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -48,6 +48,21 @@ public class TestLookupNameCheck {
         assertHasIssue(visitorContext,LookupNameCheck.class,2);
 
     }
+
+    @Test
+    public void testUpperCaseLastWord() {
+
+        String program = "\nhistorical_EXTRACTION_lt(  GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext,LookupNameCheck.class,2);
+
+    }
+
 
     @Test
     public void testUppercaseSuffix(){

@@ -36,8 +36,23 @@ public class TestSubscriptValueNameCheck {
         assertTrue(visitorContext.getIssues().isEmpty());
     }
 
+
     @Test
-    public void testLowerCaseValueName() {
+    public void testLowerCaseAnyWord() {
+
+        String program = "COUNTRIES_ENUM: COUNTRY,\n my_COUNTRY~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext, SubscriptValueNameCheck.class, 2);
+
+    }
+
+    @Test
+    public void testLowerCaseLastWord() {
 
         String program = "COUNTRIES_ENUM: COUNTRY1,\n country2~|";
 

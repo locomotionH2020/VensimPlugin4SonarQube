@@ -41,17 +41,18 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
 
         if(ctx.subscriptIdList()!=null) {
             for(ModelParser.SubscriptIdContext value:ctx.subscriptIdList().subscriptId()){
-
                 Symbol subscriptValue = visitSubscriptId(value);
                 subscriptValue.setType(SymbolType.SUBSCRIPT_VALUE);
                 subscriptValue.setDefinitionLine(getStartLine(value));
 
             }
+            for(ModelParser.SubscriptSequenceContext sequence:ctx.subscriptIdList().subscriptSequence())
+                visitSubscriptSequence(sequence);
         }
         if(ctx.call()!=null)
             symbol.addDependencies(visitCall(ctx.call()));
 
-        return super.visitSubscriptRange(ctx);
+        return symbol;
     }
 
 
@@ -64,7 +65,7 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
         if(ctx.expr()!=null)
             symbol.addDependencies( (List<Symbol>) visit(ctx.expr()));
 
-        return super.visitEquation(ctx);
+        return symbol;
     }
 
 
@@ -102,8 +103,7 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
         if(ctx.expr()!=null)
             symbol.addDependencies( (List<Symbol>) visit(ctx.expr()));
 
-
-        return super.visitDataEquation(ctx);
+        return symbol;
     }
 
     @Override
@@ -118,7 +118,7 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
             symbol.addDependencies(visitCall(ctx.call()));
 
 
-        return super.visitLookupDefinition(ctx);
+        return symbol;
     }
 
     @Override
@@ -127,7 +127,7 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
         symbol.setType(SymbolType.CONSTANT);
         symbol.setDefinitionLine(getStartLine(ctx));
 
-        return null;
+        return symbol;
     }
 
 
@@ -137,7 +137,8 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
         Symbol symbol = table.getSymbolOrCreate(ctx.Id(0).getSymbol());
         symbol.setType(SymbolType.SUBSCRIPT_NAME);
         symbol.setDefinitionLine(getStartLine(ctx));
-        return super.visitSubscriptCopy(ctx);
+
+        return symbol;
     }
 
     @Override
@@ -145,7 +146,8 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
         Symbol symbol = table.getSymbolOrCreate(ctx.Id().getSymbol());
         symbol.setType(SymbolType.REALITY_CHECK);
         symbol.setDefinitionLine(getStartLine(ctx));
-        return null;
+
+        return symbol;
 
     }
 

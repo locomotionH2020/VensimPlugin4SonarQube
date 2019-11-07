@@ -45,7 +45,7 @@ public class TestConstantNameCheck {
     }
 
     @Test
-    public void testLowerCaseLastWord(){ //TODO Diferenciarlo también en los otros tests
+    public void testLowerCaseLastWord(){
         String program = "STARTING_productivity = -999 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);

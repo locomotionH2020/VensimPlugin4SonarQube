@@ -478,16 +478,7 @@ public class TestRawSymbolTableVisitor {
     }
 
 
-    @Test
-    public void testNewLineInsideSubscript(){
-        String program = "\"materials per new capacity installed - wind offshore\"[\"Electric/electronic components\"\\ \n" +
-                "]=5~~|";
 
-        SymbolTable table = getRAWSymbolTableFromString(program);
-
-        Symbol subscript = table.getSymbol("\"Electric/electronic components\"");
-        assertNotNull(subscript);
-    }
 
 
     @Test

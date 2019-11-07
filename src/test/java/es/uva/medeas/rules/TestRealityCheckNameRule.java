@@ -57,7 +57,7 @@ public class TestRealityCheckNameRule {
     }
 
     @Test
-    public void testUppercaseLastWord(){ //TODO Diferenciarlo también en los otros tests
+    public void testUppercaseLastWord(){
         String program = "a_reality_CHECK_test" + REALITYCHECKSUFFIX;
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);

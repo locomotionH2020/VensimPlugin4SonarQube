@@ -34,8 +34,19 @@ public class TestVariableNameCheck {
     }
 
     @Test
-    public void testUppercaseName(){
+    public void testUppercaseAnyWord(){
         String program = "EXPECTED_consumption_2020 = Time ~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext,VariableNameCheck.class,1);
+    }
+
+    @Test
+    public void testUppercaseLastWord(){
+        String program = "expected_CONSUMPTION = Time ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();

@@ -14,7 +14,7 @@ import org.sonar.check.Rule;
 public class SubscriptNameCheck implements VensimCheck {
     public static final String CHECK_KEY = "subscript-convention" ;
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that all subscript names match the regular expression: \"[A-Z0-9]+_)*[A-Z0-9]+S_ENUM\"</p>\n" +
+            "<p>This rule checks that all subscript names match the regular expression: \"([A-Z0-9]+_)*[0-9]*[A-Z]+S_ENUM]\"</p>\n" +
             "<ul>" +
             "   <li>Name must be in upper case (subscripts are constants).</li>\n" +
             "   <li>Each word must be separated by ONE underscore.</li>\n" +
@@ -54,7 +54,7 @@ public class SubscriptNameCheck implements VensimCheck {
 
 
     private boolean checkSubscriptNameFollowsConvention(String name){
-        return name.matches("([A-Z0-9]+_)*[A-Z0-9]+S_ENUM");
+        return name.matches("([A-Z0-9]+_)*[0-9]*[A-Z]+S_ENUM]");
 
     }
 

@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import static org.junit.Assert.*;
 
 import static es.uva.medeas.rules.TestUtilities.getParseTreeFromString;
 import static es.uva.medeas.rules.TestUtilities.getSymbolTableFromString;
@@ -79,6 +80,14 @@ public class RuleTestUtilities {
                 throw new AssertionError("Issue of type '"+ type.getSimpleName() + "'  not found.");
             else
                 throw new AssertionError("Issue of type: '" + type.getSimpleName() + "' not found in line "+ line + ".But was found in lines: " + foundInOtherLines );
+    }
+
+    public static void assertDoesntHaveIssue(VensimVisitorContext context,Class type, int line){
+        for(Issue issue:context.getIssues()){
+            assertFalse(issue.getCheck().getClass().equals(type) && issue.getLine()==line);
+        }
+
+
     }
 
 
