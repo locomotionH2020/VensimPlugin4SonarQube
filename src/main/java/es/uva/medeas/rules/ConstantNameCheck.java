@@ -36,10 +36,12 @@ public class ConstantNameCheck implements VensimCheck {
 
 
         for(Symbol symbol:table.getSymbols()){
-            if(symbol.getType()== SymbolType.CONSTANT && symbol.getDefinitionLine()!=Symbol.LINE_NOT_DEFINED && !checkConstantFollowsConvention(symbol.getToken())){
-                Issue issue = new Issue(this,symbol.getDefinitionLine(),"The name of the constant doesn't follow the naming convention.");
+            if(symbol.getType()== SymbolType.CONSTANT && !symbol.getDefinitionLines().isEmpty() && !checkConstantFollowsConvention(symbol.getToken())){
+                for(int line: symbol.getDefinitionLines()) {
+                    Issue issue = new Issue(this,line,"The name of the constant doesn't follow the naming convention.");
+                    context.addIssue(issue);
+                }
 
-                context.addIssue(issue);
             }
         }
     }

@@ -114,4 +114,17 @@ public class TestVariableNameCheck {
 
     }
 
+    @Test
+    public void testMultipleDefinitionCreateDifferentIssues() {
+        String program = "VAR[aSubscript] = Time~|\n" +
+                "         VAR[anotherSubscript] = Time~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext, VariableNameCheck.class, 1);
+        assertHasIssue(visitorContext, VariableNameCheck.class, 2);
+    }
 }

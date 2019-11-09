@@ -103,7 +103,7 @@ public class TestUtilities {
     public static void assertSymbol(Symbol symbol, SymbolType expectedType, int expectedLine, Set<Symbol> expectedDependencies){
         assertNotNull("The symbol is null",symbol);
        assertSymbolType(symbol,expectedType);
-        assertSymbolLine(symbol,expectedLine);
+        assertSymbolDefinedOnlyIn(expectedLine,symbol);
         assertEquals(expectedDependencies,symbol.getDependencies());
         assertFalse("The symbol depends on null",expectedDependencies.contains(null));
     }
@@ -116,9 +116,13 @@ public class TestUtilities {
                 expectedType,symbol.getType());
     }
 
-    public static void assertSymbolLine(Symbol symbol, int expectedLine){
-        assertEquals("Symbol '" + symbol.getToken() +"' expected at line " + expectedLine + " found at: " + symbol.getDefinitionLine(),
-                expectedLine,symbol.getDefinitionLine());
+    public static void assertSymbolDefinedOnlyIn(int expectedLine, Symbol symbol ){
+        assertEquals("The symbol is defined in several lines" + symbol.getDefinitionLines() ,1,symbol.getDefinitionLines().size());
+
+        int line =  symbol.getDefinitionLines().iterator().next();
+        assertEquals("Symbol '" + symbol.getToken() +"' expected at line " + expectedLine + " found at: " + line,
+                expectedLine,line);
+
     }
 
     public static void assertNoDependencies(Symbol symbol){

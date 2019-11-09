@@ -176,7 +176,7 @@ public class TestLookupNameCheck {
     }
 
     @Test
-    public void testNameEndsWithNumberr(){
+    public void testNameEndsWithNumber(){
         String program = "historical_extraction_lt3(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -188,4 +188,19 @@ public class TestLookupNameCheck {
 
     }
 
+    @Test
+    public void testMultipleDefinitionCreateDifferentIssues(){
+        String program = "historical_extraction_lt3[firstSubscript](GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|\n" +
+                "historical_extraction_lt3[firstSubscript](GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|\n";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+        assertHasIssue(visitorContext,LookupNameCheck.class,2);
+    }
+
+    //TODO Test in symboltablegenerator that if a symbol is defined several times the definedLines set is correct.
 }

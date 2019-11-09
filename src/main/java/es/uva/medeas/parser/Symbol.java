@@ -5,9 +5,9 @@ import java.util.*;
 
 public class Symbol {
 
-    public static int LINE_NOT_DEFINED = -1;
+
     private String token;
-    private int lineDefined;
+    private Set<Integer> linesDefined;
     private Set<Symbol> dependencies;
     private SymbolType type;
 
@@ -16,11 +16,11 @@ public class Symbol {
         this.token = token;
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
-        lineDefined = LINE_NOT_DEFINED;
+        linesDefined = new HashSet<>();
     }
 
-    public void setDefinitionLine(int line){ 
-        this.lineDefined = line;
+    public void addDefinitionLine(int line){
+        linesDefined.add(line);
     }
 
     public void setType(SymbolType type) {
@@ -28,8 +28,8 @@ public class Symbol {
     }
 
 
-    public int getDefinitionLine(){
-        return lineDefined;
+    public Set<Integer> getDefinitionLines(){
+        return linesDefined;
     }
 
     public Set<Symbol> getDependencies() {

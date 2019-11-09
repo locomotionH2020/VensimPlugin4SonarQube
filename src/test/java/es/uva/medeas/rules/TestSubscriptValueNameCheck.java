@@ -130,7 +130,19 @@ public class TestSubscriptValueNameCheck {
 
     }
 
+    @Test
+    public void testMultipleDefinitionCreateDifferentIssues() {
+
+        String program = "MY_COUNTRIES_ENUM: a_country, COUNTRY2~|\n"+
+                "OTHER_COUNTRIES_ENUM: a_country, COUNTRY2~|\n";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
 
 
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext, SubscriptValueNameCheck.class, 1);
+        assertHasIssue(visitorContext, SubscriptValueNameCheck.class, 2);
+    }
 
 }

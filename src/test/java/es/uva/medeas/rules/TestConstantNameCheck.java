@@ -125,5 +125,19 @@ public class TestConstantNameCheck {
         scanner.checkIssues(visitorContext);
         assertTrue(visitorContext.getIssues().isEmpty());    }
 
+    @Test
+    public void testMultipleDefinitionCreateDifferentIssues() {
+        String program = "constant[aSubscript] = 3~|\n" +
+                "         constant[anotherSubscript] = 4~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext, ConstantNameCheck.class, 1);
+        assertHasIssue(visitorContext, ConstantNameCheck.class, 2);
+    }
+
 
 }

@@ -6,7 +6,6 @@ import es.uva.medeas.parser.SymbolType;
 import org.junit.Test;
 
 import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 
@@ -72,7 +71,7 @@ public class TestJsonSymbolTableBuilder {
         JsonObject symbols = jsonTable.getJsonObject(0).getJsonObject("symbols");
 
         for(SymbolType type: SymbolType.values()){
-            assertEquals("{\"type\":\"" + type.toString() + "\",\"line\":-1,\"dependencies\":[]}",
+            assertEquals("{\"type\":\"" + type.toString() + "\",\"lines\":[],\"dependencies\":[]}",
                     symbols.getJsonObject(type.toString() + " symbol").toString());
         }
 
@@ -111,13 +110,13 @@ public class TestJsonSymbolTableBuilder {
 
         SymbolTable table = new SymbolTable();
         Symbol symbol = table.createSymbol("var");
-        symbol.setDefinitionLine(line);
+        symbol.addDefinitionLine(line);
 
         builder.addSymbolTable("file",table);
         JsonArray output = builder.build();
         JsonObject file = output.getJsonObject(0);
 
-        assertEquals(line, file.getJsonObject("symbols").getJsonObject("var").getInt("line"));
+        assertEquals(line, file.getJsonObject("symbols").getJsonObject("var").getJsonArray("lines").getInt(0));
     }
 
 
@@ -180,9 +179,9 @@ public class TestJsonSymbolTableBuilder {
         builder.addSymbolTable("file",table);
         JsonObject file = builder.build().getJsonObject(0);
 
-        int actualLine = file.getJsonObject("symbols").getJsonObject("constant").getInt("line");
+        JsonArray actualLines = file.getJsonObject("symbols").getJsonObject("constant").getJsonArray("lines");
 
-        assertEquals(Symbol.LINE_NOT_DEFINED,actualLine);
+        assertTrue(actualLines.isEmpty());
 
     }
 }

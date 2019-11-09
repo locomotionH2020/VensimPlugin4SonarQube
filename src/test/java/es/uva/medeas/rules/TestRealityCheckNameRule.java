@@ -163,4 +163,6 @@ public class TestRealityCheckNameRule {
         scanner.checkIssues(visitorContext);
         assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
     }
+
+
 }

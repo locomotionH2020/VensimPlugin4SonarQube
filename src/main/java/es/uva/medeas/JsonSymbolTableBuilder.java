@@ -37,7 +37,11 @@ public class JsonSymbolTableBuilder {
         JsonObjectBuilder symbolBuilder = Json.createObjectBuilder();
 
         symbolBuilder.add("type",symbol.getType().toString());
-        symbolBuilder.add("line",symbol.getDefinitionLine());
+        JsonArrayBuilder lines = Json.createArrayBuilder();
+        for(int line:symbol.getDefinitionLines())
+            lines.add(line);
+
+        symbolBuilder.add("lines",lines);
 
         JsonArrayBuilder dependenciesBuilder = Json.createArrayBuilder();
         for(Symbol dependency:symbol.getDependencies())
@@ -48,6 +52,7 @@ public class JsonSymbolTableBuilder {
         return symbolBuilder.build();
 
     }
+
 
     public JsonArray build(){
         return fileBuilder.build();

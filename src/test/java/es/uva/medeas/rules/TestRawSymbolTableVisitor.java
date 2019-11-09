@@ -30,10 +30,10 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol argumentBefore = table.getSymbol("testArgumentBefore");
-        assertSymbolLine(argumentBefore,1);
+        assertSymbolDefinedOnlyIn(1,argumentBefore);
 
         Symbol argumentAfter = table.getSymbol("testArgumentAfter");
-        assertSymbolLine(argumentAfter,5);
+        assertSymbolDefinedOnlyIn(5,argumentAfter);
     }
 
     @Test
@@ -49,10 +49,10 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol valueBefore = table.getSymbol("testValueBefore");
-        assertSymbolLine(valueBefore,1);
+        assertSymbolDefinedOnlyIn(1,valueBefore);
 
         Symbol valueAfter = table.getSymbol("testValueAfter");
-        assertSymbolLine(valueAfter,7);
+        assertSymbolDefinedOnlyIn(7,valueAfter);
 
     }
 
@@ -84,7 +84,7 @@ public class TestRawSymbolTableVisitor {
 
         Symbol mappedSubscript = table.getSymbol("mappedSubscript");
 
-        assertSymbolLine(mappedSubscript,2);
+        assertSymbolDefinedOnlyIn(2,mappedSubscript);
 
 
     }
@@ -114,7 +114,7 @@ public class TestRawSymbolTableVisitor {
 
         Symbol copy = table.getSymbol("copy");
         assertSymbolType(copy,SymbolType.SUBSCRIPT_NAME);
-        assertSymbolLine(copy,3);
+        assertSymbolDefinedOnlyIn(3,copy);
     }
 
 
@@ -254,8 +254,8 @@ public class TestRawSymbolTableVisitor {
         Symbol pipeline = table.getSymbol("pipeline");
         Symbol result = table.getSymbol("result");
 
-        assertSymbolLine(result,1);
-        assertSymbolLine(pipeline,2);
+        assertSymbolDefinedOnlyIn(1,result);
+        assertSymbolDefinedOnlyIn(2,pipeline);
     }
 
     @Test
@@ -358,7 +358,7 @@ public class TestRawSymbolTableVisitor {
 
         Symbol emptyEquation = table.getSymbol("emptyEquation");
         assertNoDependencies(emptyEquation);
-        assertSymbolLine(emptyEquation,2);
+        assertSymbolDefinedOnlyIn(2,emptyEquation);
     }
 
     @Test
@@ -442,7 +442,7 @@ public class TestRawSymbolTableVisitor {
 
         Symbol equation = table.getSymbol("\"equation \\\"inside quotes\"");
         assertNotNull(equation);
-        assertSymbolLine(equation,4);
+        assertSymbolDefinedOnlyIn(4,equation);
 
     }
 
