@@ -31,7 +31,7 @@ before_script:
   - chmod 700 ~/.ssh
 
 stages:
-  - deploy
+  - build
 
 cache:
   paths:
@@ -39,7 +39,7 @@ cache:
     - target/
 
 
-deploy:
+build_job:
   type: build
 
   script:
