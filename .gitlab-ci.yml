@@ -55,5 +55,5 @@ deploy:
 
   script:
     - ssh usuario@tfg2020.virtual.lab.inf.uva.es -p 20201
-     "cd tfg-sonarvensim  && git checkout master |tee log && git pull origin master | tee log && mvn package | tee log && cp target/sonar-vensim-1.0-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.0-SNAPSHOT.jar && exit"
+     "cd tfg-sonarvensim  && git checkout master >output1.txt && git pull origin master >output2.txt && mvn package -DskipTests > output3 && cp target/sonar-vensim-1.0-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.0-SNAPSHOT.jar && exit"
  
