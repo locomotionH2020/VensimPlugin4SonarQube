@@ -1,5 +1,7 @@
 package es.uva.medeas.rules;
 
+import es.uva.medeas.VensimScanner;
+import es.uva.medeas.VensimVisitorContext;
 import es.uva.medeas.parser.*;
 import org.junit.Test;
 
@@ -8,6 +10,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 
+import static es.uva.medeas.rules.RuleTestUtilities.*;
 import static org.junit.Assert.*;
 import static es.uva.medeas.rules.TestUtilities.*;
 
@@ -376,6 +379,22 @@ public class TestSymbolGenerator {
 
         assertSymbolType(constant,SymbolType.CONSTANT);
     }
+
+
+    @Test
+    public void testLookupCalledBeforeDefinedAndLoadedByFunction(){
+        String program = "variableCaller= myLookup(3)~|\n" +
+                "myLookup= GET XLS LOOKUPS('inputs_W.xlsx', 'Constants', '242', 'C243')~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+
+        Symbol constant = table.getSymbol("myLookup");
+
+        assertSymbolType(constant,SymbolType.LOOKUP);
+
+
+    }
+
 
 
 }

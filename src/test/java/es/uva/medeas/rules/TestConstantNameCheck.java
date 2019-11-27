@@ -141,21 +141,7 @@ public class TestConstantNameCheck {
         assertHasIssue(visitorContext, ConstantNameCheck.class, 2);
     }
 
-    @Test
-    public void test(){
-        String program = "\"Historic share E industry own-use vs TFEC\"[scenarios]=\n" +
-                "\tIF THEN ELSE(Time<2016, \"Historic energy industry own-use\"(Time)/(Real TFEC[scenarios\\\n" +
-                "\t\t]-FE tot generation all RES elec EJ[scenarios]), 0)~|" +
-                "" +
-                "\"Historic energy industry own-use\"= GET XLS LOOKUPS('inputs_W.xlsx', 'Constants', '242', 'C243')\n" +
-                "~EJ~Energy industry own-use.|";
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
 
-        scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext, LookupNameCheck.class, 3);  //TODO Test de verdad
-
-    }
 
 
 }

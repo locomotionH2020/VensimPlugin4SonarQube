@@ -69,12 +69,10 @@ public class SymbolTableGenerator {
 
     private static void resolveFunctionType(Symbol symbol){
         if(symbol.getType()!=SymbolType.UNDETERMINED_FUNCTION)
-            throw new IllegalArgumentException("You can't resolve the functin type of a symbol that isn't UNDETERMINED_FUNCTION");
+            throw new IllegalArgumentException("You can't resolve the function type of a symbol that isn't UNDETERMINED_FUNCTION");
 
         for (Symbol dependency : symbol.getDependencies()) {
-
-
-            if (dependency.getType() == SymbolType.FUNCTION || dependency.getType() == SymbolType.UNDETERMINED_FUNCTION) { //TODO Revisar y refactor
+            if (isFunction(dependency)) {
                 if (lookupGeneratorFunctions.contains(dependency.getToken())) {
                     symbol.setType(SymbolType.LOOKUP);
                     return;
@@ -86,14 +84,13 @@ public class SymbolTableGenerator {
         symbol.setType(SymbolType.FUNCTION);
     }
 
-
     private static void tryToDetermineType(Symbol symbol) {
 
         boolean undeterminedDependency = false;
         for (Symbol dependency : symbol.getDependencies()) {
 
 
-            if (dependency.getType() == SymbolType.FUNCTION || dependency.getType() == SymbolType.UNDETERMINED_FUNCTION) { //TODO revisar esto -> refactor
+            if (isFunction(dependency)) {
                 if (nonPureFunctions.contains(dependency.getToken())) {
                     symbol.setType(SymbolType.VARIABLE);
                     break;
@@ -115,5 +112,9 @@ public class SymbolTableGenerator {
             symbol.setType(SymbolType.CONSTANT);
 
 
+    }
+
+    private static boolean isFunction(Symbol symbol){
+        return symbol.getType() == SymbolType.FUNCTION || symbol.getType() == SymbolType.UNDETERMINED_FUNCTION;
     }
 }
