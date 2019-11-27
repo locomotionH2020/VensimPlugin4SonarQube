@@ -29,6 +29,7 @@ public class SymbolTableGenerator {
     }
 
     public static void resolveSymbolTable(SymbolTable table){
+
         Set<Symbol> remainingSymbols = table.getUndeterminedSymbols();
         addDefaultSymbols(table);
 
@@ -36,7 +37,11 @@ public class SymbolTableGenerator {
 
 
             for (Symbol symbol : remainingSymbols) {
-                tryToDetermineType(symbol);
+                if(symbol.getType()==SymbolType.UNDETERMINED_FUNCTION)
+                    resolveFunctionType(symbol);
+                else {
+                   tryToDetermineType(symbol);
+                }
             }
 
             Set<Symbol> remainingSymbolsAfter = table.getUndeterminedSymbols();
@@ -50,6 +55,8 @@ public class SymbolTableGenerator {
             remainingSymbols = remainingSymbolsAfter;
 
         }
+
+
     }
 
     public static void addDefaultSymbols(SymbolTable table){
@@ -60,13 +67,33 @@ public class SymbolTableGenerator {
 
     }
 
+    private static void resolveFunctionType(Symbol symbol){
+        if(symbol.getType()!=SymbolType.UNDETERMINED_FUNCTION)
+            throw new IllegalArgumentException("You can't resolve the functin type of a symbol that isn't UNDETERMINED_FUNCTION");
+
+        for (Symbol dependency : symbol.getDependencies()) {
+
+
+            if (dependency.getType() == SymbolType.FUNCTION || dependency.getType() == SymbolType.UNDETERMINED_FUNCTION) { //TODO Revisar y refactor
+                if (lookupGeneratorFunctions.contains(dependency.getToken())) {
+                    symbol.setType(SymbolType.LOOKUP);
+                    return;
+                }
+            }
+
+
+        }
+        symbol.setType(SymbolType.FUNCTION);
+    }
 
 
     private static void tryToDetermineType(Symbol symbol) {
+
         boolean undeterminedDependency = false;
         for (Symbol dependency : symbol.getDependencies()) {
 
-            if (dependency.getType() == SymbolType.FUNCTION) {
+
+            if (dependency.getType() == SymbolType.FUNCTION || dependency.getType() == SymbolType.UNDETERMINED_FUNCTION) { //TODO revisar esto -> refactor
                 if (nonPureFunctions.contains(dependency.getToken())) {
                     symbol.setType(SymbolType.VARIABLE);
                     break;

@@ -122,7 +122,6 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
 
         Symbol variable = table.getSymbol("variable");
-
         assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }

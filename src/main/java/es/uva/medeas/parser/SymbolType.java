@@ -2,6 +2,7 @@ package es.uva.medeas.parser;
 
 public enum SymbolType {
     UNDETERMINED,
+    UNDETERMINED_FUNCTION,
     CONSTANT,
     VARIABLE,
     FUNCTION,

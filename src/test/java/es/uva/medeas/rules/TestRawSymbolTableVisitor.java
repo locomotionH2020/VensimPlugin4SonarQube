@@ -343,7 +343,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol call = table.getSymbol("MADE UP CALL");
-        assertSymbolType(call,SymbolType.FUNCTION);
+        assertSymbolType(call,SymbolType.UNDETERMINED_FUNCTION);
 
         Symbol result = table.getSymbol("result");
         assertEquals(getSymbols(table,"MADE UP CALL","arg1","arg2","arg3"),result.getDependencies());

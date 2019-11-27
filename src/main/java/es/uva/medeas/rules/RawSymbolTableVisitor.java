@@ -269,7 +269,7 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
             call = table.getSymbol(token);
         else{
             call = table.createSymbol(token);
-            call.setType(SymbolType.FUNCTION);
+            call.setType(SymbolType.UNDETERMINED_FUNCTION);
         }
 
 

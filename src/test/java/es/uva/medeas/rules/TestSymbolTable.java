@@ -99,7 +99,9 @@ public class TestSymbolTable {
             symbol.setType(type);
         }
 
-        Set<Symbol> expected = createSet(table.getSymbol(SymbolType.UNDETERMINED.toString()));
+        Symbol undetermined = table.getSymbol(SymbolType.UNDETERMINED.toString());
+        Symbol undetermined_function = table.getSymbol(SymbolType.UNDETERMINED_FUNCTION.toString());
+        Set<Symbol> expected = createSet(undetermined,undetermined_function);
         assertEquals(expected, table.getUndeterminedSymbols());
     }
 

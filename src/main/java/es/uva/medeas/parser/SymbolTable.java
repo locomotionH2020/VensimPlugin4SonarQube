@@ -74,8 +74,12 @@ public class SymbolTable {
     }
 
 
+    /**
+     * @return Symbols that have type SymbolType.UNDETERMINED or SymbolType.UNDETERMINED_FUNCTION
+     */
     public Set<Symbol> getUndeterminedSymbols(){
-        return getSymbols().stream().filter(symbol -> symbol.getType()==SymbolType.UNDETERMINED).collect(Collectors.toSet());
+
+        return getSymbols().stream().filter(symbol -> symbol.getType()==SymbolType.UNDETERMINED || symbol.getType()==SymbolType.UNDETERMINED_FUNCTION).collect(Collectors.toSet());
     }
 
 }
