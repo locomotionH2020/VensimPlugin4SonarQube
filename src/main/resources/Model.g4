@@ -25,8 +25,11 @@ lhs : Id ( subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
 // https://www.vensim.com/documentation/ref_subscript_mapping.htm
 subscriptCopy: Id '<->' Id unitsDoc;
 unchangeableConstant: lhs TwoEqual ( expr | constList ) unitsDoc;
-dataEquation: lhs ( DataEquationOp ( expr | constList ) )? (':IGNORE:' exprList)? unitsDoc;
+dataEquation: lhs ( DataEquationOp ( expr | constList ) )? (':IGNORE:' exprList)? unitsDoc
+
+;
 lookupDefinition: lhs (lookup|'('call')') unitsDoc;
+// The call is needed for direct and xls lookups. For example: historic_demand_lt( GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' ))~~|
 
 
 constraint: Id ':THE CONDITION:' expr? ':IMPLIES:' expr unitsDoc;
