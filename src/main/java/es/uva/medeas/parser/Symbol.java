@@ -7,7 +7,7 @@ public class Symbol {
 
 
     private String token;
-    private Set<Integer> linesDefined;
+    private List<Integer> linesDefined;
     private Set<Symbol> dependencies;
     private SymbolType type;
 
@@ -16,7 +16,7 @@ public class Symbol {
         this.token = token;
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
-        linesDefined = new HashSet<>();
+        linesDefined = new ArrayList<>();
     }
 
     public void addDefinitionLine(int line){
@@ -28,7 +28,7 @@ public class Symbol {
     }
 
 
-    public Set<Integer> getDefinitionLines(){
+    public List<Integer> getDefinitionLines(){
         return linesDefined;
     }
 

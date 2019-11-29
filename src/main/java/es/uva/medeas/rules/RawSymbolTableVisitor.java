@@ -17,12 +17,7 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
 
     public SymbolTable getSymbolTable(VensimVisitorContext context){
         table = new SymbolTable();
-
-
-
         visit(context.getRootNode());
-
-
 
         return table;
     }
@@ -114,7 +109,7 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
 
         if (ctx.lookup()!=null)
             symbol.addDependencies(  visitLookup(ctx.lookup()));
-        else
+        else if (ctx.call()!=null)
             symbol.addDependencies(visitCall(ctx.call()));
 
 
@@ -317,14 +312,7 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
 
     @Override
     public List<Symbol> visitLookup(ModelParser.LookupContext ctx) {
-        List<Symbol> symbols;
-        if(ctx.numberList()!=null) {
-            symbols = visitNumberList(ctx.numberList());
-
-        }else{
-            symbols = new ArrayList<>();
-        }
-        return symbols;
+        return new ArrayList<>();
     }
 
 

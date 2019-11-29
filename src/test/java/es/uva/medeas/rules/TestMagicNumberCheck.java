@@ -1,5 +1,6 @@
 package es.uva.medeas.rules;
 
+
 import es.uva.medeas.Issue;
 import es.uva.medeas.VensimScanner;
 import es.uva.medeas.VensimVisitorContext;
@@ -15,25 +16,54 @@ public class TestMagicNumberCheck {
     @Test
     public void testIssueWorks() {
 
-        String program = "a = 3 * 4 ~~|\n" +
-                "b = 3 * 4 ~~|\n" +
-                "c = 3 * 4~~|\n";
+        String program = "A = 3 * Time ~~|\n" +
+                "B = 3 * Time ~~|\n" +
+                "C = 3 * Time ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
+        assertHasIssue(visitorContext,MagicNumberCheck.class,1);
         assertHasIssue(visitorContext,MagicNumberCheck.class,2);
+        assertHasIssue(visitorContext,MagicNumberCheck.class,3);
 
+    }
+
+    @Test
+    public void testNumberRepeatsMinimumMinusOne(){
+        String program = "A = 3 * 4 ~~|\n".repeat(DEFAULT_REPETITIONS-1);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+    }
+
+    @Test
+    public void testNumberRepeatedInTheSameLineCounts(){
+        String program = "A = " + "3 * ".repeat(DEFAULT_REPETITIONS-1) + "3~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        for(Issue issue: visitorContext.getIssues()) {
+            assertEquals(MagicNumberCheck.class, issue.getCheck().getClass());
+            assertEquals(1,issue.getLine());
+        }
+
+        assertEquals(DEFAULT_REPETITIONS,visitorContext.getIssues().size());
+
+        assertHasIssue(visitorContext,MagicNumberCheck.class,1);
     }
 
     @Test
     public void testConstantDirectAssignsDontCountAsMagic(){
         String program = "A = 3 ~~|\n".repeat(DEFAULT_REPETITIONS); //TODO testearlo mejor haciendo la SymbolTable protegida, dentro de una clase TestMagicNumberVisitor o algo así
-        program += "B = 3 * 4  ~~|\n";
-        program += "C = pato(3)  ~~|\n";
-
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -77,9 +107,7 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testWithLookupSecondArgumentDoesntCount(){
-        String program = "var =WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~|" +
-                "A = 0 * 0~|\n".repeat(DEFAULT_REPETITIONS-1);
-
+        String program = "var =WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~|".repeat(DEFAULT_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -100,5 +128,28 @@ public class TestMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
         assertHasIssue(visitorContext, MagicNumberCheck.class,1);
+    }
+
+
+    @Test
+    public void testRealityCheckDoesntCount(){
+        String program = "big_growth_test :TEST INPUT: divisions = 1e+022~|\n".repeat(DEFAULT_REPETITIONS);
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+
+    }
+
+    @Test
+    public void testConstraintDoesntCount(){
+        String program = "my_condition_test :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~|".repeat(DEFAULT_REPETITIONS);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
     }
 }

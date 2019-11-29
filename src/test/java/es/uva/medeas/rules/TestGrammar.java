@@ -137,4 +137,15 @@ public class TestGrammar {
         assertEquals("\"Electric/electronic components\"",file.model().equation(0).lhs().subscript(0).subscriptIdList().subscriptId(0).getText());
     }
 
+    @Test
+    public void testNumberInParenthesisIsNotConsideredLookup(){
+        String program = "A = (3)~|";
+
+        ModelParser.FileContext tree = getParseTreeFromString(program);
+
+        ModelParser.SignExprContext parenthesis = (ModelParser.SignExprContext)  tree.model().equation(0).expr();
+        assertEquals(ModelParser.ParensContext.class, parenthesis.exprAllowSign().getClass());
+
+    }
+
 }

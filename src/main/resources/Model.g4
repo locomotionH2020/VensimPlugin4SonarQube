@@ -25,15 +25,17 @@ lhs : Id ( subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
 // https://www.vensim.com/documentation/ref_subscript_mapping.htm
 subscriptCopy: Id '<->' Id unitsDoc;
 unchangeableConstant: lhs TwoEqual ( expr | constList ) unitsDoc;
-dataEquation: lhs ( DataEquationOp ( expr | constList ) )? (':IGNORE:' exprList)? unitsDoc
+dataEquation: lhs ( DataEquationOp ( expr | constList ) )? (':IGNORE:' exprList)? unitsDoc;
 
-;
-lookupDefinition: lhs (lookup|'('call')') unitsDoc;
+lookupDefinition: lhs (lookup|('('(call|numberList)')')) unitsDoc;
+// lookup numberlist format: accomplishments per hour lookup(0,0.2,0.4,0.6,0.8,1,
+//                                                          0,0.2,0.4,0.6,0.8,1)
 // The call is needed for direct and xls lookups. For example: historic_demand_lt( GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' ))~~|
 
 
 constraint: Id ':THE CONDITION:' expr? ':IMPLIES:' expr unitsDoc;
 realityCheck: Id subscript? ':TEST INPUT:' expr unitsDoc;
+
 
 stringAssign: lhs StringAssignOp StringConst  (':IGNORE:' exprList)? unitsDoc;
 macroDefinition: ':MACRO:' macroHeader equation+ ':END OF MACRO:';
@@ -107,7 +109,9 @@ macroArguments: exprList (':' exprList)?;
 exprList : expr (',' expr)* ;
 subscriptIdList : (subscriptId|subscriptSequence) (',' (subscriptId|subscriptSequence))* ;
 subscript: '[' subscriptIdList ']'; 
-lookup : '(' ((lookupRange? lookupPointList)|numberList) ')' ;
+lookup : '(' (lookupRange? lookupPointList) ')' ;
+
+
 lookupRange : '[' lookupPoint '-' lookupPoint referenceLine? ']' ',' ;
 lookupPointList : lookupPoint (',' lookupPoint)* ;
 referenceLine: ',' lookupPointList;

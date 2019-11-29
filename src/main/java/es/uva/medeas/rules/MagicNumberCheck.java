@@ -2,23 +2,31 @@ package es.uva.medeas.rules;
 
 import es.uva.medeas.Issue;
 import es.uva.medeas.VensimVisitorContext;
-import es.uva.medeas.parser.ModelBaseVisitor;
-import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
 @Rule(key = MagicNumberCheck.CHECK_KEY,name=MagicNumberCheck.NAME, description= MagicNumberCheck.HTML_DESCRIPTION)
-public class MagicNumberCheck extends ModelBaseVisitor implements VensimCheck {
+public class MagicNumberCheck implements VensimCheck {
     public static final String CHECK_KEY = "magic-number-check";
     public static final String NAME = "MagicNumberCheck" ;
-    public static final String HTML_DESCRIPTION = "Description Missing :("; //TODO
+    public static final String HTML_DESCRIPTION = "A magic number is a number that comes out of nowhere, and is directly used in an expression." +
+            "The number must appear several times to be considered a magic number. The repetitions can be configured as a parameter of the rule." +
+            "<h2>Noncompliant Code Examples</h2>\n" +
+            "<pre>" +
+            "Year policy change energy[scenarios,sectors,final sources]=\n IF THEN ELSE(Choose policies of intensities global or by sector[scenarios]=1, value1, value2)~~|\n" +
+            "</pre>\n" +
+            "<h2>Compliant Code Examples</h2>\n" +
+            "<pre>\n" +
+            "CHOOSE_POLICY = 1~~|\n"+
+            "Year policy change energy[scenarios,sectors,final sources]=\n IF THEN ELSE(Choose policies of intensities global or by sector[scenarios]= CHOOSE_POLICY, value1, value2)~~|\n"+
+            "</pre>";
 
     public static final String DEFAULT_REPETITIONS = "3";
 
 
-    private SymbolTable numberTable;
+
 
 
     @RuleProperty(
@@ -31,17 +39,10 @@ public class MagicNumberCheck extends ModelBaseVisitor implements VensimCheck {
 
     @Override
     public void scan(VensimVisitorContext context) {
-
-        int min_repetitions = Integer.parseInt(repetitions);
-        numberTable = new SymbolTable();
-
-        visit(context.getRootNode());
-
-        numberTable.print();
-
+        SymbolTable numberTable = new MagicNumberTableVisitor().getSymbolTable(context);
 
         for(Symbol symbol: numberTable.getSymbols()){
-            if(symbol.getDefinitionLines().size()>=min_repetitions)
+            if(isMagicNumber(symbol))
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The number " + symbol.getToken()  +" is repeated " +
                             symbol.getDefinitionLines().size() + "  times. Consider replacing it by a constant");
@@ -51,58 +52,9 @@ public class MagicNumberCheck extends ModelBaseVisitor implements VensimCheck {
 
     }
 
-
-    private boolean exprIsAConstant(ModelParser.ExprContext ctx){
-        return  ctx.getClass() == ModelParser.ConstContext.class;
-    }
-    @Override
-    public Object visitEquation(ModelParser.EquationContext ctx) {
-
-        if(!exprIsAConstant(ctx.expr()))
-            return super.visit(ctx.expr());
-
-
-        return null;
-
+    private boolean isMagicNumber(Symbol symbol){
+        return symbol.getDefinitionLines().size()>=Integer.parseInt(repetitions);
     }
 
 
-    @Override
-    public Object visitLookup(ModelParser.LookupContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Object visitIntegerConst(ModelParser.IntegerConstContext ctx) {
-       Symbol integer = numberTable.getSymbolOrCreate(ctx.getText());
-       integer.addDefinitionLine(ctx.start.getLine());
-       return null;
-    }
-
-
-    @Override
-    public Object visitFloatingConst(ModelParser.FloatingConstContext ctx) {
-        Symbol integer = numberTable.getSymbolOrCreate(ctx.getText());
-        integer.addDefinitionLine(ctx.start.getLine());
-        return null;
-    }
-
-    @Override
-    public Object visitTabbedArray(ModelParser.TabbedArrayContext ctx) {
-        return null;
-    }
-
-
-    private String getFunctionName(ModelParser.CallContext ctx){
-        return ctx.Id().getText();
-    }
-
-    @Override
-    public Object visitCall(ModelParser.CallContext ctx) {
-        if ("WITH LOOKUP".equals(getFunctionName(ctx))) {
-            return visit(ctx.exprList().expr(0));
-        }
-
-        return super.visitCall(ctx);
-    }
 }
