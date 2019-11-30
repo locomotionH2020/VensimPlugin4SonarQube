@@ -5,6 +5,8 @@ import es.uva.medeas.Issue;
 import es.uva.medeas.VensimScanner;
 import es.uva.medeas.VensimVisitorContext;
 import static org.junit.Assert.*;
+
+import es.uva.medeas.parser.SymbolTable;
 import org.junit.Test;
 
 import static es.uva.medeas.rules.RuleTestUtilities.*;
@@ -152,4 +154,19 @@ public class TestMagicNumberCheck {
         scanner.checkIssues(visitorContext);
         assertTrue(visitorContext.getIssues().isEmpty());
     }
+
+
+    @Test
+    public void testBidimensionalArrayDoesntCount() {
+        String program = "INITIAL_POPULATION = 1,1,1,1;1,1,1,1;\n" +
+                "         1,1,1,1; ~Person~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+    }
+
+
 }

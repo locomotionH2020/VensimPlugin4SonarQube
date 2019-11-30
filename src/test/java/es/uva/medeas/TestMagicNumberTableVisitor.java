@@ -37,7 +37,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testDirectConstantsDontCount(){
+    public void testDirectConstantsDoesntCountEquation(){
         String program = "A = 3 ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -46,6 +46,27 @@ public class TestMagicNumberTableVisitor {
         assertFalse(table.hasSymbol("3"));
 
     }
+
+    @Test
+    public void testDirectConstantDoesntCountUnchangeableConstant(){
+        String program = "A == 3 ~~|\n";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertFalse(table.hasSymbol("3"));
+    }
+
+    @Test
+    public void testDirectConstantDoesntCountDataEquation(){
+        String program = "A := 3 ~~|\n";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertFalse(table.hasSymbol("3"));
+    }
+
 
     @Test
     public void testRepeatedNumbersInTheSameLineCount(){
@@ -70,6 +91,39 @@ public class TestMagicNumberTableVisitor {
 
         assertFalse(table.hasSymbol("3") );
 
+    }
+
+    @Test
+    public void testBidimensionalArrayDoesntCountInEquation(){
+        String program = "initial population[country,blood type] = 1,2,3,4;5,6,7,8;\n" +
+                "         9,10,11,12; ~Person~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty());
+    }
+
+    @Test
+    public void testBidimensionalArrayDoesntCountInDataEquation(){
+        String program = "initial population[country,blood type] := 1,2,3,4;5,6,7,8;\n" +
+                "         9,10,11,12; ~Person~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty());
+    }
+
+    @Test
+    public void testBidimensionalArrayDoesntCountInUnchangeableConstant(){
+        String program = "initial population[country,blood type] == 1,2,3,4;5,6,7,8;\n" +
+                "         9,10,11,12; ~Person~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty());
     }
 
     @Test
@@ -107,21 +161,36 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testParenthesisCount(){
-        String program = "A = (3)~|";
+        String program = "A = ((3)*3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
-        table.print();
+
+        assertEquals(Arrays.asList(1,1),table.getSymbol("3").getDefinitionLines() );
     }
 
     @Test
-    public void testNegativeNumbers(){
-        fail();
+    public void testSignNumbers(){
+        String program = "A = -3 * +4 ~|";
+
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(Collections.singletonList(1),table.getSymbol("-3").getDefinitionLines() );
+        assertEquals(Collections.singletonList(1),table.getSymbol("+4").getDefinitionLines() );
     }
 
     @Test
     public void testExponentNumbers(){
-        fail();
+        String program = "A = -10e+5 * +10E-9 ~|";
+
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(Collections.singletonList(1),table.getSymbol("-10e+5").getDefinitionLines() );
+        assertEquals(Collections.singletonList(1),table.getSymbol("+10E-9").getDefinitionLines() );
     }
 
     @Test
@@ -188,5 +257,52 @@ public class TestMagicNumberTableVisitor {
         assertEquals(Arrays.asList(1,1),table.getSymbol("1").getDefinitionLines() );
     }
 
+    @Test
+    public void testTransversesMacros(){
+        String program = ":MACRO: VSMOOTH(input,SMOOTH TIME)\n" +
+                "Vsmooth = INTEG((input - Vsmooth)/SMOOTH TIME*3, input)\n ~ The first order smoothed value of a variable.|\n" +
+                ":END OF MACRO:";
 
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(Collections.singletonList(2),table.getSymbol("3").getDefinitionLines() );
+
+
+    }
+
+    @Test
+    public void testWithLookupIgnoresLookupEquation(){
+        String program = "var =WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertEquals("6",table.getSymbols().iterator().next().getToken());
+    }
+
+
+    @Test
+    public void testWithLookupIgnoresLookupDataEquation(){
+        String program = "var :=WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertEquals("6",table.getSymbols().iterator().next().getToken());
+    }
+
+
+    @Test
+    public void testWithLookupIgnoresLookupUnchangeableConstant(){
+        String program = "var ==WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertEquals("6",table.getSymbols().iterator().next().getToken());;
+    }
 }

@@ -27,16 +27,32 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     private boolean exprIsAConstant(ModelParser.ExprContext ctx){
         return  ctx.getClass() == ModelParser.ConstContext.class;
     }
+
     @Override
     public Object visitEquation(ModelParser.EquationContext ctx) {
 
-        if(!exprIsAConstant(ctx.expr()))
+        if(ctx.expr()!=null && !exprIsAConstant(ctx.expr()))
             return super.visit(ctx.expr());
 
         return null;
 
     }
 
+    @Override
+    public Object visitDataEquation(ModelParser.DataEquationContext ctx) {
+        if(ctx.expr()!=null && !exprIsAConstant(ctx.expr()))
+            return super.visit(ctx.expr());
+
+        return null;
+    }
+
+    @Override
+    public Object visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
+        if(ctx.expr()!=null && !exprIsAConstant(ctx.expr()))
+            return super.visit(ctx.expr());
+
+        return null;
+    }
 
     @Override
     public Object visitLookup(ModelParser.LookupContext ctx) {
@@ -88,5 +104,16 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     }
 
 
+    @Override
+    public Object visitLookupDefinition(ModelParser.LookupDefinitionContext ctx) {
+        if(ctx.call()!=null)
+            super.visitCall(ctx.call());
+        return null;
+    }
+
+    @Override
+    public Object visitConstList(ModelParser.ConstListContext ctx) {
+        return null;
+    }
 
 }
