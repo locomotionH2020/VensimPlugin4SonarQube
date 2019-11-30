@@ -131,7 +131,7 @@ public class TestAPI {
     @Test
     public void testSymbolTableOutput() throws IOException{
         File file = new File(integrationTestsFolder,"symbolTable.json");
-
+        //TODO delete file after test completition
         InputStream fis = new FileInputStream(file);
 
         JsonReader reader = Json.createReader(fis);

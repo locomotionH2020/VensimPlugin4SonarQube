@@ -178,7 +178,7 @@ public class TestMagicNumberTableVisitor {
         SymbolTable table = visitor.getSymbolTable(visitorContext);
 
         assertEquals(Collections.singletonList(1),table.getSymbol("-3").getDefinitionLines() );
-        assertEquals(Collections.singletonList(1),table.getSymbol("+4").getDefinitionLines() );
+        assertEquals(Collections.singletonList(1),table.getSymbol("4").getDefinitionLines() );
     }
 
     @Test
@@ -189,8 +189,8 @@ public class TestMagicNumberTableVisitor {
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
 
-        assertEquals(Collections.singletonList(1),table.getSymbol("-10e+5").getDefinitionLines() );
-        assertEquals(Collections.singletonList(1),table.getSymbol("+10E-9").getDefinitionLines() );
+        assertEquals(Collections.singletonList(1),table.getSymbol("-1000000.0").getDefinitionLines() );
+        assertEquals(Collections.singletonList(1),table.getSymbol("1.0E-8").getDefinitionLines() );
     }
 
     @Test
@@ -304,5 +304,53 @@ public class TestMagicNumberTableVisitor {
 
         assertEquals(1,table.getSymbols().size());
         assertEquals("6",table.getSymbols().iterator().next().getToken());;
+    }
+
+    @Test
+    public void testNumberListDoesntCountEquation(){
+        String program = "A = 1,2,3,4,5~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+
+    }
+
+    @Test
+    public void testNumberListDoesntCountDataEquation(){
+        String program = "A := 1,2,3,4,5~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+
+    }
+
+    @Test
+    public void testNumberListDoesntCountUnchangeableConstant(){
+        String program = "A := 1,2,3,4,5~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+
+    }
+
+
+
+
+    @Test
+    public void testSameNumberInDifferentFormatIsStillTheSame(){
+        String program = "A = 3 * +3 * 1.0 * 10e-1 ~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(Arrays.asList(1,1),table.getSymbol("3").getDefinitionLines() );
+        assertEquals(Arrays.asList(1,1),table.getSymbol("1.0").getDefinitionLines() );
+
     }
 }

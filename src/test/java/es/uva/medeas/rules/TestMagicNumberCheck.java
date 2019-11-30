@@ -6,7 +6,6 @@ import es.uva.medeas.VensimScanner;
 import es.uva.medeas.VensimVisitorContext;
 import static org.junit.Assert.*;
 
-import es.uva.medeas.parser.SymbolTable;
 import org.junit.Test;
 
 import static es.uva.medeas.rules.RuleTestUtilities.*;
@@ -64,8 +63,8 @@ public class TestMagicNumberCheck {
     }
 
     @Test
-    public void testConstantDirectAssignsDontCountAsMagic(){
-        String program = "A = 3 ~~|\n".repeat(DEFAULT_REPETITIONS); //TODO testearlo mejor haciendo la SymbolTable protegida, dentro de una clase TestMagicNumberVisitor o algo así
+    public void testConstantDirectAssignsDoesntCountEquation(){
+        String program = "A = 3 ~~|\n".repeat(DEFAULT_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -75,9 +74,32 @@ public class TestMagicNumberCheck {
         assertTrue(visitorContext.getIssues().isEmpty());
     }
 
+    @Test
+    public void testConstantDirectAssignsDoesntCountDataEquation(){
+        String program = "A := 3 ~~|\n".repeat(DEFAULT_REPETITIONS);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+    }
 
     @Test
-    public void testTabbedArrayDoesntCount(){
+    public void testConstantDirectAssignsDoesntCountUnchangeableConstant(){
+        String program = "A == 3 ~~|\n".repeat(DEFAULT_REPETITIONS);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+    }
+
+    @Test
+    public void testTabbedArrayDoesntCountEquation(){
         String program = "TABBED_ARRAY = TABBED ARRAY(3    3    3    3\n" +
                 "3    3    3    3\n" +
                 "3    3    3    3)\n" +
@@ -92,6 +114,38 @@ public class TestMagicNumberCheck {
 
     }
 
+    @Test
+    public void testTabbedArrayDoesntCountDataEquation(){
+        String program = "TABBED_ARRAY := TABBED ARRAY(3    3    3    3\n" +
+                "3    3    3    3\n" +
+                "3    3    3    3)\n" +
+                "~ |";
+
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+
+    }
+
+
+    @Test
+    public void testTabbedArrayDoesntCountUnchangeableConstant(){
+        String program = "TABBED_ARRAY == TABBED ARRAY(3    3    3    3\n" +
+                "3    3    3    3\n" +
+                "3    3    3    3)\n" +
+                "~ |";
+
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+
+    }
 
     @Test
     public void testLookupsDontCount(){
@@ -108,8 +162,32 @@ public class TestMagicNumberCheck {
     }
 
     @Test
-    public void testWithLookupSecondArgumentDoesntCount(){
+    public void testWithLookupSecondArgumentDoesntCountEquation(){
         String program = "var =WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~|".repeat(DEFAULT_REPETITIONS);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+
+    }
+
+    @Test
+    public void testWithLookupSecondArgumentDoesntCountDataEquation(){
+        String program = "var :=WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~|".repeat(DEFAULT_REPETITIONS);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+
+    }
+
+    @Test
+    public void testWithLookupSecondArgumentDoesntCountUnchengableConstant(){
+        String program = "FOO == WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~|".repeat(DEFAULT_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -166,6 +244,42 @@ public class TestMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
         assertTrue(visitorContext.getIssues().isEmpty());
+    }
+
+    @Test
+    public void testNumberListDoesntCountEquation(){
+        String program = "A = 1,1,1,1,1~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+
+    }
+
+    @Test
+    public void testNumberListDoesntCountDataEquation(){
+        String program = "A := 1,1,1,1,1~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+
+    }
+
+    @Test
+    public void testNumberListDoesntCountUnchangeableConstant(){
+        String program = "A == 1,1,1,1,1~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+
     }
 
 

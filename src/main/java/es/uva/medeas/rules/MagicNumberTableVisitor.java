@@ -17,6 +17,9 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     }
 
 
+
+
+
     public  SymbolTable getSymbolTable(VensimVisitorContext context){
         numberTable = new SymbolTable();
         visit(context.getRootNode());
@@ -61,7 +64,8 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
     @Override
     public Object visitIntegerConst(ModelParser.IntegerConstContext ctx) {
-        Symbol integer = numberTable.getSymbolOrCreate(ctx.getText());
+        String value = String.valueOf(Integer.parseInt(ctx.getText()));
+        Symbol integer = numberTable.getSymbolOrCreate(value);
         integer.addDefinitionLine(ctx.start.getLine());
         return null;
     }
@@ -69,7 +73,8 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
     @Override
     public Object visitFloatingConst(ModelParser.FloatingConstContext ctx) {
-        Symbol integer = numberTable.getSymbolOrCreate(ctx.getText());
+        String value = String.valueOf(Float.parseFloat(ctx.getText()));
+        Symbol integer = numberTable.getSymbolOrCreate(value);
         integer.addDefinitionLine(ctx.start.getLine());
         return null;
     }
