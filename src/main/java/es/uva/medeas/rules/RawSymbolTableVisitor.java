@@ -268,7 +268,12 @@ class RawSymbolTableVisitor extends ModelBaseVisitor {
         }
 
 
-        List<Symbol> symbols =  (List<Symbol>) visit(ctx.exprList());
+        List<Symbol> symbols;
+        if(ctx.exprList()!=null)
+             symbols =  (List<Symbol>) visit(ctx.exprList());
+        else
+            symbols = new ArrayList<>();
+
         symbols.add(call);
         return symbols;
     }

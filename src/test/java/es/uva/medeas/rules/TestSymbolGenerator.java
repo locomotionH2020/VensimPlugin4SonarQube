@@ -270,6 +270,152 @@ public class TestSymbolGenerator {
 
     }
 
+    @Test
+    public void testRandom01IsntPure(){
+        String program = "variable=" +
+                "RANDOM 0 1()~|\n";
+        //TODO visitor call with no arguments
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+    }
+
+    @Test
+    public void testRandomBetaIsntPure(){
+        String program = "variable=" +
+                "RANDOM BETA(1,1,1,1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+    }
+
+    @Test
+    public void testRandomBinomialIsntPure(){
+        String program = "variable=" +
+                "RANDOM BINOMIAL(1,1,1,1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+    }
+
+    @Test
+    public void testRandomExponentialIsntPure(){
+        String program = "variable=" +
+                "RANDOM EXPONENTIAL(1,1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+    }
+
+    @Test
+    public void testRandomGammaIsntPure(){
+        String program = "variable=" +
+                "RANDOM GAMMA(1,1,1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+    }
+
+    @Test
+    public void testRandomLookupIsntPure(){
+        String program = "variable=" +
+                "RANDOM LOOKUP(1,1,1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+    }
+
+    @Test
+    public void testRandomNegativeBinomialIsntPure(){
+        String program = "variable=" +
+                "RANDOM NEGATIVE BINOMIAL(1,1,1,1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+    }
+
+    @Test
+    public void testRandomNormalIsntPure(){
+        String program = "variable=" +
+                "RANDOM NORMAL(1,1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+    }
+
+    @Test
+    public void testRandomPinkNoiseIsntPure(){
+        String program = "variable=" +
+                "RANDOM PINK NOISE(1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+    }
+
+    @Test
+    public void testRandomPoissonIsntPure(){
+        String program = "variable=" +
+                "RANDOM POISSON(1,1,1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testRandomTriangularIsntPure(){
+        String program = "variable=" +
+                " RANDOM TRIANGULAR(1,1,1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testRandomUniformIsntPure(){
+        String program = "variable=" +
+                " RANDOM UNIFORM(1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
+
+    @Test
+    public void testRandomWeibullIsntPure(){
+        String program = "variable=" +
+                "RANDOM WEIBULL(1,1,1,1,1,1)~|\n";
+
+        SymbolTable table = getSymbolTableFromString(program);
+        Symbol variable = table.getSymbol("variable");
+
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+
+    }
 
 
     @Test
