@@ -1,9 +1,10 @@
-package es.uva.medeas.rules;
+package es.uva.medeas.utilities;
 
-import es.uva.medeas.VensimVisitorContext;
+import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
+import es.uva.medeas.parser.visitors.RawSymbolTableVisitor;
 
 import java.util.Arrays;
 import java.util.List;

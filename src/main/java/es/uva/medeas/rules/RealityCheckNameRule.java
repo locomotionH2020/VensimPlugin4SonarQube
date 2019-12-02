@@ -1,7 +1,7 @@
 package es.uva.medeas.rules;
 
-import es.uva.medeas.Issue;
-import es.uva.medeas.VensimVisitorContext;
+import es.uva.medeas.plugin.Issue;
+import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;

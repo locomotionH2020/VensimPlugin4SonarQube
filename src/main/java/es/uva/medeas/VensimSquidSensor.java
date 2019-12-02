@@ -1,5 +1,8 @@
 package es.uva.medeas;
 
+import es.uva.medeas.plugin.VensimLanguage;
+import es.uva.medeas.plugin.VensimRuleRepository;
+import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.rules.VensimCheck;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.InputFile;

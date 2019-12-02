@@ -1,4 +1,4 @@
-package es.uva.medeas.rules;
+package es.uva.medeas.parser.visitors;
 
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.ModelBaseVisitor;
@@ -6,7 +6,7 @@ import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 
-public class MagicNumberTableVisitor  extends ModelBaseVisitor {
+public class MagicNumberTableVisitor extends ModelBaseVisitor {
 
 
     private SymbolTable numberTable;

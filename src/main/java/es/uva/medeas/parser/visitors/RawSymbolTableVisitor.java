@@ -1,6 +1,6 @@
-package es.uva.medeas.rules;
+package es.uva.medeas.parser.visitors;
 
-import es.uva.medeas.VensimVisitorContext;
+import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.*;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import java.util.*;
 
 
-class RawSymbolTableVisitor extends ModelBaseVisitor {
+public class RawSymbolTableVisitor extends ModelBaseVisitor {
     //TODO add javadocs for RawSymbolTableVisitor y SymbolTableGenerator
 
     private SymbolTable table;

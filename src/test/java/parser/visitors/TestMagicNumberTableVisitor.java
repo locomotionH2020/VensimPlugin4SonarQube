@@ -1,6 +1,7 @@
-package es.uva.medeas;
+package parser.visitors;
 
 import es.uva.medeas.parser.SymbolTable;
+import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.rules.MagicNumberTableVisitor;
 import static org.junit.Assert.*;
 
@@ -12,7 +13,7 @@ import org.sonar.api.internal.apachecommons.lang.StringUtils;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static es.uva.medeas.rules.RuleTestUtilities.getVisitorContextFromString;
+import static es.uva.medeas.testutilities.RuleTestUtilities.getVisitorContextFromString;
 
 public class TestMagicNumberTableVisitor {
 

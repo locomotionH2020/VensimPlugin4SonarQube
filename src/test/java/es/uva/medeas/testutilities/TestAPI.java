@@ -1,23 +1,19 @@
-package es.uva.medeas;
+package es.uva.medeas.testutilities;
 
 import static org.junit.Assert.*;
 
 import es.uva.medeas.rules.*;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import static es.uva.medeas.UtilitiesAPI.*;
+import static es.uva.medeas.testutilities.UtilitiesAPI.*;
 
 public class TestAPI {
 

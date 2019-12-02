@@ -1,4 +1,4 @@
-package es.uva.medeas;
+package es.uva.medeas.plugin;
 
 import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;

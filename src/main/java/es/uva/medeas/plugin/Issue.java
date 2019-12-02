@@ -1,4 +1,4 @@
-package es.uva.medeas;
+package es.uva.medeas.plugin;
 
 import es.uva.medeas.rules.VensimCheck;
 

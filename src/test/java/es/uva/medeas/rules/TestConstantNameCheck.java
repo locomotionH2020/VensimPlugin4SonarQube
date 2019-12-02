@@ -1,12 +1,10 @@
 package es.uva.medeas.rules;
 
-import es.uva.medeas.VensimScanner;
-import es.uva.medeas.VensimVisitorContext;
-import es.uva.medeas.parser.SymbolTable;
+import es.uva.medeas.plugin.VensimScanner;
+import es.uva.medeas.plugin.VensimVisitorContext;
 import org.junit.Test;
 
-import static es.uva.medeas.rules.RuleTestUtilities.*;
-import static es.uva.medeas.rules.TestUtilities.getSymbolTableFromString;
+import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 import static org.junit.Assert.assertTrue;
 
 public class TestConstantNameCheck {

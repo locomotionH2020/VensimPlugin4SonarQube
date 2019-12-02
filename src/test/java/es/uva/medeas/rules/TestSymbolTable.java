@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static es.uva.medeas.rules.TestUtilities.*;
+import static es.uva.medeas.testutilities.TestUtilities.*;
 
 public class TestSymbolTable {
 

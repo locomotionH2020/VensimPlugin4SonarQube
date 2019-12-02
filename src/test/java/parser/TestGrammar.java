@@ -1,19 +1,17 @@
-package es.uva.medeas.rules;
+package parser;
 
 
 import es.uva.medeas.parser.ModelParser;
-import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
-import org.antlr.v4.runtime.tree.ParseTree;
+
 import static org.junit.Assert.*;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static  es.uva.medeas.rules.TestUtilities.*;
+import static es.uva.medeas.testutilities.TestUtilities.*;
 
 public class TestGrammar {
 

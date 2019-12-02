@@ -1,14 +1,14 @@
 package es.uva.medeas.rules;
 
 
-import es.uva.medeas.Issue;
-import es.uva.medeas.VensimScanner;
-import es.uva.medeas.VensimVisitorContext;
+import es.uva.medeas.plugin.Issue;
+import es.uva.medeas.plugin.VensimScanner;
+import es.uva.medeas.plugin.VensimVisitorContext;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import static es.uva.medeas.rules.RuleTestUtilities.*;
+import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 
 public class TestMagicNumberCheck {
 

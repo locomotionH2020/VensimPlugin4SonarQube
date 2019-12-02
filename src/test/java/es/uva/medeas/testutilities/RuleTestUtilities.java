@@ -1,9 +1,9 @@
-package es.uva.medeas.rules;
+package es.uva.medeas.testutilities;
 
-import es.uva.medeas.Issue;
-import es.uva.medeas.VensimRuleRepository;
-import es.uva.medeas.VensimScanner;
-import es.uva.medeas.VensimVisitorContext;
+import es.uva.medeas.plugin.Issue;
+import es.uva.medeas.plugin.VensimRuleRepository;
+import es.uva.medeas.plugin.VensimScanner;
+import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.rules.VensimCheck;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.sonar.api.batch.rule.ActiveRules;
@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
 
-import static es.uva.medeas.rules.TestUtilities.getParseTreeFromString;
-import static es.uva.medeas.rules.TestUtilities.getSymbolTableFromString;
+import static es.uva.medeas.testutilities.TestUtilities.getParseTreeFromString;
+import static es.uva.medeas.testutilities.TestUtilities.getSymbolTableFromString;
 
 public class RuleTestUtilities {
 

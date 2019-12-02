@@ -1,7 +1,8 @@
-package es.uva.medeas;
+package es.uva.medeas.plugin;
 
 
 import es.uva.medeas.parser.SymbolTable;
+import es.uva.medeas.plugin.Issue;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;

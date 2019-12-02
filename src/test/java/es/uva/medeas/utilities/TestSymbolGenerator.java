@@ -1,7 +1,6 @@
-package es.uva.medeas.rules;
+package es.uva.medeas.utilities;
 
-import es.uva.medeas.VensimScanner;
-import es.uva.medeas.VensimVisitorContext;
+import es.uva.medeas.utilities.SymbolTableGenerator;
 import es.uva.medeas.parser.*;
 import org.junit.Test;
 
@@ -10,9 +9,8 @@ import org.junit.Test;
 import java.io.IOException;
 
 
-import static es.uva.medeas.rules.RuleTestUtilities.*;
 import static org.junit.Assert.*;
-import static es.uva.medeas.rules.TestUtilities.*;
+import static es.uva.medeas.testutilities.TestUtilities.*;
 
 
 public class TestSymbolGenerator {

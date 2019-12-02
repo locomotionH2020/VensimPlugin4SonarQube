@@ -1,4 +1,4 @@
-package es.uva.medeas;
+package es.uva.medeas.testutilities;
 
 
 import javax.json.Json;

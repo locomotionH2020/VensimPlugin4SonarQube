@@ -1,8 +1,9 @@
-package es.uva.medeas;
+package es.uva.medeas.plugin;
 
 
-import es.uva.medeas.rules.RuleTestUtilities;
+import es.uva.medeas.testutilities.RuleTestUtilities;
 import es.uva.medeas.rules.VensimCheck;
+import es.uva.medeas.utilities.JsonSymbolTableBuilder;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static es.uva.medeas.rules.TestUtilities.*;
+import static es.uva.medeas.testutilities.TestUtilities.*;
 
 public class TestVensimScanner
 {

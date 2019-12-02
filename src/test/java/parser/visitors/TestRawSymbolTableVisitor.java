@@ -1,18 +1,16 @@
-package es.uva.medeas.rules;
+package parser.visitors;
 
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static es.uva.medeas.rules.TestUtilities.*;
+import static es.uva.medeas.testutilities.TestUtilities.*;
 
 import static org.junit.Assert.*;
 

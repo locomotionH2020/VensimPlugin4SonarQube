@@ -1,14 +1,14 @@
-package es.uva.medeas;
+package es.uva.medeas.plugin;
 
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.VensimErrorListener;
 import es.uva.medeas.parser.ModelLexer;
 import es.uva.medeas.parser.ModelParser;
-import es.uva.medeas.rules.SymbolTableGenerator;
 import es.uva.medeas.rules.VensimCheck;
 
 
-
+import es.uva.medeas.utilities.JsonSymbolTableBuilder;
+import es.uva.medeas.utilities.SymbolTableGenerator;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
