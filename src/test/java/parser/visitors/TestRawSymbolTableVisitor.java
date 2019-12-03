@@ -6,6 +6,7 @@ import es.uva.medeas.parser.SymbolType;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ import static org.junit.Assert.*;
 public class TestRawSymbolTableVisitor {
 
     @Test
-    public void testMacroArgumentsDontOverrideOtherSymbols(){
+    public void testMacroArgumentsArentConsideredDefinition(){
         String program = "testArgumentBefore = 5 ~~ |\n" +
                 ":MACRO: myMacro(testArgumentBefore,testArgumentAfter)\n" +
                 "myMacro = INTEG((testArgumentBefore - 3)/testArgumentAfter, testArgumentBefore) ~~|\n" +
@@ -34,25 +35,6 @@ public class TestRawSymbolTableVisitor {
         assertSymbolDefinedOnlyIn(5,argumentAfter);
     }
 
-    @Test
-    public void testMacroValuesDontOverrideOtherSymbols(){
-        String program = "testValueBefore = 5 ~~ |\n" +
-                ":MACRO: myMacro(arg1, otherArg)\n" +
-                "myMacro = INTEG((arg1 - 3)/otherArg, arg1) ~~|\n" +
-                "testValueBefore = 9 ~~ |\n" +
-                "testValueAfter = 99 ~~ |\n" +
-                ":END OF MACRO:\n"+
-                "testValueAfter= 10~|\n";
-
-        SymbolTable table = getRAWSymbolTableFromString(program);
-
-        Symbol valueBefore = table.getSymbol("testValueBefore");
-        assertSymbolDefinedOnlyIn(1,valueBefore);
-
-        Symbol valueAfter = table.getSymbol("testValueAfter");
-        assertSymbolDefinedOnlyIn(7,valueAfter);
-
-    }
 
     @Test
     public void testSubscript(){
@@ -192,10 +174,8 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myMacro = table.getSymbol("myMacro");
-        assertSymbol(myMacro,SymbolType.FUNCTION,3,NO_DEPENDENCIES);
-
-        assertFalse(table.hasSymbol("input1"));
-        assertFalse(table.hasSymbol("timeVar"));
+        assertSymbolType(myMacro,SymbolType.FUNCTION);
+        assertEquals(Arrays.asList(3,4),myMacro.getDefinitionLines());
     }
 
 

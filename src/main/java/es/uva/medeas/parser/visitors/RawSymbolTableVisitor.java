@@ -79,7 +79,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
         symbol.setType(SymbolType.FUNCTION);
         symbol.addDefinitionLine(getStartLine(ctx));
 
-        return null;
+        return super.visitMacroDefinition(ctx);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package es.uva.medeas.rules;
 
+import es.uva.medeas.parser.visitors.MagicNumberTableVisitor;
 import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.Symbol;

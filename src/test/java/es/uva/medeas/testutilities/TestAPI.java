@@ -38,15 +38,6 @@ public class TestAPI {
 
 
 
-
-    private void assertIssueLine(JsonObject issue, int line){
-        assertEquals(line,issue.getInt("line"));
-    }
-
-    private void assertIssueType(JsonObject issue, String rule_key){
-        assertEquals("vensim:"+rule_key,issue.getString("rule"));
-    }
-
     @Test
     public void testSonarSubscriptName() throws IOException {
       JsonArray issues =   getIssues("testSubscriptName.mdl",SONAR_TOKEN);
@@ -121,6 +112,19 @@ public class TestAPI {
 
         assertIssueLine(issue,1);
         assertIssueType(issue, RealityCheckNameRule.CHECK_KEY);
+    }
+
+    @Test
+    public void testMagicNumberCheckName() throws IOException{
+        JsonArray issues =   getIssues("testMagicNumber.mdl",SONAR_TOKEN);
+
+        assertEquals(5,issues.size());
+
+        for(int i=0;i<5;i++) {
+            JsonObject issue = issues.getJsonObject(i);
+            assertIssueLine(issue, 1);
+            assertIssueType(issue, MagicNumberCheck.CHECK_KEY);
+        }
     }
 
 

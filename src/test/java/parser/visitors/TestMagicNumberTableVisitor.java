@@ -2,7 +2,7 @@ package parser.visitors;
 
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.plugin.VensimVisitorContext;
-import es.uva.medeas.rules.MagicNumberTableVisitor;
+import es.uva.medeas.parser.visitors.MagicNumberTableVisitor;
 import static org.junit.Assert.*;
 
 
@@ -354,4 +354,334 @@ public class TestMagicNumberTableVisitor {
         assertEquals(Arrays.asList(1,1),table.getSymbol("1.0").getDefinitionLines() );
 
     }
+
+    @Test
+    public void testFunctionExceptionsOnlyWorkIfAloneEquation(){
+        String program = "A = Time * SQRT(3) ~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(Collections.singletonList(1),table.getSymbol("3").getDefinitionLines() );
+    }
+
+    @Test
+    public void testFunctionExceptionsOnlyWorkIfAloneDataEquation(){
+        String program = "A := Time * SQRT(3) ~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(Collections.singletonList(1),table.getSymbol("3").getDefinitionLines() );
+    }
+
+    @Test
+    public void testExceptionSQRTEquation(){
+        String program = "A = SQRT(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionSQRTDataEquation(){
+        String program = "A := SQRT(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionTANEquation(){
+        String program = "A = TAN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionTANDataEquation(){
+        String program = "A := TAN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionTANHEquation(){
+        String program = "A = TANH(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionTANHDataEquation(){
+        String program = "A := TANH(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionSINEquation(){
+        String program = "A = SIN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionSINDataEquation(){
+        String program = "A := SIN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionSINHEquation(){
+        String program = "A = SINH(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionSINHDataEquation(){
+        String program = "A := SINH(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionCOSEquation(){
+        String program = "A = COS(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionCOSDataEquation(){
+        String program = "A := COS(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionCOSHEquation(){
+        String program = "CONST = COSH(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionCOSHDataEquation(){
+        String program = "A := COSH(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionARCTANEquation(){
+        String program = "A = ARCTAN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionARCTANDataEquation(){
+        String program = "A := ARCTAN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionARCSINEquation(){
+        String program = "A = ARCSIN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionARCSINDataEquation(){
+        String program = "A := ARCSIN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionARCCOSEquation(){
+        String program = "A = ARCCOS(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionARCCOSDataEquation(){
+        String program = "A := ARCCOS(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionABSEquation(){
+        String program = "A = ABS(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionABSDataEquation(){
+        String program = "A := ABS(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionLNEquation(){
+        String program = "A = LN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionLNDataEquation(){
+        String program = "A := LN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionGAMMALNEquation(){
+        String program = "A = GAMMA LN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionGAMMALNDataEquation(){
+        String program = "A := GAMMA LN(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionINTEGEREquation(){
+        String program = "A = INTEGER(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionINTEGERDataEquation(){
+        String program = "A := INTEGER(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionGAMEEquation(){
+        String program = "A = GAME(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionGAMEDataEquation(){
+        String program = "A := GAME(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+    @Test
+    public void testExceptionEXPEquation(){
+        String program = "A = EXP(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testExceptionEXPDataEquation(){
+        String program = "A := EXP(3)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
 }

@@ -11,7 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-
+import static org.junit.Assert.assertEquals;
 
 
 public class UtilitiesAPI {
@@ -77,4 +77,15 @@ public class UtilitiesAPI {
         }
 
     }
+
+
+
+    public static void assertIssueLine(JsonObject issue, int line){
+        assertEquals(line,issue.getInt("line"));
+    }
+
+    public static void assertIssueType(JsonObject issue, String rule_key){
+        assertEquals("vensim:"+rule_key,issue.getString("rule"));
+    }
+
 }
