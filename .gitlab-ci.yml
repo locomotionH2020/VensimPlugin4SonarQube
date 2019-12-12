@@ -46,5 +46,5 @@ build_job:
 
   script:
     -  ip r
-    - ssh  -vvv -i test.prv  -oStrictHostKeyChecking=no tfg2020.virtual.lab.inf.uva.es -l usuario "cd tfg-sonarvensim > what.txt  && git checkout master >output1.txt && git pull origin master >output2.txt && mvn package -DskipTests > output3 && cp target/sonar-vensim-1.0-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.0-SNAPSHOT.jar && exit"
+    - ssh  -vvv -i test.prv  -oStrictHostKeyChecking=no 10.0.20.20 -l usuario "cd tfg-sonarvensim > what.txt  && git checkout master >output1.txt && git pull origin master >output2.txt && mvn package -DskipTests > output3 && cp target/sonar-vensim-1.0-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.0-SNAPSHOT.jar && exit"
  
