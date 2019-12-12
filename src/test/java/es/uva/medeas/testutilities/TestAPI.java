@@ -116,7 +116,7 @@ public class TestAPI {
 
     @Test
     public void testMagicNumberCheckName() throws IOException{
-        JsonArray issues =   getIssues("testMagicNumber.mdl",SONAR_TOKEN);
+        JsonArray issues =  getIssues("testMagicNumber.mdl",SONAR_TOKEN);
 
         assertEquals(5,issues.size());
 

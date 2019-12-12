@@ -2,9 +2,7 @@ package es.uva.medeas.parser.visitors;
 
 import es.uva.medeas.parser.*;
 import es.uva.medeas.plugin.VensimVisitorContext;
-
-import java.util.Arrays;
-import java.util.List;
+import es.uva.medeas.utilities.Constants;
 
 public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
@@ -14,21 +12,17 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
 
 
-        private static final List<String> IGNORED_FUNCTIONS_IF_ALONE_AND_CONSTANT = Arrays.asList("SQRT","TAN","TANH","SIN","SINH","COS",
-                "COSH","ARCTAN", "ARCSIN","ARCCOS","ABS","LN","GAMMA LN","INTEGER","GAME","EXP",
-                "POWER","LOG","MIN","MODULO","XIDZ","QUANTUM");
+       ;
 
     public MagicNumberTableVisitor(){
         numberTable = new SymbolTable();
     }
 
 
-    private VensimVisitorContext visitorContext;
 
 
     public  SymbolTable getSymbolTable(VensimVisitorContext context){
         numberTable = new SymbolTable();
-        visitorContext = context;
         visit(context.getRootNode());
         return numberTable;
     }
@@ -49,17 +43,20 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
 
        ModelParser.CallExprContext callNode = (ModelParser.CallExprContext) node.exprAllowSign();
-       return IGNORED_FUNCTIONS_IF_ALONE_AND_CONSTANT.contains(callNode.call().Id().getText());
+       return Constants.IGNORED_FUNCTIONS_IF_ALONE.contains(callNode.call().Id().getText());
     }
+
+    private boolean exprIsIgnored(ModelParser.ExprContext ctx){
+        return exprIsAConstant(ctx) || exprIsAFunctionAndInIgnoreList(ctx);
+    }
+
 
     @Override
     public Object visitEquation(ModelParser.EquationContext ctx) {
-        boolean isConstant = visitorContext.getSymbolTable().getSymbol(ctx.lhs().Id().getText()).getType() == SymbolType.CONSTANT;
 
-
-        if(ctx.expr()==null || exprIsAConstant(ctx.expr()) || (exprIsAFunctionAndInIgnoreList(ctx.expr()) && isConstant))
+        if(ctx.expr()==null || exprIsIgnored(ctx.expr()))
             return null;
-        ;
+
 
         return super.visit(ctx.expr());
 
@@ -67,18 +64,25 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
     @Override
     public Object visitDataEquation(ModelParser.DataEquationContext ctx) {
-        if(ctx.expr()!=null && !exprIsAConstant(ctx.expr()) && !exprIsAFunctionAndInIgnoreList(ctx.expr()))
+
+        if(ctx.expr()==null || exprIsIgnored(ctx.expr()))
+            return null;
+
             return super.visit(ctx.expr());
 
-        return null;
+
     }
 
     @Override
     public Object visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
-        if(ctx.expr()!=null && !exprIsAConstant(ctx.expr()))
+
+        if(ctx.expr()==null || exprIsIgnored(ctx.expr()))
+            return null;
+
+
             return super.visit(ctx.expr());
 
-        return null;
+
     }
 
     @Override
@@ -113,10 +117,28 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
         return ctx.Id().getText();
     }
 
+
+    private boolean isCompoundMagicNumber(ModelParser.CallContext ctx){
+        CompoundMagicNumberVisitor visitor = new CompoundMagicNumberVisitor();
+
+        return visitor.visitExprList(ctx.exprList());
+    }
+
+
+
     @Override
     public Object visitCall(ModelParser.CallContext ctx) {
-        if ("WITH LOOKUP".equals(getFunctionName(ctx))) {
+        String functionName = getFunctionName(ctx);
+
+        if ("WITH LOOKUP".equals(functionName)) {
             return visit(ctx.exprList().expr(0));
+        }
+        if (Constants.FUNCTION_IS_COMPOUND_MAGIC_NUMBER.contains(functionName)){
+            if(isCompoundMagicNumber(ctx)){
+                Symbol integer = numberTable.getSymbolOrCreate(ctx.getText().trim());
+                integer.addDefinitionLine(ctx.start.getLine());
+                return null;
+            }
         }
 
         return super.visitCall(ctx);

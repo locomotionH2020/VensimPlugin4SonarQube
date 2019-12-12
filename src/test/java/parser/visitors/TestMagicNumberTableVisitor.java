@@ -17,7 +17,7 @@ import static es.uva.medeas.testutilities.RuleTestUtilities.getVisitorContextFro
 
 public class TestMagicNumberTableVisitor {
 
-    MagicNumberTableVisitor visitor;
+    private MagicNumberTableVisitor visitor;
 
     @Before
     public void setUp(){
@@ -304,7 +304,7 @@ public class TestMagicNumberTableVisitor {
         SymbolTable table = visitor.getSymbolTable(visitorContext);
 
         assertEquals(1,table.getSymbols().size());
-        assertEquals("6",table.getSymbols().iterator().next().getToken());;
+        assertEquals("6",table.getSymbols().iterator().next().getToken());
     }
 
     @Test
@@ -683,5 +683,136 @@ public class TestMagicNumberTableVisitor {
 
         assertTrue(table.getSymbols().isEmpty() );
     }
+
+
+    @Test
+    public void testCompoundNumberMOD(){
+        String program = " A = MODULO(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("MODULO(3,4)"));
+        assertFalse(table.hasSymbol("3"));
+        assertFalse(table.hasSymbol("4"));
+
+    }
+
+    @Test
+    public void testCompoundNumberPOWER(){
+        String program = "A = POWER(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("POWER(3,4)"));
+        assertEquals(1,table.getSymbols().size());
+
+    }
+
+    @Test
+    public void testCompoundNumberLOG(){
+        String program = "A = LOG(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("LOG(3,4)"));
+        assertEquals(1,table.getSymbols().size());
+
+    }
+
+    @Test
+    public void testCompoundNumberQUANTUM(){
+        String program = "A = QUANTUM(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("QUANTUM(3,4)"));
+        assertEquals(1,table.getSymbols().size());
+
+    }
+
+    @Test
+    public void testCompoundNumberIsTrimmed(){
+        String program = " A = MODULO(  3,   4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("MODULO(3,4)"));
+        assertEquals(1,table.getSymbols().size());
+    }
+
+    @Test
+    public void testNestedCompoundNumber(){
+        String program = " A = MODULO(POWER(MODULO(5,5),4),LOG(QUANTUM(4,6),5))~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("MODULO(POWER(MODULO(5,5),4),LOG(QUANTUM(4,6),5))"));
+        assertEquals(1,table.getSymbols().size());
+    }
+
+    @Test
+    public void testNestedCompoundNumberInIgnoredFunctions(){
+        String function= "POWER" +
+                "   (SQRT" +
+                "       (TAN" +
+                "            (TANH" +
+                "               (SIN" +
+                "                   (SINH(" +
+                "                       COS(" +
+                "                           COSH(" +
+                "                               ARCTAN(9))))))))"+
+                " ,ARCSIN(" +
+                "   ARCCOS(" +
+                "       ABS(" +
+                "           LN(" +
+                "               GAMMA LN(" +
+                "                   INTEGER(" +
+                "                       GAME(" +
+                "                           EXP(5))))))))" +
+                ")";
+
+        String program = "A = " + function + "~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        String expected = "POWER(SQRT(TAN(TANH(SIN(SINH(COS(COSH(ARCTAN(9)))))))),ARCSIN(ARCCOS(ABS(LN(GAMMA LN(INTEGER(GAME(EXP(5)))))))))";
+        assertEquals(expected,table.getSymbols().iterator().next().getToken());
+    }
+
+    @Test
+    public void testCompoundFunctionsInMiddleOfExpression(){
+        String program = "a = Time * MODULO(3,4) * DELAYP(Time,var:foo)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("MODULO(3,4)"));
+
+    }
+
+    @Test
+    public void testFunctionIsTransversedIfIsntCompoundDueToVariables(){
+        String program = "A = MODULO(3,Time)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("3"));
+    }
+
+
+    //TODO Test Compound in check
+    //TODO Test compound in data equations
+
 
 }
