@@ -27,6 +27,8 @@ before_script:
   ##
   ## Create the SSH directory and give it the right permissions
   ##
+  - echo "$SSH_PRIVATE_KEY" > test.prv
+  - chmod 600 test.prv
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
 
@@ -43,5 +45,5 @@ build_job:
   type: build
 
   script:
-    - ssh  -vvv -oStrictHostKeyChecking=no tfg2020.virtual.lab.inf.uva.es -l usuario "cd tfg-sonarvensim > what.txt  && git checkout master >output1.txt && git pull origin master >output2.txt && mvn package -DskipTests > output3 && cp target/sonar-vensim-1.0-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.0-SNAPSHOT.jar && exit"
+    - ssh  -vvv -i test.prv  -oStrictHostKeyChecking=no tfg2020.virtual.lab.inf.uva.es -l usuario "cd tfg-sonarvensim > what.txt  && git checkout master >output1.txt && git pull origin master >output2.txt && mvn package -DskipTests > output3 && cp target/sonar-vensim-1.0-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.0-SNAPSHOT.jar && exit"
  
