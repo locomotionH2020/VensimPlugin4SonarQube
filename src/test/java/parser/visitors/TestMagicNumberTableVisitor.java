@@ -384,6 +384,8 @@ public class TestMagicNumberTableVisitor {
 
         assertTrue(table.getSymbols().isEmpty() );
     }
+    //TODO test as compound (Token = 'SQRT(3)'
+    //TODO Test as nested compound: 'SQRT(TAN(3))'
 
     @Test
     public void testExceptionSQRTDataEquation(){
@@ -687,7 +689,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberMOD(){
-        String program = " A = MODULO(3,4)~|";
+        String program = " A = Time * MODULO(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
@@ -700,7 +702,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberPOWER(){
-        String program = "A = POWER(3,4)~|";
+        String program = "A = Time * POWER(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
@@ -712,7 +714,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberLOG(){
-        String program = "A = LOG(3,4)~|";
+        String program = "A = Time * LOG(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
@@ -722,9 +724,11 @@ public class TestMagicNumberTableVisitor {
 
     }
 
+    //TODO test all compound numbers are ignored if alone
+
     @Test
     public void testCompoundNumberQUANTUM(){
-        String program = "A = QUANTUM(3,4)~|";
+        String program = "A = Time * QUANTUM(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
@@ -736,7 +740,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberIsTrimmed(){
-        String program = " A = MODULO(  3,   4)~|";
+        String program = " A = Time * MODULO(  3,   4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
@@ -747,7 +751,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testNestedCompoundNumber(){
-        String program = " A = MODULO(POWER(MODULO(5,5),4),LOG(QUANTUM(4,6),5))~|";
+        String program = " A = Time * MODULO(POWER(MODULO(5,5),4),LOG(QUANTUM(4,6),5))~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
@@ -777,7 +781,7 @@ public class TestMagicNumberTableVisitor {
                 "                           EXP(5))))))))" +
                 ")";
 
-        String program = "A = " + function + "~|";
+        String program = "A = Time *" + function + "~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
@@ -800,7 +804,18 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testFunctionIsTransversedIfIsntCompoundDueToVariables(){
+    public void testFunctionIsTransversedIfIsntCompoundDueToVariablesNotAlone(){
+        String program = "A = Time * MODULO(3,Time)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("3"));
+    }
+
+    @Test
+    public void testFunctionIsTransversedIfIsntCompoundDueToVariablesAlone(){
         String program = "A = MODULO(3,Time)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -811,8 +826,72 @@ public class TestMagicNumberTableVisitor {
     }
 
 
+    @Test
+    public void testFunctionIsTransversedIfIsntCompoundDueToConstantNotAlone(){
+        String program = "CONST = 4~|" +
+                "C = Time * LOG(3,CONST)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("3"));
+    }
+
+    @Test
+    public void testFunctionIsTransversedIfIsntCompoundDueToConstantAlone(){
+        String program = "CONST = 4~|" +
+                "C = LOG(3,CONST)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("3"));
+    }
+
+    @Test
+    public void testTransversesCompoundsIfAlmostNested(){
+        String program = "A = FUNC(Time,MODULO(3,4),5)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(2,table.getSymbols().size());
+        assertTrue(table.hasSymbol("MODULO(3,4)"));
+        assertTrue(table.hasSymbol("5"));
+    }
+
+    @Test
+    public void testCompoundsInDataEquations(){
+        String program = "A := Time * MODULO(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("MODULO(3,4)"));
+
+    }
+
+    @Test
+    public void testCompoundsArentConsideredMagicIfAlone(){ //TODO test all
+        String program = "A = LOG(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty());
+    }
+
+
+
+
+    //TODO testear funciones ignoradas con paréntesis SQRT((2))
+    // TODO Testear A = ((2))
     //TODO Test Compound in check
     //TODO Test compound in data equations
+    //TODO testear en el check que el parámetro funciona
 
 
 }

@@ -43,7 +43,8 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
 
        ModelParser.CallExprContext callNode = (ModelParser.CallExprContext) node.exprAllowSign();
-       return Constants.IGNORED_FUNCTIONS_IF_ALONE.contains(callNode.call().Id().getText());
+        
+       return isCompoundNumber(callNode.call()) && Constants.IGNORED_FUNCTIONS_IF_ALONE.contains(callNode.call().Id().getText());
     }
 
     private boolean exprIsIgnored(ModelParser.ExprContext ctx){
@@ -118,7 +119,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     }
 
 
-    private boolean isCompoundMagicNumber(ModelParser.CallContext ctx){
+    private boolean isCompoundNumber(ModelParser.CallContext ctx){
         CompoundMagicNumberVisitor visitor = new CompoundMagicNumberVisitor();
 
         return visitor.visitExprList(ctx.exprList());
@@ -134,7 +135,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
             return visit(ctx.exprList().expr(0));
         }
         if (Constants.FUNCTION_IS_COMPOUND_MAGIC_NUMBER.contains(functionName)){
-            if(isCompoundMagicNumber(ctx)){
+            if(isCompoundNumber(ctx)){
                 Symbol integer = numberTable.getSymbolOrCreate(ctx.getText().trim());
                 integer.addDefinitionLine(ctx.start.getLine());
                 return null;
