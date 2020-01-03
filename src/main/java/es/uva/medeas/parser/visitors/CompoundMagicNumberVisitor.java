@@ -8,6 +8,7 @@ import es.uva.medeas.utilities.Constants;
 public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
 
+
     /**
      * Returns True if the arguments are part of a compound number.
      * The conditions are:
@@ -53,9 +54,10 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
 
     @Override
-    public Object visitCallExpr(ModelParser.CallExprContext ctx) {
-        String funcName = ctx.call().Id().getText();
-        return Constants.FUNCTION_IS_COMPOUND_MAGIC_NUMBER.contains(funcName) || Constants.IGNORED_FUNCTIONS_IF_ALONE.contains(funcName);
+    public Boolean visitCall(ModelParser.CallContext ctx) {
+
+        String funcName = ctx.Id().getText();
+        return Constants.FUNCTIONS_THAT_FORM_COMPOUND_MAGIC_NUMBERS.contains(funcName) && visitExprList(ctx.exprList());
     }
 
 

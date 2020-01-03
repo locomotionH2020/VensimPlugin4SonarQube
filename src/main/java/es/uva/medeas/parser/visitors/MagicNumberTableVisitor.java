@@ -2,7 +2,6 @@ package es.uva.medeas.parser.visitors;
 
 import es.uva.medeas.parser.*;
 import es.uva.medeas.plugin.VensimVisitorContext;
-import es.uva.medeas.utilities.Constants;
 
 public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
@@ -32,7 +31,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
         return  ctx.getClass() == ModelParser.ConstContext.class;
     }
 
-    private boolean exprIsAFunctionAndInIgnoreList(ModelParser.ExprContext ctx){
+    private boolean exprIsACompoundNumber(ModelParser.ExprContext ctx){
         if(ctx.getClass()!= ModelParser.SignExprContext.class)
             return false;
 
@@ -44,18 +43,18 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
        ModelParser.CallExprContext callNode = (ModelParser.CallExprContext) node.exprAllowSign();
         
-       return isCompoundNumber(callNode.call()) && Constants.IGNORED_FUNCTIONS_IF_ALONE.contains(callNode.call().Id().getText());
+       return isCompoundNumber(callNode.call());
     }
 
-    private boolean exprIsIgnored(ModelParser.ExprContext ctx){
-        return exprIsAConstant(ctx) || exprIsAFunctionAndInIgnoreList(ctx);
+    private boolean exprIsANumber(ModelParser.ExprContext ctx){
+        return exprIsAConstant(ctx) || exprIsACompoundNumber(ctx);
     }
 
 
     @Override
     public Object visitEquation(ModelParser.EquationContext ctx) {
 
-        if(ctx.expr()==null || exprIsIgnored(ctx.expr()))
+        if(ctx.expr()==null || exprIsANumber(ctx.expr()))
             return null;
 
 
@@ -66,7 +65,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     @Override
     public Object visitDataEquation(ModelParser.DataEquationContext ctx) {
 
-        if(ctx.expr()==null || exprIsIgnored(ctx.expr()))
+        if(ctx.expr()==null || exprIsANumber(ctx.expr()))
             return null;
 
             return super.visit(ctx.expr());
@@ -77,7 +76,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     @Override
     public Object visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
 
-        if(ctx.expr()==null || exprIsIgnored(ctx.expr()))
+        if(ctx.expr()==null || exprIsANumber(ctx.expr()))
             return null;
 
 
@@ -121,8 +120,9 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
     private boolean isCompoundNumber(ModelParser.CallContext ctx){
         CompoundMagicNumberVisitor visitor = new CompoundMagicNumberVisitor();
+        return visitor.visitCall(ctx);
 
-        return visitor.visitExprList(ctx.exprList());
+
     }
 
 
@@ -134,13 +134,14 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
         if ("WITH LOOKUP".equals(functionName)) {
             return visit(ctx.exprList().expr(0));
         }
-        if (Constants.FUNCTION_IS_COMPOUND_MAGIC_NUMBER.contains(functionName)){
-            if(isCompoundNumber(ctx)){
-                Symbol integer = numberTable.getSymbolOrCreate(ctx.getText().trim());
-                integer.addDefinitionLine(ctx.start.getLine());
-                return null;
-            }
+
+
+        if(isCompoundNumber(ctx)){
+            Symbol integer = numberTable.getSymbolOrCreate(ctx.getText().trim());
+            integer.addDefinitionLine(ctx.start.getLine());
+            return null;
         }
+
 
         return super.visitCall(ctx);
     }
