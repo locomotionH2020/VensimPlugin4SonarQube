@@ -8,14 +8,19 @@ import es.uva.medeas.utilities.Constants;
 public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
 
-
     /**
-     * Returns True if the arguments are part of a compound number.
-     * The conditions are:
-     *        * It doesnt contain constants or variables
-     *        * If it contains a function call, that function is included in the ignored function list (Constants.IGNORED_FUNCTIONS_IF_ALONE)
-     *          or in the compound function list (Constants.FUNCTION_IS_COMPOUND_MAGIC_NUMBER)
+     * Returns True if the call is a compound number
+     *
+     * To be considered a compound number, the call must meet the following conditions:
+     *        - The function called must be included in Constants.FUNCTIONS_THAT_FORM_COMPOUND_MAGIC_NUMBERS
+     *        - It doesn't contain constants or variables
+     *        - If there are nested calls, every function called must be included in Constants.FUNCTIONS_THAT_FORM_COMPOUND_MAGIC_NUMBERS
      */
+    public boolean callIsACompoundNumber(ModelParser.CallContext call){
+        return visitCall(call);
+    }
+
+
     @Override
     public Boolean visitExprList(ModelParser.ExprListContext ctx) {
         for(ModelParser.ExprContext expr: ctx.expr()){
@@ -34,7 +39,7 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
     @Override
     public Object visitConstVensim(ModelParser.ConstVensimContext ctx) {
-        return true;
+        return ctx.StringConst()==null;
     }
 
     @Override
@@ -47,15 +52,13 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
     @Override
     public Object visitLookup(ModelParser.LookupContext ctx) {
-        return true;
+        return false;
     }
-
 
 
 
     @Override
     public Boolean visitCall(ModelParser.CallContext ctx) {
-
         String funcName = ctx.Id().getText();
         return Constants.FUNCTIONS_THAT_FORM_COMPOUND_MAGIC_NUMBERS.contains(funcName) && visitExprList(ctx.exprList());
     }
@@ -69,13 +72,13 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
     @Override
     public Object visitSignExpr(ModelParser.SignExprContext ctx) {
-        if(ctx.exprAllowSign() instanceof ModelParser.ParensContext) { //TODO Test
+        if(ctx.exprAllowSign() instanceof ModelParser.ParensContext) {
             ModelParser.ParensContext parenth = (ModelParser.ParensContext) ctx.exprAllowSign();
             return visit(parenth.expr());
+
         }else if(ctx.exprAllowSign() instanceof ModelParser.CallExprContext)
             return visit(ctx.exprAllowSign());
 
-                    //TODO Refactor
         return false;
     }
 
