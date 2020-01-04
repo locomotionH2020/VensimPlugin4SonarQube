@@ -272,7 +272,7 @@ public class TestSymbolGenerator {
     public void testRandom01IsntPure(){
         String program = "variable=" +
                 "RANDOM 0 1()~|\n";
-        //TODO visitor call with no arguments
+
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 

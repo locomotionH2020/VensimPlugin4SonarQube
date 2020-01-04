@@ -57,6 +57,30 @@ public class TestCompoundNumberVisitor {
     }
 
     @Test
+    public void testCallContainsVariables(){
+        String program = "A = LOG(3,Time)~|";
+
+        ModelParser.CallContext call = getAloneCallExprFromProgram(program);
+        assertFalse(visitor.callIsACompoundNumber(call));
+    }
+
+    @Test
+    public void testCallContainsConstants(){
+        String program = "A = QUANTUM(3,UNDEFINED_CONSTANT)~|";
+
+        ModelParser.CallContext call = getAloneCallExprFromProgram(program);
+        assertFalse(visitor.callIsACompoundNumber(call));
+    }
+
+    @Test
+    public void tesCallContainsWildcard(){
+        String program = "A = MODULO(3,*)~|";
+
+        ModelParser.CallContext call = getAloneCallExprFromProgram(program);
+        assertFalse(visitor.callIsACompoundNumber(call));
+    }
+
+    @Test
     public void testNestedCallWithVariable(){
         String program = "A = SQRT(LOG(3,Time))~|";
 
@@ -82,20 +106,13 @@ public class TestCompoundNumberVisitor {
     }
 
     @Test
-    public void testCallContainsVariables(){
-        String program = "A = LOG(3,Time)~|";
+    public void testNestedCallWithWildcard(){
+        String program = "A = MODULO(3,SQRT(*))~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertFalse(visitor.callIsACompoundNumber(call));
     }
 
-    @Test
-    public void testCallContainsConstants(){
-        String program = "A = QUANTUM(3,UNDEFINED_CONSTANT)~|";
-
-        ModelParser.CallContext call = getAloneCallExprFromProgram(program);
-        assertFalse(visitor.callIsACompoundNumber(call));
-    }
 
     @Test
     public void testCallToNonCompoundFunction(){

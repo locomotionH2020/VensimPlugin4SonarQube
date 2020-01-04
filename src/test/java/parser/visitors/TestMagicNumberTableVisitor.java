@@ -27,7 +27,7 @@ public class TestMagicNumberTableVisitor {
     @Test
     public void testValid(){
         String program = "A = 3 * 4 ~~|\n" +
-                "B = 3 * Time~~|";
+                "B := 3 * Time~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
@@ -37,8 +37,9 @@ public class TestMagicNumberTableVisitor {
 
     }
 
+
     @Test
-    public void testDirectConstantsDoesntCountEquation(){
+    public void testExceptionDirectConstantEquation(){
         String program = "A = 3 ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -49,7 +50,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testDirectConstantDoesntCountUnchangeableConstant(){
+    public void testExceptionDirectConstantUnchangeableConstant(){
         String program = "A == 3 ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -59,7 +60,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testDirectConstantDoesntCountDataEquation(){
+    public void testExceptionDirectConstantDataEquation(){
         String program = "A := 3 ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -81,7 +82,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testIgnoresTabbedArray(){
+    public void testExceptionTabbedArray(){
         String program = "TABBED_ARRAY = TABBED ARRAY(3    3    3    3\n" +
                 "3    3    3    3\n" +
                 "3    3    3    3)\n" +
@@ -95,7 +96,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testBidimensionalArrayDoesntCountInEquation(){
+    public void testExceptionInBidimensionalArraysEquation(){
         String program = "initial population[country,blood type] = 1,2,3,4;5,6,7,8;\n" +
                 "         9,10,11,12; ~Person~|";
 
@@ -106,7 +107,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testBidimensionalArrayDoesntCountInDataEquation(){
+    public void testExceptionBidimensionalArraysDataEquation(){
         String program = "initial population[country,blood type] := 1,2,3,4;5,6,7,8;\n" +
                 "         9,10,11,12; ~Person~|";
 
@@ -117,7 +118,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testBidimensionalArrayDoesntCountInUnchangeableConstant(){
+    public void testExceptionBidimensionalArraysUnchangeableConstant(){
         String program = "initial population[country,blood type] == 1,2,3,4;5,6,7,8;\n" +
                 "         9,10,11,12; ~Person~|";
 
@@ -195,7 +196,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testNumbersInEquationIdDoesntCount(){
+    public void testNumbersInEquationIdDontCount(){
         String program = "NUMBER 1 = Time~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -206,7 +207,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testNumberInSymbolIdDoesntCount(){
+    public void testNumbersInSymbolIdDontCount(){
         String program = "FOO = NUMBER 1 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -216,7 +217,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testNumbersInCalledFunctionIdDoesntCount(){
+    public void testNumbersInCalledFunctionIdDontCount(){
         String program = "foo = FUNCTION 1(Time)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -227,7 +228,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testLookupDoesntCount(){
+    public void testExceptionLookup(){
         String program = "myLookup(" + "[(0,0)-(10,10),(1.25382,3.55263),(3.85321,4.5614),(7.15596,7.67544),(8.74618,9.21053)]," +
         "(1.25382,3.55263),(3.42508,3.64035),(3.85321,4.5614),(4.8318,7.80702),(6.36086,4.91228 ),(7.15596,7.67544)," +
                 "(7.18654,5.92105),(8.74618,9.21053))~~|";
@@ -239,7 +240,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testLookupNNumberListFormatDoesntCount(){
+    public void testExceptionLookupNNumberListFormat(){
         String program = "accomplishments per hour lookup(0,0.2,0.4,0.6,0.8,1,\n" +
                 "                                         0,0.2,0.4,0.6,0.8,1)~|\n";
 
@@ -273,7 +274,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testWithLookupIgnoresLookupEquation(){
+    public void testExceptionLookupInsideFunctionEquation(){
         String program = "var =WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -285,7 +286,7 @@ public class TestMagicNumberTableVisitor {
 
 
     @Test
-    public void testWithLookupIgnoresLookupDataEquation(){
+    public void testExceptionLookupInsideFunctionDataEquation(){
         String program = "var :=WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -297,7 +298,7 @@ public class TestMagicNumberTableVisitor {
 
 
     @Test
-    public void testWithLookupIgnoresLookupUnchangeableConstant(){
+    public void testWithLookupIgnoresLookupUnchangeableConstant(){ //TODO revisar si tiene sentido
         String program = "var == WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -308,7 +309,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testNumberListDoesntCountEquation(){
+    public void testExceptionNumberListEquation(){
         String program = "A = 1,2,3,4,5~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -319,7 +320,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testNumberListDoesntCountDataEquation(){
+    public void testExceptionNumberListDataEquation(){
         String program = "A := 1,2,3,4,5~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -330,7 +331,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testNumberListDoesntCountUnchangeableConstant(){
+    public void testNumberListDoesntCountUnchangeableConstant(){ //TODO revisar si tiene sentido
         String program = "A := 1,2,3,4,5~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -353,6 +354,145 @@ public class TestMagicNumberTableVisitor {
         assertEquals(Arrays.asList(1,1),table.getSymbol("3").getDefinitionLines() );
         assertEquals(Arrays.asList(1,1),table.getSymbol("1.0").getDefinitionLines() );
 
+    }
+
+
+    @Test
+    public void testCompoundNumberIsTrimmed(){
+        String program = " A = Time * MODULO(  3,   4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("MODULO(3,4)"));
+        assertEquals(1,table.getSymbols().size());
+    }
+
+    @Test
+    public void testCompoundNumberTextIncludesParenthesis(){
+        String program = " A = Time * GAME(((2)))~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("GAME(((2)))"));
+        assertEquals(1,table.getSymbols().size());
+    }
+
+
+    @Test
+    public void testNestedCompoundNumberInIgnoredFunctions(){
+        String function= "POWER" +
+                "   (SQRT" +
+                "       (TAN" +
+                "            (TANH" +
+                "               (SIN" +
+                "                   (SINH(" +
+                "                       COS(" +
+                "                           COSH(" +
+                "                               ARCTAN(" +
+                "                                   ARCSIN(" +
+                "                                       ARCCOS(ABS(9)))))))))))"+
+                " ,LN(" +
+                "     GAMMA LN(" +
+                "             INTEGER(" +
+                "                    GAME(" +
+                "                         EXP(" +
+                "                           MODULO(QUANTUM(3,7),LOG(3,7)))))))" +
+                ")";
+
+        String program = "A = Time *" + function + "~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        String expected = "POWER(SQRT(TAN(TANH(SIN(SINH(COS(COSH(ARCTAN(ARCSIN(ARCCOS(ABS(9))))))))))),LN(GAMMA LN(INTEGER(GAME(EXP(MODULO(QUANTUM(3,7),LOG(3,7))))))))";
+        assertEquals(expected,table.getSymbols().iterator().next().getToken());
+    }
+
+
+
+    @Test
+    public void testFunctionIsTransversedIfIsntCompoundDueToVariablesNotAlone(){
+        String program = "A = Time * MODULO(3,Time)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("3"));
+    }
+
+    @Test
+    public void testFunctionIsTransversedIfIsntCompoundDueToVariablesAlone(){
+        String program = "A = MODULO(3,Time)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("3"));
+    }
+
+    @Test
+    public void testFunctionIsTransversedIfIsntCompoundDueToCall(){
+        String program = "A = Time * QUANTUM(3,RANDOM(3))~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("3"));
+    }
+
+    @Test
+    public void testFunctionIsTransversedIfIsntCompoundDueToCallAlone(){
+        String program = "A = Time * QUANTUM(3,RANDOM(3))~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("3"));
+    }
+
+
+
+    @Test
+    public void testFunctionIsTransversedIfIsntCompoundDueToConstantNotAlone(){
+        String program = "CONST = 4~|" +
+                "C = Time * LOG(3,CONST)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("3"));
+    }
+
+    @Test
+    public void testFunctionIsTransversedIfIsntCompoundDueToConstantAlone(){
+        String program = "CONST = 4~|" +
+                "C = LOG(3,CONST)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(1,table.getSymbols().size());
+        assertTrue(table.hasSymbol("3"));
+    }
+
+    @Test
+    public void testTransversesCompoundsIfAlmostNested(){
+        String program = "A = FUNC(Time,MODULO(3,4),5)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(2,table.getSymbols().size());
+        assertTrue(table.hasSymbol("MODULO(3,4)"));
+        assertTrue(table.hasSymbol("5"));
     }
 
 
@@ -1055,11 +1195,19 @@ public class TestMagicNumberTableVisitor {
     }
 
 
+    @Test
+    public void testExceptionAloneModuloEquation(){
+        String program = "A = MODULO(3,4)~|";
 
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
 
     @Test
-    public void testCompoundNumberMOD(){
-        String program = " A = Time * MODULO(3,4)~|";
+    public void testCompoundNumberModuloEquation(){
+        String program = "A = Time *  MODULO(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
@@ -1067,34 +1215,174 @@ public class TestMagicNumberTableVisitor {
         assertTrue(table.hasSymbol("MODULO(3,4)"));
         assertFalse(table.hasSymbol("3"));
         assertFalse(table.hasSymbol("4"));
-
     }
 
     @Test
-    public void testCompoundNumberPOWER(){
-        String program = "A = Time * POWER(3,4)~|";
+    public void testAloneExceptionModuloDataEquation(){
+        String program = "A := MODULO(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+
+
+    @Test
+    public void testCompoundNumberModuloDataEquation(){
+        String program = "A := Time * MODULO(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("MODULO(3,4)"));
+        assertFalse(table.hasSymbol("3"));
+        assertFalse(table.hasSymbol("4"));
+    }
+
+
+    @Test
+    public void testExceptionAlonePowerEquation(){
+        String program = "A = POWER(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testCompoundNumberPowerEquation(){
+        String program = "A = Time *  POWER(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
 
         assertTrue(table.hasSymbol("POWER(3,4)"));
-        assertEquals(1,table.getSymbols().size());
-
+        assertFalse(table.hasSymbol("3"));
+        assertFalse(table.hasSymbol("4"));
     }
 
     @Test
-    public void testCompoundNumberLOG(){
-        String program = "A = Time * LOG(3,4)~|";
+    public void testAloneExceptionPowerDataEquation(){
+        String program = "A := POWER(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+
+
+    @Test
+    public void testCompoundNumberPowerDataEquation(){
+        String program = "A := Time * POWER(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("POWER(3,4)"));
+        assertFalse(table.hasSymbol("3"));
+        assertFalse(table.hasSymbol("4"));
+    }
+
+    @Test
+    public void testExceptionAloneLOGEquation(){
+        String program = "A = LOG(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testCompoundNumberLOGEquation(){
+        String program = "A = Time *  LOG(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext);
 
         assertTrue(table.hasSymbol("LOG(3,4)"));
-        assertEquals(1,table.getSymbols().size());
-
+        assertFalse(table.hasSymbol("3"));
+        assertFalse(table.hasSymbol("4"));
     }
 
-    //TODO test all compound numbers are ignored if alone
+    @Test
+    public void testAloneExceptionLOGDataEquation(){
+        String program = "A :=  LOG(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+
+
+    @Test
+    public void testCompoundNumberLOGDataEquation(){
+        String program = "A := Time * LOG(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("LOG(3,4)"));
+        assertFalse(table.hasSymbol("3"));
+        assertFalse(table.hasSymbol("4"));
+    }
+
+
+
+    @Test
+    public void testExceptionAloneQuantumEquation(){
+        String program = "A = QUANTUM(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+    @Test
+    public void testCompoundNumberQuantumEquation(){
+        String program = "A = Time *  QUANTUM(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("QUANTUM(3,4)"));
+        assertFalse(table.hasSymbol("3"));
+        assertFalse(table.hasSymbol("4"));
+    }
+
+    @Test
+    public void testAloneExceptionQuantumDataEquation(){
+        String program = "A := QUANTUM(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.getSymbols().isEmpty() );
+    }
+
+
+
+    @Test
+    public void testCompoundNumberQuantumDataEquation(){
+        String program = "A := Time * QUANTUM(3,4)~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertTrue(table.hasSymbol("QUANTUM(3,4)"));
+        assertFalse(table.hasSymbol("3"));
+        assertFalse(table.hasSymbol("4"));
+    }
+
+    
 
     @Test
     public void testCompoundNumberQUANTUM(){
@@ -1107,170 +1395,6 @@ public class TestMagicNumberTableVisitor {
         assertEquals(1,table.getSymbols().size());
 
     }
-
-    @Test
-    public void testCompoundNumberIsTrimmed(){
-        String program = " A = Time * MODULO(  3,   4)~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertTrue(table.hasSymbol("MODULO(3,4)"));
-        assertEquals(1,table.getSymbols().size());
-    }
-
-    @Test
-    public void testNestedCompoundNumber(){
-        String program = " A = Time * MODULO(POWER(MODULO(5,5),4),LOG(QUANTUM(4,6),5))~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertTrue(table.hasSymbol("MODULO(POWER(MODULO(5,5),4),LOG(QUANTUM(4,6),5))"));
-        assertEquals(1,table.getSymbols().size());
-    }
-
-    @Test
-    public void testNestedCompoundNumberInIgnoredFunctions(){
-        String function= "POWER" +
-                "   (SQRT" +
-                "       (TAN" +
-                "            (TANH" +
-                "               (SIN" +
-                "                   (SINH(" +
-                "                       COS(" +
-                "                           COSH(" +
-                "                               ARCTAN(9))))))))"+
-                " ,ARCSIN(" +
-                "   ARCCOS(" +
-                "       ABS(" +
-                "           LN(" +
-                "               GAMMA LN(" +
-                "                   INTEGER(" +
-                "                       GAME(" +
-                "                           EXP(5))))))))" +
-                ")";
-
-        String program = "A = Time *" + function + "~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertEquals(1,table.getSymbols().size());
-        String expected = "POWER(SQRT(TAN(TANH(SIN(SINH(COS(COSH(ARCTAN(9)))))))),ARCSIN(ARCCOS(ABS(LN(GAMMA LN(INTEGER(GAME(EXP(5)))))))))";
-        assertEquals(expected,table.getSymbols().iterator().next().getToken());
-    }
-
-    @Test
-    public void testCompoundFunctionsInMiddleOfExpression(){
-        String program = "a = Time * MODULO(3,4) * DELAYP(Time,var:foo)~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertEquals(1,table.getSymbols().size());
-        assertTrue(table.hasSymbol("MODULO(3,4)"));
-
-    }
-
-    @Test
-    public void testFunctionIsTransversedIfIsntCompoundDueToVariablesNotAlone(){
-        String program = "A = Time * MODULO(3,Time)~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertEquals(1,table.getSymbols().size());
-        assertTrue(table.hasSymbol("3"));
-    }
-
-    @Test
-    public void testFunctionIsTransversedIfIsntCompoundDueToVariablesAlone(){
-        String program = "A = MODULO(3,Time)~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertEquals(1,table.getSymbols().size());
-        assertTrue(table.hasSymbol("3"));
-    }
-
-
-    @Test
-    public void testFunctionIsTransversedIfIsntCompoundDueToConstantNotAlone(){
-        String program = "CONST = 4~|" +
-                "C = Time * LOG(3,CONST)~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertEquals(1,table.getSymbols().size());
-        assertTrue(table.hasSymbol("3"));
-    }
-
-    @Test
-    public void testFunctionIsTransversedIfIsntCompoundDueToConstantAlone(){
-        String program = "CONST = 4~|" +
-                "C = LOG(3,CONST)~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertEquals(1,table.getSymbols().size());
-        assertTrue(table.hasSymbol("3"));
-    }
-
-    @Test
-    public void testTransversesCompoundsIfAlmostNested(){
-        String program = "A = FUNC(Time,MODULO(3,4),5)~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertEquals(2,table.getSymbols().size());
-        assertTrue(table.hasSymbol("MODULO(3,4)"));
-        assertTrue(table.hasSymbol("5"));
-    }
-
-    @Test
-    public void testCompoundsInDataEquations(){
-        String program = "A := Time * MODULO(3,4)~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertEquals(1,table.getSymbols().size());
-        assertTrue(table.hasSymbol("MODULO(3,4)"));
-
-    }
-
-    @Test
-    public void testCompoundsArentConsideredMagicIfAlone(){ //TODO test all
-        String program = "A = LOG(3,4)~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertTrue(table.getSymbols().isEmpty());
-    }
-
-    @Test
-    public void testNestedCompoundNumberWithVariablesInside(){ //TODO test with every rule and move to its own test class
-        String program = "A = Time * SQRT(POWER(Time))~|"; //TODO testear en su propio test que no es compuesto
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertTrue(table.getSymbols().isEmpty());
-    }
-
-
-
-    //TODO testear funciones ignoradas con paréntesis SQRT((2))
-    // TODO Testear A = ((2))
-    //TODO Test Compound in check
-    //TODO Test compound in data equations
-    //TODO testear en el check que el parámetro funciona
 
 
 }

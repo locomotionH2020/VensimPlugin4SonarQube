@@ -13,8 +13,9 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
      *
      * To be considered a compound number, the call must meet the following conditions:
      *        - The function called must be included in Constants.FUNCTIONS_THAT_FORM_COMPOUND_MAGIC_NUMBERS
-     *        - It doesn't contain constants or variables
+     *        - It doesn't contain identifiers (neither constants nor variables).
      *        - If there are nested calls, every function called must be included in Constants.FUNCTIONS_THAT_FORM_COMPOUND_MAGIC_NUMBERS
+     *        - It doesn't contain wildcards
      */
     public boolean callIsACompoundNumber(ModelParser.CallContext call){
         return visitCall(call);
@@ -67,7 +68,7 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
     @Override
     public Object visitWildCard(ModelParser.WildCardContext ctx) {
-        return true;
+        return false;
     }
 
     @Override
