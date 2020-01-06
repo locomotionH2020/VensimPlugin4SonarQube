@@ -10,9 +10,6 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
 
 
-
-       ;
-
     public MagicNumberTableVisitor(){
         numberTable = new SymbolTable();
     }
@@ -75,14 +72,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
     @Override
     public Object visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
-
-        if(ctx.expr()==null || exprIsANumber(ctx.expr()))
-            return null;
-
-
-            return super.visit(ctx.expr());
-
-
+        return null;
     }
 
     @Override

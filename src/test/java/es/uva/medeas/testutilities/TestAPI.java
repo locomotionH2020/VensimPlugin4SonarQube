@@ -3,6 +3,7 @@ package es.uva.medeas.testutilities;
 import static org.junit.Assert.*;
 
 import es.uva.medeas.rules.*;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,9 +33,15 @@ public class TestAPI {
 
        UtilitiesAPI.runSonarScanner(integrationTestsFolder,SONAR_TOKEN);
 
+
     }
 
-
+    @AfterClass
+    public static void deleteJsonTableOutputFile(){
+        File file = new File(integrationTestsFolder,"symbolTable.json");
+        if(file.exists())
+            file.delete();
+    }
 
 
 
@@ -131,7 +138,6 @@ public class TestAPI {
     @Test
     public void testSymbolTableOutput() throws IOException{
         File file = new File(integrationTestsFolder,"symbolTable.json");
-        //TODO delete file after test completition
         InputStream fis = new FileInputStream(file);
 
         JsonReader reader = Json.createReader(fis);
@@ -154,5 +160,6 @@ public class TestAPI {
 
         assertEquals(expectedObjectSubscriptName,filesAnalyzed.get("testSubscriptName.mdl").getJsonObject("symbols"));
         assertNotNull(filesAnalyzed.get("testSubscriptValues.mdl").getJsonObject("symbols"));
+
     }
 }

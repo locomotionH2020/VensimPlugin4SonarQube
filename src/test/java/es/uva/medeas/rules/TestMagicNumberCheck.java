@@ -131,21 +131,6 @@ public class TestMagicNumberCheck {
     }
 
 
-    @Test
-    public void testTabbedArrayDoesntCountUnchangeableConstant(){
-        String program = "TABBED_ARRAY == TABBED ARRAY(3    3    3    3\n" +
-                "3    3    3    3\n" +
-                "3    3    3    3)\n" +
-                "~ |";
-
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
-
-    }
 
     @Test
     public void testLookupsDontCount(){
@@ -185,17 +170,6 @@ public class TestMagicNumberCheck {
 
     }
 
-    @Test
-    public void testWithLookupSecondArgumentDoesntCountUnchengableConstant(){
-        String program = "FOO == WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~|".repeat(DEFAULT_REPETITIONS);
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
-
-    }
 
     @Test
     public void testWithLookupFirstArgument(){

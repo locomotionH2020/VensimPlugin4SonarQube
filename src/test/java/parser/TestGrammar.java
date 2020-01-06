@@ -6,6 +6,7 @@ import es.uva.medeas.parser.SymbolTable;
 
 import static org.junit.Assert.*;
 
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.junit.Test;
 
@@ -145,5 +146,71 @@ public class TestGrammar {
         assertEquals(ModelParser.ParensContext.class, parenthesis.exprAllowSign().getClass());
 
     }
+
+
+    @Test(expected = ParseCancellationException.class)
+    public void testUnchangeableConstantsDontAllowOperations(){
+        String program = "A == 3+3~|";
+
+        getParseTreeFromString(program);
+    }
+
+    @Test(expected = ParseCancellationException.class)
+    public void  testUnchangeableConstantsDontAllowParenthesis(){
+        String program = "A == (3)~|";
+        getParseTreeFromString(program);
+    }
+
+    @Test
+    public void testUnchangeableConstantGetXLSConstant(){
+        String program = "A ==\n" +
+                "GET XLS CONSTANTS('inputs_W.xlsx', 'Climate', 'C98')~|";
+
+        getParseTreeFromString(program);
+    }
+
+    @Test
+    public void testUnchangeableConstantAllowsLists(){
+        String program = "A == 1,2,3,4~|";
+        getParseTreeFromString(program);
+    }
+
+    @Test
+    public void testUnchangeableConstantAllowsBidimensionalLists(){
+        String program = "A == 1,2,3,4; 5,6,7,8;~|";
+        getParseTreeFromString(program);
+    }
+
+    @Test
+    public void testIntegerWithMultipleSigns(){
+        String program = "A = -+---+-+----+-+--++-+---3~|";
+        getParseTreeFromString(program);
+    }
+
+    @Test
+    public void testFloatWithMultipleSigns(){
+        String program = "A = -+---+-+----+-+--++-+---3.0~|";
+        getParseTreeFromString(program);
+    }
+
+    @Test
+    public void testCallWithMultipleSigns(){
+        String program = "A = -++-++-+-+-+-++-+-+-+-SQRT(2)~|";
+        getParseTreeFromString(program);
+    }
+
+    @Test
+    public void testIdentifierMultipleSigns(){
+        String program = "A = -++-++-+-+-+-++-+-+-+-Time~|";
+        getParseTreeFromString(program);
+    }
+
+    @Test
+    public void testParenthesisMultipleSigns(){
+        String program = "A = -++-++-+-+-+-++-+-+-+-(10)~|";
+        getParseTreeFromString(program);
+    }
+
+
 
 }

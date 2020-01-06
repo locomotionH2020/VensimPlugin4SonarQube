@@ -298,17 +298,6 @@ public class TestMagicNumberTableVisitor {
 
 
     @Test
-    public void testWithLookupIgnoresLookupUnchangeableConstant(){ //TODO revisar si tiene sentido
-        String program = "var == WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
-
-        assertEquals(1,table.getSymbols().size());
-        assertEquals("6",table.getSymbols().iterator().next().getToken());
-    }
-
-    @Test
     public void testExceptionNumberListEquation(){
         String program = "A = 1,2,3,4,5~|";
 

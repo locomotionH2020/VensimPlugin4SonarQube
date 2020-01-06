@@ -202,5 +202,5 @@ public class TestLookupNameCheck {
         assertHasIssue(visitorContext,LookupNameCheck.class,2);
     }
 
-    //TODO Test in symboltablegenerator that if a symbol is defined several times the definedLines set is correct.
+
 }

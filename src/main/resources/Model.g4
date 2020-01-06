@@ -24,7 +24,7 @@ lhs : Id ( subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
 
 // https://www.vensim.com/documentation/ref_subscript_mapping.htm
 subscriptCopy: Id '<->' Id unitsDoc;
-unchangeableConstant: lhs TwoEqual ( expr | constList ) unitsDoc;
+unchangeableConstant: lhs TwoEqual (constList|call|Keyword) unitsDoc;
 dataEquation: lhs ( DataEquationOp ( expr | constList ) )? (':IGNORE:' exprList)? unitsDoc;
 
 lookupDefinition: lhs (lookup|('('(call|numberList)')')) unitsDoc;
@@ -89,7 +89,7 @@ expr:     expr op=('^'|'*'|'/'|'-'|'+'|Less|Greater|LessEqual|GreaterEqual|Equal
     |   Keyword expr?                        # Keyword
     |   lookup                            # LookupArg
     |    Star                             # WildCard
-    |   ('-'|'+')? exprAllowSign      # signExpr
+    |   ('-'|'+')* exprAllowSign      # signExpr
     ;
 
 exprAllowSign:
@@ -116,9 +116,9 @@ lookupRange : '[' lookupPoint '-' lookupPoint referenceLine? ']' ',' ;
 lookupPointList : lookupPoint (',' lookupPoint)* ;
 referenceLine: ',' lookupPointList;
 lookupPoint : '(' constVensim ',' constVensim ')' ;
-constantLine: ( constVensim ( ',' constVensim)+) ;
+constantLine: ( constVensim ( ',' constVensim)*) ;
 // Optional semi colon is required for two dimensional arrays https://www.vensim.com/documentation/22070.htm
-constList : (constantLine ';'?)+;
+constList : constantLine ((';' constantLine)* ';')?;
 
 numberList: (integerConst | floatingConst) (',' ( integerConst | floatingConst))*;
     
@@ -160,7 +160,7 @@ constVensim
 
 
 integerConst
-    :  ('+'|'-')? DigitSeq
+    :  ('+'|'-')* DigitSeq
     ;
 
 fragment
@@ -170,7 +170,7 @@ NonzeroDigit
 
 
 floatingConst:
-    ('+'|'-')? FloatingConstNumber;
+    ('+'|'-')* FloatingConstNumber;
 FloatingConstNumber
 : FractionalConstant ExponentPart?
 | DigitSeq ExponentPart
