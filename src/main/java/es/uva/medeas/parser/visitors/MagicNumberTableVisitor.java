@@ -2,6 +2,10 @@ package es.uva.medeas.parser.visitors;
 
 import es.uva.medeas.parser.*;
 import es.uva.medeas.plugin.VensimVisitorContext;
+import org.sonar.api.internal.apachecommons.lang.StringUtils;
+
+import static es.uva.medeas.utilities.UtilityFunctions.stringToFloat;
+import static es.uva.medeas.utilities.UtilityFunctions.stringToInt;
 
 public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
@@ -80,9 +84,13 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
         return null;
     }
 
+
+
+
+
     @Override
     public Object visitIntegerConst(ModelParser.IntegerConstContext ctx) {
-        String value = String.valueOf(Integer.parseInt(ctx.getText()));
+        String value = String.valueOf(stringToInt(ctx.getText()));
         Symbol integer = numberTable.getSymbolOrCreate(value);
         integer.addDefinitionLine(ctx.start.getLine());
         return null;
@@ -91,7 +99,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
     @Override
     public Object visitFloatingConst(ModelParser.FloatingConstContext ctx) {
-        String value = String.valueOf(Float.parseFloat(ctx.getText()));
+        String value = String.valueOf(stringToFloat(ctx.getText()));
         Symbol integer = numberTable.getSymbolOrCreate(value);
         integer.addDefinitionLine(ctx.start.getLine());
         return null;

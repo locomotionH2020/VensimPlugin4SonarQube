@@ -147,6 +147,26 @@ public class TestGrammar {
 
     }
 
+    @Test
+    public void testOnedimensionalArrayCanContainFinalSemicolon(){
+        String program = "A = 3,4,5,6; ~|";
+        ModelParser.FileContext tree= getParseTreeFromString(program);
+
+        ModelParser.ConstListContext array = tree.model().equation(0).constList();
+        assertNotNull(array);
+        assertEquals("3,4,5,6;",array.getText());
+    }
+
+    @Test
+    public void testOnedimensionalArraysDontRequireSemicolon(){
+        String program = "A = 3,4,5,6 ~|";
+        ModelParser.FileContext tree = getParseTreeFromString(program);
+
+        ModelParser.ConstListContext array = tree.model().equation(0).constList();
+        assertNotNull(array);
+        assertEquals("3,4,5,6",array.getText());
+    }
+
 
     @Test(expected = ParseCancellationException.class)
     public void testUnchangeableConstantsDontAllowOperations(){
@@ -174,6 +194,7 @@ public class TestGrammar {
         String program = "A == 1,2,3,4~|";
         getParseTreeFromString(program);
     }
+
 
     @Test
     public void testUnchangeableConstantAllowsBidimensionalLists(){

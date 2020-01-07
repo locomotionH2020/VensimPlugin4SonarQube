@@ -1,5 +1,6 @@
 package parser.visitors;
 
+import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.visitors.MagicNumberTableVisitor;
@@ -345,6 +346,17 @@ public class TestMagicNumberTableVisitor {
 
     }
 
+    @Test
+    public void testSameNumberButWithDifferentNumberOfSignsIsTheSame(){
+        String program = "A = 3 +  --3 + 4.3 + --4.3 ~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        assertEquals(Arrays.asList(1,1),table.getSymbol("3").getDefinitionLines() );
+        assertEquals(Arrays.asList(1,1),table.getSymbol("4.3").getDefinitionLines() );
+    }
+
 
     @Test
     public void testCompoundNumberIsTrimmed(){
@@ -366,6 +378,19 @@ public class TestMagicNumberTableVisitor {
 
         assertTrue(table.hasSymbol("GAME(((2)))"));
         assertEquals(1,table.getSymbols().size());
+    }
+
+    @Test
+    public void testCompoundNumberInSeveralLines(){
+        String program = "\n\n A = Time * LN(" +
+                "SQRT(2))~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext);
+
+        Symbol number = table.getSymbol("LN(SQRT(2))");
+        assertNotNull(number);
+        assertEquals(Collections.singletonList(3),number.getDefinitionLines());
     }
 
 
