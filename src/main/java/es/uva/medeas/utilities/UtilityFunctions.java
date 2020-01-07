@@ -44,7 +44,10 @@ public class UtilityFunctions {
                 baseNegatives+=1;
             if(character!='-' && character!='+'){
                 String reduction = baseNegatives%2==0 ? "": "-";
-                number = number.replaceFirst("(-|\\+)+",reduction);
+                if(baseNegatives>0)
+                    number = number.replaceFirst("(-|\\+)+",reduction);
+                else
+                    number = number.replaceFirst("(\\+)+","");
                 break;
             }
         }
@@ -63,6 +66,7 @@ public class UtilityFunctions {
                 break;
             }
         }
+
 
        return Float.parseFloat(number);
 

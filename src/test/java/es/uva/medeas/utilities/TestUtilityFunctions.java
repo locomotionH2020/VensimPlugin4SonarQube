@@ -164,4 +164,10 @@ public class TestUtilityFunctions {
         assertEquals(-5.3,result,FLOAT_COMPARISON_DELTA);
     }
 
+    @Test
+    public void testStringToFloatBaseWithoutSignAndExponentialNegative(){
+        float result = stringToFloat("10e-1");
+        assertEquals(10e-1,result,FLOAT_COMPARISON_DELTA);
+    }
+
 }
