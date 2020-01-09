@@ -4,6 +4,7 @@ import es.uva.medeas.plugin.VensimLanguage;
 import es.uva.medeas.plugin.VensimRuleRepository;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.rules.VensimCheck;
+import es.uva.medeas.utilities.JsonSymbolTableBuilder;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
@@ -49,7 +50,7 @@ public class VensimSquidSensor implements Sensor {
         List<InputFile> list = new ArrayList<>();
         files.forEach(list::add);
         List<InputFile> inputFiles = Collections.unmodifiableList(list);
-        VensimScanner scanner = new VensimScanner(sensorContext, checks);
+        VensimScanner scanner = new VensimScanner(sensorContext, checks, new JsonSymbolTableBuilder());
         scanner.scanFiles(inputFiles);
     }
 }

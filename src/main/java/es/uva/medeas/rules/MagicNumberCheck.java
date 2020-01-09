@@ -2,9 +2,12 @@ package es.uva.medeas.rules;
 
 import es.uva.medeas.parser.visitors.MagicNumberTableVisitor;
 import es.uva.medeas.plugin.Issue;
+import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
@@ -26,8 +29,7 @@ public class MagicNumberCheck implements VensimCheck {
 
     public static final String DEFAULT_REPETITIONS = "3";
 
-
-
+    protected static Logger LOG = Loggers.get(MagicNumberCheck.class);
 
 
     @RuleProperty(
@@ -37,24 +39,39 @@ public class MagicNumberCheck implements VensimCheck {
     public String repetitions = DEFAULT_REPETITIONS ;
 
 
-
     @Override
     public void scan(VensimVisitorContext context) {
-        SymbolTable numberTable = new MagicNumberTableVisitor().getSymbolTable(context);
+        SymbolTable numberTable = getVisitor().getSymbolTable(context);
+        int minimumRepetitions = getMinimumRepetitions();
 
         for(Symbol symbol: numberTable.getSymbols()){
-            if(isMagicNumber(symbol))
+            if(symbol.getDefinitionLines().size()>=minimumRepetitions)
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The number " + symbol.getToken()  +" is repeated " +
-                            symbol.getDefinitionLines().size() + "  times. Consider replacing it by a constant");
+                            symbol.getDefinitionLines().size() + " times. Consider replacing it by a constant");
                     context.addIssue(issue);
                 }
         }
 
     }
 
-    private boolean isMagicNumber(Symbol symbol){
-        return symbol.getDefinitionLines().size()>=Integer.parseInt(repetitions);
+    private int getMinimumRepetitions(){
+        try{
+            int selectedRepetitions = Integer.parseInt(repetitions);
+            if(selectedRepetitions>1)
+                return selectedRepetitions;
+            else{
+                LOG.warn("The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be greater than 1.");
+                return Integer.parseInt(DEFAULT_REPETITIONS);
+            }
+        }catch (NumberFormatException ex){
+            LOG.warn("The rule " + NAME + " has an invalid configuration: The selected minimum repetitions isn't a number.");
+            return Integer.parseInt(DEFAULT_REPETITIONS);
+        }
+    }
+
+    protected MagicNumberTableVisitor getVisitor(){
+        return new MagicNumberTableVisitor();
     }
 
 

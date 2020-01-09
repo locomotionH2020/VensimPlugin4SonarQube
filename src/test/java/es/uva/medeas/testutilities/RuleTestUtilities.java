@@ -5,6 +5,7 @@ import es.uva.medeas.plugin.VensimRuleRepository;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.rules.VensimCheck;
+import es.uva.medeas.utilities.JsonSymbolTableBuilder;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.sonar.api.batch.rule.ActiveRules;
 import org.sonar.api.batch.rule.CheckFactory;
@@ -26,13 +27,15 @@ import static es.uva.medeas.testutilities.TestUtilities.getSymbolTableFromString
 
 public class RuleTestUtilities {
 
+    private static final String CHECK_KEY_FIELD = "CHECK_KEY";
+
 
     public static ActiveRules getAllActiveRules() throws NoSuchFieldException, IllegalAccessException {
         ActiveRulesBuilder builder = new ActiveRulesBuilder();
 
 
         for(Class check:VensimRuleRepository.getChecks()) {
-            String check_key = (String) check.getField("CHECK_KEY").get(null);
+            String check_key = (String) check.getField(CHECK_KEY_FIELD).get(null);
             RuleKey checkRuleKey = RuleKey.of(VensimRuleRepository.REPOSITORY_KEY, check_key );
             NewActiveRule rule = new NewActiveRule.Builder().setRuleKey(checkRuleKey).build();
 
@@ -59,7 +62,7 @@ public class RuleTestUtilities {
 
         Path path = Paths.get("");
         SensorContextTester context = SensorContextTester.create(path);
-        return  new VensimScanner(context,checks);
+        return  new VensimScanner(context,checks, new JsonSymbolTableBuilder());
     }
 
     public static void assertHasIssue(VensimVisitorContext context,Class type, int line){
@@ -67,7 +70,7 @@ public class RuleTestUtilities {
         List<Integer> foundInOtherLines = new ArrayList<>();
 
         for(Issue issue:context.getIssues()){
-            if(issue.getCheck().getClass().equals(type)) {
+            if(isSameRule(issue.getCheck().getClass(),type)) {
                 if(issue.getLine()==line)
                     found = true;
                 else
@@ -80,6 +83,14 @@ public class RuleTestUtilities {
                 throw new AssertionError("Issue of type '"+ type.getSimpleName() + "'  not found.");
             else
                 throw new AssertionError("Issue of type: '" + type.getSimpleName() + "' not found in line "+ line + ".But was found in lines: " + foundInOtherLines );
+    }
+
+    private static boolean isSameRule(Class rule1, Class rule2){ //Compares check-keys instead of classes to allow the use of mocks
+        try {
+            return rule1.getField(CHECK_KEY_FIELD).equals(rule2.getField(CHECK_KEY_FIELD));
+        } catch (NoSuchFieldException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public static void assertDoesntHaveIssue(VensimVisitorContext context,Class type, int line){

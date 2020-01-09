@@ -40,16 +40,15 @@ public class VensimScanner {
     private final Checks<VensimCheck> checks;
     private  final JsonSymbolTableBuilder jsonBuilder;
 
-    public VensimScanner(SensorContext context, Checks<VensimCheck> checks) {
+    public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder) {
         this.context = context;
         this.checks = checks;
-        this.jsonBuilder = new JsonSymbolTableBuilder();
+        this.jsonBuilder = builder;
 
 
     }
 
     public void scanFiles(List<InputFile> inputFiles) {
-
         for (InputFile vensimFile : inputFiles) {
             if (context.isCancelled()) {
                 return;

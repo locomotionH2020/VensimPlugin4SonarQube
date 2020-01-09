@@ -1,260 +1,495 @@
 package es.uva.medeas.rules;
 
 
+import es.uva.medeas.parser.Symbol;
+import es.uva.medeas.parser.SymbolTable;
+import es.uva.medeas.parser.visitors.MagicNumberTableVisitor;
 import es.uva.medeas.plugin.Issue;
-import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import static org.junit.Assert.*;
-
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.sonar.api.utils.log.Logger;
+
+import java.lang.reflect.Field;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class TestMagicNumberCheck {
 
-    private final int  DEFAULT_REPETITIONS = Integer.parseInt(MagicNumberCheck.DEFAULT_REPETITIONS);
+    public static final int DEFAULT_MINIMUM_REPETITIONS = Integer.parseInt(MagicNumberCheck.DEFAULT_REPETITIONS);
+
+
+
+    public MagicNumberCheck getMagicNumberCheckWithTable(VensimVisitorContext context, SymbolTable table){
+        MagicNumberCheck check = Mockito.mock(MagicNumberCheck.class);
+        check.repetitions = String.valueOf(DEFAULT_MINIMUM_REPETITIONS);
+        MagicNumberTableVisitor visitor = Mockito.mock(MagicNumberTableVisitor.class);
+        when(visitor.getSymbolTable(context)).thenReturn(table);
+
+        doCallRealMethod().when(check).scan(any());
+        when(check.getVisitor()).thenReturn(visitor);
+
+        return check;
+    }
+
+    @BeforeClass
+    public static void preTest(){
+        assertTrue(DEFAULT_MINIMUM_REPETITIONS>0);
+    }
 
     @Test
-    public void testIssueWorks() {
+    public void testMagicNumbersCreateIssue(){
 
-        String program = "A = 3 * Time ~~|\n" +
-                "B = 3 * Time ~~|\n" +
-                "C = 3 * Time ~~|\n";
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            symbol.addDefinitionLine(i);
 
 
-        scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,MagicNumberCheck.class,1);
-        assertHasIssue(visitorContext,MagicNumberCheck.class,2);
-        assertHasIssue(visitorContext,MagicNumberCheck.class,3);
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.scan(context);
+
+
+        assertEquals(DEFAULT_MINIMUM_REPETITIONS,context.getIssues().size());
+        for(Issue issue:context.getIssues())
+            assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
+
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            assertHasIssue(context,MagicNumberCheck.class,i);
 
     }
 
     @Test
-    public void testNumberRepeatsMinimumMinusOne(){
-        String program = "A = 3 * 4 ~~|\n".repeat(DEFAULT_REPETITIONS-1);
+    public void testNonMagicNumbersDontCreateIssue(){
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
+            symbol.addDefinitionLine(i);
 
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.scan(context);
+
+        assertEquals(0,context.getIssues().size());
     }
 
     @Test
-    public void testNumberRepeatedInTheSameLineCounts(){
-        String program = "A = " + "3 * ".repeat(DEFAULT_REPETITIONS-1) + "3~~|";
+    public void testWithNumberNotDefined(){
+        SymbolTable table = new SymbolTable();
+        table.createSymbol("51");
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.scan(context);
 
-
-        scanner.checkIssues(visitorContext);
-        for(Issue issue: visitorContext.getIssues()) {
-            assertEquals(MagicNumberCheck.class, issue.getCheck().getClass());
-            assertEquals(1,issue.getLine());
-        }
-
-        assertEquals(DEFAULT_REPETITIONS,visitorContext.getIssues().size());
-
-        assertHasIssue(visitorContext,MagicNumberCheck.class,1);
+        assertEquals(0,context.getIssues().size());
     }
 
     @Test
-    public void testConstantDirectAssignsDoesntCountEquation(){
-        String program = "A = 3 ~~|\n".repeat(DEFAULT_REPETITIONS);
+    public void testCountsRepetitionsInSameLine(){
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            symbol.addDefinitionLine(10);
 
 
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.scan(context);
+
+
+        for(Issue issue:context.getIssues())
+            assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
+
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            assertHasIssue(context,MagicNumberCheck.class,10);
     }
 
-    @Test
-    public void testConstantDirectAssignsDoesntCountDataEquation(){
-        String program = "A := 3 ~~|\n".repeat(DEFAULT_REPETITIONS);
+     @Test
+    public void testTableWithBothMagicAndRegularNumbers(){
+         SymbolTable table = new SymbolTable();
+         VensimVisitorContext context = new VensimVisitorContext(null);
+         context.setSymbolTable(table);
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+         Symbol magicNumber = table.createSymbol("51");
+         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+             magicNumber.addDefinitionLine(10);
+         magicNumber.addDefinitionLine(1);
 
+         Symbol normalNumber1 = table.createSymbol("70");
+         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
+             normalNumber1.addDefinitionLine(10);
 
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
-    }
-
-    @Test
-    public void testConstantDirectAssignsDoesntCountUnchangeableConstant(){
-        String program = "A == 3 ~~|\n".repeat(DEFAULT_REPETITIONS);
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
-    }
-
-    @Test
-    public void testTabbedArrayDoesntCountEquation(){
-        String program = "TABBED_ARRAY = TABBED ARRAY(3    3    3    3\n" +
-                "3    3    3    3\n" +
-                "3    3    3    3)\n" +
-                "~ |";
+         Symbol normalNumber2 = table.createSymbol("3.141592653");
+         normalNumber2.addDefinitionLine(1);
 
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+         check.scan(context);
 
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+         assertEquals(DEFAULT_MINIMUM_REPETITIONS+1,context.getIssues().size());
+         for(Issue issue:context.getIssues())
+             assertEquals("The number 51 is repeated "+ (DEFAULT_MINIMUM_REPETITIONS+1) +" times. Consider replacing it by a constant",issue.getMessage());
+     }
 
-    }
+     @Test
+    public void  testDifferentNumberOfMinimumRepetitionsMagicNumber(){
+       final int REPETITIONS = 9;
 
-    @Test
-    public void testTabbedArrayDoesntCountDataEquation(){
-        String program = "TABBED_ARRAY := TABBED ARRAY(3    3    3    3\n" +
-                "3    3    3    3\n" +
-                "3    3    3    3)\n" +
-                "~ |";
+         SymbolTable table = new SymbolTable();
+         VensimVisitorContext context = new VensimVisitorContext(null);
+         context.setSymbolTable(table);
 
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
-
-    }
+         Symbol symbol = table.createSymbol("51");
+         for(int i = 0; i< REPETITIONS; i++)
+             symbol.addDefinitionLine(i);
 
 
-
-    @Test
-    public void testLookupsDontCount(){
-        String program = "mylookup_lt([(3,0)-(10,10)],(1.10092,2.41228),(2.72171,3.24561),(6.11621,5.96491),(3,8.37719))\n~|"
-                .repeat(DEFAULT_REPETITIONS);
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+         check.repetitions = String.valueOf(REPETITIONS);
+         check.scan(context);
 
 
-    }
+         assertEquals(REPETITIONS,context.getIssues().size());
+         for(Issue issue:context.getIssues())
+             assertEquals("The number 51 is repeated "+ REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
 
-    @Test
-    public void testWithLookupSecondArgumentDoesntCountEquation(){
-        String program = "var =WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~|".repeat(DEFAULT_REPETITIONS);
+         for(int i = 0; i< REPETITIONS; i++)
+             assertHasIssue(context,MagicNumberCheck.class,i);
+     }
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+     @Test
+     public void testDifferentMinimumRepetitionsNotAMagicNumber(){
+         final int REPETITIONS = 9;
 
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+         SymbolTable table = new SymbolTable();
+         VensimVisitorContext context = new VensimVisitorContext(null);
+         context.setSymbolTable(table);
 
-    }
+         Symbol symbol = table.createSymbol("51");
+         for(int i = 0; i< REPETITIONS-1; i++)
+             symbol.addDefinitionLine(i);
+
+
+         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+         check.repetitions = String.valueOf(REPETITIONS);
+         check.scan(context);
+
+         assertEquals(0,context.getIssues().size());
+     }
 
     @Test
-    public void testWithLookupSecondArgumentDoesntCountDataEquation(){
-        String program = "var :=WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~|".repeat(DEFAULT_REPETITIONS);
+    public void testZeroAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
 
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
-
-    }
-
-
-    @Test
-    public void testWithLookupFirstArgument(){
-        String program = "var =WITH LOOKUP(14,((0,1),(1,1),(2,2)))\n~|" +
-                "A = 14 * 0~|\n".repeat(DEFAULT_REPETITIONS-1);
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            symbol.addDefinitionLine(i);
 
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.repetitions = "0";
+        check.scan(context);
 
-        scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext, MagicNumberCheck.class,1);
-    }
+        assertEquals(DEFAULT_MINIMUM_REPETITIONS,context.getIssues().size());
+        for(Issue issue:context.getIssues())
+            assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
 
-
-    @Test
-    public void testRealityCheckDoesntCount(){
-        String program = "big_growth_test :TEST INPUT: divisions = 1e+022~|\n".repeat(DEFAULT_REPETITIONS);
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            assertHasIssue(context,MagicNumberCheck.class,i);
 
     }
 
     @Test
-    public void testConstraintDoesntCount(){
-        String program = "my_condition_test :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~|".repeat(DEFAULT_REPETITIONS);
+    public void testZeroAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
 
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
-    }
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
+            symbol.addDefinitionLine(i);
 
 
-    @Test
-    public void testBidimensionalArrayDoesntCount() {
-        String program = "INITIAL_POPULATION = 1,1,1,1;1,1,1,1;\n" +
-                "         1,1,1,1; ~Person~|";
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.repetitions = "0";
+        check.scan(context);
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+        assertEquals(0,context.getIssues().size());
 
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
-    }
-
-    @Test
-    public void testNumberListDoesntCountEquation(){
-        String program = "A = 1,1,1,1,1~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
 
     }
 
     @Test
-    public void testNumberListDoesntCountDataEquation(){
-        String program = "A := 1,1,1,1,1~|";
+    public void testOneAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            symbol.addDefinitionLine(i);
 
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.repetitions = "1";
+        check.scan(context);
+
+        assertEquals(DEFAULT_MINIMUM_REPETITIONS,context.getIssues().size());
+        for(Issue issue:context.getIssues())
+            assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
+
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            assertHasIssue(context,MagicNumberCheck.class,i);
 
     }
 
     @Test
-    public void testNumberListDoesntCountUnchangeableConstant(){
-        String program = "A == 1,1,1,1,1~|";
+    public void testOneAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
 
-        scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
+            symbol.addDefinitionLine(i);
+
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.repetitions = "1";
+        check.scan(context);
+
+        assertEquals(0,context.getIssues().size());
+
 
     }
+
+
+    @Test
+    public void testNegativeNumberAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
+
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            symbol.addDefinitionLine(i);
+
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.repetitions = "-1";
+        check.scan(context);
+
+        assertEquals(DEFAULT_MINIMUM_REPETITIONS,context.getIssues().size());
+        for(Issue issue:context.getIssues())
+            assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
+
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            assertHasIssue(context,MagicNumberCheck.class,i);
+
+    }
+
+    @Test
+    public void testNegativeNumberAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
+
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
+
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
+            symbol.addDefinitionLine(i);
+
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.repetitions = "-1";
+        check.scan(context);
+
+        assertEquals(0,context.getIssues().size());
+
+
+    }
+
+
+    @Test
+    public void testEmptyStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
+
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            symbol.addDefinitionLine(i);
+
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.repetitions = "";
+        check.scan(context);
+
+        assertEquals(DEFAULT_MINIMUM_REPETITIONS,context.getIssues().size());
+        for(Issue issue:context.getIssues())
+            assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
+
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            assertHasIssue(context,MagicNumberCheck.class,i);
+
+    }
+
+    @Test
+    public void testEmptyStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
+
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
+
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
+            symbol.addDefinitionLine(i);
+
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.repetitions = "";
+        check.scan(context);
+
+        assertEquals(0,context.getIssues().size());
+
+
+    }
+
+
+    @Test
+    public void testStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
+
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            symbol.addDefinitionLine(i);
+
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.repetitions = "F";
+        check.scan(context);
+
+        assertEquals(DEFAULT_MINIMUM_REPETITIONS,context.getIssues().size());
+        for(Issue issue:context.getIssues())
+            assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
+
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
+            assertHasIssue(context,MagicNumberCheck.class,i);
+
+    }
+
+    @Test
+    public void testStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
+
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
+
+        Symbol symbol = table.createSymbol("51");
+        for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
+            symbol.addDefinitionLine(i);
+
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.repetitions =  "F";
+        check.scan(context);
+
+        assertEquals(0,context.getIssues().size());
+
+
+    }
+
+
+    @Test
+    public void testWarningIsLoggedIfMinimumRepetitionsIsAString() throws NoSuchFieldException, IllegalAccessException {
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        Field logField = MagicNumberCheck.class.getDeclaredField("LOG");
+        Logger logger = Mockito.mock(Logger.class);
+
+        logField.set(null,logger);
+        check.repetitions =  "F";
+        check.scan(context);
+
+        verify(logger,times(1)).warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions isn't a number.");
+    }
+
+
+    @Test
+    public void testWarningIsLoggedIfMinimumRepetitionsIsZero() throws NoSuchFieldException, IllegalAccessException {
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        Field logField = MagicNumberCheck.class.getDeclaredField("LOG");
+        Logger logger = Mockito.mock(Logger.class);
+
+        logField.set(null,logger);
+        check.repetitions =  "0";
+        check.scan(context);
+
+        verify(logger,times(1)).warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be greater than 1.");
+    }
+
+    @Test
+    public void testWarningIsLoggedIfMinimumRepetitionsIsOne() throws NoSuchFieldException, IllegalAccessException {
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        Field logField = MagicNumberCheck.class.getDeclaredField("LOG");
+        Logger logger = Mockito.mock(Logger.class);
+
+        logField.set(null,logger);
+        check.repetitions =  "1";
+        check.scan(context);
+
+        verify(logger,times(1)).warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be greater than 1.");
+    }
+
+    @Test
+    public void testWarningIsLoggedIfMinimumRepetitionsIsNegative() throws NoSuchFieldException, IllegalAccessException {
+        SymbolTable table = new SymbolTable();
+        VensimVisitorContext context = new VensimVisitorContext(null);
+        context.setSymbolTable(table);
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        Field logField = MagicNumberCheck.class.getDeclaredField("LOG");
+        Logger logger = Mockito.mock(Logger.class);
+
+        logField.set(null,logger);
+        check.repetitions =  "-1";
+        check.scan(context);
+
+        verify(logger,times(1)).warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be greater than 1.");
+    }
+
 
 
 }
