@@ -9,6 +9,8 @@ import org.sonar.api.Plugin;
 public class VensimPlugin implements Plugin {
 
 
+    public static final String LOG_NAME = "SonarVensim";
+
     @Override
     public void define(Context context) {
 

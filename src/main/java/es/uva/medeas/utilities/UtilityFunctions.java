@@ -1,6 +1,6 @@
 package es.uva.medeas.utilities;
 
-import org.sonar.api.internal.apachecommons.lang.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class UtilityFunctions {
 

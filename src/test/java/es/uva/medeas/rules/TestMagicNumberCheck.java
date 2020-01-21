@@ -1,6 +1,7 @@
 package es.uva.medeas.rules;
 
 
+import es.uva.medeas.VensimPlugin;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.visitors.MagicNumberTableVisitor;
@@ -424,6 +425,8 @@ public class TestMagicNumberCheck {
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsAString() throws NoSuchFieldException, IllegalAccessException {
         SymbolTable table = new SymbolTable();
+        table.createSymbol("1");
+        table.createSymbol("2");
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
@@ -435,13 +438,16 @@ public class TestMagicNumberCheck {
         check.repetitions =  "F";
         check.scan(context);
 
-        verify(logger,times(1)).warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions isn't a number.");
+        verify(logger,times(1))
+                .warn("["+ VensimPlugin.LOG_NAME +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
     }
 
 
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsZero() throws NoSuchFieldException, IllegalAccessException {
         SymbolTable table = new SymbolTable();
+        table.createSymbol("1");
+        table.createSymbol("2");
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
@@ -453,12 +459,15 @@ public class TestMagicNumberCheck {
         check.repetitions =  "0";
         check.scan(context);
 
-        verify(logger,times(1)).warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be greater than 1.");
+        verify(logger,times(1))
+                .warn("["+ VensimPlugin.LOG_NAME +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
     }
 
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsOne() throws NoSuchFieldException, IllegalAccessException {
         SymbolTable table = new SymbolTable();
+        table.createSymbol("1");
+        table.createSymbol("2");
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
@@ -470,12 +479,15 @@ public class TestMagicNumberCheck {
         check.repetitions =  "1";
         check.scan(context);
 
-        verify(logger,times(1)).warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be greater than 1.");
+        verify(logger,times(1))
+                .warn("["+ VensimPlugin.LOG_NAME +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
     }
 
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsNegative() throws NoSuchFieldException, IllegalAccessException {
         SymbolTable table = new SymbolTable();
+        table.createSymbol("1");
+        table.createSymbol("2");
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
@@ -487,7 +499,8 @@ public class TestMagicNumberCheck {
         check.repetitions =  "-1";
         check.scan(context);
 
-        verify(logger,times(1)).warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be greater than 1.");
+        verify(logger,times(1))
+                .warn("["+ VensimPlugin.LOG_NAME +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
     }
 
 

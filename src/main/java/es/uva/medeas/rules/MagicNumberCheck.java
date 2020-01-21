@@ -1,8 +1,8 @@
 package es.uva.medeas.rules;
 
+import es.uva.medeas.VensimPlugin;
 import es.uva.medeas.parser.visitors.MagicNumberTableVisitor;
 import es.uva.medeas.plugin.Issue;
-import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
@@ -31,6 +31,12 @@ public class MagicNumberCheck implements VensimCheck {
 
     protected static Logger LOG = Loggers.get(MagicNumberCheck.class);
 
+    private boolean repetitionsPropertyIsValid;
+
+    public MagicNumberCheck(){
+        repetitionsPropertyIsValid = true;
+    }
+
 
     @RuleProperty(
             key = "minimum-repetitions",
@@ -53,6 +59,9 @@ public class MagicNumberCheck implements VensimCheck {
                 }
         }
 
+        if(!repetitionsPropertyIsValid)
+            LOG.warn("["+ VensimPlugin.LOG_NAME +"] The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
+
     }
 
     private int getMinimumRepetitions(){
@@ -61,11 +70,11 @@ public class MagicNumberCheck implements VensimCheck {
             if(selectedRepetitions>1)
                 return selectedRepetitions;
             else{
-                LOG.warn("The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be greater than 1.");
+                repetitionsPropertyIsValid = false;
                 return Integer.parseInt(DEFAULT_REPETITIONS);
             }
         }catch (NumberFormatException ex){
-            LOG.warn("The rule " + NAME + " has an invalid configuration: The selected minimum repetitions isn't a number.");
+            repetitionsPropertyIsValid = false;
             return Integer.parseInt(DEFAULT_REPETITIONS);
         }
     }
