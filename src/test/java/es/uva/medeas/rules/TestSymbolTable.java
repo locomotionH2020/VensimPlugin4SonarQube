@@ -23,8 +23,7 @@ public class TestSymbolTable {
     }
     @Test
     public void testSymbolTableConstructor(){
-        assertEquals(new HashSet<Symbol>(), new HashSet<>(table.getSymbols()));
-
+        assertTrue(table.getSymbols().isEmpty());
     }
 
     @Test

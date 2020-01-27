@@ -8,6 +8,7 @@ public class Symbol {
 
     private String token;
     private List<Integer> linesDefined;
+    private List<Symbol> indexes;
     private Set<Symbol> dependencies;
     private SymbolType type;
 
@@ -58,5 +59,16 @@ public class Symbol {
 
     public boolean hasType(){
         return getType()!=SymbolType.UNDETERMINED;
+    }
+
+    public void addIndex(Symbol index){
+        if(index.getType() != SymbolType.SUBSCRIPT_NAME && index.getType()!= SymbolType.SUBSCRIPT_VALUE)
+            throw new IllegalArgumentException("Indexes must be a subscript name or a subscript value");
+
+        indexes.add(index);
+    }
+
+    public List<Symbol> getIndexes(){
+        return indexes;
     }
 }
