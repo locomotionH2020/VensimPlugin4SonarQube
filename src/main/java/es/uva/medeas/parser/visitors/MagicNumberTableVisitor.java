@@ -2,7 +2,7 @@ package es.uva.medeas.parser.visitors;
 
 import es.uva.medeas.parser.*;
 import es.uva.medeas.plugin.VensimVisitorContext;
-import org.sonar.api.internal.apachecommons.lang.StringUtils;
+
 
 import static es.uva.medeas.utilities.UtilityFunctions.stringToFloat;
 import static es.uva.medeas.utilities.UtilityFunctions.stringToInt;

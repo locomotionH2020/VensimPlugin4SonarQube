@@ -94,7 +94,7 @@ public class SymbolTableGenerator {
         for (Symbol dependency : symbol.getDependencies()) {
 
 
-            if (isFunction(dependency)) {
+            if (dependency.getType() == SymbolType.FUNCTION) {
                 if (nonPureFunctions.contains(dependency.getToken())) {
                     symbol.setType(SymbolType.VARIABLE);
                     break;
@@ -106,7 +106,7 @@ public class SymbolTableGenerator {
                 symbol.setType(SymbolType.VARIABLE);
 
                 break;
-            }else if(dependency.getType() == SymbolType.UNDETERMINED) {
+            }else if(dependency.getType() == SymbolType.UNDETERMINED || dependency.getType() == SymbolType.UNDETERMINED_FUNCTION) {
                 undeterminedDependency = true;
             }
 
