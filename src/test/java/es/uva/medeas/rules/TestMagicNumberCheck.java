@@ -49,7 +49,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
             symbol.addDefinitionLine(i);
 
@@ -73,7 +73,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
             symbol.addDefinitionLine(i);
 
@@ -87,7 +87,7 @@ public class TestMagicNumberCheck {
     @Test
     public void testWithNumberNotDefined(){
         SymbolTable table = new SymbolTable();
-        table.createSymbol("51");
+        table.addSymbol(new Symbol("51"));
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
@@ -103,7 +103,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
             symbol.addDefinitionLine(10);
 
@@ -125,16 +125,16 @@ public class TestMagicNumberCheck {
          VensimVisitorContext context = new VensimVisitorContext(null);
          context.setSymbolTable(table);
 
-         Symbol magicNumber = table.createSymbol("51");
+         Symbol magicNumber = table.addSymbol(new Symbol("51"));
          for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
              magicNumber.addDefinitionLine(10);
          magicNumber.addDefinitionLine(1);
 
-         Symbol normalNumber1 = table.createSymbol("70");
+         Symbol normalNumber1 = table.addSymbol(new Symbol("70"));
          for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
              normalNumber1.addDefinitionLine(10);
 
-         Symbol normalNumber2 = table.createSymbol("3.141592653");
+         Symbol normalNumber2 = table.addSymbol(new Symbol("3.141592653"));
          normalNumber2.addDefinitionLine(1);
 
 
@@ -154,7 +154,7 @@ public class TestMagicNumberCheck {
          VensimVisitorContext context = new VensimVisitorContext(null);
          context.setSymbolTable(table);
 
-         Symbol symbol = table.createSymbol("51");
+         Symbol symbol = table.addSymbol(new Symbol("51"));
          for(int i = 0; i< REPETITIONS; i++)
              symbol.addDefinitionLine(i);
 
@@ -180,7 +180,7 @@ public class TestMagicNumberCheck {
          VensimVisitorContext context = new VensimVisitorContext(null);
          context.setSymbolTable(table);
 
-         Symbol symbol = table.createSymbol("51");
+         Symbol symbol = table.addSymbol(new Symbol("51"));
          for(int i = 0; i< REPETITIONS-1; i++)
              symbol.addDefinitionLine(i);
 
@@ -199,7 +199,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
             symbol.addDefinitionLine(i);
 
@@ -224,7 +224,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
             symbol.addDefinitionLine(i);
 
@@ -244,7 +244,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
             symbol.addDefinitionLine(i);
 
@@ -269,7 +269,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
             symbol.addDefinitionLine(i);
 
@@ -290,7 +290,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
             symbol.addDefinitionLine(i);
 
@@ -315,7 +315,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
             symbol.addDefinitionLine(i);
 
@@ -336,7 +336,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
             symbol.addDefinitionLine(i);
 
@@ -361,7 +361,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
             symbol.addDefinitionLine(i);
 
@@ -382,7 +382,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
             symbol.addDefinitionLine(i);
 
@@ -407,7 +407,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
-        Symbol symbol = table.createSymbol("51");
+        Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
             symbol.addDefinitionLine(i);
 
@@ -425,8 +425,8 @@ public class TestMagicNumberCheck {
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsAString() throws NoSuchFieldException, IllegalAccessException {
         SymbolTable table = new SymbolTable();
-        table.createSymbol("1");
-        table.createSymbol("2");
+        table.addSymbol(new Symbol("1"));
+        table.addSymbol(new Symbol("2"));
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
@@ -446,8 +446,8 @@ public class TestMagicNumberCheck {
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsZero() throws NoSuchFieldException, IllegalAccessException {
         SymbolTable table = new SymbolTable();
-        table.createSymbol("1");
-        table.createSymbol("2");
+        table.addSymbol(new Symbol("1"));
+        table.addSymbol(new Symbol("2"));
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
@@ -466,8 +466,8 @@ public class TestMagicNumberCheck {
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsOne() throws NoSuchFieldException, IllegalAccessException {
         SymbolTable table = new SymbolTable();
-        table.createSymbol("1");
-        table.createSymbol("2");
+        table.addSymbol(new Symbol("1"));
+        table.addSymbol(new Symbol("2"));
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 
@@ -486,8 +486,8 @@ public class TestMagicNumberCheck {
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsNegative() throws NoSuchFieldException, IllegalAccessException {
         SymbolTable table = new SymbolTable();
-        table.createSymbol("1");
-        table.createSymbol("2");
+        table.addSymbol(new Symbol("1"));
+        table.addSymbol(new Symbol("2"));
         VensimVisitorContext context = new VensimVisitorContext(null);
         context.setSymbolTable(table);
 

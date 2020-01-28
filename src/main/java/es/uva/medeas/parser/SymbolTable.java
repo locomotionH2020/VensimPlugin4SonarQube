@@ -1,5 +1,4 @@
 package es.uva.medeas.parser;
-import org.antlr.v4.runtime.Token;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,34 +20,7 @@ public class SymbolTable {
             throw new IllegalArgumentException("Token " + token + " not found");
     }
 
-
-    public Symbol getSymbolOrCreate(String token){
-
-        if(table.containsKey(token))
-            return table.get(token);
-
-        else{
-            return createSymbol(token);
-        }
-
-    }
-
-
-    public Symbol createSymbol(String token){
-        if(hasSymbol(token))
-            throw new IllegalArgumentException("The symbol:  "+  token + " already exists.");
-
-        Symbol symbol = new Symbol(token);
-        table.put(token,symbol);
-        return symbol;
-    }
-
-
-
-    public Symbol getSymbolOrCreate(Token token){
-       return getSymbolOrCreate(token.getText());
-
-    }
+    
 
     public void print(){
         //TODO Temporal para comprobar visualmente si funciona:
@@ -82,4 +54,13 @@ public class SymbolTable {
         return getSymbols().stream().filter(symbol -> symbol.getType()==SymbolType.UNDETERMINED || symbol.getType()==SymbolType.UNDETERMINED_FUNCTION).collect(Collectors.toSet());
     }
 
+    public Symbol addSymbol(Symbol symbol) {
+        String token = symbol.getToken().trim();
+
+        if(hasSymbol(token))
+            throw new IllegalArgumentException("The symbol:  "+ token+ " already exists.");
+
+        table.put(token,symbol);
+        return symbol;
+    }
 }

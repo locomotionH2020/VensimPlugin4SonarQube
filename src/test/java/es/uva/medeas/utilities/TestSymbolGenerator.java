@@ -1,6 +1,5 @@
 package es.uva.medeas.utilities;
 
-import es.uva.medeas.utilities.SymbolTableGenerator;
 import es.uva.medeas.parser.*;
 import org.junit.Test;
 
@@ -446,8 +445,8 @@ public class TestSymbolGenerator {
     public void testVariableTypeInference(){
         SymbolTable table = new SymbolTable();
 
-        Symbol undeterminedType = table.createSymbol("undeterminedType");
-        Symbol variable = table.createSymbol("variable");
+        Symbol undeterminedType = table.addSymbol(new Symbol("undeterminedType"));
+        Symbol variable = table.addSymbol(new Symbol("variable"));
         variable.setType(SymbolType.VARIABLE);
 
         undeterminedType.addDependency(variable);
@@ -462,13 +461,13 @@ public class TestSymbolGenerator {
     public void testInfersVarTypeIfThereAreUndeterminedDependencies(){
         SymbolTable table = new SymbolTable();
 
-        Symbol undeterminedType = table.createSymbol("undeterminedType");
-        Symbol variable = table.createSymbol("variable");
+        Symbol undeterminedType = table.addSymbol(new Symbol("undeterminedType"));
+        Symbol variable = table.addSymbol(new Symbol("variable"));
         variable.setType(SymbolType.VARIABLE);
 
-        undeterminedType.addDependency(table.createSymbol("undeterminedBefore"));
+        undeterminedType.addDependency(table.addSymbol(new Symbol("undeterminedBefore")));
         undeterminedType.addDependency(variable);
-        undeterminedType.addDependency(table.createSymbol("undeterminedAfter"));
+        undeterminedType.addDependency(table.addSymbol(new Symbol("undeterminedAfter")));
         SymbolTableGenerator.resolveSymbolTable(table);
 
 
@@ -479,7 +478,7 @@ public class TestSymbolGenerator {
     public void testThrowsExceptionIfCantBeResolved(){
         SymbolTable table = new SymbolTable();
 
-        Symbol undeterminedType = table.createSymbol("undeterminedType");
+        Symbol undeterminedType = table.addSymbol(new Symbol("undeterminedType"));
         undeterminedType.addDependency(undeterminedType);
 
         SymbolTableGenerator.resolveSymbolTable(table);
@@ -514,8 +513,8 @@ public class TestSymbolGenerator {
         SymbolTable table = new SymbolTable();
 
 
-        Symbol constant = table.createSymbol("constant");
-        Symbol subscriptValue = table.createSymbol("subscriptValue");
+        Symbol constant = table.addSymbol(new Symbol("constant"));
+        Symbol subscriptValue = table.addSymbol(new Symbol("subscriptValue"));
         subscriptValue.setType(SymbolType.SUBSCRIPT_VALUE);
 
         constant.addDependency(subscriptValue);

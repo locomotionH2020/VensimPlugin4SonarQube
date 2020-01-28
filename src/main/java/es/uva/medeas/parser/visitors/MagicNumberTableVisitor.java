@@ -51,7 +51,14 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
         return exprIsAConstant(ctx) || exprIsACompoundNumber(ctx);
     }
 
+    private Symbol getSymbolOrCreate(SymbolTable table,String token){
+        if(table.hasSymbol(token))
+            return table.getSymbol(token);
 
+        else{
+            return table.addSymbol(new Symbol(token));
+        }
+    }
     @Override
     public Object visitEquation(ModelParser.EquationContext ctx) {
 
@@ -91,7 +98,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     @Override
     public Object visitIntegerConst(ModelParser.IntegerConstContext ctx) {
         String value = String.valueOf(stringToInt(ctx.getText()));
-        Symbol integer = numberTable.getSymbolOrCreate(value);
+        Symbol integer = getSymbolOrCreate(numberTable,value);
         integer.addDefinitionLine(ctx.start.getLine());
         return null;
     }
@@ -100,7 +107,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     @Override
     public Object visitFloatingConst(ModelParser.FloatingConstContext ctx) {
         String value = String.valueOf(stringToFloat(ctx.getText()));
-        Symbol integer = numberTable.getSymbolOrCreate(value);
+        Symbol integer = getSymbolOrCreate(numberTable,value);
         integer.addDefinitionLine(ctx.start.getLine());
         return null;
     }
@@ -135,7 +142,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
 
         if(isCompoundNumber(ctx)){
-            Symbol integer = numberTable.getSymbolOrCreate(ctx.getText().trim());
+            Symbol integer = getSymbolOrCreate(numberTable,ctx.getText().trim());
             integer.addDefinitionLine(ctx.start.getLine());
             return null;
         }

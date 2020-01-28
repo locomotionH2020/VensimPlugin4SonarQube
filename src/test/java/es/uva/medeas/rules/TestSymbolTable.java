@@ -26,28 +26,17 @@ public class TestSymbolTable {
         assertTrue(table.getSymbols().isEmpty());
     }
 
-    @Test
-    public void testCreateSymbol(){
-        Symbol symbol = table.createSymbol("mySymbol");
-
-        assertEquals(symbol.getToken(),"mySymbol");
-        assertTrue(table.hasSymbol("mySymbol"));
-        assertTrue(symbol.getDefinitionLines().isEmpty());
-        assertEquals(NO_DEPENDENCIES,symbol.getDependencies());
-        assertSymbolType(symbol, SymbolType.UNDETERMINED);
-    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateSymbolAlreadyExists(){
-        table.createSymbol("symbol");
-        table.createSymbol("symbol");
+        table.addSymbol(new Symbol("  symbol  "));
+        table.addSymbol(new Symbol(" symbol   "));
     }
 
 
     @Test
-    public void testGetSymbolOrCreateNewSymbol(){
-        Symbol symbol = table.getSymbolOrCreate("mySymbol");
-
+    public void testAddSymbol(){
+        Symbol symbol = table.addSymbol(new Symbol("mySymbol"));
         assertEquals(symbol.getToken(),"mySymbol");
         assertTrue(table.hasSymbol("mySymbol"));
         assertTrue(symbol.getDefinitionLines().isEmpty());
@@ -55,19 +44,12 @@ public class TestSymbolTable {
         assertSymbolType(symbol, SymbolType.UNDETERMINED);
     }
 
-    @Test
-    public void testGetSymbolOrCreateExistingSymbol(){
-        Symbol mySymbol = table.createSymbol("mySymbol");
-        Symbol actualSymbol = table.getSymbolOrCreate("mySymbol");
-
-        assertSame(mySymbol,actualSymbol);
-    }
 
     @Test
     public void testGetSymbols(){
-        Symbol first = table.createSymbol("firstSymbol");
-        Symbol second = table.createSymbol("secondSymbol");
-        Symbol third = table.createSymbol("thirdSymbol");
+        Symbol first = table.addSymbol(new Symbol("firstSymbol"));
+        Symbol second = table.addSymbol(new Symbol("secondSymbol"));
+        Symbol third = table.addSymbol(new Symbol("thirdSymbol"));
 
         Set<Symbol> tableSymbols = new HashSet<>(table.getSymbols());
         assertEquals(createSet(first,second,third), tableSymbols);
@@ -75,7 +57,7 @@ public class TestSymbolTable {
 
     @Test
     public void testGetSymbol(){
-        Symbol expectedSymbol = table.createSymbol("testSymbol");
+        Symbol expectedSymbol = table.addSymbol(new Symbol("testSymbol"));
         Symbol actualSymbol = table.getSymbol("testSymbol");
 
         assertSame(expectedSymbol,actualSymbol);
@@ -94,7 +76,7 @@ public class TestSymbolTable {
     @Test
     public void testGetUndeterminedSymbols(){
         for(SymbolType type: SymbolType.values()){
-            Symbol symbol = table.createSymbol(type.toString());
+            Symbol symbol = table.addSymbol(new Symbol(type.toString()));
             symbol.setType(type);
         }
 

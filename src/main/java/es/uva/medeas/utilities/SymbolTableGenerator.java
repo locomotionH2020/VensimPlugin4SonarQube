@@ -65,8 +65,13 @@ public class SymbolTableGenerator {
 
     public static void addDefaultSymbols(SymbolTable table){
         for(String variable: symbolVariables) {
-            Symbol s =  table.getSymbolOrCreate(variable);
-            s.setType(SymbolType.VARIABLE);
+            if (table.hasSymbol(variable))
+                table.getSymbol(variable).setType(SymbolType.VARIABLE);
+            else {
+                Symbol s = new Symbol(variable);
+                s.setType(SymbolType.VARIABLE);
+                table.addSymbol(s);
+            }
         }
 
     }

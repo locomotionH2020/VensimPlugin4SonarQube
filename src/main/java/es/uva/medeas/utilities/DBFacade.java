@@ -35,16 +35,18 @@ public class DBFacade {
         SymbolTable table = new SymbolTable();
 
         for(int i=0;i<symbolsFound.size();i++){
-            JsonObject symbol = symbolsFound.getJsonObject(i);
-            jsonObjectToSymbol(table,symbol); //TODO si hay dos simbolos con el mismo token, lanzar excepcion y loggearlo.
-
+            JsonObject jsonSymbol = symbolsFound.getJsonObject(i);
+            Symbol symbol = jsonObjectToSymbol(jsonSymbol); //TODO si hay dos simbolos con el mismo token, lanzar excepcion y loggearlo.
+            table.addSymbol(symbol);
         }
+
+        return table;
     }
 
-    private Symbol jsonObjectToSymbol(SymbolTable table, JsonObject jsonSymbol) {
+    private Symbol jsonObjectToSymbol(JsonObject jsonSymbol) {
         String token = jsonSymbol.getString("symbol");
         //String type = jsonSymbol.getString("type"); //TODO transformar el tipo
-        Symbol symbol = table.createSymbol(token);
+        Symbol symbol = new Symbol(token);
 
 
 

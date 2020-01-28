@@ -59,7 +59,7 @@ public class TestJsonSymbolTableBuilder {
         SymbolTable table = new SymbolTable();
 
         for(SymbolType type: SymbolType.values()){
-            Symbol symbol = table.createSymbol(type.toString() + " symbol");
+            Symbol symbol = table.addSymbol(new Symbol(type.toString() + " symbol"));
             symbol.setType(type);
         }
 
@@ -82,7 +82,7 @@ public class TestJsonSymbolTableBuilder {
         JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
 
         SymbolTable firstSymbolTable = new SymbolTable();
-        firstSymbolTable.createSymbol("var");
+        firstSymbolTable.addSymbol(new Symbol("var"));
 
         builder.addSymbolTable("firstFile",firstSymbolTable);
         builder.addSymbolTable("secondFile",new SymbolTable());
@@ -109,7 +109,7 @@ public class TestJsonSymbolTableBuilder {
         JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
 
         SymbolTable table = new SymbolTable();
-        Symbol symbol = table.createSymbol("var");
+        Symbol symbol = table.addSymbol(new Symbol("var"));
         symbol.addDefinitionLine(line);
 
         builder.addSymbolTable("file",table);
@@ -125,10 +125,10 @@ public class TestJsonSymbolTableBuilder {
         JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
 
         SymbolTable table = new SymbolTable();
-        Symbol var = table.createSymbol("var");
-        Symbol constant = table.createSymbol("constant");
-        Symbol notFoo = table.createSymbol("notFoo");
-        Symbol anotherOne = table.createSymbol("anotherOne");
+        Symbol var = table.addSymbol(new Symbol("var"));
+        Symbol constant = table.addSymbol(new Symbol("constant"));
+        Symbol notFoo = table.addSymbol(new Symbol("notFoo"));
+        Symbol anotherOne = table.addSymbol(new Symbol("anotherOne"));
 
         var.addDependencies(Arrays.asList(constant,notFoo));
         notFoo.addDependency(anotherOne);
@@ -158,7 +158,7 @@ public class TestJsonSymbolTableBuilder {
         JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
 
         SymbolTable table = new SymbolTable();
-        table.createSymbol("constant");
+        table.addSymbol(new Symbol("constant"));
 
         builder.addSymbolTable("file",table);
         JsonObject file = builder.build().getJsonObject(0);
@@ -174,7 +174,7 @@ public class TestJsonSymbolTableBuilder {
         JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
 
         SymbolTable table = new SymbolTable();
-        table.createSymbol("constant");
+        table.addSymbol(new Symbol("constant"));
 
         builder.addSymbolTable("file",table);
         JsonObject file = builder.build().getJsonObject(0);
