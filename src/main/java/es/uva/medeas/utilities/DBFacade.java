@@ -63,7 +63,7 @@ public class DBFacade {
         JsonArray jsonSymbols = jsonBuilder.build();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(url).POST(HttpRequest.BodyPublishers.ofString(jsonSymbols.toString())).header("Content-Type", "application/json") //TODO Testear esto
+                .uri(url).POST(HttpRequest.BodyPublishers.ofString(jsonSymbols.toString())).header("Content-Type", "application/json")
                 .build();
 
         try {

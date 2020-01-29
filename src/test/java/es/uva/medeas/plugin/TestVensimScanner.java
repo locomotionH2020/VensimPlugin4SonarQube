@@ -1,6 +1,7 @@
 package es.uva.medeas.plugin;
 
 
+import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.testutilities.RuleTestUtilities;
 import es.uva.medeas.rules.VensimCheck;
 import es.uva.medeas.utilities.JsonSymbolTableBuilder;
@@ -25,7 +26,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import static es.uva.medeas.testutilities.TestUtilities.*;
-import static org.mockito.Mockito.spy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class TestVensimScanner {
 
@@ -40,8 +42,8 @@ public class TestVensimScanner {
         Logger logger = Mockito.mock(Logger.class);
         VensimScanner.LOG = logger;
         InputFile inputFile = Mockito.mock(InputFile.class);
-        Mockito.when(inputFile.contents()).thenReturn("This isn't a vensim model");
-        Mockito.when(inputFile.toString()).thenReturn("notAVensimModel.mdl");
+        when(inputFile.contents()).thenReturn("This isn't a vensim model");
+        when(inputFile.toString()).thenReturn("notAVensimModel.mdl");
 
 
 
@@ -69,9 +71,9 @@ public class TestVensimScanner {
         InputFile fileBefore = Mockito.mock(InputFile.class);
         InputFile wrongFile = Mockito.mock(InputFile.class);
         InputFile fileAfter = Mockito.mock(InputFile.class);
-        Mockito.when(wrongFile.contents()).thenReturn("This isn't a vensim model");
-        Mockito.when(fileBefore.contents()).thenReturn(loadFile("invertedDependencies.mdl"));
-        Mockito.when(fileAfter.contents()).thenReturn(loadFile("testCyclicDependencies.mdl"));
+        when(wrongFile.contents()).thenReturn("This isn't a vensim model");
+        when(fileBefore.contents()).thenReturn(loadFile("invertedDependencies.mdl"));
+        when(fileAfter.contents()).thenReturn(loadFile("testCyclicDependencies.mdl"));
 
 
         List<InputFile> files = new ArrayList<>();
@@ -81,23 +83,28 @@ public class TestVensimScanner {
 
 
         SensorContext context = Mockito.mock(SensorContext.class);
-        Mockito.when(context.isCancelled()).thenReturn(false);
+        when(context.isCancelled()).thenReturn(false);
         NewMeasure measure = Mockito.mock(NewMeasure.class);
-        Mockito.when(measure.forMetric(Mockito.any())).thenReturn(measure);
-        Mockito.when(measure.on(Mockito.any())).thenReturn(measure);
-        Mockito.when(measure.withValue(Mockito.any())).thenReturn(measure);
+        when(measure.forMetric(Mockito.any())).thenReturn(measure);
+        when(measure.on(Mockito.any())).thenReturn(measure);
+        when(measure.withValue(Mockito.any())).thenReturn(measure);
 
-        Mockito.when(context.newMeasure()).thenReturn(measure);
+        when(context.newMeasure()).thenReturn(measure);
 
         CheckFactory factory = new CheckFactory(RuleTestUtilities.getAllActiveRules());
         Checks<VensimCheck> checks =  factory.<VensimCheck>create(VensimRuleRepository.REPOSITORY_KEY)
                 .addAnnotatedChecks(VensimRuleRepository.getChecks());
 
         VensimScanner scanner = spy(new VensimScanner(context,checks,builder));
+        doReturn(null).when(scanner).getSymbolTableFromDB(any());
+
         Mockito.doCallRealMethod().when(scanner).scanFiles(files);
         Mockito.doCallRealMethod().when(scanner).scanFile(Mockito.any());
         Mockito.doCallRealMethod().when(scanner).getParseTree(Mockito.any());
         Mockito.doCallRealMethod().when(scanner).checkIssues(Mockito.any());
+
+
+
         Mockito.doNothing().when(scanner).generateJsonOutput();
 
 

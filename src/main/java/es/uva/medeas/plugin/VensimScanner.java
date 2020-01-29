@@ -104,7 +104,7 @@ public class VensimScanner {
 
 
             List<String> symbolsFound = table.getSymbols().stream().map(Symbol::getToken).collect(Collectors.toList());
-            SymbolTable dbTable = DBFacade.getExistingSymbolsFromDB(symbolDbService,symbolsFound); //TODO Tener en cuenta que puede fallar, no ser valido, etc)
+            SymbolTable dbTable = getSymbolTableFromDB(symbolsFound);
 
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
 
@@ -123,9 +123,10 @@ public class VensimScanner {
             LOG.error("Unable to parse the file '{}'. Message {}",inputFile.toString(),e.getLocalizedMessage());
         }
 
+    }
 
-
-
+    protected SymbolTable getSymbolTableFromDB(List<String> symbolsFound){
+        return DBFacade.getExistingSymbolsFromDB(symbolDbService,symbolsFound); //TODO Tener en cuenta que puede fallar, no ser valido, etc)
     }
 
     public void checkIssues(VensimVisitorContext fileContext){
