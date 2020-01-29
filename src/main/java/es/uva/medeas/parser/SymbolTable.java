@@ -20,7 +20,7 @@ public class SymbolTable {
             throw new IllegalArgumentException("Token " + token + " not found");
     }
 
-    
+
 
     public void print(){
         //TODO Temporal para comprobar visualmente si funciona:

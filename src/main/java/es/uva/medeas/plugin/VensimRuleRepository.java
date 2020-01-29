@@ -46,6 +46,7 @@ public class VensimRuleRepository implements RulesDefinition{
         set.add(ConstantNameCheck.class);
         set.add(RealityCheckNameRule.class);
         set.add(MagicNumberCheck.class);
+        set.add(SymbolNotFoundInDBCheck.class);
 
         return set;
     }

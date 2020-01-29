@@ -32,7 +32,7 @@ public class ConstantNameCheck implements VensimCheck {
 
     @Override
     public void scan(VensimVisitorContext context) {
-        SymbolTable table = context.getSymbolTable();
+        SymbolTable table = context.getParsedSymbolTable();
 
 
         for(Symbol symbol:table.getSymbols()){

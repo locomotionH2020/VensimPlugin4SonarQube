@@ -1,20 +1,20 @@
 package es.uva.medeas.plugin;
 
 
+import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.parser.SymbolTable;
-import es.uva.medeas.plugin.Issue;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class VensimVisitorContext {
 
-    private ParseTree rootNode;
+    private ModelParser.FileContext rootNode;
     private List<Issue> issues;
-    private SymbolTable table;
+    private SymbolTable parsedTable;
+    private SymbolTable dbTable;
 
-    public ParseTree getRootNode() {
+    public ModelParser.FileContext getRootNode() {
         return rootNode;
     }
 
@@ -22,21 +22,24 @@ public class VensimVisitorContext {
         return issues;
     }
 
-    public VensimVisitorContext(ParseTree rootNode){
+    public VensimVisitorContext(ModelParser.FileContext rootNode, SymbolTable parsedTable, SymbolTable dbTable){
         this.rootNode = rootNode;
         issues = new ArrayList<>();
-        table = null;
+        this.parsedTable = parsedTable;
+        this.dbTable = dbTable;
     }
 
     public void addIssue(Issue issue){
         issues.add(issue);
     }
 
-    public void setSymbolTable(SymbolTable table) {
-        this.table = table;
+
+
+    public SymbolTable getParsedSymbolTable(){
+        return parsedTable;
     }
 
-    public SymbolTable getSymbolTable(){
-        return table;
+    public SymbolTable getDbSymbolTable(){
+        return dbTable;
     }
 }

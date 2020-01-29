@@ -1,5 +1,6 @@
 package es.uva.medeas.utilities;
 
+import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
@@ -21,7 +22,7 @@ public class SymbolTableGenerator {
     private static final List<String> lookupGeneratorFunctions  = Arrays.asList("GET DIRECT LOOKUPS", "GET XLS LOOKUPS");
 
 
-    public static SymbolTable getSymbolTable(VensimVisitorContext context){
+    public static SymbolTable getSymbolTable(ModelParser.FileContext context){
         RawSymbolTableVisitor generator = new RawSymbolTableVisitor();
         SymbolTable rawTable = generator.getSymbolTable(context);
 

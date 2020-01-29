@@ -1,5 +1,6 @@
 package es.uva.medeas.testutilities;
 
+import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimRuleRepository;
 import es.uva.medeas.plugin.VensimScanner;
@@ -15,6 +16,7 @@ import org.sonar.api.batch.rule.internal.NewActiveRule;
 
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.rule.RuleKey;
+
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -103,10 +105,8 @@ public class RuleTestUtilities {
 
 
     public static VensimVisitorContext getVisitorContextFromString(String program){
-        ParseTree root =  getParseTreeFromString(program);
-        VensimVisitorContext visitorContext = new VensimVisitorContext(root);
-        visitorContext.setSymbolTable(getSymbolTableFromString(program));
-        return visitorContext;
+        ModelParser.FileContext root =  getParseTreeFromString(program);
+        return new VensimVisitorContext(root,getSymbolTableFromString(program),null);
     }
 
 

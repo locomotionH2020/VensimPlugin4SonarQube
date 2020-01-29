@@ -47,7 +47,7 @@ public class MagicNumberCheck implements VensimCheck {
 
     @Override
     public void scan(VensimVisitorContext context) {
-        SymbolTable numberTable = getVisitor().getSymbolTable(context);
+        SymbolTable numberTable = getVisitor().getSymbolTable(context.getRootNode());
         int minimumRepetitions = getMinimumRepetitions();
 
         for(Symbol symbol: numberTable.getSymbols()){

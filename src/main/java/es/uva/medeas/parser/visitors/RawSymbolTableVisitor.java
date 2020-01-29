@@ -15,9 +15,9 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
 
     private SymbolTable table;
 
-    public SymbolTable getSymbolTable(VensimVisitorContext context){
+    public SymbolTable getSymbolTable(ModelParser.FileContext context){
         table = new SymbolTable();
-        visit(context.getRootNode());
+        visit(context);
 
         return table;
     }

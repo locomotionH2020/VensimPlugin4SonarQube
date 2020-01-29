@@ -21,9 +21,9 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
 
 
-    public  SymbolTable getSymbolTable(VensimVisitorContext context){
+    public  SymbolTable getSymbolTable(ModelParser.FileContext context){
         numberTable = new SymbolTable();
-        visit(context.getRootNode());
+        visit(context);
         return numberTable;
     }
 

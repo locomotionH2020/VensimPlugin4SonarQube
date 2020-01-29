@@ -36,7 +36,7 @@ public class SubscriptValueNameCheck implements VensimCheck {
 
     @Override
     public void scan(VensimVisitorContext context) {
-        SymbolTable table = context.getSymbolTable();
+        SymbolTable table = context.getParsedSymbolTable();
 
 
 

@@ -31,7 +31,7 @@ public class TestMagicNumberTableVisitor {
                 "B := 3 * Time~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Arrays.asList(1,2),table.getSymbol("3").getDefinitionLines() );
         assertEquals(Collections.singletonList(1),table.getSymbol("4").getDefinitionLines() );
@@ -44,7 +44,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = 3 ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertFalse(table.hasSymbol("3"));
 
@@ -55,7 +55,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A == 3 ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertFalse(table.hasSymbol("3"));
     }
@@ -65,7 +65,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := 3 ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertFalse(table.hasSymbol("3"));
     }
@@ -76,7 +76,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = 3 * 3 * 3 * 3 ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Arrays.asList(1,1,1,1),table.getSymbol("3").getDefinitionLines() );
 
@@ -90,7 +90,7 @@ public class TestMagicNumberTableVisitor {
                 "~ |";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertFalse(table.hasSymbol("3") );
 
@@ -102,7 +102,7 @@ public class TestMagicNumberTableVisitor {
                 "         9,10,11,12; ~Person~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty());
     }
@@ -113,7 +113,7 @@ public class TestMagicNumberTableVisitor {
                 "         9,10,11,12; ~Person~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty());
     }
@@ -124,7 +124,7 @@ public class TestMagicNumberTableVisitor {
                 "         9,10,11,12; ~Person~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty());
     }
@@ -134,7 +134,7 @@ public class TestMagicNumberTableVisitor {
         String program = "var = - FUNCTION( 3, ANOTHER FUNCTION(3),3)~ |";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Arrays.asList(1,1,1),table.getSymbol("3").getDefinitionLines() );
     }
@@ -144,7 +144,7 @@ public class TestMagicNumberTableVisitor {
         String program = "\nFOO = 0.3 * 0.3~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Arrays.asList(2,2),table.getSymbol("0.3").getDefinitionLines() );
 
@@ -155,7 +155,7 @@ public class TestMagicNumberTableVisitor {
         String program = "FOO = (3 ^ (3)) * 3 / 3 - 3 + (3<3 :AND: 3>3 :AND: 3<=3 :AND: 3>=3 :AND: :NOT: 3 = 3 :OR: 3 <> 3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
 
         int expectedThrees = StringUtils.countMatches(program,"3");
@@ -167,7 +167,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = ((3)*3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Arrays.asList(1,1),table.getSymbol("3").getDefinitionLines() );
     }
@@ -178,7 +178,7 @@ public class TestMagicNumberTableVisitor {
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Collections.singletonList(1),table.getSymbol("-3").getDefinitionLines() );
         assertEquals(Collections.singletonList(1),table.getSymbol("4").getDefinitionLines() );
@@ -190,7 +190,7 @@ public class TestMagicNumberTableVisitor {
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Collections.singletonList(1),table.getSymbol("-1000000.0").getDefinitionLines() );
         assertEquals(Collections.singletonList(1),table.getSymbol("1.0E-8").getDefinitionLines() );
@@ -201,7 +201,7 @@ public class TestMagicNumberTableVisitor {
         String program = "NUMBER 1 = Time~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertFalse(table.hasSymbol("1") );
 
@@ -212,7 +212,7 @@ public class TestMagicNumberTableVisitor {
         String program = "FOO = NUMBER 1 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertFalse(table.hasSymbol("1") );
     }
@@ -222,7 +222,7 @@ public class TestMagicNumberTableVisitor {
         String program = "foo = FUNCTION 1(Time)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertFalse(table.hasSymbol("1") );
 
@@ -235,7 +235,7 @@ public class TestMagicNumberTableVisitor {
                 "(7.18654,5.92105),(8.74618,9.21053))~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -246,7 +246,7 @@ public class TestMagicNumberTableVisitor {
                 "                                         0,0.2,0.4,0.6,0.8,1)~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -255,7 +255,7 @@ public class TestMagicNumberTableVisitor {
     public void testDelayPCounts(){
         String program = "a = DELAYP(1,1:Time)~|";
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Arrays.asList(1,1),table.getSymbol("1").getDefinitionLines() );
     }
@@ -267,7 +267,7 @@ public class TestMagicNumberTableVisitor {
                 ":END OF MACRO:";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Collections.singletonList(2),table.getSymbol("3").getDefinitionLines() );
 
@@ -279,7 +279,7 @@ public class TestMagicNumberTableVisitor {
         String program = "var =WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(1,table.getSymbols().size());
         assertEquals("6",table.getSymbols().iterator().next().getToken());
@@ -291,7 +291,7 @@ public class TestMagicNumberTableVisitor {
         String program = "var :=WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(1,table.getSymbols().size());
         assertEquals("6",table.getSymbols().iterator().next().getToken());
@@ -303,7 +303,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = 1,2,3,4,5~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
 
@@ -314,7 +314,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := 1,2,3,4,5~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
 
@@ -325,7 +325,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := 1,2,3,4,5~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
 
@@ -339,7 +339,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = 3 * +3 * 1.0 * 10e-1 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Arrays.asList(1,1),table.getSymbol("3").getDefinitionLines() );
         assertEquals(Arrays.asList(1,1),table.getSymbol("1.0").getDefinitionLines() );
@@ -351,7 +351,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = 3 +  --3 + 4.3 + --4.3 ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(Arrays.asList(1,1),table.getSymbol("3").getDefinitionLines() );
         assertEquals(Arrays.asList(1,1),table.getSymbol("4.3").getDefinitionLines() );
@@ -363,7 +363,7 @@ public class TestMagicNumberTableVisitor {
         String program = " A = Time * MODULO(  3,   4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("MODULO(3,4)"));
         assertEquals(1,table.getSymbols().size());
@@ -374,7 +374,7 @@ public class TestMagicNumberTableVisitor {
         String program = " A = Time * GAME(((2)))~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("GAME(((2)))"));
         assertEquals(1,table.getSymbols().size());
@@ -386,7 +386,7 @@ public class TestMagicNumberTableVisitor {
                 "SQRT(2))~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         Symbol number = table.getSymbol("LN(SQRT(2))");
         assertNotNull(number);
@@ -418,7 +418,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *" + function + "~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(1,table.getSymbols().size());
         String expected = "POWER(SQRT(TAN(TANH(SIN(SINH(COS(COSH(ARCTAN(ARCSIN(ARCCOS(ABS(9))))))))))),LN(GAMMA LN(INTEGER(GAME(EXP(MODULO(QUANTUM(3,7),LOG(3,7))))))))";
@@ -432,7 +432,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time * MODULO(3,Time)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(1,table.getSymbols().size());
         assertTrue(table.hasSymbol("3"));
@@ -443,7 +443,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = MODULO(3,Time)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(1,table.getSymbols().size());
         assertTrue(table.hasSymbol("3"));
@@ -454,7 +454,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time * QUANTUM(3,RANDOM(3))~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(1,table.getSymbols().size());
         assertTrue(table.hasSymbol("3"));
@@ -465,7 +465,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time * QUANTUM(3,RANDOM(3))~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(1,table.getSymbols().size());
         assertTrue(table.hasSymbol("3"));
@@ -479,7 +479,7 @@ public class TestMagicNumberTableVisitor {
                 "C = Time * LOG(3,CONST)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(1,table.getSymbols().size());
         assertTrue(table.hasSymbol("3"));
@@ -491,7 +491,7 @@ public class TestMagicNumberTableVisitor {
                 "C = LOG(3,CONST)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(1,table.getSymbols().size());
         assertTrue(table.hasSymbol("3"));
@@ -502,7 +502,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = FUNC(Time,MODULO(3,4),5)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertEquals(2,table.getSymbols().size());
         assertTrue(table.hasSymbol("MODULO(3,4)"));
@@ -515,7 +515,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = SQRT(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -525,7 +525,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  SQRT(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("SQRT(3)"));
     }
@@ -535,7 +535,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := SQRT(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -545,7 +545,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * SQRT(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("SQRT(3)"));
     }
@@ -559,7 +559,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = TAN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -569,7 +569,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  TAN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("TAN(3)"));
     }
@@ -579,7 +579,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := TAN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -589,7 +589,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * TAN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("TAN(3)"));
     }
@@ -603,7 +603,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = TANH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -613,7 +613,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  TANH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("TANH(3)"));
     }
@@ -623,7 +623,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := TANH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -633,7 +633,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * TANH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("TANH(3)"));
     }
@@ -645,7 +645,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = SIN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -655,7 +655,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  SIN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("SIN(3)"));
     }
@@ -665,7 +665,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := SIN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -675,7 +675,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * SIN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("SIN(3)"));
     }
@@ -689,7 +689,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = SINH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -699,7 +699,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  SINH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("SINH(3)"));
     }
@@ -709,7 +709,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := SINH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -719,7 +719,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * SINH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("SINH(3)"));
     }
@@ -733,7 +733,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = COS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -743,7 +743,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  COS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("COS(3)"));
     }
@@ -753,7 +753,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := COS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -763,7 +763,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * COS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("COS(3)"));
     }
@@ -777,7 +777,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = COSH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -787,7 +787,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  COSH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("COSH(3)"));
     }
@@ -797,7 +797,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := COSH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -807,7 +807,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * COSH(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("COSH(3)"));
     }
@@ -821,7 +821,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = ARCTAN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -831,7 +831,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  ARCTAN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("ARCTAN(3)"));
     }
@@ -841,7 +841,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := ARCTAN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -851,7 +851,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * ARCTAN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("ARCTAN(3)"));
     }
@@ -865,7 +865,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = ARCSIN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -875,7 +875,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  ARCSIN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("ARCSIN(3)"));
     }
@@ -885,7 +885,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := ARCSIN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -895,7 +895,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * ARCSIN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("ARCSIN(3)"));
     }
@@ -909,7 +909,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = ARCCOS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -919,7 +919,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  ARCCOS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("ARCCOS(3)"));
     }
@@ -929,7 +929,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := ARCCOS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -939,7 +939,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * ARCCOS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("ARCCOS(3)"));
     }
@@ -953,7 +953,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = ABS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -963,7 +963,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  ABS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("ABS(3)"));
     }
@@ -973,7 +973,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := ABS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -983,7 +983,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * ABS(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("ABS(3)"));
     }
@@ -997,7 +997,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = LN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1007,7 +1007,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  LN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("LN(3)"));
     }
@@ -1017,7 +1017,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := LN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1027,7 +1027,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * LN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("LN(3)"));
     }
@@ -1041,7 +1041,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = GAMMA LN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1051,7 +1051,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  GAMMA LN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("GAMMA LN(3)"));
     }
@@ -1061,7 +1061,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := GAMMA LN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1071,7 +1071,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * GAMMA LN(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("GAMMA LN(3)"));
     }
@@ -1085,7 +1085,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = INTEGER(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1095,7 +1095,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  INTEGER(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("INTEGER(3)"));
     }
@@ -1105,7 +1105,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := INTEGER(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1115,7 +1115,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * INTEGER(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("INTEGER(3)"));
     }
@@ -1129,7 +1129,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = GAME(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1139,7 +1139,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  GAME(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("GAME(3)"));
     }
@@ -1149,7 +1149,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := GAME(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1159,7 +1159,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * GAME(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("GAME(3)"));
     }
@@ -1173,7 +1173,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = EXP(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1183,7 +1183,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  EXP(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("EXP(3)"));
     }
@@ -1193,7 +1193,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := EXP(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1203,7 +1203,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * EXP(3)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("EXP(3)"));
     }
@@ -1214,7 +1214,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = MODULO(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1224,7 +1224,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  MODULO(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("MODULO(3,4)"));
         assertFalse(table.hasSymbol("3"));
@@ -1236,7 +1236,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := MODULO(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1248,7 +1248,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * MODULO(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("MODULO(3,4)"));
         assertFalse(table.hasSymbol("3"));
@@ -1261,7 +1261,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = POWER(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1271,7 +1271,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  POWER(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("POWER(3,4)"));
         assertFalse(table.hasSymbol("3"));
@@ -1283,7 +1283,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := POWER(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1295,7 +1295,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * POWER(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("POWER(3,4)"));
         assertFalse(table.hasSymbol("3"));
@@ -1307,7 +1307,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = LOG(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1317,7 +1317,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  LOG(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("LOG(3,4)"));
         assertFalse(table.hasSymbol("3"));
@@ -1329,7 +1329,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A :=  LOG(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1341,7 +1341,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * LOG(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("LOG(3,4)"));
         assertFalse(table.hasSymbol("3"));
@@ -1355,7 +1355,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = QUANTUM(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1365,7 +1365,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time *  QUANTUM(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("QUANTUM(3,4)"));
         assertFalse(table.hasSymbol("3"));
@@ -1377,7 +1377,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := QUANTUM(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.getSymbols().isEmpty() );
     }
@@ -1389,7 +1389,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A := Time * QUANTUM(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("QUANTUM(3,4)"));
         assertFalse(table.hasSymbol("3"));
@@ -1403,7 +1403,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = Time * QUANTUM(3,4)~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        SymbolTable table = visitor.getSymbolTable(visitorContext);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
         assertTrue(table.hasSymbol("QUANTUM(3,4)"));
         assertEquals(1,table.getSymbols().size());

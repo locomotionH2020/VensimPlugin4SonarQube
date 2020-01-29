@@ -3,17 +3,13 @@ package es.uva.medeas.utilities;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
+import javax.json.*;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Arrays;
 import java.util.List;
 
 public class DBFacade {
@@ -24,14 +20,14 @@ public class DBFacade {
      * @param symbols
      * @return A SymbolTable with the symbols that have been found in the DB (might not be all).
      */
-    public SymbolTable getExistingSymbolsFromDB(String serviceUrl, List<String> symbols){
+    public static SymbolTable getExistingSymbolsFromDB(String serviceUrl, List<String> symbols){
         JsonArray symbolsFound = sendRequestToService(serviceUrl,symbols);
 
         return createSymbolTableFromJson(symbolsFound);
     }
 
 
-    protected SymbolTable createSymbolTableFromJson(JsonArray symbolsFound) {
+    protected static SymbolTable createSymbolTableFromJson(JsonArray symbolsFound) {
         SymbolTable table = new SymbolTable();
 
         for(int i=0;i<symbolsFound.size();i++){
@@ -43,8 +39,8 @@ public class DBFacade {
         return table;
     }
 
-    private Symbol jsonObjectToSymbol(JsonObject jsonSymbol) {
-        String token = jsonSymbol.getString("symbol");
+    private static Symbol jsonObjectToSymbol(JsonObject jsonSymbol) {
+        String token = jsonSymbol.getString("symbol").trim();
         //String type = jsonSymbol.getString("type"); //TODO transformar el tipo
         Symbol symbol = new Symbol(token);
 
@@ -54,14 +50,20 @@ public class DBFacade {
     }
 
 
-    protected JsonArray sendRequestToService(String serviceUrl, List<String> symbols){
+    protected static JsonArray sendRequestToService(String serviceUrl, List<String> symbols){
         HttpClient client = HttpClient.newBuilder().build();
 
 
         URI url = URI.create(serviceUrl);
 
+        JsonArrayBuilder jsonBuilder = Json.createArrayBuilder();
+        for(String s: symbols)
+            jsonBuilder.add(s);
+
+        JsonArray jsonSymbols = jsonBuilder.build();
+
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(url).POST(HttpRequest.BodyPublishers.ofString(Arrays.toString(symbols.toArray()))) //TODO Testear esto
+                .uri(url).POST(HttpRequest.BodyPublishers.ofString(jsonSymbols.toString())).header("Content-Type", "application/json") //TODO Testear esto
                 .build();
 
         try {

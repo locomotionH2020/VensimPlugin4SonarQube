@@ -41,7 +41,7 @@ public class TestUtilities {
 
     }
 
-    public static ParseTree getParseTree(String file_path) throws IOException {
+    public static ModelParser.FileContext getParseTree(String file_path) throws IOException {
 
 
         return getParseTreeFromString(loadFile(file_path));
@@ -70,29 +70,25 @@ public class TestUtilities {
     public static SymbolTable getRAWSymbolTableFromString(String content){
 
 
-        ParseTree p = getParseTreeFromString(content);
+        ModelParser.FileContext root = getParseTreeFromString(content);
 
 
         RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
-        VensimVisitorContext context = new VensimVisitorContext(p);
-        return visitor.getSymbolTable(context);
+        return visitor.getSymbolTable(root);
     }
 
 
 
     public static SymbolTable getRAWSymbolTable(String file_path) throws IOException {
-        ParseTree tree = getParseTree(file_path);
+        ModelParser.FileContext tree = getParseTree(file_path);
 
         RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
-        VensimVisitorContext context = new VensimVisitorContext(tree);
-        return visitor.getSymbolTable(context);
+        return visitor.getSymbolTable(tree);
     }
 
     public static SymbolTable getSymbolTable(String file_path) throws IOException {
-        ParseTree tree = getParseTree(file_path);
-
-        VensimVisitorContext context = new VensimVisitorContext(tree);
-        return SymbolTableGenerator.getSymbolTable(context);
+        ModelParser.FileContext tree = getParseTree(file_path);
+        return SymbolTableGenerator.getSymbolTable(tree);
     }
 
     public static Set<Symbol> createSet(Symbol... symbols){

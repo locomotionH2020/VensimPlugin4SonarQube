@@ -40,7 +40,7 @@ public class LookupNameCheck implements VensimCheck{
 
     @Override
     public void scan(VensimVisitorContext context) {
-        SymbolTable table = context.getSymbolTable();
+        SymbolTable table = context.getParsedSymbolTable();
 
         for(Symbol symbol:table.getSymbols()){
             if(symbol.getType()== SymbolType.LOOKUP && !checkLookupFollowsConvention(symbol.getToken())){

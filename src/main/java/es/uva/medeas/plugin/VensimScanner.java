@@ -1,17 +1,14 @@
 package es.uva.medeas.plugin;
 
-import es.uva.medeas.parser.SymbolTable;
-import es.uva.medeas.parser.VensimErrorListener;
-import es.uva.medeas.parser.ModelLexer;
-import es.uva.medeas.parser.ModelParser;
+import es.uva.medeas.parser.*;
 import es.uva.medeas.rules.VensimCheck;
 
 
+import es.uva.medeas.utilities.DBFacade;
 import es.uva.medeas.utilities.JsonSymbolTableBuilder;
 import es.uva.medeas.utilities.SymbolTableGenerator;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.TextRange;
 import org.sonar.api.batch.rule.Checks;
@@ -31,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class VensimScanner {
 
@@ -39,6 +37,7 @@ public class VensimScanner {
     private final SensorContext context;
     private final Checks<VensimCheck> checks;
     private  final JsonSymbolTableBuilder jsonBuilder;
+    private final String symbolDbService = "http://localhost:9999/symbols";
 
     public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder) {
         this.context = context;
@@ -81,7 +80,7 @@ public class VensimScanner {
 
     }
 
-    protected ParseTree getParseTree(String file_content){
+    protected ModelParser.FileContext getParseTree(String file_content){
         ModelLexer lexer = new ModelLexer(CharStreams.fromString(file_content));
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -92,18 +91,23 @@ public class VensimScanner {
         return parser.file();
     }
 
-    public void scanFile(InputFile inputFile) {
+    public void scanFile(InputFile inputFile) { //TODO refactor
 
         try {
             String content = inputFile.contents();
 
-            ParseTree root = getParseTree(content);
+            ModelParser.FileContext root = getParseTree(content);
 
-            VensimVisitorContext visitorContext = new VensimVisitorContext(root);
-            SymbolTable table = SymbolTableGenerator.getSymbolTable(visitorContext);
+
+            SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
             jsonBuilder.addSymbolTable(inputFile.filename(),table);
 
-            visitorContext.setSymbolTable(table);
+
+            List<String> symbolsFound = table.getSymbols().stream().map(Symbol::getToken).collect(Collectors.toList());
+            SymbolTable dbTable = DBFacade.getExistingSymbolsFromDB(symbolDbService,symbolsFound); //TODO Tener en cuenta que puede fallar, no ser valido, etc)
+
+            VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
+
 
             checkIssues(visitorContext);
             saveIssues(inputFile,visitorContext.getIssues());
