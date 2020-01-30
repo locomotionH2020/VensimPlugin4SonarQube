@@ -71,4 +71,20 @@ public class Symbol {
     public List<Symbol> getIndexes(){
         return indexes;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Symbol)) return false;
+        Symbol symbol = (Symbol) o;
+        return Objects.equals(getToken(), symbol.getToken()) &&
+                Objects.equals(linesDefined, symbol.linesDefined) &&
+                Objects.equals(getIndexes(), symbol.getIndexes()) &&
+                Objects.equals(getDependencies(), symbol.getDependencies()) &&
+                getType() == symbol.getType();
+    }
+
+
+
 }

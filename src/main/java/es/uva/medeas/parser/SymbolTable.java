@@ -63,4 +63,14 @@ public class SymbolTable {
         table.put(token,symbol);
         return symbol;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SymbolTable)) return false;
+        SymbolTable table1 = (SymbolTable) o;
+        return table.equals(table1.table);
+    }
+
+
 }

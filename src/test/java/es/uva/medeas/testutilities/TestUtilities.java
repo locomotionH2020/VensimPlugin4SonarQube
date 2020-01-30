@@ -139,4 +139,13 @@ public class TestUtilities {
         }
         return  symbolSet;
     }
+
+    public static void addSymbolInLines(SymbolTable table, String token, int... lines){
+        Symbol symbol = new Symbol(token);
+        for(int line: lines)
+            symbol.addDefinitionLine(line);
+
+        table.addSymbol(symbol);
+    }
 }
+

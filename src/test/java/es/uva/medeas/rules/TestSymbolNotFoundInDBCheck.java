@@ -8,18 +8,13 @@ import org.junit.Test;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.assertDoesntHaveIssue;
 import static es.uva.medeas.testutilities.RuleTestUtilities.assertHasIssue;
+import static es.uva.medeas.testutilities.TestUtilities.addSymbolInLines;
 import static org.junit.Assert.*;
 
 public class TestSymbolNotFoundInDBCheck {
 
 
-    private void addSymbolInLines(SymbolTable table, String token, int... lines){
-        Symbol symbol = new Symbol(token);
-        for(int line: lines)
-            symbol.addDefinitionLine(line);
 
-        table.addSymbol(symbol);
-    }
 
     @Test
     public void testCompareEmptyTables(){

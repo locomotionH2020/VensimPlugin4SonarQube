@@ -1,8 +1,10 @@
-package es.uva.medeas.testutilities;
+package es.uva.medeas;
 
 import static org.junit.Assert.*;
 
 import es.uva.medeas.rules.*;
+import es.uva.medeas.testutilities.TestUtilities;
+import es.uva.medeas.testutilities.UtilitiesAPI;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
