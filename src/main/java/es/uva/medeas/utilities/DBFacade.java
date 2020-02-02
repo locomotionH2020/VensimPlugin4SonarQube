@@ -2,6 +2,9 @@ package es.uva.medeas.utilities;
 
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
+import es.uva.medeas.utilities.exceptions.ConnectionFailedException;
+import es.uva.medeas.utilities.exceptions.EmptyServiceException;
+import es.uva.medeas.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.medeas.utilities.exceptions.ServiceResponseFormatNotValid;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
@@ -23,6 +26,15 @@ public class DBFacade {
      * Searches for the symbols given as a parameter in the DB
      * @param symbols
      * @return A SymbolTable with the symbols that have been found in the DB (might not be all).
+     * The symbols contain the information found in the DB (type, module, etc).
+     *
+     * If the response from the service contains a duplicated symbol, it takes the first one and logs a warning.
+     *
+     * @throws ServiceResponseFormatNotValid If the response of the service doesn't have a valid format.
+     * @throws InvalidServiceUrlException If the url isn't valid (doesn't have a protocol or invalid format)
+     * @throws ConnectionFailedException If the domain address can't be resolved or the page is inaccessible.
+     * @throws EmptyServiceException If {@code serviceUrl} is empty if null
+     * @throws IllegalArgumentException If {@code symbols} is null
      */
     public static SymbolTable getExistingSymbolsFromDB(String serviceUrl, List<String> symbols) {
 
@@ -30,20 +42,14 @@ public class DBFacade {
 
         JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse));
         try {
-            JsonArray symbolsFound = jsonReader.readArray(); //TODO handle invalid data and invalid url/no connection
+            JsonArray symbolsFound = jsonReader.readArray();
             return createSymbolTableFromJson(symbolsFound);
-        } catch (JsonParsingException ex) {
+        } catch (JsonException ex) {
             throw new ServiceResponseFormatNotValid();
         } finally {
             jsonReader.close();
         }
-
-
-
-
-
     }
-
 
     protected static SymbolTable createSymbolTableFromJson(JsonArray symbolsFound) {
         SymbolTable table = new SymbolTable();
@@ -51,7 +57,7 @@ public class DBFacade {
         for(int i=0;i<symbolsFound.size();i++){
             try {
                 JsonObject jsonSymbol = symbolsFound.getJsonObject(i);
-                Symbol symbol = jsonObjectToSymbol(jsonSymbol); //TODO si hay dos simbolos con el mismo token, lanzar excepcion y loggearlo.
+                Symbol symbol = jsonObjectToSymbol(jsonSymbol);
                 if(table.hasSymbol(symbol.getToken()))
                     LOG.warn("Received duplicated symbol from the dictionary service.");
                 else
@@ -67,7 +73,7 @@ public class DBFacade {
 
     private static Symbol jsonObjectToSymbol(JsonObject jsonSymbol) {
         String token = jsonSymbol.getString("symbol",null);
-        //String type = jsonSymbol.getString("type"); //TODO transformar el tipo
+
         if(token==null)
             throw new ServiceResponseFormatNotValid();
 

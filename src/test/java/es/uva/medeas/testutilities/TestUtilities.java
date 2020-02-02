@@ -145,8 +145,11 @@ public class TestUtilities {
         return  symbolSet;
     }
 
-    public static void addSymbolInLines(SymbolTable table, String token, int... lines){
+    public static void addSymbolInLines(SymbolTable table, String token, SymbolType type, int... lines){
         Symbol symbol = new Symbol(token);
+        if(type!=null)
+            symbol.setType(type);
+
         for(int line: lines)
             symbol.addDefinitionLine(line);
 

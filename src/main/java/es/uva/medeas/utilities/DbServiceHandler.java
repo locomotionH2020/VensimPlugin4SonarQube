@@ -29,7 +29,7 @@ public class DbServiceHandler {
      * @param symbols
      * @return
      * @throws InvalidServiceUrlException If the url isn't valid (doesn't have a protocol or invalid format)
-     * @throws ConnectionFailedException If the domain address can't be resolved.
+     * @throws ConnectionFailedException If the domain address can't be resolved or the page is inaccessible.
      * @throws EmptyServiceException If {@code serviceUrl} is empty if null
      * @throws IllegalArgumentException If {@code symbols} is null
      */

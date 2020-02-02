@@ -16,12 +16,8 @@ import javax.json.*;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.ConnectException;
-import java.net.URI;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 
 import java.util.List;
 
@@ -76,7 +72,6 @@ public class TestDBFacade {
         DBFacade.handler = mockSymbolServiceHandlerToReturn(jsonDbTable);
 
         SymbolTable obtainedTable = DBFacade.getExistingSymbolsFromDB("", List.of("foo","var"));
-        obtainedTable.print();
         assertEquals(dbTable,obtainedTable);
     }
 
@@ -95,32 +90,6 @@ public class TestDBFacade {
 
     }
 
-    @Test
-    public void testSendNoSymbols() throws IOException, InterruptedException {
-        DbServiceHandler handler = new DbServiceHandler();
-        HttpClient mockClient = mock(HttpClient.class);
-        HttpResponse<String> mockResponse = mock(HttpResponse.class);
-        when(mockResponse.body()).thenReturn("[]");
-        handler.client = mockClient;
-
-
-        HttpRequest.BodyPublisher expectedBody = HttpRequest.BodyPublishers.ofString("[]");
-
-        doAnswer(invocationOnMock ->{
-            HttpRequest mRequest = invocationOnMock.getArgument(0);
-            HttpRequest.BodyPublisher body = mRequest.bodyPublisher().get();
-            assertEquals("The body of the request send should be empty ([]), but it isn't.",expectedBody.contentLength(),body.contentLength());
-
-
-            return mockResponse;}).when(mockClient).send(any(),any());
-        handler.sendRequestToService("https://randomUrl", new ArrayList<>());
-
-
-        verify(mockClient,times(1)).send(any(),any());
-
-
-
-    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSymbolListIsNull(){
@@ -128,92 +97,46 @@ public class TestDBFacade {
     }
 
 
-    @Test
-    public void testSymbolsSentCorrectly() throws IOException, InterruptedException {
-        DbServiceHandler handler = new DbServiceHandler();
-        HttpClient mockClient = mock(HttpClient.class);
-        HttpResponse<String> mockResponse = mock(HttpResponse.class);
-        when(mockResponse.body()).thenReturn("[]");
-        handler.client = mockClient;
-
-
-        HttpRequest.BodyPublisher expectedBody = HttpRequest.BodyPublishers.ofString("[\"var\",\"foo\",\"duck\"]");
-
-        doAnswer(invocationOnMock -> {
-            HttpRequest mRequest = invocationOnMock.getArgument(0);
-            HttpRequest.BodyPublisher body = mRequest.bodyPublisher().get();
-            assertEquals("The body of the request sent doesn't match the expected body",expectedBody.contentLength(), body.contentLength());
-
-
-            return mockResponse;
-        }).when(mockClient).send(any(), any());
-        handler.sendRequestToService("https://randomUrl", List.of("var", "foo", "duck"));
-
-
-        verify(mockClient, times(1)).send(any(), any());
-
-    }
 
     @Test(expected = ServiceResponseFormatNotValid.class)
-    public void testUnexpectedFormatArrayOfLiterals() throws IOException, InterruptedException {
-        DbServiceHandler handler = new DbServiceHandler();
-        HttpClient mockClient = mock(HttpClient.class);
-        HttpResponse<String> mockResponse = mock(HttpResponse.class);
-        doReturn(mockResponse).when(mockClient).send(any(),any());
-        when(mockResponse.body()).thenReturn("[1,3,4]");
-
-        handler.client = mockClient;
-        DBFacade.handler = handler;
+    public void testUnexpectedFormatArrayOfLiterals() {
+        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns("[1,3,4]");
 
         DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("foo","var"));
     }
 
     @Test(expected = ServiceResponseFormatNotValid.class)
-    public void testUnexpectedFormatObjectsDontHaveSymbolKey() throws IOException, InterruptedException {
-        DbServiceHandler handler = new DbServiceHandler();
-        HttpClient mockClient = mock(HttpClient.class);
-        HttpResponse<String> mockResponse = mock(HttpResponse.class);
-        doReturn(mockResponse).when(mockClient).send(any(),any());
-        when(mockResponse.body()).thenReturn("[{\"symbol\":\"foo\"},{\"randomKey\":\"nope\"}]");
+    public void testUnexpectedFormatNotAList(){
+       DBFacade.handler = Utilities.getMockDbServiceHandlerThatReturns("{\"symbol\":\"foo\"}");
 
-        handler.client = mockClient;
-        DBFacade.handler = handler;
+       DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("foo"));
+
+    }
+
+    @Test(expected = ServiceResponseFormatNotValid.class)
+    public void testUnexpectedFormatObjectsDontHaveSymbolKey(){
+        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns("[{\"symbol\":\"foo\"},{\"randomKey\":\"nope\"}]");
 
         DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("foo","var"));
     }
 
     @Test
-    public void testResponseJsonContainsDuplicatedSymbols() throws IOException, InterruptedException {
-        DbServiceHandler handler = new DbServiceHandler();
-        HttpClient mockClient = mock(HttpClient.class);
-        HttpResponse<String> mockResponse = mock(HttpResponse.class);
-        doReturn(mockResponse).when(mockClient).send(any(),any());
-        when(mockResponse.body()).thenReturn("[{\"symbol\":\"var\"},{\"symbol\":\"var\"}]");
+    public void testResponseJsonContainsDuplicatedSymbols(){
 
         Logger logger = mock(Logger.class); //Extract to method
         DBFacade.LOG = logger;
+        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns("[{\"symbol\":\"var\"},{\"symbol\":\"var\"}]");
 
 
-        handler.client = mockClient;
-        DBFacade.handler = handler;
-
-        DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("foo","var"));
-
+        DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("var"));
 
 
         verify(logger).warn("Received duplicated symbol from the dictionary service.");
     }
 
     @Test(expected = ServiceResponseFormatNotValid.class)
-    public void testResponseIsntAJson() throws IOException, InterruptedException {
-        DbServiceHandler handler = new DbServiceHandler();
-        HttpClient mockClient = mock(HttpClient.class);
-        HttpResponse<String> mockResponse = mock(HttpResponse.class);
-        doReturn(mockResponse).when(mockClient).send(any(),any());
-        when(mockResponse.body()).thenReturn("some text");
-
-        handler.client = mockClient;
-        DBFacade.handler = handler;
+    public void testResponseIsntAJson() {
+        DBFacade.handler = Utilities.getMockDbServiceHandlerThatReturns("some text");
 
         DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("foo","var"));
     }
