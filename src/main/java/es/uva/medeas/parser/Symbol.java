@@ -20,6 +20,11 @@ public class Symbol {
         linesDefined = new ArrayList<>();
     }
 
+    public Symbol(String token, SymbolType type){
+      this(token);
+      this.type = type;
+    }
+
     public void addDefinitionLine(int line){
         linesDefined.add(line);
     }

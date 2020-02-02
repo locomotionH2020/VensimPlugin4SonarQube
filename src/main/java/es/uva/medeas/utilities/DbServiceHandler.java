@@ -33,7 +33,7 @@ public class DbServiceHandler {
      * @throws EmptyServiceException If {@code serviceUrl} is empty if null
      * @throws IllegalArgumentException If {@code symbols} is null
      */
-    protected String sendRequestToService(String serviceUrl, List<String> symbols){
+    public String sendRequestToService(String serviceUrl, List<String> symbols){
         if(serviceUrl==null || "".equals(serviceUrl.trim()))
             throw new EmptyServiceException("Service Url is null or empty string");
         if(symbols==null)

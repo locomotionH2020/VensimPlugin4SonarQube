@@ -1,5 +1,6 @@
 package es.uva.medeas.plugin;
 
+import es.uva.medeas.ServiceController;
 import es.uva.medeas.parser.*;
 import es.uva.medeas.rules.VensimCheck;
 
@@ -27,8 +28,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class VensimScanner {
 
@@ -37,12 +38,14 @@ public class VensimScanner {
     private final SensorContext context;
     private final Checks<VensimCheck> checks;
     private  final JsonSymbolTableBuilder jsonBuilder;
-    private final String symbolDbService = "http://localhost:9999/symbols";
+  
+    private ServiceController serviceController;
 
-    public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder) {
+    public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder, ServiceController serviceController) {
         this.context = context;
         this.checks = checks;
         this.jsonBuilder = builder;
+        this.serviceController = serviceController;
 
 
     }
@@ -102,9 +105,7 @@ public class VensimScanner {
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
             jsonBuilder.addSymbolTable(inputFile.filename(),table);
 
-
-            List<String> symbolsFound = table.getSymbols().stream().map(Symbol::getToken).collect(Collectors.toList());
-            SymbolTable dbTable = getSymbolTableFromDB(symbolsFound);
+            SymbolTable dbTable = serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols()));
 
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
 
@@ -125,9 +126,7 @@ public class VensimScanner {
 
     }
 
-    protected SymbolTable getSymbolTableFromDB(List<String> symbolsFound){
-        return DBFacade.getExistingSymbolsFromDB(symbolDbService,symbolsFound); //TODO Tener en cuenta que puede fallar, no ser valido, etc)
-    }
+
 
     public void checkIssues(VensimVisitorContext fileContext){
 

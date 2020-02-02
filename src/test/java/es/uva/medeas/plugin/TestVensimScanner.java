@@ -1,6 +1,7 @@
 package es.uva.medeas.plugin;
 
 
+import es.uva.medeas.ServiceController;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.testutilities.RuleTestUtilities;
 import es.uva.medeas.rules.VensimCheck;
@@ -75,6 +76,8 @@ public class TestVensimScanner {
         when(fileBefore.contents()).thenReturn(loadFile("invertedDependencies.mdl"));
         when(fileAfter.contents()).thenReturn(loadFile("testCyclicDependencies.mdl"));
 
+        ServiceController mockServiceController = mock(ServiceController.class);
+
 
         List<InputFile> files = new ArrayList<>();
         files.add(fileBefore);
@@ -95,8 +98,8 @@ public class TestVensimScanner {
         Checks<VensimCheck> checks =  factory.<VensimCheck>create(VensimRuleRepository.REPOSITORY_KEY)
                 .addAnnotatedChecks(VensimRuleRepository.getChecks());
 
-        VensimScanner scanner = spy(new VensimScanner(context,checks,builder));
-        doReturn(null).when(scanner).getSymbolTableFromDB(any());
+        VensimScanner scanner = spy(new VensimScanner(context,checks,builder,mockServiceController));
+        when(mockServiceController.getSymbolsFromDb(anyList())).thenReturn(null);
 
         Mockito.doCallRealMethod().when(scanner).scanFiles(files);
         Mockito.doCallRealMethod().when(scanner).scanFile(Mockito.any());
@@ -116,7 +119,6 @@ public class TestVensimScanner {
         Mockito.verify(logger,Mockito.times(0)).warn(Mockito.any());
 
     }
-
 
 
 }

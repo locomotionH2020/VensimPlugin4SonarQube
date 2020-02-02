@@ -3,6 +3,8 @@ package es.uva.medeas.utilities;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.utilities.exceptions.ServiceResponseFormatNotValid;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
 
 import javax.json.*;
@@ -15,14 +17,16 @@ public class DBFacade {
 
     protected static DbServiceHandler handler = new DbServiceHandler();
 
+    protected static Logger LOG = Loggers.get(DBFacade.class.getSimpleName());
+
     /**
      * Searches for the symbols given as a parameter in the DB
      * @param symbols
      * @return A SymbolTable with the symbols that have been found in the DB (might not be all).
      */
     public static SymbolTable getExistingSymbolsFromDB(String serviceUrl, List<String> symbols) {
-        String serviceResponse = handler.sendRequestToService(serviceUrl, symbols);
 
+        String serviceResponse = handler.sendRequestToService(serviceUrl, symbols);
 
         JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse));
         try {
@@ -48,7 +52,10 @@ public class DBFacade {
             try {
                 JsonObject jsonSymbol = symbolsFound.getJsonObject(i);
                 Symbol symbol = jsonObjectToSymbol(jsonSymbol); //TODO si hay dos simbolos con el mismo token, lanzar excepcion y loggearlo.
-                table.addSymbol(symbol);
+                if(table.hasSymbol(symbol.getToken()))
+                    LOG.warn("Received duplicated symbol from the dictionary service.");
+                else
+                    table.addSymbol(symbol);
             }catch (ClassCastException ex) {
                 throw new ServiceResponseFormatNotValid();
             }

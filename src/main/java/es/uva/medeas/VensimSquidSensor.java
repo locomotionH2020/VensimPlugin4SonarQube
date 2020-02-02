@@ -22,6 +22,7 @@ public class VensimSquidSensor implements Sensor {
 
 
     private static final String NAME = "Vensim Squid Sensor";
+    private static final String symbolDbService = "http://localhost:9999/symbols";
 
     private final Checks<VensimCheck> checks;
 
@@ -50,7 +51,7 @@ public class VensimSquidSensor implements Sensor {
         List<InputFile> list = new ArrayList<>();
         files.forEach(list::add);
         List<InputFile> inputFiles = Collections.unmodifiableList(list);
-        VensimScanner scanner = new VensimScanner(sensorContext, checks, new JsonSymbolTableBuilder());
+        VensimScanner scanner = new VensimScanner(sensorContext, checks, new JsonSymbolTableBuilder(), new ServiceController(symbolDbService));
         scanner.scanFiles(inputFiles);
     }
 }

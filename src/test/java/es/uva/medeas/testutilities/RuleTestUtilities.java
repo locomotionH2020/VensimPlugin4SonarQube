@@ -1,11 +1,13 @@
 package es.uva.medeas.testutilities;
 
+import es.uva.medeas.ServiceController;
 import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimRuleRepository;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.rules.VensimCheck;
+import es.uva.medeas.utilities.DbServiceHandler;
 import es.uva.medeas.utilities.JsonSymbolTableBuilder;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.sonar.api.batch.rule.ActiveRules;
@@ -64,7 +66,8 @@ public class RuleTestUtilities {
 
         Path path = Paths.get("");
         SensorContextTester context = SensorContextTester.create(path);
-        return  new VensimScanner(context,checks, new JsonSymbolTableBuilder());
+        return  new VensimScanner(context,checks, new JsonSymbolTableBuilder(), new ServiceController("")); //TODO revisar uso del metodo y si debería hacer mock de
+        //service controller
     }
 
     public static void assertHasIssue(VensimVisitorContext context,Class type, int line){
