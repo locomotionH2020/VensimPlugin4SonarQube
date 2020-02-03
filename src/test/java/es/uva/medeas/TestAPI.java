@@ -11,11 +11,11 @@ import org.junit.Test;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
+import java.util.stream.Collectors;
+import javax.json.*;
+
 import static es.uva.medeas.testutilities.UtilitiesAPI.*;
 
 public class TestAPI {
@@ -50,10 +50,10 @@ public class TestAPI {
     @Test
     public void testSonarSubscriptName() throws IOException {
       JsonArray issues =   getIssues("testSubscriptName.mdl",SONAR_TOKEN);
+      List<JsonObject> issueList =  filterIssuesOfType(issues, SubscriptNameCheck.CHECK_KEY);
 
-
-      assertEquals(1,issues.size());
-      JsonObject issue = issues.getJsonObject(0);
+      assertEquals(1,issueList.size());
+      JsonObject issue = issueList.get(0);;
 
       assertIssueLine(issue,3);
       assertIssueType(issue,SubscriptNameCheck.CHECK_KEY);
@@ -64,10 +64,10 @@ public class TestAPI {
     @Test
     public void testSonarSubscriptValue() throws IOException {
         JsonArray issues =   getIssues("testSubscriptValues.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, SubscriptValueNameCheck.CHECK_KEY);
 
-
-        assertEquals(1,issues.size());
-        JsonObject issue = issues.getJsonObject(0);
+        assertEquals(1,issueList.size());
+        JsonObject issue = issueList.get(0);
 
         assertIssueLine(issue,4);
         assertIssueType(issue, SubscriptValueNameCheck.CHECK_KEY);
@@ -78,62 +78,71 @@ public class TestAPI {
     @Test
     public void testSonarLookupName() throws IOException{
         JsonArray issues =   getIssues("testLookupName.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, LookupNameCheck.CHECK_KEY);
 
-
-        assertEquals(1,issues.size());
-        JsonObject issue = issues.getJsonObject(0);
+        assertEquals(1,issueList.size());
+        JsonObject issue = issueList.get(0);
 
         assertIssueLine(issue,3);
-        assertIssueType(issue, LookupNameCheck.CHECK_KEY);
     }
 
     @Test
     public void testSonarVariableName() throws IOException{
         JsonArray issues =   getIssues("testVariableName.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, VariableNameCheck.CHECK_KEY);
 
 
-        assertEquals(1,issues.size());
-        JsonObject issue = issues.getJsonObject(0);
+        assertEquals(1,issueList.size());
+        JsonObject issue = issueList.get(0);
 
         assertIssueLine(issue,2);
-        assertIssueType(issue, VariableNameCheck.CHECK_KEY);
     }
 
     @Test
     public void testSonarConstantName() throws IOException{
         JsonArray issues =   getIssues("testConstantName.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, ConstantNameCheck.CHECK_KEY);
 
 
-        assertEquals(1,issues.size());
-        JsonObject issue = issues.getJsonObject(0);
+        assertEquals(1,issueList.size());
+        JsonObject issue = issueList.get(0);
 
         assertIssueLine(issue,5);
-        assertIssueType(issue, ConstantNameCheck.CHECK_KEY);
     }
 
     @Test
     public void testRealityCheckName() throws IOException{
         JsonArray issues =   getIssues("testRealityCheckName.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList = filterIssuesOfType(issues,RealityCheckNameRule.CHECK_KEY);
 
 
-        assertEquals(1,issues.size());
-        JsonObject issue = issues.getJsonObject(0);
+        assertEquals(1,issueList.size());
+        JsonObject issue = issueList.get(0);
 
         assertIssueLine(issue,1);
-        assertIssueType(issue, RealityCheckNameRule.CHECK_KEY);
     }
 
     @Test
-    public void testMagicNumberCheckName() throws IOException{
+    public void testMagicNumberCheck() throws IOException{
         JsonArray issues =  getIssues("testMagicNumber.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, MagicNumberCheck.CHECK_KEY);
 
-        assertEquals(5,issues.size());
+        assertEquals(5,issueList.size());
 
-        for(int i=0;i<5;i++) {
-            JsonObject issue = issues.getJsonObject(i);
+
+        for(JsonObject issue: issueList) {
             assertIssueLine(issue, 1);
-            assertIssueType(issue, MagicNumberCheck.CHECK_KEY);
         }
+    }
+
+    @Test
+    public void testSymbolNotDefinedInDictionaryCheck() throws IOException{
+        JsonArray issues =  getIssues("testSymbolNotDefinedInDictionary.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, SymbolNotFoundInDBCheck.CHECK_KEY);
+
+        assertEquals(1,issueList.size());
+
+        assertIssueLine(issueList.get(0),3);
     }
 
 

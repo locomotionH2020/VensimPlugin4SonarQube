@@ -1,5 +1,5 @@
-module.exports = {
-  path: '/symbols/',
+module.exports = [{
+  path: '/symbols/all',
   method: 'POST',
   template: (params, query, body) => {
     console.log(body);
@@ -11,4 +11,12 @@ module.exports = {
     return symbols;
   }
 
+},
+{
+  path: '/symbols/integrationTest',
+  method: 'POST',
+  template: [{symbol:"PRODUCTIVITY"}]
+
 }
+
+]

@@ -14,7 +14,8 @@ import org.sonar.check.Rule;
 public class SymbolNotFoundInDBCheck implements VensimCheck {
     public static final String CHECK_KEY = "symbol-not-found-db" ;
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that all the symbols in the file are defined in the database.</p>";
+            "<p>This rule checks that all the symbols in the file are defined in the dictionary. " +
+            "The symbols predefined by Vensim (FINAL TIME, TIME STEP, etc) and functions are ignored (except lookups)</p>";
     public static final String NAME = "SymbolNotFoundInDB" ;
 
 

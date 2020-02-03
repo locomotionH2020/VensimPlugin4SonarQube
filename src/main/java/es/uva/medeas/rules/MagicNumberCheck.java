@@ -60,7 +60,7 @@ public class MagicNumberCheck implements VensimCheck {
         }
 
         if(!repetitionsPropertyIsValid)
-            LOG.warn("["+ VensimPlugin.LOG_NAME +"] The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
+            LOG.warn("["+ VensimPlugin.PLUGIN_KEY +"] The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
 
     }
 

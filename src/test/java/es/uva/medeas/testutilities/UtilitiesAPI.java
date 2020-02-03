@@ -1,6 +1,9 @@
 package es.uva.medeas.testutilities;
 
 
+import es.uva.medeas.VensimPlugin;
+import es.uva.medeas.rules.ConstantNameCheck;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -10,8 +13,11 @@ import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class UtilitiesAPI {
@@ -85,7 +91,17 @@ public class UtilitiesAPI {
     }
 
     public static void assertIssueType(JsonObject issue, String rule_key){
-        assertEquals("vensim:"+rule_key,issue.getString("rule"));
+        assertTrue(issueIsType(issue,rule_key));
     }
 
+    public static boolean issueIsType(JsonObject issue, String rule_key){
+        String expectedKey = VensimPlugin.PLUGIN_KEY+ ":"+rule_key;
+        return expectedKey.equals(issue.getString("rule"));
+    }
+
+
+    public static List<JsonObject> filterIssuesOfType(JsonArray issues, String rule_key){
+         return issues.stream().filter(issue -> issueIsType((JsonObject) issue, rule_key)).
+                map(value -> (JsonObject) value).collect(Collectors.toList());
+    }
 }

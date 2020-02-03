@@ -47,22 +47,23 @@ public class ServiceController {
         try {
             SymbolTable table = DBFacade.getExistingSymbolsFromDB(dictionaryService, symbolsFound);
             success = true;
+
             return table;
         }catch (InvalidServiceUrlException ex){
-            LOG.error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)"+ "["+ VensimPlugin.LOG_NAME +"]");
+            LOG.error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)"+ "["+ VensimPlugin.PLUGIN_KEY +"]");
             return null;
         }catch (EmptyServiceException ex){
-            LOG.info("Missing dictionary service parameter." + "["+ VensimPlugin.LOG_NAME +"]");
+            LOG.info("Missing dictionary service parameter." + "["+ VensimPlugin.PLUGIN_KEY +"]");
             return null;
         }catch (ConnectionFailedException ex){
-            LOG.error("The dictionary service was unreachable." + "["+ VensimPlugin.LOG_NAME +"]");
+            LOG.error("The dictionary service was unreachable." + "["+ VensimPlugin.PLUGIN_KEY +"]");
             return null;
         }catch (ServiceResponseFormatNotValid ex){
-            LOG.error("The response of the dictionary service wasn't vaid"+"["+ VensimPlugin.LOG_NAME +"]");
+            LOG.error("The response of the dictionary service wasn't valid"+"["+ VensimPlugin.PLUGIN_KEY +"]");
             return null;
         }finally {
             if(!success)
-                LOG.info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.LOG_NAME +"]");
+                LOG.info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
         }
 
     }

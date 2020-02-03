@@ -1,0 +1,28 @@
+
+
+STARTING_PRODUCT= 5 ~~|
+
+
+
+PRODUCTIVITY = 5 ~~|
+
+
+FINAL TIME = 10
+	~	Month
+	~	The final time for the simulation.
+	|
+
+INITIAL TIME = 0
+	~	Month
+	~	The initial time for the simulation.
+	|
+
+SAVEPER = TIME STEP
+	~	Month
+	~	The frequency with which output is stored.
+	|
+
+TIME STEP = 0.0625
+	~	Month
+	~	The time step for the simulation.
+	|

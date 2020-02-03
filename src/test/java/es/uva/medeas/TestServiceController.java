@@ -3,9 +3,7 @@ package es.uva.medeas;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
-import es.uva.medeas.utilities.DBFacade;
 import es.uva.medeas.utilities.DbServiceHandler;
-import es.uva.medeas.utilities.TestDBFacade;
 import es.uva.medeas.utilities.Utilities;
 import es.uva.medeas.utilities.exceptions.ConnectionFailedException;
 import org.junit.After;
@@ -79,8 +77,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)"+ "["+ VensimPlugin.LOG_NAME +"]");
-        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.LOG_NAME +"]");
+        verify(logger).error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)"+ "["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
     @Test
@@ -92,8 +90,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)"+ "["+ VensimPlugin.LOG_NAME +"]");
-        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.LOG_NAME +"]");
+        verify(logger).error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)"+ "["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
     @Test
@@ -105,8 +103,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)"+ "["+ VensimPlugin.LOG_NAME +"]");
-        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.LOG_NAME +"]");
+        verify(logger).error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)"+ "["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
     @Test
@@ -118,8 +116,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).info("Missing dictionary service parameter." + "["+ VensimPlugin.LOG_NAME +"]");
-        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.LOG_NAME +"]");
+        verify(logger).info("Missing dictionary service parameter." + "["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
     @Test
@@ -131,8 +129,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).info("Missing dictionary service parameter." + "["+ VensimPlugin.LOG_NAME +"]");
-        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.LOG_NAME +"]");
+        verify(logger).info("Missing dictionary service parameter." + "["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
     @Test
@@ -148,8 +146,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The dictionary service was unreachable." + "["+ VensimPlugin.LOG_NAME +"]");
-        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.LOG_NAME +"]");
+        verify(logger).error("The dictionary service was unreachable." + "["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
     @Test
@@ -163,8 +161,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't vaid"+"["+ VensimPlugin.LOG_NAME +"]");
-        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.LOG_NAME +"]");
+        verify(logger).error("The response of the dictionary service wasn't vaid"+"["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
 
@@ -179,8 +177,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't vaid"+"["+ VensimPlugin.LOG_NAME +"]");
-        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.LOG_NAME +"]");
+        verify(logger).error("The response of the dictionary service wasn't vaid"+"["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
 
@@ -195,8 +193,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't vaid"+"["+ VensimPlugin.LOG_NAME +"]");
-        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.LOG_NAME +"]");
+        verify(logger).error("The response of the dictionary service wasn't vaid"+"["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger).info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
 

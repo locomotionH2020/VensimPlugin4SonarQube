@@ -22,7 +22,7 @@ public class VensimSquidSensor implements Sensor {
 
 
     private static final String NAME = "Vensim Squid Sensor";
-    private static final String symbolDbService = "http://localhost:9999/symbols";
+    private static final String symbolDbService = "http://localhost:9999/symbols/integrationTest";
 
     private final Checks<VensimCheck> checks;
 

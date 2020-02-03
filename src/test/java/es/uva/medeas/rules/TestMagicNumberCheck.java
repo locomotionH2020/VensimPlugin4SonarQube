@@ -13,8 +13,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.sonar.api.utils.log.Logger;
 
-import java.lang.reflect.Field;
-
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -406,80 +404,76 @@ public class TestMagicNumberCheck {
 
 
     @Test
-    public void testWarningIsLoggedIfMinimumRepetitionsIsAString() throws NoSuchFieldException, IllegalAccessException {
+    public void testWarningIsLoggedIfMinimumRepetitionsIsAString(){
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("1"));
         table.addSymbol(new Symbol("2"));
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
-        Field logField = MagicNumberCheck.class.getDeclaredField("LOG");
         Logger logger = Mockito.mock(Logger.class);
+        MagicNumberCheck.LOG = logger;
 
-        logField.set(null,logger);
         check.repetitions =  "F";
         check.scan(context);
 
         verify(logger,times(1))
-                .warn("["+ VensimPlugin.LOG_NAME +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
+                .warn("["+ VensimPlugin.PLUGIN_KEY +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
     }
 
 
     @Test
-    public void testWarningIsLoggedIfMinimumRepetitionsIsZero() throws NoSuchFieldException, IllegalAccessException {
+    public void testWarningIsLoggedIfMinimumRepetitionsIsZero(){
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("1"));
         table.addSymbol(new Symbol("2"));
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
-        Field logField = MagicNumberCheck.class.getDeclaredField("LOG");
         Logger logger = Mockito.mock(Logger.class);
+        MagicNumberCheck.LOG = logger;
 
-        logField.set(null,logger);
         check.repetitions =  "0";
         check.scan(context);
 
         verify(logger,times(1))
-                .warn("["+ VensimPlugin.LOG_NAME +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
+                .warn("["+ VensimPlugin.PLUGIN_KEY +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
     }
 
     @Test
-    public void testWarningIsLoggedIfMinimumRepetitionsIsOne() throws NoSuchFieldException, IllegalAccessException {
+    public void testWarningIsLoggedIfMinimumRepetitionsIsOne() {
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("1"));
         table.addSymbol(new Symbol("2"));
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
-        Field logField = MagicNumberCheck.class.getDeclaredField("LOG");
         Logger logger = Mockito.mock(Logger.class);
+        MagicNumberCheck.LOG = logger;
 
-        logField.set(null,logger);
         check.repetitions =  "1";
         check.scan(context);
 
         verify(logger,times(1))
-                .warn("["+ VensimPlugin.LOG_NAME +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
+                .warn("["+ VensimPlugin.PLUGIN_KEY +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
     }
 
     @Test
-    public void testWarningIsLoggedIfMinimumRepetitionsIsNegative() throws NoSuchFieldException, IllegalAccessException {
+    public void testWarningIsLoggedIfMinimumRepetitionsIsNegative(){
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("1"));
         table.addSymbol(new Symbol("2"));
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
-        Field logField = MagicNumberCheck.class.getDeclaredField("LOG");
         Logger logger = Mockito.mock(Logger.class);
+        MagicNumberCheck.LOG = logger;
 
-        logField.set(null,logger);
         check.repetitions =  "-1";
         check.scan(context);
 
         verify(logger,times(1))
-                .warn("["+ VensimPlugin.LOG_NAME +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
+                .warn("["+ VensimPlugin.PLUGIN_KEY +"] The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
     }
 
 
