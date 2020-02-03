@@ -26,6 +26,9 @@ public class ServiceController {
     protected static Logger LOG = Loggers.get(ServiceController.class.getSimpleName());
     private String dictionaryService;
 
+    // I used to put this message in a separate log call, but there were another logs in between the two. So I decided to join them.
+    private final String RULES_DISABLED_MESSAGE = "The rules that require the data from the dictionary service will be skipped. ";
+
     public ServiceController(String dictionaryService){
         this.dictionaryService = dictionaryService;
     }
@@ -43,27 +46,21 @@ public class ServiceController {
      */
     public SymbolTable getSymbolsFromDb(List<Symbol> symbols){
         List<String> symbolsFound = symbols.stream().filter(s -> !symbolIsIgnored(s)).map(Symbol::getToken).collect(Collectors.toList());
-        boolean success = false;
         try {
-            SymbolTable table = DBFacade.getExistingSymbolsFromDB(dictionaryService, symbolsFound);
-            success = true;
-
-            return table;
+            return  DBFacade.getExistingSymbolsFromDB(dictionaryService, symbolsFound);
         }catch (InvalidServiceUrlException ex){
-            LOG.error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)"+ "["+ VensimPlugin.PLUGIN_KEY +"]");
+            LOG.error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n"+ RULES_DISABLED_MESSAGE +"["+ VensimPlugin.PLUGIN_KEY +"]");
             return null;
         }catch (EmptyServiceException ex){
-            LOG.info("Missing dictionary service parameter." + "["+ VensimPlugin.PLUGIN_KEY +"]");
+            LOG.info("Missing dictionary service parameter.\n" + RULES_DISABLED_MESSAGE + "["+ VensimPlugin.PLUGIN_KEY +"]");
             return null;
         }catch (ConnectionFailedException ex){
-            LOG.error("The dictionary service was unreachable." + "["+ VensimPlugin.PLUGIN_KEY +"]");
+            LOG.error("The dictionary service was unreachable.\n"+ RULES_DISABLED_MESSAGE + "["+ VensimPlugin.PLUGIN_KEY +"]");
             return null;
         }catch (ServiceResponseFormatNotValid ex){
-            LOG.error("The response of the dictionary service wasn't valid"+"["+ VensimPlugin.PLUGIN_KEY +"]");
+            LOG.error("The response of the dictionary service wasn't valid. "+ ex.getMessage() + "\n"+
+                    RULES_DISABLED_MESSAGE+"["+ VensimPlugin.PLUGIN_KEY +"]");
             return null;
-        }finally {
-            if(!success)
-                LOG.info("The rules that require the data from the dictionary service will be skipped."+"["+ VensimPlugin.PLUGIN_KEY +"]");
         }
 
     }

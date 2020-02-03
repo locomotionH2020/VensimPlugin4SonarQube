@@ -2,7 +2,7 @@ package es.uva.medeas.testutilities;
 
 
 import es.uva.medeas.VensimPlugin;
-import es.uva.medeas.rules.ConstantNameCheck;
+
 
 import javax.json.Json;
 import javax.json.JsonArray;

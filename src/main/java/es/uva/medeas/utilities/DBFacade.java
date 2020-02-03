@@ -11,7 +11,6 @@ import org.sonar.api.utils.log.Loggers;
 
 
 import javax.json.*;
-import javax.json.stream.JsonParsingException;
 
 import java.io.StringReader;
 import java.util.List;
@@ -45,7 +44,7 @@ public class DBFacade {
             JsonArray symbolsFound = jsonReader.readArray();
             return createSymbolTableFromJson(symbolsFound);
         } catch (JsonException ex) {
-            throw new ServiceResponseFormatNotValid();
+            throw new ServiceResponseFormatNotValid("Expected a JSON array of symbols.\nActual response:" + serviceResponse);
         } finally {
             jsonReader.close();
         }
@@ -63,7 +62,9 @@ public class DBFacade {
                 else
                     table.addSymbol(symbol);
             }catch (ClassCastException ex) {
-                throw new ServiceResponseFormatNotValid();
+                throw new ServiceResponseFormatNotValid("Expected an array of symbols.\nActual response: " + symbolsFound.toString());
+            }catch (IllegalArgumentException ex){
+                throw new ServiceResponseFormatNotValid(ex.getMessage());
             }
 
         }
@@ -75,7 +76,7 @@ public class DBFacade {
         String token = jsonSymbol.getString("symbol",null);
 
         if(token==null)
-            throw new ServiceResponseFormatNotValid();
+            throw new IllegalArgumentException("Symbol: "+ jsonSymbol.toString() + "does't have a 'symbol' key");
 
         return new Symbol(token.trim());
     }
