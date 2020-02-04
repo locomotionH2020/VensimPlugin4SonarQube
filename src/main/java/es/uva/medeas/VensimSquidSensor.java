@@ -13,6 +13,7 @@ import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
+import org.sonar.api.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +24,8 @@ public class VensimSquidSensor implements Sensor {
 
 
     private static final String NAME = "Vensim Squid Sensor";
-    private static final String symbolDbService = "http://localhost:9999/symbols/integrationTest";
+    private static final String DICTIONARY_SERVICE_PARAMETER = "vensim.dictionaryService";
+
 
     private final Checks<VensimCheck> checks;
 
@@ -46,13 +48,17 @@ public class VensimSquidSensor implements Sensor {
     @Override
     public void execute(SensorContext sensorContext) {
         FilePredicates p = sensorContext.fileSystem().predicates();
-     
+
+
+        String dictionaryService = sensorContext.config().get(DICTIONARY_SERVICE_PARAMETER).orElse("");
+
 
         Iterable<InputFile> files = sensorContext.fileSystem().inputFiles(p.hasLanguage(VensimLanguage.KEY));
         List<InputFile> list = new ArrayList<>();
         files.forEach(list::add);
         List<InputFile> inputFiles = Collections.unmodifiableList(list);
-        VensimScanner scanner = new VensimScanner(sensorContext, checks, new JsonSymbolTableBuilder(), new ServiceController(symbolDbService));
+
+        VensimScanner scanner = new VensimScanner(sensorContext, checks, new JsonSymbolTableBuilder(), new ServiceController(dictionaryService));
         scanner.scanFiles(inputFiles);
     }
 }
