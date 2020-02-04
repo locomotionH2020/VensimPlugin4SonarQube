@@ -202,5 +202,51 @@ public class TestServiceController {
     }
 
 
+    @Test
+    public void testConsecutiveSameErrorsAreOnlyLoggedOnce(){
+        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}"));
+
+        ServiceController controller = new ServiceController("http://localhost");
+        Logger logger = Mockito.mock(Logger.class);
+        ServiceController.LOG = logger;
+
+        controller.getSymbolsFromDb(new ArrayList<>());
+        controller.getSymbolsFromDb(new ArrayList<>());
+        controller.getSymbolsFromDb(new ArrayList<>());
+        controller.getSymbolsFromDb(new ArrayList<>());
+
+
+        verify(logger,times(1)).error("The response of the dictionary service wasn't valid. Expected a JSON array of symbols.\n"+
+                "Actual response:{\"randomKey\":\"foo\"}\n"+
+                "The rules that require the data from the dictionary service will be skipped. "+"["+ VensimPlugin.PLUGIN_KEY +"]");
+    }
+
+    @Test
+    public void testConsecutiveDifferentErrorsAreLogged(){
+        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}"));
+
+        ServiceController controller = new ServiceController("http://localhost");
+        Logger logger = Mockito.mock(Logger.class);
+        ServiceController.LOG = logger;
+
+        controller.getSymbolsFromDb(new ArrayList<>());
+        controller.getSymbolsFromDb(new ArrayList<>());
+        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{\"symbol\":\"foo\"}"));
+        controller.getSymbolsFromDb(new ArrayList<>());
+        controller.getSymbolsFromDb(new ArrayList<>());
+
+
+        verify(logger).error("The response of the dictionary service wasn't valid. Expected a JSON array of symbols.\n"+
+                "Actual response:{\"randomKey\":\"foo\"}\n"+
+                "The rules that require the data from the dictionary service will be skipped. "+"["+ VensimPlugin.PLUGIN_KEY +"]");
+
+
+        verify(logger).error("The response of the dictionary service wasn't valid. Expected a JSON array of symbols.\n" +
+                "Actual response:{\"symbol\":\"foo\"}\n"+
+                "The rules that require the data from the dictionary service will be skipped. "+"["+ VensimPlugin.PLUGIN_KEY +"]");
+    }
+
+
+
 
 }
