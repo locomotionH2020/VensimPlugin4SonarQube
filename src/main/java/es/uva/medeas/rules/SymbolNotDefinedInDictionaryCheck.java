@@ -10,8 +10,8 @@ import org.sonar.check.Rule;
 
 
 
-@Rule(key = SymbolNotFoundInDBCheck.CHECK_KEY, name=SymbolNotFoundInDBCheck.NAME,description = SymbolNotFoundInDBCheck.HTML_DESCRIPTION)
-public class SymbolNotFoundInDBCheck implements VensimCheck {
+@Rule(key = SymbolNotDefinedInDictionaryCheck.CHECK_KEY, name= SymbolNotDefinedInDictionaryCheck.NAME,description = SymbolNotDefinedInDictionaryCheck.HTML_DESCRIPTION)
+public class SymbolNotDefinedInDictionaryCheck implements VensimCheck {
     public static final String CHECK_KEY = "symbol-not-found-db" ;
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the symbols in the file are defined in the dictionary. " +

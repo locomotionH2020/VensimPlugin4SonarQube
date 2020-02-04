@@ -1,20 +1,15 @@
 package es.uva.medeas.testutilities;
 
 
-import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.*;
 import es.uva.medeas.parser.visitors.RawSymbolTableVisitor;
-import es.uva.medeas.utilities.DbServiceHandler;
 import es.uva.medeas.utilities.SymbolTableGenerator;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,7 +17,6 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class TestUtilities {
 

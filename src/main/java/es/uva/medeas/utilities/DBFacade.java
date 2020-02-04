@@ -17,7 +17,7 @@ import java.util.List;
 
 public class DBFacade {
 
-    protected static DbServiceHandler handler = new DbServiceHandler();
+    protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
 
     protected static Logger LOG = Loggers.get(DBFacade.class.getSimpleName());
 
@@ -37,7 +37,7 @@ public class DBFacade {
      */
     public static SymbolTable getExistingSymbolsFromDB(String serviceUrl, List<String> symbols) {
 
-        String serviceResponse = handler.sendRequestToService(serviceUrl, symbols);
+        String serviceResponse = handler.sendRequestToDictionaryService(serviceUrl, symbols);
 
         JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse));
         try {

@@ -1,10 +1,9 @@
-package es.uva.medeas;
+package es.uva.medeas.utilities;
 
+import es.uva.medeas.VensimPlugin;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
-import es.uva.medeas.utilities.DbServiceHandler;
-import es.uva.medeas.utilities.Utilities;
 import es.uva.medeas.utilities.exceptions.ConnectionFailedException;
 import org.junit.After;
 import org.junit.Assert;
@@ -23,14 +22,14 @@ public class TestServiceController {
 
     @After
     public void  resetDbFacade(){
-        Utilities.setDbFacadeHandler(new DbServiceHandler());
+        Utilities.setDbFacadeHandler(new ServiceConnectionHandler());
     }
 
     @Test
     public void testControllerIgnoresFunctions(){
         ServiceController controller = new ServiceController("https://localhost");
 
-        DbServiceHandler mockHandler = Utilities.getMockDbServiceHandlerThatReturns("[]");
+        ServiceConnectionHandler mockHandler = Utilities.getMockDbServiceHandlerThatReturns("[]");
 
         Utilities.setDbFacadeHandler(mockHandler);
 
@@ -46,7 +45,7 @@ public class TestServiceController {
         );
         controller.getSymbolsFromDb(symbols);
 
-        verify(mockHandler,Mockito.times(1)).sendRequestToService(any(), argThat(arg->{
+        verify(mockHandler,Mockito.times(1)).sendRequestToDictionaryService(any(), argThat(arg->{
             Set<String> actualSet = new HashSet<>(arg);
             Set<String> expectedSet =  new HashSet<>(Arrays.asList("var", "const", "lookup","subscript","sValue","realityCheck"));
             return actualSet.equals(expectedSet);
@@ -59,12 +58,12 @@ public class TestServiceController {
         ServiceController controller = new ServiceController("http://localhost");
 
         List<Symbol> symbols = Arrays.asList("FINAL TIME", "INITIAL TIME", "SAVEPER", "TIME STEP").stream().map(Symbol::new).collect(Collectors.toList());
-        DbServiceHandler mockHandler = Utilities.getMockDbServiceHandlerThatReturns("[]");
+        ServiceConnectionHandler mockHandler = Utilities.getMockDbServiceHandlerThatReturns("[]");
         Utilities.setDbFacadeHandler(mockHandler);
 
         controller.getSymbolsFromDb(symbols);
 
-        verify(mockHandler,Mockito.times(1)).sendRequestToService(any(), argThat(List::isEmpty));
+        verify(mockHandler,Mockito.times(1)).sendRequestToDictionaryService(any(), argThat(List::isEmpty));
 
     }
 
@@ -88,6 +87,7 @@ public class TestServiceController {
         ServiceController.LOG = logger;
 
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
+
 
         Assert.assertNull(actualValue);
         verify(logger).error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n"+
@@ -135,8 +135,8 @@ public class TestServiceController {
 
     @Test
     public void testDictionaryConnectionFailed(){
-        DbServiceHandler handler = mock(DbServiceHandler.class);
-        when(handler.sendRequestToService(any(),anyList())).thenThrow(new ConnectionFailedException(null));
+        ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
+        when(handler.sendRequestToDictionaryService(any(),anyList())).thenThrow(new ConnectionFailedException(null));
         Utilities.setDbFacadeHandler(handler);
 
         ServiceController controller = new ServiceController("http://localhost");

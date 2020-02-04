@@ -1,13 +1,10 @@
 package es.uva.medeas.rules;
 
-import es.uva.medeas.ServiceController;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
 import es.uva.medeas.plugin.VensimVisitorContext;
 
-import es.uva.medeas.utilities.DbServiceHandler;
-import es.uva.medeas.utilities.Utilities;
 import org.junit.Test;
 
 
@@ -21,7 +18,7 @@ import static es.uva.medeas.testutilities.TestUtilities.addSymbolInLines;
 import static org.junit.Assert.*;
 
 
-public class TestSymbolNotFoundInDBCheck {
+public class TestSymbolNotDefinedInDictionaryCheck {
 
 
 
@@ -30,7 +27,7 @@ public class TestSymbolNotFoundInDBCheck {
     public void testCompareEmptyTables(){
         VensimVisitorContext context = new VensimVisitorContext(null,new SymbolTable(),new SymbolTable());
 
-        SymbolNotFoundInDBCheck check = new SymbolNotFoundInDBCheck();
+        SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
         assertTrue(context.getIssues().isEmpty());
@@ -40,7 +37,7 @@ public class TestSymbolNotFoundInDBCheck {
     public void testDbTableIsNull(){
         VensimVisitorContext context = new VensimVisitorContext(null,new SymbolTable(),null);
 
-        SymbolNotFoundInDBCheck check = new SymbolNotFoundInDBCheck();
+        SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
         assertTrue(context.getIssues().isEmpty());
@@ -53,11 +50,11 @@ public class TestSymbolNotFoundInDBCheck {
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new SymbolTable());
 
-        SymbolNotFoundInDBCheck check = new SymbolNotFoundInDBCheck();
+        SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,1);
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,2);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,1);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,2);
     }
 
     @Test
@@ -68,7 +65,7 @@ public class TestSymbolNotFoundInDBCheck {
 
         VensimVisitorContext context = new VensimVisitorContext(null,new SymbolTable(), dbTable);
 
-        SymbolNotFoundInDBCheck check = new SymbolNotFoundInDBCheck();
+        SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
 
@@ -91,7 +88,7 @@ public class TestSymbolNotFoundInDBCheck {
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
-        SymbolNotFoundInDBCheck check = new SymbolNotFoundInDBCheck();
+        SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
 
@@ -116,16 +113,16 @@ public class TestSymbolNotFoundInDBCheck {
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
-        SymbolNotFoundInDBCheck check = new SymbolNotFoundInDBCheck();
+        SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
 
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,1);
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,3);
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,5);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,1);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,3);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,5);
 
-        assertDoesntHaveIssue(context,SymbolNotFoundInDBCheck.class,2);
-        assertDoesntHaveIssue(context,SymbolNotFoundInDBCheck.class,4);
+        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,2);
+        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,4);
 
     }
 
@@ -137,7 +134,7 @@ public class TestSymbolNotFoundInDBCheck {
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new SymbolTable());
 
-        SymbolNotFoundInDBCheck check = new SymbolNotFoundInDBCheck();
+        SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
         assertTrue(context.getIssues().isEmpty());
@@ -162,20 +159,20 @@ public class TestSymbolNotFoundInDBCheck {
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
-        SymbolNotFoundInDBCheck check = new SymbolNotFoundInDBCheck();
+        SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
 
-        assertDoesntHaveIssue(context,SymbolNotFoundInDBCheck.class,1);
-        assertDoesntHaveIssue(context,SymbolNotFoundInDBCheck.class,5);
-        assertDoesntHaveIssue(context,SymbolNotFoundInDBCheck.class,9);
+        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,1);
+        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,5);
+        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,9);
 
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,2);
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,3);
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,4);
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,6);
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,7);
-        assertHasIssue(context,SymbolNotFoundInDBCheck.class,8);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,2);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,3);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,4);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,6);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,7);
+        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,8);
     }
 
     @Test
@@ -191,10 +188,10 @@ public class TestSymbolNotFoundInDBCheck {
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
-        SymbolNotFoundInDBCheck check = new SymbolNotFoundInDBCheck();
+        SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
-        assertDoesntHaveIssue(context,SymbolNotFoundInDBCheck.class,1);
+        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,1);
 
     }
 

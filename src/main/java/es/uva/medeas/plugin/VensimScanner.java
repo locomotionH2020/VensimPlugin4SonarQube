@@ -1,11 +1,10 @@
 package es.uva.medeas.plugin;
 
-import es.uva.medeas.ServiceController;
+import es.uva.medeas.utilities.ServiceController;
 import es.uva.medeas.parser.*;
 import es.uva.medeas.rules.VensimCheck;
 
 
-import es.uva.medeas.utilities.DBFacade;
 import es.uva.medeas.utilities.JsonSymbolTableBuilder;
 import es.uva.medeas.utilities.SymbolTableGenerator;
 import org.antlr.v4.runtime.*;

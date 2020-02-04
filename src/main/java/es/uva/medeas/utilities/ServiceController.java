@@ -1,10 +1,9 @@
-package es.uva.medeas;
+package es.uva.medeas.utilities;
 
+import es.uva.medeas.VensimPlugin;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
-import es.uva.medeas.utilities.Constants;
-import es.uva.medeas.utilities.DBFacade;
 import es.uva.medeas.utilities.exceptions.ConnectionFailedException;
 import es.uva.medeas.utilities.exceptions.EmptyServiceException;
 import es.uva.medeas.utilities.exceptions.InvalidServiceUrlException;

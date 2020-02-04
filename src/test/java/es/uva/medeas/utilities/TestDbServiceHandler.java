@@ -3,6 +3,7 @@ package es.uva.medeas.utilities;
 import es.uva.medeas.utilities.exceptions.ConnectionFailedException;
 import es.uva.medeas.utilities.exceptions.EmptyServiceException;
 import es.uva.medeas.utilities.exceptions.InvalidServiceUrlException;
+import org.junit.After;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class TestDbServiceHandler {
 
     @Test
     public void testSymbolsSentCorrectly() throws IOException, InterruptedException {
-        DbServiceHandler handler = new DbServiceHandler();
+        ServiceConnectionHandler handler = new ServiceConnectionHandler();
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.body()).thenReturn("[]");
@@ -38,7 +39,7 @@ public class TestDbServiceHandler {
 
             return mockResponse;
         }).when(mockClient).send(any(), any());
-        String actualValue = handler.sendRequestToService("https://randomUrl", List.of("var", "foo", "duck"));
+        String actualValue = handler.sendRequestToDictionaryService("https://randomUrl", List.of("var", "foo", "duck"));
 
 
         verify(mockClient, times(1)).send(any(), any());
@@ -49,7 +50,7 @@ public class TestDbServiceHandler {
 
     @Test
     public void testSendNoSymbols() throws IOException, InterruptedException {
-        DbServiceHandler handler = new DbServiceHandler();
+        ServiceConnectionHandler handler = new ServiceConnectionHandler();
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.body()).thenReturn("[]");
@@ -65,7 +66,7 @@ public class TestDbServiceHandler {
 
 
             return mockResponse;}).when(mockClient).send(any(),any());
-        handler.sendRequestToService("https://randomUrl", new ArrayList<>());
+        handler.sendRequestToDictionaryService("https://randomUrl", new ArrayList<>());
 
 
         verify(mockClient,times(1)).send(any(),any());
@@ -74,39 +75,39 @@ public class TestDbServiceHandler {
 
     @Test(expected = EmptyServiceException.class)
     public void testEmptyServiceRaisesException(){
-        new DbServiceHandler().sendRequestToService("",List.of("foo","var"));
+        new ServiceConnectionHandler().sendRequestToDictionaryService("",List.of("foo","var"));
     }
 
     @Test(expected = EmptyServiceException.class)
     public void testNullServiceRaisesException(){
-        new DbServiceHandler().sendRequestToService(null,List.of("foo","var"));
+        new ServiceConnectionHandler().sendRequestToDictionaryService(null,List.of("foo","var"));
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testServiceWithAnotherProtocol(){
-        new DbServiceHandler().sendRequestToService("ftp://somedomain/folder/file.txt",List.of("foo","var"));
+        new ServiceConnectionHandler().sendRequestToDictionaryService("ftp://somedomain/folder/file.txt",List.of("foo","var"));
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testServiceWithInvalidProtocol(){
-        new DbServiceHandler().sendRequestToService("\\some$randomtext",List.of("foo","var"));
+        new ServiceConnectionHandler().sendRequestToDictionaryService("\\some$randomtext",List.of("foo","var"));
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testDomainWithoutProtocol(){
-        new DbServiceHandler().sendRequestToService("www.google.com",List.of("foo","var"));
+        new ServiceConnectionHandler().sendRequestToDictionaryService("www.google.com",List.of("foo","var"));
     }
 
     @Test(expected = ConnectionFailedException.class)
     public void testDomainNotFound(){
-        new DbServiceHandler().sendRequestToService("https://adsmfmgekrhadbsfsfaf.com",List.of("foo","var"));
+        new ServiceConnectionHandler().sendRequestToDictionaryService("https://adsmfmgekrhadbsfsfaf.com",List.of("foo","var"));
     }
 
 
 
     @Test
     public void testDomainWithoutWWW() throws IOException, InterruptedException {
-        DbServiceHandler handler = new DbServiceHandler();
+        ServiceConnectionHandler handler = new ServiceConnectionHandler();
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         doReturn(mockResponse).when(mockClient).send(any(),any());
@@ -114,7 +115,7 @@ public class TestDbServiceHandler {
 
         handler.client = mockClient;
 
-        String actualValue = handler.sendRequestToService("http://google.com", List.of("foo", "var"));
+        String actualValue = handler.sendRequestToDictionaryService("http://google.com", List.of("foo", "var"));
 
         assertEquals("honk",actualValue);
     }

@@ -7,15 +7,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class Utilities {
-    public static DbServiceHandler getMockDbServiceHandlerThatReturns(String returnValue){
-        DbServiceHandler handler = mock(DbServiceHandler.class);
+    public static ServiceConnectionHandler getMockDbServiceHandlerThatReturns(String returnValue){
+        ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
 
-        doReturn(returnValue).when(handler).sendRequestToService(anyString(),anyList());
+        doReturn(returnValue).when(handler).sendRequestToDictionaryService(anyString(),anyList());
 
         return handler;
     }
 
-    public static void setDbFacadeHandler(DbServiceHandler handler){
+    public static void setDbFacadeHandler(ServiceConnectionHandler handler){
       DBFacade.handler =  handler;
     }
 

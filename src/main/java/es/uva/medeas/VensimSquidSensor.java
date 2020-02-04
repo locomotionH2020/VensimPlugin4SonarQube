@@ -5,6 +5,7 @@ import es.uva.medeas.plugin.VensimRuleRepository;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.rules.VensimCheck;
 import es.uva.medeas.utilities.JsonSymbolTableBuilder;
+import es.uva.medeas.utilities.ServiceController;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;

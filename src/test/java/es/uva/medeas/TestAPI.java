@@ -13,7 +13,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.json.*;
 
 import static es.uva.medeas.testutilities.UtilitiesAPI.*;
@@ -138,7 +137,7 @@ public class TestAPI {
     @Test
     public void testSymbolNotDefinedInDictionaryCheck() throws IOException{
         JsonArray issues =  getIssues("testSymbolNotDefinedInDictionary.mdl",SONAR_TOKEN);
-        List<JsonObject> issueList =  filterIssuesOfType(issues, SymbolNotFoundInDBCheck.CHECK_KEY);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, SymbolNotDefinedInDictionaryCheck.CHECK_KEY);
 
         assertEquals(1,issueList.size());
 

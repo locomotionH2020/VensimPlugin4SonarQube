@@ -1,15 +1,12 @@
 package es.uva.medeas.plugin;
 
 
-import es.uva.medeas.ServiceController;
-import es.uva.medeas.parser.SymbolTable;
+import es.uva.medeas.utilities.ServiceController;
 import es.uva.medeas.testutilities.RuleTestUtilities;
 import es.uva.medeas.rules.VensimCheck;
 import es.uva.medeas.utilities.JsonSymbolTableBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.sonar.api.batch.fs.InputFile;
@@ -21,10 +18,8 @@ import org.sonar.api.utils.log.Logger;
 
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import static es.uva.medeas.testutilities.TestUtilities.*;
 import static org.mockito.ArgumentMatchers.any;

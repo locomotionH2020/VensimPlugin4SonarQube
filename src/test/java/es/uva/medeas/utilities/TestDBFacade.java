@@ -2,11 +2,11 @@ package es.uva.medeas.utilities;
 
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
-import es.uva.medeas.rules.MagicNumberCheck;
 import es.uva.medeas.utilities.exceptions.ConnectionFailedException;
 import es.uva.medeas.utilities.exceptions.EmptyServiceException;
 import es.uva.medeas.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.medeas.utilities.exceptions.ServiceResponseFormatNotValid;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -27,9 +27,9 @@ import static org.mockito.Mockito.*;
 
 public class TestDBFacade {
 
-    @Before
+    @After
     public void resetDbServiceHandler(){
-        DBFacade.handler = new DbServiceHandler(); // Makes the tests independent
+        DBFacade.handler = new ServiceConnectionHandler(); // Makes the tests independent
     }
 
     private String generateJsonFromSymbolTable(SymbolTable table){
@@ -52,10 +52,10 @@ public class TestDBFacade {
         return builder.build();
     }
 
-    private DbServiceHandler mockSymbolServiceHandlerToReturn(String jsonDbTable) {
-        DbServiceHandler handler = Mockito.mock(DbServiceHandler.class);
+    private ServiceConnectionHandler mockSymbolServiceHandlerToReturn(String jsonDbTable) {
+        ServiceConnectionHandler handler = Mockito.mock(ServiceConnectionHandler.class);
 
-        when(handler.sendRequestToService(any(),any())).thenReturn(jsonDbTable);
+        when(handler.sendRequestToDictionaryService(any(),any())).thenReturn(jsonDbTable);
 
         return handler;
     }
@@ -176,7 +176,7 @@ public class TestDBFacade {
 
     @Test
     public void testDomainWithoutWWW() throws IOException, InterruptedException {
-        DbServiceHandler handler = new DbServiceHandler();
+        ServiceConnectionHandler handler = new ServiceConnectionHandler();
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         doReturn(mockResponse).when(mockClient).send(any(),any());

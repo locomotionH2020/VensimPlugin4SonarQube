@@ -1,15 +1,13 @@
 package es.uva.medeas.testutilities;
 
-import es.uva.medeas.ServiceController;
+import es.uva.medeas.utilities.ServiceController;
 import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimRuleRepository;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.rules.VensimCheck;
-import es.uva.medeas.utilities.DbServiceHandler;
 import es.uva.medeas.utilities.JsonSymbolTableBuilder;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.sonar.api.batch.rule.ActiveRules;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;

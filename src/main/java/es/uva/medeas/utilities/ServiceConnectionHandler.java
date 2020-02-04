@@ -14,12 +14,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-public class DbServiceHandler {
+public class ServiceConnectionHandler {
 
 
     protected HttpClient client;
 
-    public DbServiceHandler(){
+    public ServiceConnectionHandler(){
         client =  HttpClient.newBuilder().build();
     }
 
@@ -33,7 +33,7 @@ public class DbServiceHandler {
      * @throws EmptyServiceException If {@code serviceUrl} is empty if null
      * @throws IllegalArgumentException If {@code symbols} is null
      */
-    public String sendRequestToService(String serviceUrl, List<String> symbols){
+    public String sendRequestToDictionaryService(String serviceUrl, List<String> symbols){
         if(serviceUrl==null || "".equals(serviceUrl.trim()))
             throw new EmptyServiceException("Service Url is null or empty string");
         if(symbols==null)
