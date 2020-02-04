@@ -139,6 +139,23 @@ public class TestConstantNameCheck {
         assertHasIssue(visitorContext, ConstantNameCheck.class, 2);
     }
 
+    @Test
+    public void testRuleIgnoresDefaultSymbols(){
+        String program = "FINAL TIME  = 100 ~ ~|\n"+
+                "INITIAL TIME  = 0  ~ ~|\n"+
+                "SAVEPER =  TIME STEP ~ ~|\n"+
+                "TIME STEP  = 1 ~ ~|\n";
+
+
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+
+
+        assertTrue(visitorContext.getIssues().isEmpty());
+    }
 
 
 
