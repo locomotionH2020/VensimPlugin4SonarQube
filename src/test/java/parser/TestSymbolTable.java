@@ -1,4 +1,4 @@
-package es.uva.medeas.rules;
+package parser;
 
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;

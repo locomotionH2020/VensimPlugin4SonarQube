@@ -6,6 +6,7 @@ import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
+import es.uva.medeas.utilities.Constants;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.check.Rule;
@@ -23,7 +24,7 @@ public class MagicNumberCheck implements VensimCheck {
             "</pre>\n" +
             "<h2>Compliant Code Examples</h2>\n" +
             "<pre>\n" +
-            "CHOOSE_POLICY = 1~~|\n"+
+            "CHOOSE_POLICY = 5~~|\n"+
             "Year policy change energy[scenarios,sectors,final sources]=\n IF THEN ELSE(Choose policies of intensities global or by sector[scenarios]= CHOOSE_POLICY, value1, value2)~~|\n"+
             "</pre>";
 
@@ -31,10 +32,11 @@ public class MagicNumberCheck implements VensimCheck {
 
     protected static Logger LOG = Loggers.get(MagicNumberCheck.class);
 
-    private boolean repetitionsPropertyIsValid;
+    private boolean alreadyLoggedPropertyError;
 
     public MagicNumberCheck(){
-        repetitionsPropertyIsValid = true;
+       alreadyLoggedPropertyError = false;
+
     }
 
 
@@ -47,20 +49,25 @@ public class MagicNumberCheck implements VensimCheck {
 
     @Override
     public void scan(VensimVisitorContext context) {
+
         SymbolTable numberTable = getVisitor().getSymbolTable(context.getRootNode());
+
         int minimumRepetitions = getMinimumRepetitions();
 
+
+
         for(Symbol symbol: numberTable.getSymbols()){
-            if(symbol.getDefinitionLines().size()>=minimumRepetitions)
-                for(int line: symbol.getDefinitionLines()) {
-                    Issue issue = new Issue(this,line,"The number " + symbol.getToken()  +" is repeated " +
-                            symbol.getDefinitionLines().size() + " times. Consider replacing it by a constant");
-                    context.addIssue(issue);
-                }
+            if(!numberIsIgnored(symbol.getToken())) {
+                if (symbol.getDefinitionLines().size() >= minimumRepetitions)
+                    for (int line : symbol.getDefinitionLines()) {
+                        Issue issue = new Issue(this, line, "The number " + symbol.getToken() + " is repeated " +
+                                symbol.getDefinitionLines().size() + " times. Consider replacing it by a constant");
+                        context.addIssue(issue);
+                    }
+            }
         }
 
-        if(!repetitionsPropertyIsValid)
-            LOG.warn("["+ VensimPlugin.PLUGIN_KEY +"] The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 1.");
+
 
     }
 
@@ -70,11 +77,17 @@ public class MagicNumberCheck implements VensimCheck {
             if(selectedRepetitions>1)
                 return selectedRepetitions;
             else{
-                repetitionsPropertyIsValid = false;
+               if(!alreadyLoggedPropertyError){
+                   LOG.warn( "The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 1."+"["+ VensimPlugin.PLUGIN_KEY +"]");
+                   alreadyLoggedPropertyError = true;
+               }
                 return Integer.parseInt(DEFAULT_REPETITIONS);
             }
         }catch (NumberFormatException ex){
-            repetitionsPropertyIsValid = false;
+            if(!alreadyLoggedPropertyError){
+                LOG.warn("The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 1."+"["+ VensimPlugin.PLUGIN_KEY +"]");
+                alreadyLoggedPropertyError = true;
+            }
             return Integer.parseInt(DEFAULT_REPETITIONS);
         }
     }
@@ -83,5 +96,8 @@ public class MagicNumberCheck implements VensimCheck {
         return new MagicNumberTableVisitor();
     }
 
+    private boolean numberIsIgnored(String number){
+        return Constants.IGNORED_MAGIC_NUMBERS.contains(number);
+    }
 
 }

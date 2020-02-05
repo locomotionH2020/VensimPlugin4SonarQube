@@ -106,10 +106,22 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
     @Override
     public Object visitFloatingConst(ModelParser.FloatingConstContext ctx) {
-        String value = String.valueOf(stringToFloat(ctx.getText()));
-        Symbol integer = getSymbolOrCreate(numberTable,value);
-        integer.addDefinitionLine(ctx.start.getLine());
+        float value = stringToFloat(ctx.getText());
+        String strValue;
+        if(isInteger(value)){
+            int intValue = (int) value;
+            strValue = String.valueOf(intValue);
+        }else{
+            strValue = String.valueOf(value);
+        }
+
+        Symbol floatSymbol = getSymbolOrCreate(numberTable,strValue);
+        floatSymbol.addDefinitionLine(ctx.start.getLine());
         return null;
+    }
+
+    private boolean isInteger(float value) {
+        return (int) value == value;
     }
 
     @Override

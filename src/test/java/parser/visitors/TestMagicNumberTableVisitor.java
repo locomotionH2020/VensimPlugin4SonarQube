@@ -150,6 +150,7 @@ public class TestMagicNumberTableVisitor {
 
     }
 
+
     @Test
     public void testTransversesExprOperationsAndKeyword(){
         String program = "FOO = (3 ^ (3)) * 3 / 3 - 3 + (3<3 :AND: 3>3 :AND: 3<=3 :AND: 3>=3 :AND: :NOT: 3 = 3 :OR: 3 <> 3)~|";
@@ -192,7 +193,7 @@ public class TestMagicNumberTableVisitor {
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
-        assertEquals(Collections.singletonList(1),table.getSymbol("-1000000.0").getDefinitionLines() );
+        assertEquals(Collections.singletonList(1),table.getSymbol("-1000000").getDefinitionLines() );
         assertEquals(Collections.singletonList(1),table.getSymbol("1.0E-8").getDefinitionLines() );
     }
 
@@ -332,17 +333,37 @@ public class TestMagicNumberTableVisitor {
     }
 
 
-
-
     @Test
-    public void testSameNumberInDifferentFormatIsStillTheSame(){
-        String program = "A = 3 * +3 * 1.0 * 10e-1 ~|";
+    public void testSameNumberWithScientificNotationAndWithoutItIsTheSame(){
+        String program = "A = 1.0 * 10e-1  ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
+        assertEquals(1,table.getSymbols().size());
+        assertEquals(Arrays.asList(1,1),table.getSymbol("1").getDefinitionLines() );
+    }
+
+    @Test
+    public void testSameNumberWithAndWithoutSignIsTheSame(){
+        String program = "A = 3 * +3  ~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertEquals(1,table.getSymbols().size());
         assertEquals(Arrays.asList(1,1),table.getSymbol("3").getDefinitionLines() );
-        assertEquals(Arrays.asList(1,1),table.getSymbol("1.0").getDefinitionLines() );
+    }
+
+    @Test
+    public void testSameNumberAsIntAndFloatIsTheSame(){
+        String program = "A = 6 * 6.00000 ~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertEquals(1,table.getSymbols().size());
+        assertEquals(Arrays.asList(1,1),table.getSymbol("6").getDefinitionLines() );
 
     }
 

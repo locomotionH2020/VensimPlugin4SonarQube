@@ -7,8 +7,7 @@ import org.junit.Test;
 
 import static es.uva.medeas.rules.TestMagicNumberCheck.DEFAULT_MINIMUM_REPETITIONS;
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestIntegrationMagicNumberCheck {
 
@@ -255,5 +254,52 @@ public class TestIntegrationMagicNumberCheck {
 
     }
 
+
+    @Test
+    public void testIgnoresZerosWithFractionDigits(){
+        String program = "CONST = 0.000 + 0.000~~|".repeat(DEFAULT_MINIMUM_REPETITIONS +4);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+    }
+
+    @Test
+    public void testIgnoresOnesWithFractionDigits(){
+        String program = "CONST = 1.000 + 1.000~~|".repeat(DEFAULT_MINIMUM_REPETITIONS +4);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+    }
+
+    @Test
+    public void testIgnores100WithFractionDigits(){
+        String program = "CONST = 100.000 + 100.000~~|".repeat(DEFAULT_MINIMUM_REPETITIONS +4);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertTrue(visitorContext.getIssues().isEmpty());
+    }
+
+
+    @Test
+    public void testRuleConsidersFloatsThatAreIntsAsInts(){
+        String program = "var = 6.00 * Time~~|".repeat(DEFAULT_MINIMUM_REPETITIONS -1);
+        program += "var2 = 6 * Time ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS-1);
+
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        assertFalse(visitorContext.getIssues().isEmpty());
+    }
 
 }
