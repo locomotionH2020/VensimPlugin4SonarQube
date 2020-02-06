@@ -18,7 +18,9 @@ public class MagicNumberCheck implements VensimCheck {
     public static final String CHECK_KEY = "magic-number-check";
     public static final String NAME = "MagicNumberCheck" ;
     public static final String HTML_DESCRIPTION = "A magic number is a number that comes out of nowhere, and is directly used in an expression." +
-            "The number must appear several times to be considered a magic number. The repetitions can be configured as a parameter of the rule." +
+            "The number must appear several times to be considered a magic number. The repetitions can be configured as a parameter of the rule.<br><br>" +
+            "If the number appears less times than then parameter, it will raise an issue of severity INFO. If it appears more times or exactly as the parameter," +
+            " it will raise an issue of severity MAJOR "+
             "<h2>Noncompliant Code Examples</h2>\n" +
             "<pre>" +
             "Year policy change energy[scenarios,sectors,final sources]=\n IF THEN ELSE(Choose policies of intensities global or by sector[scenarios]=1, value1, value2)~~|\n" +

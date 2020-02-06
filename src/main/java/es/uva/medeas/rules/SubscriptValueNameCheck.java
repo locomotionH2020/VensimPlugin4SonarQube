@@ -23,12 +23,12 @@ public class SubscriptValueNameCheck implements VensimCheck {
             "</ul>"+
             "<h2>Noncompliant Code Examples</h2>\n" +
             "<pre>\n" +
-            "MY_COUNTRIES_ENUM: first_country ~~|\n" +
-            "MY_COUNTRIES_ENUM: FIRST__COUNTRY ~~|\n" +
+            "MY_COUNTRIES_I: first_country ~~|\n" +
+            "MY_COUNTRIES_I: FIRST__COUNTRY ~~|\n" +
             "</pre>\n" +
             "<h2>Compliant Solution</h2>\n" +
             "<pre>\n" +
-            "MY_COUNTRIES_ENUM: FIRST_COUNTRY  ~~|\n"+
+            "MY_COUNTRIES_I: FIRST_COUNTRY  ~~|\n"+
             "</pre>\n";
     public static final String NAME = "SubscriptValueNameCheck" ;
 
