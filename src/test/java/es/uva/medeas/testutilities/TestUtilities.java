@@ -3,6 +3,8 @@ package es.uva.medeas.testutilities;
 
 import es.uva.medeas.parser.*;
 import es.uva.medeas.parser.visitors.RawSymbolTableVisitor;
+import es.uva.medeas.plugin.Issue;
+import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.utilities.SymbolTableGenerator;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -13,7 +15,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -148,6 +152,12 @@ public class TestUtilities {
             symbol.addDefinitionLine(line);
 
         table.addSymbol(symbol);
+    }
+
+
+
+    public static List<Issue> getIssuesFromType(VensimVisitorContext context, Class type){
+        return context.getIssues().stream().filter(issue -> issue.getCheck().getClass()==type).collect(Collectors.toList());
     }
 
 

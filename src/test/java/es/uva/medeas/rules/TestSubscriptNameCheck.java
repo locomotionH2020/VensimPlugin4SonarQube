@@ -1,10 +1,14 @@
 package es.uva.medeas.rules;
 
 
+import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 
+import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -16,20 +20,35 @@ public class TestSubscriptNameCheck {
     @Test
     public void testCorrectName() {
 
-        String program = "MY_10_FAVORITE_COUNTRIES_ENUM: COUNTRY1, COUNTRY2~|";
+        String program = "MY_10_FAVORITE_COUNTRIES_I: COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
 
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,SubscriptNameCheck.class);
+        assertTrue(issues.isEmpty());
+
+    }
+
+    @Test
+    public void testRuleDoesntEnforcePlural(){
+        String program = "TEST_I: OPTION_1, OPTION_2 ~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,SubscriptNameCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
     @Test
     public void testNameCanContainAnyNumber() {
-        String program = "NUMBERS1_2_3_4_5_6_7_8_9NUMBERS_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "NUMBERS1_2_3_4_5_6_7_8_9NUMBERS_I:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -42,7 +61,7 @@ public class TestSubscriptNameCheck {
     @Test
     public void testLowercaseAnyWord() {
 
-        String program = "some_COUNTRIES_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "some_COUNTRIES_I:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -56,7 +75,7 @@ public class TestSubscriptNameCheck {
     @Test
     public void testLowercaseLastWord() {
 
-        String program = "countrieS_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "countrieS_I:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -67,24 +86,11 @@ public class TestSubscriptNameCheck {
 
     }
 
-    @Test
-    public void testNonPluralName() {
-
-
-        String program = "\nCOUNTRY_ENUM:\n COUNTRY1, COUNTRY2~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-        scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,2);
-
-    }
 
     @Test
     public void testNameWithoutSuffix() {
 
-        String program = "COUNTRIES:\n COUNTRY1, COUNTRY2~|";
+        String program = "COUNTRIES:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -98,7 +104,7 @@ public class TestSubscriptNameCheck {
     @Test
     public void testNameWithLowercaseSuffix() {
 
-        String program = "COUNTRIES_enum:\n COUNTRY1, COUNTRY2~|";
+        String program = "COUNTRIES_i:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -110,8 +116,8 @@ public class TestSubscriptNameCheck {
     }
 
     @Test
-    public void testOnlySAndSuffix(){
-        String program = "S_ENUM:\n COUNTRY1, COUNTRY2~|";
+    public void testOnlySuffix(){
+        String program = "I:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -123,7 +129,7 @@ public class TestSubscriptNameCheck {
 
     @Test
     public void testSeveralUnderscore(){
-        String program = "MY__COUNTRIES_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "MY__COUNTRIES_I:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -135,7 +141,7 @@ public class TestSubscriptNameCheck {
 
     @Test
     public void testSeveralUnderscoreBeforeSuffix(){
-        String program = "MY_COUNTRIES__ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "MY_COUNTRIES__I:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -147,7 +153,7 @@ public class TestSubscriptNameCheck {
 
     @Test
     public void testNameBeginningWithUnderscore(){
-        String program = "_MY_COUNTRIES_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "_MY_COUNTRIES_I:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -159,7 +165,7 @@ public class TestSubscriptNameCheck {
 
     @Test
     public void testNameEndingWithUnderscore(){
-        String program = "MY_COUNTRIES_ENUM_:\n COUNTRY1, COUNTRY2~|";
+        String program = "MY_COUNTRIES_I_:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -169,21 +175,10 @@ public class TestSubscriptNameCheck {
         assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
     }
 
-    @Test
-    public void testUnderscoreBeforePlural(){
-        String program = "MY_COUNTRIE_S_ENUM:\n COUNTRY1, COUNTRY2~|";
-
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-
-        scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
-    }
 
     @Test
     public void testWeirdCharacters(){
-        String program = "A_WEIRD_È_ENUM:\n COUNTRY1, COUNTRY2~|";
+        String program = "A_WEIRD_È_I:\n COUNTRY1, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -194,9 +189,9 @@ public class TestSubscriptNameCheck {
     }
 
     @Test
-    public void testBeginsWithNumber(){
-        String program = "\"2_COUNTRIES_ENUM\": COUNTRY1, COUNTRY2~|\n" +
-                        " \"3_COUNTRIES_ENUM\": COUNTRY1, COUNTRY2, COUNTRY3~|";
+    public void testQuotedName(){
+        String program = "\"2_COUNTRIES_I\": COUNTRY1, COUNTRY2~~|\n" +
+                        " \"3_COUNTRIES_I\": COUNTRY1, COUNTRY2, COUNTRY3~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -209,18 +204,6 @@ public class TestSubscriptNameCheck {
     }
 
 
-    @Test
-    public void testEndsWithNumber(){
-        String program = "MY_SUBSCRIPT10S_ENUM:\n COUNTRY1, COUNTRY2~|\n"+
-                    "MY_10SUBSCRIPTS_ENUM:\n COUNTRY1, COUNTRY2~|";
 
-        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
-        VensimScanner scanner = getScanner();
-
-
-        scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
-        assertDoesntHaveIssue(visitorContext,SubscriptNameCheck.class,2);
-    }
 
 }

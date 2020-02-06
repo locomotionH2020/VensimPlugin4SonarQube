@@ -1,9 +1,13 @@
 package es.uva.medeas.rules;
 
 
+import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
+import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.Test;
+
+import java.util.List;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 import static org.junit.Assert.assertTrue;
@@ -13,26 +17,28 @@ public class TestSubscriptValueNameCheck {
     @Test
     public void testCorrectName() {
 
-        String program = "MY_COUNTRIES_ENUM: FIRST_COUNTRY, COUNTRY2~|";
+        String program = "MY_COUNTRIES_I: FIRST_COUNTRY, COUNTRY2~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
-
+        List<Issue> issues =TestUtilities.getIssuesFromType(visitorContext,SubscriptValueNameCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
     @Test
     public void testNameCanContainAnyNumber() {
-        String program = "NUMBERS_INSIDE_SUBSCRIPTS_ENUM:\n COUNTRY_0_1_2_3_4_5_6_7_8_9, COUNTRY2~|";
+        String program = "NUMBERS_INSIDE_SUBSCRIPTS_I:\n COUNTRY_0_1_2_3_4_5_6_7_8_9, COUNTRY2~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues =TestUtilities.getIssuesFromType(visitorContext,SubscriptValueNameCheck.class);
+        assertTrue(issues.isEmpty());
     }
 
 

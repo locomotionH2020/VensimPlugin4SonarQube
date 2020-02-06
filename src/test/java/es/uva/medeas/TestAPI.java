@@ -163,9 +163,13 @@ public class TestAPI {
 
         assertTrue(filesAnalyzed.keySet().contains("testSubscriptName.mdl"));
 
-        JsonReader jsonReader = Json.createReader(new StringReader( "{\"COUNTRY1\":{\"type\":\"SUBSCRIPT_VALUE\",\"lines\":[1,3],\"dependencies\":[]},\"COUNTRY2\":{\"type\":\"SUBSCRIPT_VALUE\",\"lines\":[1,3],\"dependencies\":[]},\"COUNTERY_ENUM\":{\"type\":\"SUBSCRIPT_NAME\",\"lines\":[3],\"dependencies\":[]},\"Time\":{\"type\":\"VARIABLE\",\"lines\":[],\"dependencies\":[]},\"MY_10_FAVORITE_COUNTRIES_ENUM\":{\"type\":\"SUBSCRIPT_NAME\",\"lines\":[1],\"dependencies\":[]}}\n"    ));
+
+        JsonReader jsonReader = Json.createReader(new StringReader( "{\"COUNTRY1\":{\"type\":\"SUBSCRIPT_VALUE\",\"lines\":[1,3],\"dependencies\":[]},\"COUNTRY\":{\"type\":\"SUBSCRIPT_NAME\",\"lines\":[3],\"dependencies\":[]},\"COUNTRY2\":{\"type\":\"SUBSCRIPT_VALUE\",\"lines\":[1,3],\"dependencies\":[]},\"Time\":{\"type\":\"VARIABLE\",\"lines\":[],\"dependencies\":[]},\"MY_10_FAVORITE_COUNTRIES_I\":{\"type\":\"SUBSCRIPT_NAME\",\"lines\":[1],\"dependencies\":[]}}\n"    ));
         JsonObject expectedObjectSubscriptName = jsonReader.readObject();
         jsonReader.close();
+
+
+
 
 
         assertEquals(expectedObjectSubscriptName,filesAnalyzed.get("testSubscriptName.mdl").getJsonObject("symbols"));
