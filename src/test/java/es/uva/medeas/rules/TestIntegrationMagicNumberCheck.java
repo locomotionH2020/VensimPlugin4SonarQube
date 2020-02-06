@@ -4,6 +4,10 @@ import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import org.junit.Test;
+import org.sonar.api.batch.rule.Severity;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static es.uva.medeas.rules.TestMagicNumberCheck.DEFAULT_MINIMUM_REPETITIONS;
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
@@ -15,18 +19,22 @@ public class TestIntegrationMagicNumberCheck {
     @Test
     public void testIssueWorks() {
 
-        String program = "A = 3 * Time ~~|\n" +
-                "B = 3 * Time ~~|\n" +
-                "C = 3 * Time ~~|\n";
+        String program = "a = 3 * Time ~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,MagicNumberCheck.class,1); //TODO Test message
-        assertHasIssue(visitorContext,MagicNumberCheck.class,2);
-        assertHasIssue(visitorContext,MagicNumberCheck.class,3);
+        for(int i=1;i<DEFAULT_MINIMUM_REPETITIONS+1;i++)
+            assertHasIssue(visitorContext,MagicNumberCheck.class,i);
+
+        for(Issue issue:visitorContext.getIssues()) {
+            assertEquals(Severity.MAJOR, issue.getSeverity());
+            assertEquals("The number 3 is repeated "+DEFAULT_MINIMUM_REPETITIONS+" times. Consider replacing it by a constant",issue.getMessage());
+        }
+
+
 
     }
 
@@ -38,7 +46,10 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        assertEquals((DEFAULT_MINIMUM_REPETITIONS-1)*2,visitorContext.getIssues().size());
+        for(Issue issue:visitorContext.getIssues())
+            assertEquals(Severity.INFO,issue.getSeverity());
     }
 
     @Test
@@ -299,7 +310,14 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertFalse(visitorContext.getIssues().isEmpty());
+        List<Issue> magicNumberIssue = visitorContext.getIssues().stream()
+                .filter(issue -> issue.getCheck().getClass()==MagicNumberCheck.class).collect(Collectors.toList());
+
+        assertHasIssue(visitorContext,MagicNumberCheck.class,1);
+        for(Issue issue:magicNumberIssue)
+            assertEquals(Severity.MAJOR,issue.getSeverity());
     }
+
+
 
 }

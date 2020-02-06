@@ -7,6 +7,7 @@ import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.utilities.Constants;
+import org.sonar.api.batch.rule.Severity;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.check.Rule;
@@ -43,7 +44,7 @@ public class MagicNumberCheck implements VensimCheck {
     @RuleProperty(
             key = "minimum-repetitions",
             defaultValue = DEFAULT_REPETITIONS,
-    description = "Minimum times a number must appear to be considered a magic number.")
+    description = "Minimum times a number must appear to be considered a magic number. Must be greater than 0.")
     public String repetitions = DEFAULT_REPETITIONS ;
 
 
@@ -58,12 +59,25 @@ public class MagicNumberCheck implements VensimCheck {
 
         for(Symbol symbol: numberTable.getSymbols()){
             if(!numberIsIgnored(symbol.getToken())) {
-                if (symbol.getDefinitionLines().size() >= minimumRepetitions)
+                int foundRepetitions = symbol.getDefinitionLines().size();
+
+                if(foundRepetitions>=1){
+
+                    Severity issueSeverity;
+                    if(foundRepetitions<minimumRepetitions)
+                        issueSeverity = Severity.INFO;
+                    else
+                        issueSeverity = Severity.MAJOR;
+
+
                     for (int line : symbol.getDefinitionLines()) {
                         Issue issue = new Issue(this, line, "The number " + symbol.getToken() + " is repeated " +
                                 symbol.getDefinitionLines().size() + " times. Consider replacing it by a constant");
+                        issue.setSeverity(issueSeverity);
                         context.addIssue(issue);
                     }
+
+                }
             }
         }
 
@@ -74,18 +88,18 @@ public class MagicNumberCheck implements VensimCheck {
     private int getMinimumRepetitions(){
         try{
             int selectedRepetitions = Integer.parseInt(repetitions);
-            if(selectedRepetitions>1)
+            if(selectedRepetitions>=1)
                 return selectedRepetitions;
             else{
                if(!alreadyLoggedPropertyError){
-                   LOG.warn( "The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 1."+"["+ VensimPlugin.PLUGIN_KEY +"]");
+                   LOG.warn( "The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 0."+"["+ VensimPlugin.PLUGIN_KEY +"]");
                    alreadyLoggedPropertyError = true;
                }
                 return Integer.parseInt(DEFAULT_REPETITIONS);
             }
         }catch (NumberFormatException ex){
             if(!alreadyLoggedPropertyError){
-                LOG.warn("The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 1."+"["+ VensimPlugin.PLUGIN_KEY +"]");
+                LOG.warn("The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 0."+"["+ VensimPlugin.PLUGIN_KEY +"]");
                 alreadyLoggedPropertyError = true;
             }
             return Integer.parseInt(DEFAULT_REPETITIONS);

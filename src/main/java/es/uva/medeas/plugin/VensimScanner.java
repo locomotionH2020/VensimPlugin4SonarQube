@@ -151,6 +151,7 @@ public class VensimScanner {
             newLocation.at(range);
 
             newIssue.at(newLocation);
+            newIssue.overrideSeverity(preciseIssue.getSeverity());
             newIssue.save();
         }
 
