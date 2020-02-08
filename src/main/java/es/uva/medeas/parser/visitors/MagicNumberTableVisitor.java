@@ -1,13 +1,12 @@
 package es.uva.medeas.parser.visitors;
 
 import es.uva.medeas.parser.*;
-import es.uva.medeas.plugin.VensimVisitorContext;
 
 
 import static es.uva.medeas.utilities.UtilityFunctions.stringToFloat;
 import static es.uva.medeas.utilities.UtilityFunctions.stringToInt;
 
-public class MagicNumberTableVisitor  extends ModelBaseVisitor {
+public class MagicNumberTableVisitor  extends ModelBaseVisitor<Void> {
 
 
     private SymbolTable numberTable;
@@ -60,7 +59,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
         }
     }
     @Override
-    public Object visitEquation(ModelParser.EquationContext ctx) {
+    public Void visitEquation(ModelParser.EquationContext ctx) {
 
         if(ctx.expr()==null || exprIsANumber(ctx.expr()))
             return null;
@@ -71,7 +70,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     }
 
     @Override
-    public Object visitDataEquation(ModelParser.DataEquationContext ctx) {
+    public Void visitDataEquation(ModelParser.DataEquationContext ctx) {
 
         if(ctx.expr()==null || exprIsANumber(ctx.expr()))
             return null;
@@ -82,12 +81,12 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     }
 
     @Override
-    public Object visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
+    public Void visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
         return null;
     }
 
     @Override
-    public Object visitLookup(ModelParser.LookupContext ctx) {
+    public Void visitLookup(ModelParser.LookupContext ctx) {
         return null;
     }
 
@@ -96,7 +95,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
 
     @Override
-    public Object visitIntegerConst(ModelParser.IntegerConstContext ctx) {
+    public Void visitIntegerConst(ModelParser.IntegerConstContext ctx) {
         String value = String.valueOf(stringToInt(ctx.getText()));
         Symbol integer = getSymbolOrCreate(numberTable,value);
         integer.addDefinitionLine(ctx.start.getLine());
@@ -105,7 +104,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
 
     @Override
-    public Object visitFloatingConst(ModelParser.FloatingConstContext ctx) {
+    public Void visitFloatingConst(ModelParser.FloatingConstContext ctx) {
         float value = stringToFloat(ctx.getText());
         String strValue;
         if(isInteger(value)){
@@ -125,7 +124,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     }
 
     @Override
-    public Object visitTabbedArray(ModelParser.TabbedArrayContext ctx) {
+    public Void visitTabbedArray(ModelParser.TabbedArrayContext ctx) {
         return null;
     }
 
@@ -145,7 +144,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
 
 
     @Override
-    public Object visitCall(ModelParser.CallContext ctx) {
+    public Void visitCall(ModelParser.CallContext ctx) {
         String functionName = getFunctionName(ctx);
 
         if ("WITH LOOKUP".equals(functionName)) {
@@ -164,26 +163,45 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor {
     }
 
     @Override
-    public Object visitRealityCheck(ModelParser.RealityCheckContext ctx) {
+    public Void visitRealityCheck(ModelParser.RealityCheckContext ctx) {
         return null;
     }
 
     @Override
-    public Object visitConstraint(ModelParser.ConstraintContext ctx) {
+    public Void visitConstraint(ModelParser.ConstraintContext ctx) {
         return null;
     }
 
 
     @Override
-    public Object visitLookupDefinition(ModelParser.LookupDefinitionContext ctx) {
+    public Void visitLookupDefinition(ModelParser.LookupDefinitionContext ctx) {
         if(ctx.call()!=null)
             super.visitCall(ctx.call());
         return null;
     }
 
     @Override
-    public Object visitConstList(ModelParser.ConstListContext ctx) {
+    public Void visitConstList(ModelParser.ConstListContext ctx) {
         return null;
     }
 
+
+    private boolean isASwitch(String symbol){
+        return symbol.matches("SWITCH_.+");
+    }
+
+    @Override
+    public Void visitExprOperation(ModelParser.ExprOperationContext ctx) {
+        if(ctx.op.getType() == ModelLexer.Equal){
+            if(!isASwitch(ctx.expr(0).getText()))
+                visit(ctx.expr(1));
+            if(!isASwitch(ctx.expr(1).getText()))
+                visit(ctx.expr(0));
+
+        }else{
+            super.visitExprOperation(ctx);
+        }
+
+        return null;
+    }
 }

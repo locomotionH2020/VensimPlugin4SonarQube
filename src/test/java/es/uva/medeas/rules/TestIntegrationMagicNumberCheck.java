@@ -318,6 +318,23 @@ public class TestIntegrationMagicNumberCheck {
             assertEquals(Severity.MAJOR,issue.getSeverity());
     }
 
+    @Test
+    public void testExceptionSwitch(){
+        String program = "Policy change energy speed H[scenarios,final sources]=\n" +
+                "IF THEN ELSE(SWTICH_OPTION_ONE=1,Time, IF THEN ELSE(2=SWITCH_OPTION_TWO))~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+        List<Issue> magicNumberIssue = visitorContext.getIssues().stream()
+                .filter(issue -> issue.getCheck().getClass()==MagicNumberCheck.class).collect(Collectors.toList());
+
+
+        assertTrue(magicNumberIssue.isEmpty());
+
+    }
+
 
 
 }

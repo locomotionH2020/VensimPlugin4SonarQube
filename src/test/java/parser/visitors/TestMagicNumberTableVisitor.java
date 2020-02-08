@@ -130,6 +130,126 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
+    public void testExceptionSwitchLeftSide(){
+        String program = "Other Forcings RCP[scenarios]:INTERPOLATE::=\n" +
+                "IF THEN ELSE(SWITCH_RCP[scenarios]=1, Other Forcings RCP Scenario[RCP26], \n" +
+                "IF THEN ELSE(SWITCH_RCP[scenarios]=2, Other Forcings RCP Scenario[RCP45],\n" +
+                "IF THEN ELSE(SWITCH_RCP[scenarios]=3, Other Forcings RCP Scenario[RCP60], Other Forcings RCP Scenario\\\n" +
+                "[RCP85])))~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+
+        assertTrue(table.getSymbols().isEmpty());
+    }
+
+    @Test
+    public void testExceptionSwitchRightSide(){
+        String program = "Other Forcings RCP[scenarios]:INTERPOLATE::=\n" +
+                "IF THEN ELSE(1=SWITCH_RCP[scenarios], Other Forcings RCP Scenario[RCP26], \n" +
+                "IF THEN ELSE(2=SWITCH_RCP[scenarios], Other Forcings RCP Scenario[RCP45],\n" +
+                "IF THEN ELSE(3=SWITCH_RCP[scenarios], Other Forcings RCP Scenario[RCP60], Other Forcings RCP Scenario\\\n" +
+                "[RCP85])))~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertTrue(table.getSymbols().isEmpty());
+    }
+
+
+    @Test
+    public void testExceptionSwitchAloneRightSide(){
+        String program = "Other Forcings RCP[scenarios]=\n"+
+                "                IF THEN ELSE(1=SWITCH, Time,Time*CONST)~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertTrue(table.hasSymbol("1"));
+    }
+
+    @Test
+    public void testExceptionSwitchAndUnderscoreAloneRightSide(){
+        String program = "Other Forcings RCP[scenarios]=\n"+
+                "                IF THEN ELSE(1=SWITCH_, Time,Time*CONST)~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertTrue(table.hasSymbol("1"));
+    }
+
+    @Test
+    public void testExceptionSwitchContainsWordButNotAtTheBeginningRightSide(){
+        String program = "Other Forcings RCP[scenarios]=\n"+
+                "                IF THEN ELSE(1=EMISSIONS_SWITCH, Time,Time*CONST)~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertTrue(table.hasSymbol("1"));
+    }
+
+    @Test
+    public void testExceptionSwitchAndMoreTextRightSide(){
+        String program = "Other Forcings RCP[scenarios]=\n"+
+                "                IF THEN ELSE(1=SWITCHOPTION_ONE, Time,Time*CONST)~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertTrue(table.hasSymbol("1"));
+    }
+
+
+
+    @Test
+    public void testExceptionSwitchAloneLeftSide(){
+        String program = "Other Forcings RCP[scenarios]=\n"+
+                "                IF THEN ELSE(SWITCH=1, Time,Time*CONST)~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertTrue(table.hasSymbol("1"));
+    }
+
+    @Test
+    public void testExceptionSwitchAndUnderscoreAloneLeftSide(){
+        String program = "Other Forcings RCP[scenarios]=\n"+
+                "                IF THEN ELSE(SWITCH_=1, Time,Time*CONST)~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertTrue(table.hasSymbol("1"));
+    }
+
+    @Test
+    public void testExceptionSwitchContainsWordButNotAtTheBeginningLeftSide(){
+        String program = "Other Forcings RCP[scenarios]=\n"+
+                "                IF THEN ELSE(EMISSIONS_SWITCH=1, Time,Time*CONST)~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertTrue(table.hasSymbol("1"));
+    }
+
+    @Test
+    public void testExceptionSwitchAndMoreTextLeftSide(){
+        String program = "Other Forcings RCP[scenarios]=\n"+
+                "                IF THEN ELSE(SWITCHOPTION_ONE=1, Time,Time*CONST)~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertTrue(table.hasSymbol("1"));
+    }
+
+    @Test
     public void testTraversesFunctionPath(){
         String program = "var = - FUNCTION( 3, ANOTHER FUNCTION(3),3)~ |";
 

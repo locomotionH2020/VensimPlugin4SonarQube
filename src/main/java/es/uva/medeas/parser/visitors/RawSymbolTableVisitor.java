@@ -1,6 +1,5 @@
 package es.uva.medeas.parser.visitors;
 
-import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.*;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -184,7 +183,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
 
 
     @Override
-    public List<Symbol> visitExprOperation(ModelParser.ExprOperationContext ctx) {
+    public Object visitExprOperation(ModelParser.ExprOperationContext ctx) {
         List<Symbol> symbols = (List<Symbol>) visit(ctx.expr(0));
         symbols.addAll((List<Symbol>) visit(ctx.expr(1)));
 
