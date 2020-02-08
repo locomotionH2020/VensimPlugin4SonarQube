@@ -2,6 +2,7 @@ package es.uva.medeas.testutilities;
 
 
 import es.uva.medeas.VensimPlugin;
+import org.sonar.api.batch.rule.Severity;
 
 
 import javax.json.Json;
@@ -92,6 +93,10 @@ public class UtilitiesAPI {
 
     public static void assertIssueType(JsonObject issue, String rule_key){
         assertTrue(issueIsType(issue,rule_key));
+    }
+
+    public static Severity getIssueSeverity(JsonObject issue){
+        return Severity.valueOf(issue.getString("severity"));
     }
 
     public static boolean issueIsType(JsonObject issue, String rule_key){

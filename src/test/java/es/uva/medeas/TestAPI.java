@@ -8,11 +8,13 @@ import es.uva.medeas.testutilities.UtilitiesAPI;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.sonar.api.batch.rule.Severity;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.json.*;
 
 import static es.uva.medeas.testutilities.UtilitiesAPI.*;
@@ -126,11 +128,21 @@ public class TestAPI {
         JsonArray issues =  getIssues("testMagicNumber.mdl",SONAR_TOKEN);
         List<JsonObject> issueList =  filterIssuesOfType(issues, MagicNumberCheck.CHECK_KEY);
 
-        assertEquals(5,issueList.size());
+        Map<Boolean, List<JsonObject>> partitionedIssues = issueList.stream().collect(Collectors.partitioningBy(issue-> getIssueSeverity((JsonObject) issue)==Severity.MAJOR));
+        List<JsonObject> majorIssues = partitionedIssues.get(true);
+        List<JsonObject> otherIsues = partitionedIssues.get(false);
 
+        assertEquals(5,majorIssues.size());
+        assertEquals(1,otherIsues.size());
 
-        for(JsonObject issue: issueList) {
-            assertIssueLine(issue, 1);
+        for(JsonObject majorIssue: majorIssues) {
+            assertIssueLine(majorIssue, 1);
+            assertEquals(Severity.MAJOR,getIssueSeverity(majorIssue));
+        }
+
+        for(JsonObject otherIssue: otherIsues) {
+            assertIssueLine(otherIssue, 3);
+            assertEquals(Severity.INFO,getIssueSeverity(otherIssue));
         }
     }
 
