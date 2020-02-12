@@ -13,7 +13,7 @@ public class TestLookupNameCheck {
     @Test
     public void testCorrectName() {
 
-        String program = "historic3_demand_lt( GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' ))~|";
+        String program = "historic3_demand_lt( GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' ))~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -26,7 +26,7 @@ public class TestLookupNameCheck {
 
     @Test
     public void testNameCanContainAnyNumber() {
-        String program = "numbers_1_2_3_4_5_6_7_8_9_lt( GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' ))~|";
+        String program = "numbers_1_2_3_4_5_6_7_8_9_lt( GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' ))~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();

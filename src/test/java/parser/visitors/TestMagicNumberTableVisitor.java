@@ -87,7 +87,7 @@ public class TestMagicNumberTableVisitor {
         String program = "TABBED_ARRAY = TABBED ARRAY(3    3    3    3\n" +
                 "3    3    3    3\n" +
                 "3    3    3    3)\n" +
-                "~ |";
+                "~~ |";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -251,7 +251,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testTraversesFunctionPath(){
-        String program = "var = - FUNCTION( 3, ANOTHER FUNCTION(3),3)~ |";
+        String program = "var = - FUNCTION( 3, ANOTHER FUNCTION(3),3)~ ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -261,7 +261,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testTableIncludesFloats(){
-        String program = "\nFOO = 0.3 * 0.3~|";
+        String program = "\nFOO = 0.3 * 0.3~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -273,7 +273,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testTransversesExprOperationsAndKeyword(){
-        String program = "FOO = (3 ^ (3)) * 3 / 3 - 3 + (3<3 :AND: 3>3 :AND: 3<=3 :AND: 3>=3 :AND: :NOT: 3 = 3 :OR: 3 <> 3)~|";
+        String program = "FOO = (3 ^ (3)) * 3 / 3 - 3 + (3<3 :AND: 3>3 :AND: 3<=3 :AND: 3>=3 :AND: :NOT: 3 = 3 :OR: 3 <> 3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -285,7 +285,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testParenthesisCount(){
-        String program = "A = ((3)*3)~|";
+        String program = "A = ((3)*3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -295,7 +295,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testSignNumbers(){
-        String program = "A = -3 * +4 ~|";
+        String program = "A = -3 * +4 ~~|";
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -307,7 +307,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExponentNumbers(){
-        String program = "A = -10e+5 * +10E-9 ~|";
+        String program = "A = -10e+5 * +10E-9 ~~|";
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -319,7 +319,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testNumbersInEquationIdDontCount(){
-        String program = "NUMBER 1 = Time~|";
+        String program = "NUMBER 1 = Time~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -330,7 +330,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testNumbersInSymbolIdDontCount(){
-        String program = "FOO = NUMBER 1 ~|";
+        String program = "FOO = NUMBER 1 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -340,7 +340,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testNumbersInCalledFunctionIdDontCount(){
-        String program = "foo = FUNCTION 1(Time)~|";
+        String program = "foo = FUNCTION 1(Time)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -364,7 +364,7 @@ public class TestMagicNumberTableVisitor {
     @Test
     public void testExceptionLookupNNumberListFormat(){
         String program = "accomplishments per hour lookup(0,0.2,0.4,0.6,0.8,1,\n" +
-                "                                         0,0.2,0.4,0.6,0.8,1)~|\n";
+                "                                         0,0.2,0.4,0.6,0.8,1)~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -374,7 +374,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testDelayPCounts(){
-        String program = "a = DELAYP(1,1:Time)~|";
+        String program = "a = DELAYP(1,1:Time)~~|";
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
@@ -384,7 +384,7 @@ public class TestMagicNumberTableVisitor {
     @Test
     public void testTransversesMacros(){
         String program = ":MACRO: VSMOOTH(input,SMOOTH TIME)\n" +
-                "Vsmooth = INTEG((input - Vsmooth)/SMOOTH TIME*3, input)\n ~ The first order smoothed value of a variable.|\n" +
+                "Vsmooth = INTEG((input - Vsmooth)/SMOOTH TIME*3, input)\n ~ The first order smoothed value of a variable.~|\n" +
                 ":END OF MACRO:";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -397,7 +397,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionLookupInsideFunctionEquation(){
-        String program = "var =WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
+        String program = "var =WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -409,7 +409,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionLookupInsideFunctionDataEquation(){
-        String program = "var :=WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~|";
+        String program = "var :=WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -421,7 +421,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionNumberListEquation(){
-        String program = "A = 1,2,3,4,5~|";
+        String program = "A = 1,2,3,4,5~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -432,7 +432,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionNumberListDataEquation(){
-        String program = "A := 1,2,3,4,5~|";
+        String program = "A := 1,2,3,4,5~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -443,7 +443,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testNumberListDoesntCountUnchangeableConstant(){ //TODO revisar si tiene sentido
-        String program = "A := 1,2,3,4,5~|";
+        String program = "A := 1,2,3,4,5~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -489,7 +489,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testSameNumberButWithDifferentNumberOfSignsIsTheSame(){
-        String program = "A = 3 +  --3 + 4.3 + --4.3 ~|";
+        String program = "A = 3 +  --3 + 4.3 + --4.3 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -501,7 +501,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberIsTrimmed(){
-        String program = " A = Time * MODULO(  3,   4)~|";
+        String program = " A = Time * MODULO(  3,   4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -512,7 +512,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberTextIncludesParenthesis(){
-        String program = " A = Time * GAME(((2)))~|";
+        String program = " A = Time * GAME(((2)))~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -524,7 +524,7 @@ public class TestMagicNumberTableVisitor {
     @Test
     public void testCompoundNumberInSeveralLines(){
         String program = "\n\n A = Time * LN(" +
-                "SQRT(2))~|";
+                "SQRT(2))~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -556,7 +556,7 @@ public class TestMagicNumberTableVisitor {
                 "                           MODULO(QUANTUM(3,7),LOG(3,7)))))))" +
                 ")";
 
-        String program = "A = Time *" + function + "~|";
+        String program = "A = Time *" + function + "~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -570,7 +570,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testFunctionIsTransversedIfIsntCompoundDueToVariablesNotAlone(){
-        String program = "A = Time * MODULO(3,Time)~|";
+        String program = "A = Time * MODULO(3,Time)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -581,7 +581,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testFunctionIsTransversedIfIsntCompoundDueToVariablesAlone(){
-        String program = "A = MODULO(3,Time)~|";
+        String program = "A = MODULO(3,Time)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -592,7 +592,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testFunctionIsTransversedIfIsntCompoundDueToCall(){
-        String program = "A = Time * QUANTUM(3,RANDOM(3))~|";
+        String program = "A = Time * QUANTUM(3,RANDOM(3))~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -603,7 +603,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testFunctionIsTransversedIfIsntCompoundDueToCallAlone(){
-        String program = "A = Time * QUANTUM(3,RANDOM(3))~|";
+        String program = "A = Time * QUANTUM(3,RANDOM(3))~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -616,8 +616,8 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testFunctionIsTransversedIfIsntCompoundDueToConstantNotAlone(){
-        String program = "CONST = 4~|" +
-                "C = Time * LOG(3,CONST)~|";
+        String program = "CONST = 4~~|" +
+                "C = Time * LOG(3,CONST)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -628,8 +628,8 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testFunctionIsTransversedIfIsntCompoundDueToConstantAlone(){
-        String program = "CONST = 4~|" +
-                "C = LOG(3,CONST)~|";
+        String program = "CONST = 4~~|" +
+                "C = LOG(3,CONST)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -640,7 +640,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testTransversesCompoundsIfAlmostNested(){
-        String program = "A = FUNC(Time,MODULO(3,4),5)~|";
+        String program = "A = FUNC(Time,MODULO(3,4),5)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -653,7 +653,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneSQRTEquation(){
-        String program = "A = SQRT(3)~|";
+        String program = "A = SQRT(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -663,7 +663,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberSQRTEquation(){
-        String program = "A = Time *  SQRT(3)~|";
+        String program = "A = Time *  SQRT(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -673,7 +673,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionSQRTDataEquation(){
-        String program = "A := SQRT(3)~|";
+        String program = "A := SQRT(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -683,7 +683,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberSQRTDataEquation(){
-        String program = "A := Time * SQRT(3)~|";
+        String program = "A := Time * SQRT(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -697,7 +697,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneTANEquation(){
-        String program = "A = TAN(3)~|";
+        String program = "A = TAN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -707,7 +707,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberTANEquation(){
-        String program = "A = Time *  TAN(3)~|";
+        String program = "A = Time *  TAN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -717,7 +717,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionTANDataEquation(){
-        String program = "A := TAN(3)~|";
+        String program = "A := TAN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -727,7 +727,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberTANDataEquation(){
-        String program = "A := Time * TAN(3)~|";
+        String program = "A := Time * TAN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -741,7 +741,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneTANHEquation(){
-        String program = "A = TANH(3)~|";
+        String program = "A = TANH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -751,7 +751,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberTANHEquation(){
-        String program = "A = Time *  TANH(3)~|";
+        String program = "A = Time *  TANH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -761,7 +761,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionTANHDataEquation(){
-        String program = "A := TANH(3)~|";
+        String program = "A := TANH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -771,7 +771,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberTANHDataEquation(){
-        String program = "A := Time * TANH(3)~|";
+        String program = "A := Time * TANH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -783,7 +783,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneSINEquation(){
-        String program = "A = SIN(3)~|";
+        String program = "A = SIN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -793,7 +793,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberSINEquation(){
-        String program = "A = Time *  SIN(3)~|";
+        String program = "A = Time *  SIN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -803,7 +803,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionSINDataEquation(){
-        String program = "A := SIN(3)~|";
+        String program = "A := SIN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -813,7 +813,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberSINDataEquation(){
-        String program = "A := Time * SIN(3)~|";
+        String program = "A := Time * SIN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -827,7 +827,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneSINHEquation(){
-        String program = "A = SINH(3)~|";
+        String program = "A = SINH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -837,7 +837,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberSINHEquation(){
-        String program = "A = Time *  SINH(3)~|";
+        String program = "A = Time *  SINH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -847,7 +847,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionSINHDataEquation(){
-        String program = "A := SINH(3)~|";
+        String program = "A := SINH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -857,7 +857,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberSINHDataEquation(){
-        String program = "A := Time * SINH(3)~|";
+        String program = "A := Time * SINH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -871,7 +871,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneCOSEquation(){
-        String program = "A = COS(3)~|";
+        String program = "A = COS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -881,7 +881,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberCOSEquation(){
-        String program = "A = Time *  COS(3)~|";
+        String program = "A = Time *  COS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -891,7 +891,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionCOSDataEquation(){
-        String program = "A := COS(3)~|";
+        String program = "A := COS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -901,7 +901,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberCOSDataEquation(){
-        String program = "A := Time * COS(3)~|";
+        String program = "A := Time * COS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -915,7 +915,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneCOSHEquation(){
-        String program = "A = COSH(3)~|";
+        String program = "A = COSH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -925,7 +925,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberCOSHEquation(){
-        String program = "A = Time *  COSH(3)~|";
+        String program = "A = Time *  COSH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -935,7 +935,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionCOSHDataEquation(){
-        String program = "A := COSH(3)~|";
+        String program = "A := COSH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -945,7 +945,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberCOSHDataEquation(){
-        String program = "A := Time * COSH(3)~|";
+        String program = "A := Time * COSH(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -959,7 +959,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneARCTANEquation(){
-        String program = "A = ARCTAN(3)~|";
+        String program = "A = ARCTAN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -969,7 +969,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberARCTANEquation(){
-        String program = "A = Time *  ARCTAN(3)~|";
+        String program = "A = Time *  ARCTAN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -979,7 +979,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionARCTANDataEquation(){
-        String program = "A := ARCTAN(3)~|";
+        String program = "A := ARCTAN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -989,7 +989,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberARCTANDataEquation(){
-        String program = "A := Time * ARCTAN(3)~|";
+        String program = "A := Time * ARCTAN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1003,7 +1003,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneARCSINEquation(){
-        String program = "A = ARCSIN(3)~|";
+        String program = "A = ARCSIN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1013,7 +1013,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberARCSINEquation(){
-        String program = "A = Time *  ARCSIN(3)~|";
+        String program = "A = Time *  ARCSIN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1023,7 +1023,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionARCSINDataEquation(){
-        String program = "A := ARCSIN(3)~|";
+        String program = "A := ARCSIN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1033,7 +1033,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberARCSINDataEquation(){
-        String program = "A := Time * ARCSIN(3)~|";
+        String program = "A := Time * ARCSIN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1047,7 +1047,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneARCCOSEquation(){
-        String program = "A = ARCCOS(3)~|";
+        String program = "A = ARCCOS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1057,7 +1057,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberARCCOSEquation(){
-        String program = "A = Time *  ARCCOS(3)~|";
+        String program = "A = Time *  ARCCOS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1067,7 +1067,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionARCCOSDataEquation(){
-        String program = "A := ARCCOS(3)~|";
+        String program = "A := ARCCOS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1077,7 +1077,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberARCCOSDataEquation(){
-        String program = "A := Time * ARCCOS(3)~|";
+        String program = "A := Time * ARCCOS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1091,7 +1091,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneABSEquation(){
-        String program = "A = ABS(3)~|";
+        String program = "A = ABS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1101,7 +1101,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberABSEquation(){
-        String program = "A = Time *  ABS(3)~|";
+        String program = "A = Time *  ABS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1111,7 +1111,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionABSDataEquation(){
-        String program = "A := ABS(3)~|";
+        String program = "A := ABS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1121,7 +1121,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberABSDataEquation(){
-        String program = "A := Time * ABS(3)~|";
+        String program = "A := Time * ABS(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1135,7 +1135,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneLNEquation(){
-        String program = "A = LN(3)~|";
+        String program = "A = LN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1145,7 +1145,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberLNEquation(){
-        String program = "A = Time *  LN(3)~|";
+        String program = "A = Time *  LN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1155,7 +1155,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionLNDataEquation(){
-        String program = "A := LN(3)~|";
+        String program = "A := LN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1165,7 +1165,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberLNDataEquation(){
-        String program = "A := Time * LN(3)~|";
+        String program = "A := Time * LN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1179,7 +1179,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneGAMMALNEquation(){
-        String program = "A = GAMMA LN(3)~|";
+        String program = "A = GAMMA LN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1189,7 +1189,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberGAMMALNEquation(){
-        String program = "A = Time *  GAMMA LN(3)~|";
+        String program = "A = Time *  GAMMA LN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1199,7 +1199,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionGAMMALNDataEquation(){
-        String program = "A := GAMMA LN(3)~|";
+        String program = "A := GAMMA LN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1209,7 +1209,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberGAMMALNDataEquation(){
-        String program = "A := Time * GAMMA LN(3)~|";
+        String program = "A := Time * GAMMA LN(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1223,7 +1223,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneINTEGEREquation(){
-        String program = "A = INTEGER(3)~|";
+        String program = "A = INTEGER(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1233,7 +1233,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberINTEGEREquation(){
-        String program = "A = Time *  INTEGER(3)~|";
+        String program = "A = Time *  INTEGER(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1243,7 +1243,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionINTEGERDataEquation(){
-        String program = "A := INTEGER(3)~|";
+        String program = "A := INTEGER(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1253,7 +1253,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberINTEGERDataEquation(){
-        String program = "A := Time * INTEGER(3)~|";
+        String program = "A := Time * INTEGER(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1267,7 +1267,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneGAMEEquation(){
-        String program = "A = GAME(3)~|";
+        String program = "A = GAME(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1277,7 +1277,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberGAMEEquation(){
-        String program = "A = Time *  GAME(3)~|";
+        String program = "A = Time *  GAME(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1287,7 +1287,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionGAMEDataEquation(){
-        String program = "A := GAME(3)~|";
+        String program = "A := GAME(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1297,7 +1297,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberGAMEDataEquation(){
-        String program = "A := Time * GAME(3)~|";
+        String program = "A := Time * GAME(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1311,7 +1311,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneEXPEquation(){
-        String program = "A = EXP(3)~|";
+        String program = "A = EXP(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1321,7 +1321,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberEXPEquation(){
-        String program = "A = Time *  EXP(3)~|";
+        String program = "A = Time *  EXP(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1331,7 +1331,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionEXPDataEquation(){
-        String program = "A := EXP(3)~|";
+        String program = "A := EXP(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1341,7 +1341,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberEXPDataEquation(){
-        String program = "A := Time * EXP(3)~|";
+        String program = "A := Time * EXP(3)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1352,7 +1352,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneModuloEquation(){
-        String program = "A = MODULO(3,4)~|";
+        String program = "A = MODULO(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1362,7 +1362,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberModuloEquation(){
-        String program = "A = Time *  MODULO(3,4)~|";
+        String program = "A = Time *  MODULO(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1374,7 +1374,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionModuloDataEquation(){
-        String program = "A := MODULO(3,4)~|";
+        String program = "A := MODULO(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1386,7 +1386,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberModuloDataEquation(){
-        String program = "A := Time * MODULO(3,4)~|";
+        String program = "A := Time * MODULO(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1399,7 +1399,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAlonePowerEquation(){
-        String program = "A = POWER(3,4)~|";
+        String program = "A = POWER(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1409,7 +1409,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberPowerEquation(){
-        String program = "A = Time *  POWER(3,4)~|";
+        String program = "A = Time *  POWER(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1421,7 +1421,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionPowerDataEquation(){
-        String program = "A := POWER(3,4)~|";
+        String program = "A := POWER(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1433,7 +1433,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberPowerDataEquation(){
-        String program = "A := Time * POWER(3,4)~|";
+        String program = "A := Time * POWER(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1445,7 +1445,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneLOGEquation(){
-        String program = "A = LOG(3,4)~|";
+        String program = "A = LOG(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1455,7 +1455,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberLOGEquation(){
-        String program = "A = Time *  LOG(3,4)~|";
+        String program = "A = Time *  LOG(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1467,7 +1467,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionLOGDataEquation(){
-        String program = "A :=  LOG(3,4)~|";
+        String program = "A :=  LOG(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1479,7 +1479,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberLOGDataEquation(){
-        String program = "A := Time * LOG(3,4)~|";
+        String program = "A := Time * LOG(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1493,7 +1493,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionAloneQuantumEquation(){
-        String program = "A = QUANTUM(3,4)~|";
+        String program = "A = QUANTUM(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1503,7 +1503,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberQuantumEquation(){
-        String program = "A = Time *  QUANTUM(3,4)~|";
+        String program = "A = Time *  QUANTUM(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1515,7 +1515,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testAloneExceptionQuantumDataEquation(){
-        String program = "A := QUANTUM(3,4)~|";
+        String program = "A := QUANTUM(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1527,7 +1527,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberQuantumDataEquation(){
-        String program = "A := Time * QUANTUM(3,4)~|";
+        String program = "A := Time * QUANTUM(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -1541,7 +1541,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testCompoundNumberQUANTUM(){
-        String program = "A = Time * QUANTUM(3,4)~|";
+        String program = "A = Time * QUANTUM(3,4)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());

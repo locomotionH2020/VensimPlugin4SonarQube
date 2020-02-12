@@ -12,7 +12,7 @@ public class TestConstantNameCheck {
     @Test
     public void testCorrectName() {
 
-        String program = "STARTING_PRODUCTIVITY = -99999 ~|";
+        String program = "STARTING_PRODUCTIVITY = -99999 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -24,7 +24,7 @@ public class TestConstantNameCheck {
 
     @Test
     public void testNameCanContainAnyNumber(){
-        String program = "NUMBERS0_1_2_3_4_5_6_7_8_9 = 3 ~|";
+        String program = "NUMBERS0_1_2_3_4_5_6_7_8_9 = 3 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -35,7 +35,7 @@ public class TestConstantNameCheck {
 
     @Test
     public void testLowerCaseAnyWord(){
-        String program = "starting_PRODUCTIVITY = -99999 ~|";
+        String program = "starting_PRODUCTIVITY = -99999 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -46,7 +46,7 @@ public class TestConstantNameCheck {
 
     @Test
     public void testLowerCaseLastWord(){
-        String program = "STARTING_productivity = -999 ~|";
+        String program = "STARTING_productivity = -999 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -57,7 +57,7 @@ public class TestConstantNameCheck {
 
     @Test
     public void testSeveralUnderscore(){
-        String program = "\nSTARTING__CONSUMPTION = 100 ~|";
+        String program = "\nSTARTING__CONSUMPTION = 100 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -68,7 +68,7 @@ public class TestConstantNameCheck {
 
     @Test
     public void testNameBeginningWithUnderscore(){
-        String program = "_EXPECTED_PRODUCT_2020 = 1 ~|";
+        String program = "_EXPECTED_PRODUCT_2020 = 1 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -79,7 +79,7 @@ public class TestConstantNameCheck {
 
     @Test
     public void testNameEndingWithUnderscore(){
-        String program = "EXPECTED_PRODUCT_2020_ = 2 ~|";
+        String program = "EXPECTED_PRODUCT_2020_ = 2 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -90,7 +90,7 @@ public class TestConstantNameCheck {
 
     @Test
     public void testWeirdCharacters(){
-        String program = "WÉIRD= 3~|";
+        String program = "WÉIRD= 3~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -102,8 +102,8 @@ public class TestConstantNameCheck {
 
     @Test
     public void testNameBeginsWithNumber(){
-        String program = "\"2020_EXPECTED_PRODUCT\" = 5 ~|\n"+
-                "\"2020EXPECTED_PRODUCT\" = 5 ~|\n";
+        String program = "\"2020_EXPECTED_PRODUCT\" = 5 ~~|\n"+
+                "\"2020EXPECTED_PRODUCT\" = 5 ~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -116,7 +116,7 @@ public class TestConstantNameCheck {
 
     @Test
     public void testDoesntGenerateIssuesInUndefinedSymbols(){
-        String program = "CONSTANT= undefINED~|";
+        String program = "CONSTANT= undefINED~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -127,8 +127,8 @@ public class TestConstantNameCheck {
 
     @Test
     public void testMultipleDefinitionCreateDifferentIssues() {
-        String program = "constant[aSubscript] = 3~|\n" +
-                "         constant[anotherSubscript] = 4~|";
+        String program = "constant[aSubscript] = 3~~|\n" +
+                "         constant[anotherSubscript] = 4~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();

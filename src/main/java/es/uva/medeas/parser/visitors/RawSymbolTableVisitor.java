@@ -379,4 +379,10 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
         return new ArrayList<>();
     }
 
+    @Override
+    public Object visitUnitsDoc(ModelParser.UnitsDocContext ctx) {
+        String  comment = ctx.comment.getText().substring(1); // Removes the tilde (~)
+        String units = ctx.units.getText().substring(1);
+        return super.visitUnitsDoc(ctx);
+    }
 }

@@ -59,7 +59,7 @@ public class TestVensimScanner {
 
 
         Logger logger = Mockito.mock(Logger.class);
-     ;
+
 
         JsonSymbolTableBuilder builder = Mockito.mock(JsonSymbolTableBuilder.class);
         VensimScanner.LOG = logger;

@@ -47,7 +47,7 @@ public class TestSymbolGenerator {
 
     @Test
     public void testEquationEqualsNAIsConstant(){
-        String program = "testKeywordNA = :NA:  ~|";
+        String program = "testKeywordNA = :NA:  ~~|";
 
         SymbolTable table = getSymbolTableFromString(program);
 
@@ -270,7 +270,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandom01IsntPure(){
         String program = "variable=" +
-                "RANDOM 0 1()~|\n";
+                "RANDOM 0 1()~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -281,7 +281,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomBetaIsntPure(){
         String program = "variable=" +
-                "RANDOM BETA(1,1,1,1,1,1,1)~|\n";
+                "RANDOM BETA(1,1,1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -292,7 +292,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomBinomialIsntPure(){
         String program = "variable=" +
-                "RANDOM BINOMIAL(1,1,1,1,1,1,1)~|\n";
+                "RANDOM BINOMIAL(1,1,1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -303,7 +303,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomExponentialIsntPure(){
         String program = "variable=" +
-                "RANDOM EXPONENTIAL(1,1,1,1,1)~|\n";
+                "RANDOM EXPONENTIAL(1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -314,7 +314,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomGammaIsntPure(){
         String program = "variable=" +
-                "RANDOM GAMMA(1,1,1,1,1,1)~|\n";
+                "RANDOM GAMMA(1,1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -325,7 +325,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomLookupIsntPure(){
         String program = "variable=" +
-                "RANDOM LOOKUP(1,1,1,1,1,1)~|\n";
+                "RANDOM LOOKUP(1,1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -336,7 +336,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomNegativeBinomialIsntPure(){
         String program = "variable=" +
-                "RANDOM NEGATIVE BINOMIAL(1,1,1,1,1,1,1)~|\n";
+                "RANDOM NEGATIVE BINOMIAL(1,1,1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -347,7 +347,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomNormalIsntPure(){
         String program = "variable=" +
-                "RANDOM NORMAL(1,1,1,1,1)~|\n";
+                "RANDOM NORMAL(1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -358,7 +358,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomPinkNoiseIsntPure(){
         String program = "variable=" +
-                "RANDOM PINK NOISE(1,1,1,1)~|\n";
+                "RANDOM PINK NOISE(1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -369,7 +369,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomPoissonIsntPure(){
         String program = "variable=" +
-                "RANDOM POISSON(1,1,1,1,1,1)~|\n";
+                "RANDOM POISSON(1,1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -381,7 +381,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomTriangularIsntPure(){
         String program = "variable=" +
-                " RANDOM TRIANGULAR(1,1,1,1,1,1)~|\n";
+                " RANDOM TRIANGULAR(1,1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -393,7 +393,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomUniformIsntPure(){
         String program = "variable=" +
-                " RANDOM UNIFORM(1,1,1)~|\n";
+                " RANDOM UNIFORM(1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -405,7 +405,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomWeibullIsntPure(){
         String program = "variable=" +
-                "RANDOM WEIBULL(1,1,1,1,1,1)~|\n";
+                "RANDOM WEIBULL(1,1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
@@ -526,8 +526,8 @@ public class TestSymbolGenerator {
 
     @Test
     public void testLookupCalledBeforeDefinedAndLoadedByFunction(){
-        String program = "variableCaller= myLookup(3)~|\n" +
-                "myLookup= GET XLS LOOKUPS('inputs_W.xlsx', 'Constants', '242', 'C243')~|\n";
+        String program = "variableCaller= myLookup(3)~~|\n" +
+                "myLookup= GET XLS LOOKUPS('inputs_W.xlsx', 'Constants', '242', 'C243')~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
 

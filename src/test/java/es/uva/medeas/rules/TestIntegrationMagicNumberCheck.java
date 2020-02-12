@@ -112,7 +112,7 @@ public class TestIntegrationMagicNumberCheck {
         String program = "TABBED_ARRAY = TABBED ARRAY(3    3    3    3\n" +
                 "3    3    3    3\n" +
                 "3    3    3    3)\n" +
-                "~ |";
+                "~ ~|";
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -128,7 +128,7 @@ public class TestIntegrationMagicNumberCheck {
         String program = "TABBED_ARRAY := TABBED ARRAY(3    3    3    3\n" +
                 "3    3    3    3\n" +
                 "3    3    3    3)\n" +
-                "~ |";
+                "~ ~|";
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -143,7 +143,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testLookupsDontCount(){
-        String program = "mylookup_lt([(3,0)-(10,10)],(1.10092,2.41228),(2.72171,3.24561),(6.11621,5.96491),(3,8.37719))\n~|"
+        String program = "mylookup_lt([(3,0)-(10,10)],(1.10092,2.41228),(2.72171,3.24561),(6.11621,5.96491),(3,8.37719))\n~~|"
                 .repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -157,7 +157,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testWithLookupSecondArgumentDoesntCountEquation(){
-        String program = "var =WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "var =WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -169,7 +169,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testWithLookupSecondArgumentDoesntCountDataEquation(){
-        String program = "var :=WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "var :=WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -182,8 +182,8 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testWithLookupFirstArgument(){
-        String program = "var =WITH LOOKUP(14,((0,1),(1,1),(2,2)))\n~|" +
-                "A = 14 * 0~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS -1);
+        String program = "var =WITH LOOKUP(14,((0,1),(1,1),(2,2)))\n~~|" +
+                "A = 14 * 0~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS -1);
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -196,7 +196,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testRealityCheckDoesntCount(){
-        String program = "big_growth_test :TEST INPUT: divisions = 1e+022~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "big_growth_test :TEST INPUT: divisions = 1e+022~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS);
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
@@ -207,7 +207,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testConstraintDoesntCount(){
-        String program = "my_condition_test :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "my_condition_test :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -231,7 +231,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testNumberListDoesntCountEquation(){
-        String program = "A = 1,1,1,1,1~|";
+        String program = "A = 1,1,1,1,1~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -243,7 +243,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testNumberListDoesntCountDataEquation(){
-        String program = "A := 1,1,1,1,1~|";
+        String program = "A := 1,1,1,1,1~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -255,7 +255,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testNumberListDoesntCountUnchangeableConstant(){
-        String program = "A == 1,1,1,1,1~|";
+        String program = "A == 1,1,1,1,1~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();

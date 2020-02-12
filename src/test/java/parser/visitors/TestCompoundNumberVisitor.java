@@ -23,7 +23,7 @@ public class TestCompoundNumberVisitor {
     private ModelParser.CallContext getAloneCallExprFromProgram(String program) {
         ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        return ((ModelParser.CallExprContext) tree.model().equation(0).expr().children.get(0)).call();
+        return ((ModelParser.CallExprContext) tree.model().symbolDefinition(0).equation().expr().children.get(0)).call();
     }
 
     @Test
@@ -50,7 +50,7 @@ public class TestCompoundNumberVisitor {
                 "                                       QUANTUM(2)))))))))))" +
                 ")";
 
-        String program = "A = " + function + "~|";
+        String program = "A = " + function + "~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call));
@@ -58,7 +58,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testCallContainsVariables(){
-        String program = "A = LOG(3,Time)~|";
+        String program = "A = LOG(3,Time)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertFalse(visitor.callIsACompoundNumber(call));
@@ -66,7 +66,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testCallContainsConstants(){
-        String program = "A = QUANTUM(3,UNDEFINED_CONSTANT)~|";
+        String program = "A = QUANTUM(3,UNDEFINED_CONSTANT)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertFalse(visitor.callIsACompoundNumber(call));
@@ -74,7 +74,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void tesCallContainsWildcard(){
-        String program = "A = MODULO(3,*)~|";
+        String program = "A = MODULO(3,*)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertFalse(visitor.callIsACompoundNumber(call));
@@ -82,7 +82,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testNestedCallWithVariable(){
-        String program = "A = SQRT(LOG(3,Time))~|";
+        String program = "A = SQRT(LOG(3,Time))~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertFalse(visitor.callIsACompoundNumber(call));
@@ -91,7 +91,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testNestedCallWithConstant(){
-        String program = "A = MODULO(3,LN(UNDEFINED_CONSTANT))~|";
+        String program = "A = MODULO(3,LN(UNDEFINED_CONSTANT))~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertFalse(visitor.callIsACompoundNumber(call));
@@ -99,7 +99,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testNestedCallWithNonCompoundCall(){
-        String program = "A = MODULO(3,RANDOM(4))~|";
+        String program = "A = MODULO(3,RANDOM(4))~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertFalse(visitor.callIsACompoundNumber(call));
@@ -107,7 +107,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testNestedCallWithWildcard(){
-        String program = "A = MODULO(3,SQRT(*))~|";
+        String program = "A = MODULO(3,SQRT(*))~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertFalse(visitor.callIsACompoundNumber(call));
@@ -116,7 +116,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testCallToNonCompoundFunction(){
-        String program = "A = RANDOM_FUNCTION(3)~|";
+        String program = "A = RANDOM_FUNCTION(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertFalse(visitor.callIsACompoundNumber(call));
@@ -124,7 +124,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundWithExtraParenthesis(){
-        String program = "A = GAMMA LN((((3))))~|";
+        String program = "A = GAMMA LN((((3))))~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call));
@@ -133,7 +133,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundTwoExpressionsWithKeyword(){
-        String program = "A = ARCCOS(3 :AND: 4)~|";
+        String program = "A = ARCCOS(3 :AND: 4)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call));
@@ -141,7 +141,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundExpressionWithKeyword(){
-        String program = "A = ARCSIN(:NOT: 4)~|";
+        String program = "A = ARCSIN(:NOT: 4)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call));
@@ -149,7 +149,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundWithFloatingLiteral(){
-        String program = "A = ARCTAN(-3e-4)~|";
+        String program = "A = ARCTAN(-3e-4)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call));
@@ -158,7 +158,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testCallWithStringLiteral(){
-        String program = "A = MODULO(3,'Honk')~|";
+        String program = "A = MODULO(3,'Honk')~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertFalse(visitor.callIsACompoundNumber(call));
@@ -166,7 +166,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundWithOperations(){
-        String program = "A = COS(3*4+1 - SIN(5))~|";
+        String program = "A = COS(3*4+1 - SIN(5))~~|";
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call));
     }
@@ -175,7 +175,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundSQRT(){
-        String program = "A = SQRT(3)~|";
+        String program = "A = SQRT(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -185,7 +185,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundTAN(){
-        String program = "A = TAN(3)~|";
+        String program = "A = TAN(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -195,7 +195,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundTANH(){
-        String program = "A = TANH(3)~|";
+        String program = "A = TANH(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -205,7 +205,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundSIN(){
-        String program = "A = SIN(3)~|";
+        String program = "A = SIN(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -215,7 +215,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundSINH(){
-        String program = "A = SINH(3)~|";
+        String program = "A = SINH(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -225,7 +225,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundCOS(){
-        String program = "A = COS(3)~|";
+        String program = "A = COS(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -235,7 +235,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundCOSH(){
-        String program = "A = COSH(3)~|";
+        String program = "A = COSH(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -245,7 +245,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundARCTAN(){
-        String program = "A = ARCTAN(3)~|";
+        String program = "A = ARCTAN(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -255,7 +255,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundARCSIN(){
-        String program = "A = ARCSIN(3)~|";
+        String program = "A = ARCSIN(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -265,7 +265,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundARCCOS(){
-        String program = "A = ARCCOS(3)~|";
+        String program = "A = ARCCOS(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -275,7 +275,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundABS(){
-        String program = "A = ABS(3)~|";
+        String program = "A = ABS(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -285,7 +285,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundLN(){
-        String program = "A = LN(3)~|";
+        String program = "A = LN(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -295,7 +295,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundGAMMALN(){
-        String program = "A = GAMMA LN(3)~|";
+        String program = "A = GAMMA LN(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -305,7 +305,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundINTEGER(){
-        String program = "A = INTEGER(3)~|";
+        String program = "A = INTEGER(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -315,7 +315,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundGAME(){
-        String program = "A = GAME(3)~|";
+        String program = "A = GAME(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -325,7 +325,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundEXP(){
-        String program = "A = EXP(3)~|";
+        String program = "A = EXP(3)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -335,7 +335,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundPOWER(){
-        String program = "A = POWER(3,4)~|";
+        String program = "A = POWER(3,4)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -345,7 +345,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundLOG(){
-        String program = "A = LOG(3,4)~|";
+        String program = "A = LOG(3,4)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -355,7 +355,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundMODULO(){
-        String program = "A = MODULO(3,4)~|";
+        String program = "A = MODULO(3,4)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;
@@ -365,7 +365,7 @@ public class TestCompoundNumberVisitor {
 
     @Test
     public void testValidCompoundQUANTUM(){
-        String program = "A = QUANTUM(3,4)~|";
+        String program = "A = QUANTUM(3,4)~~|";
 
         ModelParser.CallContext call = getAloneCallExprFromProgram(program);
         assertTrue(visitor.callIsACompoundNumber(call))  ;

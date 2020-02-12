@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TestRealityCheckNameRule {
 
-    private final String REALITYCHECKSUFFIX = ":THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~|";
+    private final String REALITYCHECKSUFFIX = ":THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~~|";
     @Test
     public void testCorrectName() {
 

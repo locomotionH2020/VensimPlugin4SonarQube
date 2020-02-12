@@ -18,7 +18,7 @@ public class TestGrammar {
 
     @Test
     public void testFloatNotation(){
-        String program = "const = -1e-3 ~|";
+        String program = "const = -1e-3 ~~|";
 
         getParseTreeFromString(program);
     }
@@ -26,13 +26,13 @@ public class TestGrammar {
 
     @Test
     public void testNegativeFloatsAreDetected(){
-        String program = "const = -0.3-4.1 ~|";
+        String program = "const = -0.3-4.1 ~~|";
         getParseTreeFromString(program);
     }
 
     @Test
     public void testNegativeIntegersAreDetected(){
-        String program = "const = -5-4 ~|";
+        String program = "const = -5-4 ~~|" ;
         getParseTreeFromString(program);
     }
 
@@ -41,14 +41,14 @@ public class TestGrammar {
         String program = "initial population equiv comma semicolon syntax[country row,blood type column]=\t\n" +
                 "1,2,3,4;\n" +
                 "5,6,7,8;\n" +
-                "9,10,11,12;\n~|";
+                "9,10,11,12;\n~~|";
 
         getParseTreeFromString(program);
     }
 
     @Test
     public void testWeirdChars(){
-        String program = "URR tot agg oil Laherrère 2006= 10  ~|";
+        String program = "URR tot agg oil Laherrère 2006= 10  ~~|";
 
         getParseTreeFromString(program);
     }
@@ -62,7 +62,7 @@ public class TestGrammar {
 
         ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        String reference_line = tree.model().lookupDefinition(0).lookup().lookupRange().referenceLine().getText();
+        String reference_line = tree.model().symbolDefinition(0).lookupDefinition().lookup().lookupRange().referenceLine().getText();
 
         assertEquals(",(1.25382,3.55263),(3.85321,4.5614),(7.15596,7.67544),(8.74618,9.21053)",reference_line);
 
@@ -75,7 +75,7 @@ public class TestGrammar {
 
         ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        ModelParser.ExprOperationContext parentExpr = (ModelParser.ExprOperationContext) tree.model().equation(0).expr();
+        ModelParser.ExprOperationContext parentExpr = (ModelParser.ExprOperationContext) tree.model().symbolDefinition(0).equation().expr();
 
         ModelParser.SignExprContext firstChild = (ModelParser.SignExprContext) parentExpr.getChild(0);
         assertEquals("-",firstChild.start.getText());
@@ -98,7 +98,7 @@ public class TestGrammar {
 
     @Test
     public void testGrammarRecognizesWildCard(){
-        String program = "testWildcard :THE CONDITION: FINAL TIME=101 :IMPLIES: \t* <  6:AND: * >=  1e+007  ~|";
+        String program = "testWildcard :THE CONDITION: FINAL TIME=101 :IMPLIES: \t* <  6:AND: * >=  1e+007  ~~|";
 
         getParseTreeFromString(program);
     }
@@ -133,36 +133,36 @@ public class TestGrammar {
         SymbolTable table = getRAWSymbolTableFromString(program);
         ModelParser.FileContext file = getParseTreeFromString(program);
 
-        assertEquals("\"Electric/electronic components\"",file.model().equation(0).lhs().subscript(0).subscriptIdList().subscriptId(0).getText());
+        assertEquals("\"Electric/electronic components\"",file.model().symbolDefinition(0).equation().lhs().subscript(0).subscriptIdList().subscriptId(0).getText());
     }
 
     @Test
     public void testNumberInParenthesisIsNotConsideredLookup(){
-        String program = "A = (3)~|";
+        String program = "A = (3)~~|";
 
         ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        ModelParser.SignExprContext parenthesis = (ModelParser.SignExprContext)  tree.model().equation(0).expr();
+        ModelParser.SignExprContext parenthesis = (ModelParser.SignExprContext)  tree.model().symbolDefinition(0).equation().expr();
         assertEquals(ModelParser.ParensContext.class, parenthesis.exprAllowSign().getClass());
 
     }
 
     @Test
     public void testOnedimensionalArrayCanContainFinalSemicolon(){
-        String program = "A = 3,4,5,6; ~|";
+        String program = "A = 3,4,5,6; ~~|";
         ModelParser.FileContext tree= getParseTreeFromString(program);
 
-        ModelParser.ConstListContext array = tree.model().equation(0).constList();
+        ModelParser.ConstListContext array = tree.model().symbolDefinition(0).equation().constList();
         assertNotNull(array);
         assertEquals("3,4,5,6;",array.getText());
     }
 
     @Test
     public void testOnedimensionalArraysDontRequireSemicolon(){
-        String program = "A = 3,4,5,6 ~|";
+        String program = "A = 3,4,5,6 ~~|";
         ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        ModelParser.ConstListContext array = tree.model().equation(0).constList();
+        ModelParser.ConstListContext array = tree.model().symbolDefinition(0).equation().constList();
         assertNotNull(array);
         assertEquals("3,4,5,6",array.getText());
     }
@@ -170,65 +170,65 @@ public class TestGrammar {
 
     @Test(expected = ParseCancellationException.class)
     public void testUnchangeableConstantsDontAllowOperations(){
-        String program = "A == 3+3~|";
+        String program = "A == 3+3~~|";
 
         getParseTreeFromString(program);
     }
 
     @Test(expected = ParseCancellationException.class)
     public void  testUnchangeableConstantsDontAllowParenthesis(){
-        String program = "A == (3)~|";
+        String program = "A == (3)~~|";
         getParseTreeFromString(program);
     }
 
     @Test
     public void testUnchangeableConstantGetXLSConstant(){
         String program = "A ==\n" +
-                "GET XLS CONSTANTS('inputs_W.xlsx', 'Climate', 'C98')~|";
+                "GET XLS CONSTANTS('inputs_W.xlsx', 'Climate', 'C98')~~|";
 
         getParseTreeFromString(program);
     }
 
     @Test
     public void testUnchangeableConstantAllowsLists(){
-        String program = "A == 1,2,3,4~|";
+        String program = "A == 1,2,3,4~~|";
         getParseTreeFromString(program);
     }
 
 
     @Test
     public void testUnchangeableConstantAllowsBidimensionalLists(){
-        String program = "A == 1,2,3,4; 5,6,7,8;~|";
+        String program = "A == 1,2,3,4; 5,6,7,8;~~|";
         getParseTreeFromString(program);
     }
 
     @Test
     public void testIntegerWithMultipleSigns(){
-        String program = "A = -+---+-+----+-+--++-+---3~|";
+        String program = "A = -+---+-+----+-+--++-+---3~~|";
         getParseTreeFromString(program);
     }
 
     @Test
     public void testFloatWithMultipleSigns(){
-        String program = "A = -+---+-+----+-+--++-+---3.0~|";
+        String program = "A = -+---+-+----+-+--++-+---3.0~~|";
         getParseTreeFromString(program);
     }
 
     @Test
     public void testCallWithMultipleSigns(){
-        String program = "A = -++-++-+-+-+-++-+-+-+-SQRT(2)~|";
+        String program = "A = -++-++-+-+-+-++-+-+-+-SQRT(2)~~|";
         getParseTreeFromString(program);
     }
 
     @Test
     public void testIdentifierMultipleSigns(){
-        String program = "A = -++-++-+-+-+-++-+-+-+-Time~|";
+        String program = "A = -++-++-+-+-+-++-+-+-+-Time~~|";
         getParseTreeFromString(program);
     }
 
     @Test
     public void testParenthesisMultipleSigns(){
-        String program = "A = -++-++-+-+-+-++-+-+-+-(10)~|";
+        String program = "A = -++-++-+-+-+-++-+-+-+-(10)~~|";
         getParseTreeFromString(program);
     }
 

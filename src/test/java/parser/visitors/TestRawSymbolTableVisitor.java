@@ -23,7 +23,7 @@ public class TestRawSymbolTableVisitor {
                 ":MACRO: myMacro(testArgumentBefore,testArgumentAfter)\n" +
                 "myMacro = INTEG((testArgumentBefore - 3)/testArgumentAfter, testArgumentBefore) ~~|\n" +
                 ":END OF MACRO:\n"+
-                "testArgumentAfter= 10~|\n";
+                "testArgumentAfter= 10~~|\n";
 
 
         SymbolTable table = getRAWSymbolTableFromString(program);
@@ -238,7 +238,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testEquationEqualsNADoesntHaveDependencies(){
-        String program = "testKeywordNA = :NA:  ~|";
+        String program = "testKeywordNA = :NA:  ~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -248,7 +248,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testExprInsideParenthesis(){
-        String program = "variable = ((((someConstant)))/Time)~|";
+        String program = "variable = ((((someConstant)))/Time)~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -260,8 +260,8 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testExprWithSign(){
-        String program = "negativeVariable = -something~|\n" +
-                "positiveVariable = +something~|";
+        String program = "negativeVariable = -something~~|\n" +
+                "positiveVariable = +something~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -277,7 +277,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testExprLookupCal(){
         String program = "lookup_inside_expr= WITH LOOKUP ( constVensim,\n" +
-                "([(0,0)-(4,2)],(0,0.9),(1,1),(2,1.2),(3,1.5),(4,2) ))~|";
+                "([(0,0)-(4,2)],(0,0.9),(1,1),(2,1.2),(3,1.5),(4,2) ))~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -289,7 +289,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testExprOperatorsDependencies(){
         String program = "testOperators = var1 *  var2 / var3 + (var4)\n" +
-                "                  - var5  ^  var6  ~|";
+                "                  - var5  ^  var6  ~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -303,7 +303,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testExprComparisonOperatorsDependencies(){
         String program = " testComparisonOperators = IF THEN ELSE (var1 >= var2 :AND: var3 <= var4\n" +
-                " :OR: var5 > var6 :OR: var7 < var8 :OR: var9 = var10 :OR: var11<>var12)  ~|";
+                " :OR: var5 > var6 :OR: var7 < var8 :OR: var9 = var10 :OR: var11<>var12)  ~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -316,7 +316,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testExprCall(){
-        String program = "result = MADE UP CALL(arg1,arg2,arg3) ~|\n";
+        String program = "result = MADE UP CALL(arg1,arg2,arg3) ~~|\n";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -330,7 +330,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testEmptyEquation(){
-        String program = "\nemptyEquation ~|";
+        String program = "\nemptyEquation ~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -341,7 +341,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testRealityCheckConditionImplies(){
-        String program = "\n\n\n\n\nmyCondition :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~|";
+        String program = "\n\n\n\n\nmyCondition :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~~|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myCondition = table.getSymbol("myCondition");

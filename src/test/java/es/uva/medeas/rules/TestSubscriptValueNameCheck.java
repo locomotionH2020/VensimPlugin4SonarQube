@@ -17,7 +17,7 @@ public class TestSubscriptValueNameCheck {
     @Test
     public void testCorrectName() {
 
-        String program = "MY_COUNTRIES_I: FIRST_COUNTRY, COUNTRY2~|";
+        String program = "MY_COUNTRIES_I: FIRST_COUNTRY, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -30,7 +30,7 @@ public class TestSubscriptValueNameCheck {
 
     @Test
     public void testNameCanContainAnyNumber() {
-        String program = "NUMBERS_INSIDE_SUBSCRIPTS_I:\n COUNTRY_0_1_2_3_4_5_6_7_8_9, COUNTRY2~|";
+        String program = "NUMBERS_INSIDE_SUBSCRIPTS_I:\n COUNTRY_0_1_2_3_4_5_6_7_8_9, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -45,7 +45,7 @@ public class TestSubscriptValueNameCheck {
     @Test
     public void testLowerCaseAnyWord() {
 
-        String program = "COUNTRIES_I: COUNTRY,\n my_COUNTRY~|";
+        String program = "COUNTRIES_I: COUNTRY,\n my_COUNTRY~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -59,7 +59,7 @@ public class TestSubscriptValueNameCheck {
     @Test
     public void testLowerCaseLastWord() {
 
-        String program = "COUNTRIES_I: COUNTRY1,\n country2~|";
+        String program = "COUNTRIES_I: COUNTRY1,\n country2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -72,7 +72,7 @@ public class TestSubscriptValueNameCheck {
 
     @Test
     public void testSeveralUnderscore(){
-        String program = "MY_COUNTRIES_I: ONE__COUNTRY,\n COUNTRY2~|";
+        String program = "MY_COUNTRIES_I: ONE__COUNTRY,\n COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -85,7 +85,7 @@ public class TestSubscriptValueNameCheck {
 
     @Test
     public void testNameBeginningWithUnderscore(){
-        String program = "MY_COUNTRIES_I:\n _COUNTRY1\n, COUNTRY2~|";
+        String program = "MY_COUNTRIES_I:\n _COUNTRY1\n, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -97,7 +97,7 @@ public class TestSubscriptValueNameCheck {
 
     @Test
     public void testNameEndingWithUnderscore(){
-        String program = "MY_COUNTRIES_I_:\n COUNTRY1_, COUNTRY2~|";
+        String program = "MY_COUNTRIES_I_:\n COUNTRY1_, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -110,7 +110,7 @@ public class TestSubscriptValueNameCheck {
 
     @Test
     public void testWeirdCharacters(){
-        String program = "COUNTRIES_I:\n WEIRD_È, COUNTRY2~|";
+        String program = "COUNTRIES_I:\n WEIRD_È, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -122,8 +122,8 @@ public class TestSubscriptValueNameCheck {
 
     @Test
     public void testBeginsWithNumber(){
-        String program = "COUNTRIES_I: \"1_COUNTRY\", COUNTRY2~|\n" +
-                         "ANOTHER_I: \"1COUNTRY\"~|";
+        String program = "COUNTRIES_I: \"1_COUNTRY\", COUNTRY2~~|\n" +
+                         "ANOTHER_I: \"1COUNTRY\"~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -138,8 +138,8 @@ public class TestSubscriptValueNameCheck {
     @Test
     public void testMultipleDefinitionCreateDifferentIssues() {
 
-        String program = "MY_COUNTRIES_I: a_country, COUNTRY2~|\n"+
-                "OTHER_COUNTRIES_I: a_country, COUNTRY2~|\n";
+        String program = "MY_COUNTRIES_I: a_country, COUNTRY2~~|\n"+
+                "OTHER_COUNTRIES_I: a_country, COUNTRY2~~|\n";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
