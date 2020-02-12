@@ -62,7 +62,7 @@ public class TestGrammar {
 
         ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        String reference_line = tree.model().symbolDefinition(0).lookupDefinition().lookup().lookupRange().referenceLine().getText();
+        String reference_line = tree.model().symbolWithDoc(0).symbolWithDocDefinition().lookupDefinition().lookup().lookupRange().referenceLine().getText();
 
         assertEquals(",(1.25382,3.55263),(3.85321,4.5614),(7.15596,7.67544),(8.74618,9.21053)",reference_line);
 
@@ -75,7 +75,7 @@ public class TestGrammar {
 
         ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        ModelParser.ExprOperationContext parentExpr = (ModelParser.ExprOperationContext) tree.model().symbolDefinition(0).equation().expr();
+        ModelParser.ExprOperationContext parentExpr = (ModelParser.ExprOperationContext) tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr();
 
         ModelParser.SignExprContext firstChild = (ModelParser.SignExprContext) parentExpr.getChild(0);
         assertEquals("-",firstChild.start.getText());
@@ -133,7 +133,7 @@ public class TestGrammar {
         SymbolTable table = getRAWSymbolTableFromString(program);
         ModelParser.FileContext file = getParseTreeFromString(program);
 
-        assertEquals("\"Electric/electronic components\"",file.model().symbolDefinition(0).equation().lhs().subscript(0).subscriptIdList().subscriptId(0).getText());
+        assertEquals("\"Electric/electronic components\"",file.model().symbolWithDoc(0).symbolWithDocDefinition().equation().lhs().subscript(0).subscriptIdList().subscriptId(0).getText());
     }
 
     @Test
@@ -142,7 +142,7 @@ public class TestGrammar {
 
         ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        ModelParser.SignExprContext parenthesis = (ModelParser.SignExprContext)  tree.model().symbolDefinition(0).equation().expr();
+        ModelParser.SignExprContext parenthesis = (ModelParser.SignExprContext)  tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr();
         assertEquals(ModelParser.ParensContext.class, parenthesis.exprAllowSign().getClass());
 
     }
@@ -152,7 +152,7 @@ public class TestGrammar {
         String program = "A = 3,4,5,6; ~~|";
         ModelParser.FileContext tree= getParseTreeFromString(program);
 
-        ModelParser.ConstListContext array = tree.model().symbolDefinition(0).equation().constList();
+        ModelParser.ConstListContext array = tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().constList();
         assertNotNull(array);
         assertEquals("3,4,5,6;",array.getText());
     }
@@ -162,7 +162,7 @@ public class TestGrammar {
         String program = "A = 3,4,5,6 ~~|";
         ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        ModelParser.ConstListContext array = tree.model().symbolDefinition(0).equation().constList();
+        ModelParser.ConstListContext array = tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().constList();
         assertNotNull(array);
         assertEquals("3,4,5,6",array.getText());
     }

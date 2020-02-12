@@ -36,7 +36,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     }
 
     @Override
-    public Object visitSubscriptRange(ModelParser.SubscriptRangeContext ctx) {
+    public Symbol visitSubscriptRange(ModelParser.SubscriptRangeContext ctx) {
         Symbol symbol = getSymbolOrCreate(table,ctx.Id().getSymbol().getText());
         symbol.addDefinitionLine(getStartLine(ctx));
         symbol.setType(SymbolType.SUBSCRIPT_NAME);
@@ -60,7 +60,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
 
 
     @Override
-    public Object visitEquation(ModelParser.EquationContext ctx) {
+    public Symbol visitEquation(ModelParser.EquationContext ctx) {
         Symbol symbol = getSymbolOrCreate(table,ctx.lhs().Id().getSymbol().getText());
         symbol.addDefinitionLine(getStartLine(ctx));
 
@@ -73,12 +73,12 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
 
 
     @Override
-    public Object visitConstraint(ModelParser.ConstraintContext ctx) {
+    public Symbol visitConstraint(ModelParser.ConstraintContext ctx) {
         Symbol symbol = getSymbolOrCreate(table,ctx.Id().getSymbol().getText());
         symbol.setType(SymbolType.REALITY_CHECK);
         symbol.addDefinitionLine(getStartLine(ctx));
 
-        return null;
+        return symbol;
     }
 
     @Override
@@ -91,15 +91,15 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     }
 
     @Override
-    public Object visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
+    public Symbol visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
         Symbol symbol = getSymbolOrCreate(table,ctx.lhs().Id().getSymbol().getText());
         symbol.setType(SymbolType.CONSTANT);
         symbol.addDefinitionLine(getStartLine(ctx));
-        return null;
+        return symbol;
     }
 
     @Override
-    public Object visitDataEquation(ModelParser.DataEquationContext ctx) {
+    public Symbol visitDataEquation(ModelParser.DataEquationContext ctx) {
         Symbol symbol = getSymbolOrCreate(table,ctx.lhs().Id().getSymbol().getText());
         symbol.addDefinitionLine(getStartLine(ctx));
 
@@ -110,7 +110,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     }
 
     @Override
-    public Object visitLookupDefinition(ModelParser.LookupDefinitionContext ctx) {
+    public Symbol visitLookupDefinition(ModelParser.LookupDefinitionContext ctx) {
         Symbol symbol = getSymbolOrCreate(table,ctx.lhs().Id().getSymbol().getText());
         symbol.addDefinitionLine(getStartLine(ctx));
         symbol.setType(SymbolType.LOOKUP);
@@ -125,7 +125,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     }
 
     @Override
-    public Object visitStringAssign(ModelParser.StringAssignContext ctx) {
+    public Symbol visitStringAssign(ModelParser.StringAssignContext ctx) {
         Symbol symbol = getSymbolOrCreate(table,ctx.lhs().Id().getSymbol().getText());
         symbol.setType(SymbolType.CONSTANT);
         symbol.addDefinitionLine(getStartLine(ctx));
@@ -135,7 +135,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
 
 
     @Override
-    public Object visitSubscriptCopy(ModelParser.SubscriptCopyContext ctx) {
+    public Symbol visitSubscriptCopy(ModelParser.SubscriptCopyContext ctx) {
 
         Symbol symbol = getSymbolOrCreate(table,ctx.Id(0).getSymbol().getText());
         symbol.setType(SymbolType.SUBSCRIPT_NAME);
@@ -145,7 +145,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     }
 
     @Override
-    public Object visitRealityCheck(ModelParser.RealityCheckContext ctx) {
+    public Symbol visitRealityCheck(ModelParser.RealityCheckContext ctx) {
         Symbol symbol = getSymbolOrCreate(table,ctx.Id().getSymbol().getText());
         symbol.setType(SymbolType.REALITY_CHECK);
         symbol.addDefinitionLine(getStartLine(ctx));
@@ -379,10 +379,21 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
         return new ArrayList<>();
     }
 
+
     @Override
-    public Object visitUnitsDoc(ModelParser.UnitsDocContext ctx) {
-        String  comment = ctx.comment.getText().substring(1); // Removes the tilde (~)
-        String units = ctx.units.getText().substring(1);
-        return super.visitUnitsDoc(ctx);
+    public Symbol visitSymbolWithDoc(ModelParser.SymbolWithDocContext ctx) {
+        Object symbolObj = visitSymbolWithDocDefinition(ctx.symbolWithDocDefinition());
+        if(!(symbolObj instanceof Symbol))
+            throw new IllegalStateException("The visitor returned an object that isn't of type Symbol. Actual object: "+ symbolObj);
+
+        Symbol symbol = (Symbol) symbolObj;
+
+        String comment = ctx.unitsDoc().comment.getText().substring(1);
+        String units = ctx.unitsDoc().units.getText().substring(1);
+
+        symbol.setUnits(units);
+        symbol.setComment(comment);
+
+        return symbol;
     }
 }

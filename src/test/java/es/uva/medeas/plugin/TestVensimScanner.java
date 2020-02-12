@@ -49,7 +49,7 @@ public class TestVensimScanner {
         files.add(inputFile);
         scanner.scanFiles(files);
 
-        Mockito.verify(logger).error("Unable to parse the file '{}'. Message {}","notAVensimModel.mdl", "no viable alternative at input 'This isn't a vensim model'");
+        Mockito.verify(logger).error("Unable to parse the file '{}'. Message {}","notAVensimModel.mdl", "mismatched input '<EOF>' expecting {':IGNORE:', ':EXCEPT:', '[', ':=', Keyword, INFO_UNIT}");
 
     }
 

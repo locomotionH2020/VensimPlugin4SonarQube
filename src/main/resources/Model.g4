@@ -6,11 +6,14 @@ grammar Model;
 // A Vensim model is a sequence of equations and subscript ranges.
 
 file: model EOF;
-model: ( symbolDefinition|macroDefinition)* sketches;
+model: ( symbolWithDoc | macroDefinition)* sketches;
 
 
-symbolDefinition: ( lookupDefinition | subscriptRange | equation |constraint  | unchangeableConstant |
-                         dataEquation| stringAssign |subscriptCopy |realityCheck) unitsDoc ;
+symbolWithDoc: symbolWithDocDefinition unitsDoc;
+
+symbolWithDocDefinition: ( lookupDefinition | subscriptRange | equation |constraint  | unchangeableConstant |
+                         dataEquation| stringAssign |subscriptCopy |realityCheck); 
+
 
 // A subscript range definition names subscripts in a dimension.
 subscriptRange : Id ':' ( subscriptIdList| call) subscriptMappingList? ;
@@ -41,7 +44,7 @@ realityCheck: Id subscript? ':TEST INPUT:' expr ;
 
 
 stringAssign: lhs StringAssignOp StringConst  (':IGNORE:' exprList)? ;
-macroDefinition: ':MACRO:' macroHeader symbolDefinition+ ':END OF MACRO:';
+macroDefinition: ':MACRO:' macroHeader symbolWithDoc+ ':END OF MACRO:';
 
 
 

@@ -23,7 +23,7 @@ public class TestCompoundNumberVisitor {
     private ModelParser.CallContext getAloneCallExprFromProgram(String program) {
         ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        return ((ModelParser.CallExprContext) tree.model().symbolDefinition(0).equation().expr().children.get(0)).call();
+        return ((ModelParser.CallExprContext) tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr().children.get(0)).call();
     }
 
     @Test

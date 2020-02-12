@@ -9,6 +9,8 @@ public class Symbol {
     private String token;
     private List<Integer> linesDefined;
     private List<Symbol> indexes;
+    private String units;
+    private String comment;
     private Set<Symbol> dependencies;
     private SymbolType type;
 
@@ -18,6 +20,8 @@ public class Symbol {
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
         linesDefined = new ArrayList<>();
+        units = "";
+        comment ="";
     }
 
     public Symbol(String token, SymbolType type){
@@ -91,5 +95,11 @@ public class Symbol {
     }
 
 
+    public void setUnits(String units) {
+        this.units = units.strip();
+    }
 
+    public void setComment(String comment){
+        this.comment = comment.strip();
+    }
 }
