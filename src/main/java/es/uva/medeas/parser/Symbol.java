@@ -24,6 +24,7 @@ public class Symbol {
         comment ="";
     }
 
+
     public Symbol(String token, SymbolType type){
       this(token);
       this.type = type;
@@ -102,4 +103,13 @@ public class Symbol {
     public void setComment(String comment){
         this.comment = comment.strip();
     }
+
+    public String getUnits() {
+        return units;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
 }

@@ -232,6 +232,22 @@ public class TestGrammar {
         getParseTreeFromString(program);
     }
 
+    @Test
+    public void testSuplementaryVariable(){
+        String program = "A ~ units ~ comment ~ :SUPPLEMENTARY ";
+        getParseTreeFromString(program);
+    }
 
+    @Test
+    public void testVariableWithDoubleQuotesInComment(){
+        String program = "A ~ units ~ \" |  ";
+        getParseTreeFromString(program);
+    }
+
+    @Test
+    public void testVariableWithDoubleQuotesInUnits(){
+        String program = "A ~ \" ~ comment |  ";
+        getParseTreeFromString(program);
+    }
 
 }

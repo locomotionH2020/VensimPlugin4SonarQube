@@ -17,29 +17,13 @@ import static org.junit.Assert.*;
 
 public class TestRawSymbolTableVisitor {
 
-    @Test
-    public void testMacroArgumentsArentConsideredDefinition(){
-        String program = "testArgumentBefore = 5 ~~ |\n" +
-                ":MACRO: myMacro(testArgumentBefore,testArgumentAfter)\n" +
-                "myMacro = INTEG((testArgumentBefore - 3)/testArgumentAfter, testArgumentBefore) ~~|\n" +
-                ":END OF MACRO:\n"+
-                "testArgumentAfter= 10~~|\n";
 
-
-        SymbolTable table = getRAWSymbolTableFromString(program);
-
-        Symbol argumentBefore = table.getSymbol("testArgumentBefore");
-        assertSymbolDefinedOnlyIn(1,argumentBefore);
-
-        Symbol argumentAfter = table.getSymbol("testArgumentAfter");
-        assertSymbolDefinedOnlyIn(5,argumentAfter);
-    }
 
 
     @Test
     public void testSubscript(){
         String program = "\nname: OPTION1,\n" +
-                " OPTION2 -> mappedSubscript ~~|";
+                " OPTION2 -> mappedSubscript ~ units ~ comment|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -50,6 +34,8 @@ public class TestRawSymbolTableVisitor {
         assertSymbol(subscriptName, SymbolType.SUBSCRIPT_NAME,2,NO_DEPENDENCIES);
         assertSymbol(option1,SymbolType.SUBSCRIPT_VALUE,2,NO_DEPENDENCIES);
         assertSymbol(option2,SymbolType.SUBSCRIPT_VALUE,3,NO_DEPENDENCIES);
+        assertEquals("units",subscriptName.getUnits());
+        assertEquals("comment",subscriptName.getComment());
 
     }
 
@@ -87,7 +73,7 @@ public class TestRawSymbolTableVisitor {
     public void testSubscriptCopy(){
         String program =  "subscriptBefore[copy] = 7 ~~|\n" +
                 "original: OPTION1 ~~|\n" +
-                "copy\n <-> original  ~~|\n" +
+                "copy\n <-> original  ~ units ~ comment|\n" +
                 "subscriptAfter[copy] = 6 ~~|\n";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
@@ -95,6 +81,8 @@ public class TestRawSymbolTableVisitor {
         Symbol copy = table.getSymbol("copy");
         assertSymbolType(copy,SymbolType.SUBSCRIPT_NAME);
         assertSymbolDefinedOnlyIn(3,copy);
+        assertEquals("units",copy.getUnits());
+        assertEquals("comment",copy.getComment());
     }
 
 
@@ -128,13 +116,15 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testLookup(){
         String program = "test lookup call before = myLookup(3)~~|\n" +
-                "myLookup([(0,0)-(10,10)],(0,0),(1,1),(2,0.5),(3,1),(4,0))~~|\n" +
+                "myLookup([(0,0)-(10,10)],(0,0),(1,1),(2,0.5),(3,1),(4,0))~units~ comment|\n" +
                 "test lookup call after = myLookup(5)~~|\n";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myLookup = table.getSymbol("myLookup");
         assertSymbol(myLookup,SymbolType.LOOKUP,2,NO_DEPENDENCIES);
+        assertEquals("units",myLookup.getUnits());
+        assertEquals("comment",myLookup.getComment());
 
     }
 
@@ -167,8 +157,8 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testMacro(){
         String program = "\n\n:MACRO: myMacro(input,timeVar)\n" +
-                "myMacro = INTEG((input - 3)/timeVar, input)\n" +
-                "~~|\n"+
+                "myMacro = INTEG((input - 3)/timeVar, input)~~|\n" +
+                "supportFunction = 6 * input * timeVar ~~|\n"+
                 ":END OF MACRO:";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
@@ -176,6 +166,28 @@ public class TestRawSymbolTableVisitor {
         Symbol myMacro = table.getSymbol("myMacro");
         assertSymbolType(myMacro,SymbolType.FUNCTION);
         assertEquals(Arrays.asList(3,4),myMacro.getDefinitionLines());
+        assertTrue(table.hasSymbol("supportFunction"));
+
+    }
+
+    @Test
+    public void testMacroArgumentsArentConsideredDefinition(){
+        String program = "testArgumentBefore = 5 ~~ |\n" +
+                ":MACRO: myMacro(testArgumentBefore,testArgumentAfter)\n" +
+                "myMacro = INTEG((testArgumentBefore - 3)/testArgumentAfter, testArgumentBefore) ~~|\n" +
+                ":END OF MACRO:\n"+
+                "testArgumentAfter= 10~~|\n";
+
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        Symbol argumentBefore = table.getSymbol("testArgumentBefore");
+        assertSymbolDefinedOnlyIn(1,argumentBefore);
+
+        Symbol argumentAfter = table.getSymbol("testArgumentAfter");
+        assertSymbolDefinedOnlyIn(5,argumentAfter);
+
+        table.print();
     }
 
 
@@ -183,22 +195,27 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testUnchangeableConstant(){
-        String program = "\n\n\nPI== 3.14159 ~~|";
+        String program = "\n\n\nPI== 3.14159 ~ units ~ comment|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
 
         Symbol pi = table.getSymbol("PI");
         assertSymbol(pi,SymbolType.CONSTANT,4,NO_DEPENDENCIES);
+        assertEquals("units",pi.getUnits());
+        assertEquals("comment",pi.getComment());
     }
 
     @Test
     public void testStringConstant(){
-        String program = "\n\nfilename:IS: 'simpleInputs.xls'~~|";
+        String program = "\n\nfilename:IS: 'simpleInputs.xls'~ units~ comment|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
 
         Symbol filename = table.getSymbol("filename");
         assertSymbol(filename,SymbolType.CONSTANT,3,NO_DEPENDENCIES);
+
+        assertEquals("units",filename.getUnits());
+        assertEquals("comment",filename.getComment());
     }
 
 
@@ -330,33 +347,39 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testEmptyEquation(){
-        String program = "\nemptyEquation ~~|";
+        String program = "\nemptyEquation ~ units~ comment|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol emptyEquation = table.getSymbol("emptyEquation");
         assertNoDependencies(emptyEquation);
         assertSymbolDefinedOnlyIn(2,emptyEquation);
+        assertEquals("comment",emptyEquation.getComment());
+        assertEquals("units",emptyEquation.getUnits());
     }
 
     @Test
     public void testRealityCheckConditionImplies(){
-        String program = "\n\n\n\n\nmyCondition :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~~|";
+        String program = "\n\n\n\n\nmyCondition :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~ units ~ comment|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myCondition = table.getSymbol("myCondition");
         assertSymbol(myCondition,SymbolType.REALITY_CHECK,6,NO_DEPENDENCIES);
+        assertEquals("comment", myCondition.getComment());
+        assertEquals("units", myCondition.getUnits());
     }
 
 
     @Test
     public void testRealityCheckTestInput(){
-        String program = "\nmyTestInput :TEST INPUT: positiveVariable[subscript] >= 0 ~~|";
+        String program = "\nmyTestInput :TEST INPUT: positiveVariable[subscript] >= 0 ~ units ~ comment|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myTestInput = table.getSymbol("myTestInput");
         assertSymbol(myTestInput,SymbolType.REALITY_CHECK,2,NO_DEPENDENCIES);
+        assertEquals("comment", myTestInput.getComment());
+        assertEquals("units", myTestInput.getUnits());
     }
 
     @Test
@@ -474,7 +497,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testVariableCalledE(){
-        // A error in the grammar caused 'e' to be tokenized as a 'e' token (used in scientific notation) rather than as an id.
+        // An error in the grammar caused 'e' to be tokenized as a 'e' token (used in scientific notation) rather than as an id.
         String program = "e = 5~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
@@ -490,4 +513,38 @@ public class TestRawSymbolTableVisitor {
 
         assertNotNull(table.getSymbol("e10"));
     }
+
+    @Test
+    public void testEquationWithoutCommentAndUnit(){
+       String program = "var = 5 ~     ~    |";
+
+       SymbolTable table = getRAWSymbolTableFromString(program);
+       Symbol var = table.getSymbol("var");
+
+       assertEquals("",var.getComment());
+       assertEquals("",var.getUnits());
+    }
+
+
+    @Test
+    public void testEquationInsideMacroCommentAndUnit(){
+        String program = "\n\n:MACRO: myMacro(input,timeVar)\n" +
+                "myMacro = INTEG((input - 3)/timeVar, input)~ main function units ~ main function comment|\n" +
+                "supportFunction = 6 * input * timeVar ~ support function units ~ support function comment|\n"+
+                ":END OF MACRO:";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        Symbol myMacro = table.getSymbol("myMacro");
+        Symbol supportFunction = table.getSymbol("supportFunction");
+
+        assertEquals("main function units", myMacro.getUnits());
+        assertEquals("main function comment", myMacro.getComment());
+
+        assertEquals("support function units", supportFunction.getUnits());
+        assertEquals("support function comment", supportFunction.getComment());
+
+    }
+
+
 }
