@@ -158,7 +158,7 @@ public class TestRawSymbolTableVisitor {
     public void testMacro(){
         String program = "\n\n:MACRO: myMacro(input,timeVar)\n" +
                 "myMacro = INTEG((input - 3)/timeVar, input)~~|\n" +
-                "supportFunction = 6 * input * timeVar ~~|\n"+
+                "supportValue = 6 * input * timeVar ~~|\n"+
                 ":END OF MACRO:";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
@@ -166,7 +166,7 @@ public class TestRawSymbolTableVisitor {
         Symbol myMacro = table.getSymbol("myMacro");
         assertSymbolType(myMacro,SymbolType.FUNCTION);
         assertEquals(Arrays.asList(3,4),myMacro.getDefinitionLines());
-        assertTrue(table.hasSymbol("supportFunction"));
+        assertTrue(table.hasSymbol("supportValue"));
 
     }
 
@@ -186,8 +186,6 @@ public class TestRawSymbolTableVisitor {
 
         Symbol argumentAfter = table.getSymbol("testArgumentAfter");
         assertSymbolDefinedOnlyIn(5,argumentAfter);
-
-        table.print();
     }
 
 
@@ -530,19 +528,19 @@ public class TestRawSymbolTableVisitor {
     public void testEquationInsideMacroCommentAndUnit(){
         String program = "\n\n:MACRO: myMacro(input,timeVar)\n" +
                 "myMacro = INTEG((input - 3)/timeVar, input)~ main function units ~ main function comment|\n" +
-                "supportFunction = 6 * input * timeVar ~ support function units ~ support function comment|\n"+
+                "supportValue = 6 * input * timeVar ~ support function units ~ support function comment|\n"+
                 ":END OF MACRO:";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myMacro = table.getSymbol("myMacro");
-        Symbol supportFunction = table.getSymbol("supportFunction");
+        Symbol supportValue = table.getSymbol("supportValue");
 
         assertEquals("main function units", myMacro.getUnits());
         assertEquals("main function comment", myMacro.getComment());
 
-        assertEquals("support function units", supportFunction.getUnits());
-        assertEquals("support function comment", supportFunction.getComment());
+        assertEquals("support function units", supportValue.getUnits());
+        assertEquals("support function comment", supportValue.getComment());
 
     }
 

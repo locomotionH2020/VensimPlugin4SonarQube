@@ -158,6 +158,28 @@ public class TestAPI {
 
 
     @Test
+    public void testSymbolWithoutCommentCheck() throws IOException{
+        JsonArray issues =  getIssues("testSymbolWithoutCommentOrUnits.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, SymbolWithoutCommentCheck.CHECK_KEY);
+
+        assertEquals(1,issueList.size());
+
+        assertIssueLine(issueList.get(0),3);
+    }
+
+    @Test
+    public void testSymbolWithoutUnitsCheck() throws IOException{
+        JsonArray issues =  getIssues("testSymbolWithoutCommentOrUnits.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, SymbolWithoutUnitsCheck.CHECK_KEY);
+
+        assertEquals(1,issueList.size());
+
+        assertIssueLine(issueList.get(0),1);
+    }
+
+
+
+    @Test
     public void testSymbolTableOutput() throws IOException{
         File file = new File(integrationTestsFolder,"symbolTable.json");
         InputStream fis = new FileInputStream(file);

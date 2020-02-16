@@ -48,6 +48,7 @@ public class VensimRuleRepository implements RulesDefinition{
         set.add(MagicNumberCheck.class);
         set.add(SymbolNotDefinedInDictionaryCheck.class);
         set.add(SymbolWithoutCommentCheck.class);
+        set.add(SymbolWithoutUnitsCheck.class);
 
         return set;
     }
