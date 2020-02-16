@@ -1,8 +1,12 @@
 package es.uva.medeas.rules;
 
+import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
+import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.Test;
+
+import java.util.List;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 import static org.junit.Assert.assertTrue;
@@ -18,7 +22,9 @@ public class TestVariableNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, VariableNameCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
@@ -30,7 +36,10 @@ public class TestVariableNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, VariableNameCheck.class);
+        assertTrue(issues.isEmpty());
+
     }
 
     @Test

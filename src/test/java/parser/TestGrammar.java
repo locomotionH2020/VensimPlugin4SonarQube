@@ -234,7 +234,7 @@ public class TestGrammar {
 
     @Test
     public void testSuplementaryVariable(){
-        String program = "A ~ units ~ comment ~ :SUPPLEMENTARY ";
+        String program = "A ~ units ~ comment ~ :SUPPLEMENTARY |";
         getParseTreeFromString(program);
     }
 

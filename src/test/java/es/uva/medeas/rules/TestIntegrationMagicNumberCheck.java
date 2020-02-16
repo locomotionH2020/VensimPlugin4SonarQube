@@ -3,6 +3,7 @@ package es.uva.medeas.rules;
 import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
+import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.Test;
 import org.sonar.api.batch.rule.Severity;
 
@@ -26,10 +27,14 @@ public class TestIntegrationMagicNumberCheck {
 
 
         scanner.checkIssues(visitorContext);
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+
+
         for(int i=1;i<DEFAULT_MINIMUM_REPETITIONS+1;i++)
             assertHasIssue(visitorContext,MagicNumberCheck.class,i);
 
-        for(Issue issue:visitorContext.getIssues()) {
+        for(Issue issue:issues) {
             assertEquals(Severity.MAJOR, issue.getSeverity());
             assertEquals("The number 3 is repeated "+DEFAULT_MINIMUM_REPETITIONS+" times. Consider replacing it by a constant",issue.getMessage());
         }
@@ -47,8 +52,10 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        assertEquals((DEFAULT_MINIMUM_REPETITIONS-1)*2,visitorContext.getIssues().size());
-        for(Issue issue:visitorContext.getIssues())
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+
+        assertEquals((DEFAULT_MINIMUM_REPETITIONS-1)*2,issues.size());
+        for(Issue issue:issues)
             assertEquals(Severity.INFO,issue.getSeverity());
     }
 
@@ -61,12 +68,15 @@ public class TestIntegrationMagicNumberCheck {
 
 
         scanner.checkIssues(visitorContext);
-        for(Issue issue: visitorContext.getIssues()) {
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+
+        for(Issue issue: issues) {
             assertEquals(MagicNumberCheck.class, issue.getCheck().getClass());
             assertEquals(1,issue.getLine());
         }
 
-        assertEquals(DEFAULT_MINIMUM_REPETITIONS,visitorContext.getIssues().size());
+        assertEquals(DEFAULT_MINIMUM_REPETITIONS,issues.size());
 
         assertHasIssue(visitorContext,MagicNumberCheck.class,1);
     }
@@ -80,7 +90,9 @@ public class TestIntegrationMagicNumberCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
     }
 
     @Test
@@ -92,7 +104,9 @@ public class TestIntegrationMagicNumberCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());;
     }
 
     @Test
@@ -104,7 +118,9 @@ public class TestIntegrationMagicNumberCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
     }
 
     @Test
@@ -119,7 +135,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
@@ -135,7 +153,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
@@ -150,7 +170,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
 
 
     }
@@ -163,7 +185,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
@@ -175,7 +199,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
@@ -201,7 +227,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
@@ -213,7 +241,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
     }
 
 
@@ -226,7 +256,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
     }
 
     @Test
@@ -237,7 +269,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
@@ -249,7 +283,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
@@ -261,7 +297,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
@@ -274,7 +312,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
     }
 
     @Test
@@ -285,7 +325,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
     }
 
     @Test
@@ -296,7 +338,9 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        assertTrue(issues.isEmpty());
     }
 
 

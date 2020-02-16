@@ -391,8 +391,12 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
         String comment = ctx.unitsDoc().comment.getText().substring(1);
         String units = ctx.unitsDoc().units.getText().substring(1);
 
-        symbol.setUnits(units);
-        symbol.setComment(comment);
+        if(!comment.isBlank())
+            symbol.setComment(comment);
+
+        if(!units.isBlank())
+            symbol.setUnits(units);
+
 
         return symbol;
     }

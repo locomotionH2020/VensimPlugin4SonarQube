@@ -5,6 +5,7 @@ import es.uva.medeas.parser.*;
 import es.uva.medeas.parser.visitors.RawSymbolTableVisitor;
 import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimVisitorContext;
+import es.uva.medeas.rules.VensimCheck;
 import es.uva.medeas.utilities.SymbolTableGenerator;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -143,7 +144,7 @@ public class TestUtilities {
         return  symbolSet;
     }
 
-    public static void addSymbolInLines(SymbolTable table, String token, SymbolType type, int... lines){
+    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, int... lines){
         Symbol symbol = new Symbol(token);
         if(type!=null)
             symbol.setType(type);
@@ -152,11 +153,14 @@ public class TestUtilities {
             symbol.addDefinitionLine(line);
 
         table.addSymbol(symbol);
+        return symbol;
     }
 
 
 
     public static List<Issue> getIssuesFromType(VensimVisitorContext context, Class type){
+        if(!VensimCheck.class.isAssignableFrom(type))
+            throw new IllegalArgumentException("The type: '"+ type+"' isn't a rule.");
         return context.getIssues().stream().filter(issue -> issue.getCheck().getClass()==type).collect(Collectors.toList());
     }
 

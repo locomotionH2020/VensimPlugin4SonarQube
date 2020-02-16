@@ -24,6 +24,8 @@ public final class VensimQualityProfile implements BuiltInQualityProfilesDefinit
         profile.activateRule(REPO_KEY,RealityCheckNameRule.CHECK_KEY);
         profile.activateRule(REPO_KEY,MagicNumberCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY, SymbolNotDefinedInDictionaryCheck.CHECK_KEY);
+        profile.activateRule(REPO_KEY, SymbolWithoutCommentCheck.CHECK_KEY);
+
 
         profile.done();
     }

@@ -1,8 +1,12 @@
 package es.uva.medeas.rules;
 
+import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
+import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.Test;
+
+import java.util.List;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 import static org.junit.Assert.assertTrue;
@@ -18,7 +22,9 @@ public class TestConstantNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, ConstantNameCheck.class);
+        assertTrue(issues.isEmpty());
 
     }
 
@@ -30,7 +36,9 @@ public class TestConstantNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, ConstantNameCheck.class);
+        assertTrue(issues.isEmpty());
     }
 
     @Test
@@ -123,7 +131,9 @@ public class TestConstantNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());    }
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, ConstantNameCheck.class);
+        assertTrue(issues.isEmpty());    }
 
     @Test
     public void testMultipleDefinitionCreateDifferentIssues() {
@@ -153,8 +163,9 @@ public class TestConstantNameCheck {
 
         scanner.checkIssues(visitorContext);
 
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, ConstantNameCheck.class);
 
-        assertTrue(visitorContext.getIssues().isEmpty());
+        assertTrue(issues.isEmpty());
     }
 
 

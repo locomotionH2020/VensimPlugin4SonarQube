@@ -546,5 +546,44 @@ public class TestRawSymbolTableVisitor {
 
     }
 
+    @Test
+    public void testUnitsAndCommentSymbolDefinedMultipleTimes(){
+        String program = "var = 5 ~  units    ~  comment |\n" +
+                "var = 5 ~     ~    |";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol var = table.getSymbol("var");
+
+        assertEquals("comment",var.getComment());
+        assertEquals("units",var.getUnits());
+    }
+
+    @Test
+    public void testUnitsAndCommentNotInTheFirstDefinition(){
+        String program = "var = 5 ~     ~   |\n" +
+                "var = 5 ~     ~    |\n"+
+                "var = 5 ~ units    ~  comment   |\n";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol var = table.getSymbol("var");
+
+        assertEquals("comment",var.getComment());
+        assertEquals("units",var.getUnits());
+    }
+
+
+    @Test
+    public void testMultipleUnitsAndCommentInDifferentDefinitions(){
+        String program = "var = 5 ~ units first definition   ~  comment first definition   |\n" +
+                "var = 5 ~ units second definition    ~ comment second definition    |\n";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol var = table.getSymbol("var");
+
+        assertEquals("comment second definition",var.getComment());
+        assertEquals("units second definition",var.getUnits());
+        //TODO No tengo del todo claro lo que tendría que hacer en este caso, si lanzar excepción, ignorar el primer comentario o ignorar el segundo.
+    }
+
 
 }

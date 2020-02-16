@@ -55,7 +55,9 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertTrue(visitorContext.getIssues().isEmpty());
+
+        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, SubscriptNameCheck.class);
+        assertTrue(issues.isEmpty());
     }
 
     @Test
