@@ -27,8 +27,7 @@ public class TestSubscriptNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,SubscriptNameCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,SubscriptNameCheck.class);
 
     }
 
@@ -41,8 +40,7 @@ public class TestSubscriptNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,SubscriptNameCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,SubscriptNameCheck.class);
 
     }
 
@@ -56,8 +54,7 @@ public class TestSubscriptNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, SubscriptNameCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,SubscriptNameCheck.class);
     }
 
     @Test

@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static es.uva.medeas.testutilities.RuleTestUtilities.assertDoesntHaveIssue;
+import static es.uva.medeas.testutilities.RuleTestUtilities.assertDoesntHaveIssueInLine;
 import static es.uva.medeas.testutilities.RuleTestUtilities.assertHasIssue;
 import static es.uva.medeas.testutilities.TestUtilities.addSymbolInLines;
 import static org.junit.Assert.*;
@@ -121,8 +121,8 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,3);
         assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,5);
 
-        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,2);
-        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,4);
+        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,2);
+        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,4);
 
     }
 
@@ -163,9 +163,9 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         check.scan(context);
 
 
-        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,1);
-        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,5);
-        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,9);
+        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,1);
+        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,5);
+        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,9);
 
         assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,2);
         assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,3);
@@ -191,7 +191,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
-        assertDoesntHaveIssue(context, SymbolNotDefinedInDictionaryCheck.class,1);
+        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,1);
 
     }
 

@@ -23,8 +23,7 @@ public class TestConstantNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, ConstantNameCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,ConstantNameCheck.class);
 
     }
 
@@ -37,8 +36,7 @@ public class TestConstantNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, ConstantNameCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,ConstantNameCheck.class);
     }
 
     @Test
@@ -132,8 +130,8 @@ public class TestConstantNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, ConstantNameCheck.class);
-        assertTrue(issues.isEmpty());    }
+        assertDoesntHaveIssueOfType(visitorContext,ConstantNameCheck.class);
+    }
 
     @Test
     public void testMultipleDefinitionCreateDifferentIssues() {
@@ -163,9 +161,7 @@ public class TestConstantNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, ConstantNameCheck.class);
-
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,ConstantNameCheck.class);
     }
 
 

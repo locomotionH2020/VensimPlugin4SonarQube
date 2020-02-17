@@ -23,8 +23,7 @@ public class TestSubscriptValueNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        List<Issue> issues =TestUtilities.getIssuesFromType(visitorContext,SubscriptValueNameCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,SubscriptValueNameCheck.class);
 
     }
 
@@ -37,8 +36,7 @@ public class TestSubscriptValueNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues =TestUtilities.getIssuesFromType(visitorContext,SubscriptValueNameCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,SubscriptValueNameCheck.class);
     }
 
 

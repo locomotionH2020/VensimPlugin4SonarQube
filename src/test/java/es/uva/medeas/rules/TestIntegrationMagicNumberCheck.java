@@ -91,8 +91,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
     }
 
     @Test
@@ -105,8 +104,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());;
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
     }
 
     @Test
@@ -119,8 +117,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
     }
 
     @Test
@@ -136,8 +133,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
 
     }
 
@@ -154,8 +150,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
 
     }
 
@@ -171,8 +166,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
 
 
     }
@@ -186,8 +180,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
 
     }
 
@@ -200,8 +193,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
 
     }
 
@@ -228,8 +220,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
 
     }
 
@@ -242,8 +233,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
     }
 
 
@@ -257,8 +247,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
     }
 
     @Test
@@ -270,8 +259,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
 
     }
 
@@ -284,8 +272,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
 
     }
 
@@ -298,8 +285,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
 
     }
 
@@ -313,8 +299,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
     }
 
     @Test
@@ -326,8 +311,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
     }
 
     @Test
@@ -339,8 +323,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
     }
 
 

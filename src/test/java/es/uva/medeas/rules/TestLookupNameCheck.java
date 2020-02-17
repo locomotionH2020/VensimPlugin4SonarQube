@@ -24,10 +24,7 @@ public class TestLookupNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, LookupNameCheck.class);
-        assertTrue(issues.isEmpty());
-
-
+        assertDoesntHaveIssueOfType(visitorContext,LookupNameCheck.class);
     }
 
     @Test
@@ -39,8 +36,7 @@ public class TestLookupNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, LookupNameCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,LookupNameCheck.class);
     }
 
     @Test

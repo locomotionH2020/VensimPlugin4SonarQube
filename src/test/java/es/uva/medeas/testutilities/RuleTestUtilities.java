@@ -96,12 +96,17 @@ public class RuleTestUtilities {
         }
     }
 
-    public static void assertDoesntHaveIssue(VensimVisitorContext context,Class type, int line){
+    public static void assertDoesntHaveIssueInLine(VensimVisitorContext context, Class type, int line){
         for(Issue issue:context.getIssues()){
             assertFalse(issue.getCheck().getClass().equals(type) && issue.getLine()==line);
         }
 
 
+    }
+    public static void assertDoesntHaveIssueOfType(VensimVisitorContext context, Class type){
+        for(Issue issue:context.getIssues()){
+            assertFalse(issue.getCheck().getClass().equals(type));
+        }
     }
 
 

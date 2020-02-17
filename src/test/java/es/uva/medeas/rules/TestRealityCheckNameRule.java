@@ -24,8 +24,7 @@ public class TestRealityCheckNameRule {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, RealityCheckNameRule.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,RealityCheckNameRule.class);
     }
 
     @Test
@@ -37,8 +36,7 @@ public class TestRealityCheckNameRule {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, RealityCheckNameRule.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,RealityCheckNameRule.class);
 
     }
 

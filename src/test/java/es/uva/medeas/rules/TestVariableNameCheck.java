@@ -23,8 +23,7 @@ public class TestVariableNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, VariableNameCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,VariableNameCheck.class);
 
     }
 
@@ -37,8 +36,7 @@ public class TestVariableNameCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext, VariableNameCheck.class);
-        assertTrue(issues.isEmpty());
+        assertDoesntHaveIssueOfType(visitorContext,VariableNameCheck.class);
 
     }
 
