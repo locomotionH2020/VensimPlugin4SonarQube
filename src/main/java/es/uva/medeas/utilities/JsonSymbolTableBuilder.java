@@ -7,7 +7,15 @@ import javax.json.*;
 
 public class JsonSymbolTableBuilder {
 
+
+
     private JsonArrayBuilder fileBuilder;
+
+    public final static String KEY_COMMENT = "comment";
+    public final static String KEY_UNITS = "units";
+    public final static String KEY_DEPENDENCIES = "dependencies";
+    public static final String KEY_LINES = "lines";
+    public static final String KEY_TYPE = "type" ;
 
     public JsonSymbolTableBuilder(){
         fileBuilder = Json.createArrayBuilder();
@@ -36,18 +44,24 @@ public class JsonSymbolTableBuilder {
     private JsonObject symbolToJson(Symbol symbol){
         JsonObjectBuilder symbolBuilder = Json.createObjectBuilder();
 
-        symbolBuilder.add("type",symbol.getType().toString());
+        symbolBuilder.add(KEY_TYPE,symbol.getType().toString());
         JsonArrayBuilder lines = Json.createArrayBuilder();
         for(int line:symbol.getDefinitionLines())
             lines.add(line);
 
-        symbolBuilder.add("lines",lines);
+        symbolBuilder.add(KEY_LINES,lines);
 
         JsonArrayBuilder dependenciesBuilder = Json.createArrayBuilder();
         for(Symbol dependency:symbol.getDependencies())
             dependenciesBuilder.add(dependency.getToken());
 
-        symbolBuilder.add("dependencies",dependenciesBuilder);
+        symbolBuilder.add(KEY_DEPENDENCIES,dependenciesBuilder);
+
+
+        symbolBuilder.add(KEY_UNITS,symbol.getUnits());
+        symbolBuilder.add(KEY_COMMENT,symbol.getComment());
+
+
 
         return symbolBuilder.build();
 

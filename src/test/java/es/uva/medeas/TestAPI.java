@@ -5,15 +5,14 @@ import static org.junit.Assert.*;
 import es.uva.medeas.rules.*;
 import es.uva.medeas.testutilities.TestUtilities;
 import es.uva.medeas.testutilities.UtilitiesAPI;
+import es.uva.medeas.utilities.JsonSymbolTableBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.sonar.api.batch.rule.Severity;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.json.*;
 
@@ -34,7 +33,7 @@ public class TestAPI {
 
        integrationTestsFolder = new File(file.getParentFile().getParentFile(),"integrationTests");
 
-       UtilitiesAPI.runSonarScanner(integrationTestsFolder,SONAR_TOKEN);
+      UtilitiesAPI.runSonarScanner(integrationTestsFolder,SONAR_TOKEN);
 
 
     }
@@ -179,9 +178,154 @@ public class TestAPI {
 
 
 
+
     @Test
-    public void testSymbolTableOutput() throws IOException{
-        File file = new File(integrationTestsFolder,"symbolTable.json");
+    public void testJsonOutputNoCommentsAndNoUnits() throws IOException{
+        Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
+
+        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+
+        JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
+        JsonObject symbol = symbols.getJsonObject("SYMBOL_WITHOUT_COMMENTS_OR_UNITS");
+
+        assertEquals("",symbol.getString(JsonSymbolTableBuilder.KEY_COMMENT));
+        assertEquals("", symbol.getString(JsonSymbolTableBuilder.KEY_UNITS));
+
+
+    }
+
+    @Test
+    public void testJsonOutputWithCommentsAndUnits() throws IOException{
+        Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
+
+        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+
+        JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
+        JsonObject symbol = symbols.getJsonObject("SYMBOL_WITH_COMMENTS_AND_UNITS");
+
+        assertEquals("a comment",symbol.getString(JsonSymbolTableBuilder.KEY_COMMENT));
+        assertEquals("units", symbol.getString(JsonSymbolTableBuilder.KEY_UNITS));
+
+    }
+
+
+    @Test
+    public void testJsonOutputSymbolWithoutDependencies() throws IOException{
+        Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
+
+        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+
+        JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
+        JsonObject symbol = symbols.getJsonObject("SYMBOL_WITHOUT_DEPENDENCIES");
+
+        JsonArray dependencies = symbol.getJsonArray(JsonSymbolTableBuilder.KEY_DEPENDENCIES);
+
+        assertTrue(dependencies.isEmpty());
+    }
+
+    @Test
+    public void testJsonOutputSymbolWithOneDependency() throws IOException{
+        Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
+
+        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+
+        JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
+        JsonObject symbol = symbols.getJsonObject("SYMBOL_WITH_ONE_DEPENDENCY");
+
+        JsonArray dependencies = symbol.getJsonArray(JsonSymbolTableBuilder.KEY_DEPENDENCIES);
+
+        assertEquals(1,dependencies.size());
+        assertEquals("SYMBOL_WITHOUT_DEPENDENCIES",dependencies.getString(0));
+
+    }
+
+    @Test
+    public void testJsonOutputSymbolWithMultipleDependencies() throws IOException{
+        Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
+
+        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+
+        JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
+        JsonObject symbol = symbols.getJsonObject("SYMBOL_WITH_MULTIPLE_DEPENDENCIES");
+
+        JsonArray dependencies = symbol.getJsonArray(JsonSymbolTableBuilder.KEY_DEPENDENCIES);
+
+        assertEquals(2,dependencies.size());
+
+        Set<String> actualDependencies = new HashSet<>();
+        for(int i=0;i<dependencies.size();i++)
+            actualDependencies.add(dependencies.getString(i));
+
+        assertEquals(Set.of("Time","SYMBOL_WITHOUT_DEPENDENCIES"),actualDependencies);
+
+
+    }
+
+    @Test
+    public void testJsonOutputWithoutDefinedLine() throws IOException{
+        Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
+
+        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+
+        JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
+        JsonObject symbol = symbols.getJsonObject("Time");
+
+        JsonArray lines = symbol.getJsonArray(JsonSymbolTableBuilder.KEY_LINES);
+
+        assertEquals(0,lines.size());
+
+    }
+
+    @Test
+    public void testJsonOutputSymbolDefinedOnce() throws IOException{
+        Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
+
+        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+
+        JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
+        JsonObject symbol = symbols.getJsonObject("SYMBOL_WITHOUT_COMMENTS_OR_UNITS");
+
+        JsonArray lines = symbol.getJsonArray(JsonSymbolTableBuilder.KEY_LINES);
+
+        assertEquals(1,lines.size());
+        assertEquals(1,lines.getInt(0));
+    }
+
+    @Test
+    public void testJsonOutputSymbolDefinedMultipleTimes() throws IOException{
+        Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
+
+        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+
+        JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
+        JsonObject symbol = symbols.getJsonObject("SYMBOL_DEFINED_MULTIPLE_TIMES");
+
+        JsonArray lines = symbol.getJsonArray(JsonSymbolTableBuilder.KEY_LINES);
+        Set<Integer> actualLines = new HashSet<>();
+        for(int i=0;i<lines.size();i++)
+            actualLines.add(lines.getInt(i));
+
+        assertEquals(2,lines.size());
+        assertEquals(actualLines,Set.of(3,4));
+    }
+
+    @Test
+    public void testJsonOutputSymbolType() throws IOException{
+        Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
+
+        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+
+        JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
+        JsonObject symbol = symbols.getJsonObject("SYMBOL_WITH_MULTIPLE_DEPENDENCIES");
+
+        assertEquals("VARIABLE",symbol.getString(JsonSymbolTableBuilder.KEY_TYPE));
+    }
+
+
+
+
+    private Map<String, JsonObject> getFilesAnalyzedJsonOutput() throws FileNotFoundException {
+        File file = new File(integrationTestsFolder, "symbolTable.json");
         InputStream fis = new FileInputStream(file);
 
         JsonReader reader = Json.createReader(fis);
@@ -189,25 +333,14 @@ public class TestAPI {
         JsonArray jsonFile = reader.readArray();
 
 
-        Map<String,JsonObject> filesAnalyzed = new HashMap<>();
-        for(int i=0;i<jsonFile.size();i++){
+        Map<String, JsonObject> filesAnalyzed = new HashMap<>();
+        for (int i = 0; i < jsonFile.size(); i++) {
             JsonObject object = jsonFile.getJsonObject(i);
-            filesAnalyzed.put(object.getString("file"),object);
+            filesAnalyzed.put(object.getString("file"), object);
         }
-
-        assertTrue(filesAnalyzed.keySet().contains("testSubscriptName.mdl"));
-
-
-        JsonReader jsonReader = Json.createReader(new StringReader( "{\"COUNTRY1\":{\"type\":\"SUBSCRIPT_VALUE\",\"lines\":[1,3],\"dependencies\":[]},\"COUNTRY\":{\"type\":\"SUBSCRIPT_NAME\",\"lines\":[3],\"dependencies\":[]},\"COUNTRY2\":{\"type\":\"SUBSCRIPT_VALUE\",\"lines\":[1,3],\"dependencies\":[]},\"Time\":{\"type\":\"VARIABLE\",\"lines\":[],\"dependencies\":[]},\"MY_10_FAVORITE_COUNTRIES_I\":{\"type\":\"SUBSCRIPT_NAME\",\"lines\":[1],\"dependencies\":[]}}\n"    ));
-        JsonObject expectedObjectSubscriptName = jsonReader.readObject();
-        jsonReader.close();
-
-
-
-
-
-        assertEquals(expectedObjectSubscriptName,filesAnalyzed.get("testSubscriptName.mdl").getJsonObject("symbols"));
-        assertNotNull(filesAnalyzed.get("testSubscriptValues.mdl").getJsonObject("symbols"));
-
+        return filesAnalyzed;
     }
+
+
+
 }

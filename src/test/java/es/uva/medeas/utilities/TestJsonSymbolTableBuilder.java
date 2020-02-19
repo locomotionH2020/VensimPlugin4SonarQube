@@ -54,28 +54,6 @@ public class TestJsonSymbolTableBuilder {
 
     }
 
-    @Test
-    public void testCompleteSymbolTable(){
-        SymbolTable table = new SymbolTable();
-
-        for(SymbolType type: SymbolType.values()){
-            Symbol symbol = table.addSymbol(new Symbol(type.toString() + " symbol"));
-            symbol.setType(type);
-        }
-
-        JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
-        builder.addSymbolTable("file",table);
-
-        JsonArray jsonTable = builder.build();
-
-        JsonObject symbols = jsonTable.getJsonObject(0).getJsonObject("symbols");
-
-        for(SymbolType type: SymbolType.values()){
-            assertEquals("{\"type\":\"" + type.toString() + "\",\"lines\":[],\"dependencies\":[]}",
-                    symbols.getJsonObject(type.toString() + " symbol").toString());
-        }
-
-    }
 
     @Test
     public void testMultipleSymbolTables(){
@@ -116,9 +94,24 @@ public class TestJsonSymbolTableBuilder {
         JsonArray output = builder.build();
         JsonObject file = output.getJsonObject(0);
 
-        assertEquals(line, file.getJsonObject("symbols").getJsonObject("var").getJsonArray("lines").getInt(0));
+        assertEquals(line, file.getJsonObject("symbols").getJsonObject("var").getJsonArray(JsonSymbolTableBuilder.KEY_LINES).getInt(0));
     }
 
+    @Test
+    public void testType(){
+        JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
+
+        SymbolTable table = new SymbolTable();
+        Symbol symbol = table.addSymbol(new Symbol("scenario1",SymbolType.SUBSCRIPT_VALUE));
+
+        builder.addSymbolTable("file",table);
+        JsonObject file = builder.build().getJsonObject(0);
+
+        String type = file.getJsonObject("symbols").getJsonObject("scenario1").getString(JsonSymbolTableBuilder.KEY_TYPE);
+
+        assertEquals("SUBSCRIPT_VALUE",type);
+
+    }
 
     @Test
     public void testDependencies(){
@@ -137,8 +130,8 @@ public class TestJsonSymbolTableBuilder {
         JsonArray output = builder.build();
         JsonObject file = output.getJsonObject(0);
 
-        JsonArray varDependencies = file.getJsonObject("symbols").getJsonObject("var").getJsonArray("dependencies");
-        JsonArray notFooDependencies = file.getJsonObject("symbols").getJsonObject("notFoo").getJsonArray("dependencies");
+        JsonArray varDependencies = file.getJsonObject("symbols").getJsonObject("var").getJsonArray(JsonSymbolTableBuilder.KEY_DEPENDENCIES);
+        JsonArray notFooDependencies = file.getJsonObject("symbols").getJsonObject("notFoo").getJsonArray(JsonSymbolTableBuilder.KEY_DEPENDENCIES);
 
         JsonValue[] varDependenciesValues = varDependencies.toArray(new JsonValue[0]);
         List<JsonValue> varDependenciesList =  Arrays.asList(varDependenciesValues);
@@ -163,7 +156,7 @@ public class TestJsonSymbolTableBuilder {
         builder.addSymbolTable("file",table);
         JsonObject file = builder.build().getJsonObject(0);
 
-        JsonArray dependencies = file.getJsonObject("symbols").getJsonObject("constant").getJsonArray("dependencies");
+        JsonArray dependencies = file.getJsonObject("symbols").getJsonObject("constant").getJsonArray(JsonSymbolTableBuilder.KEY_DEPENDENCIES);
 
         assertTrue(dependencies.isEmpty());
 
@@ -179,9 +172,76 @@ public class TestJsonSymbolTableBuilder {
         builder.addSymbolTable("file",table);
         JsonObject file = builder.build().getJsonObject(0);
 
-        JsonArray actualLines = file.getJsonObject("symbols").getJsonObject("constant").getJsonArray("lines");
+        JsonArray actualLines = file.getJsonObject("symbols").getJsonObject("constant").getJsonArray(JsonSymbolTableBuilder.KEY_LINES);
 
         assertTrue(actualLines.isEmpty());
 
     }
+
+    @Test
+    public void testSymbolWithoutComment(){
+        JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
+
+        SymbolTable table = new SymbolTable();
+        table.addSymbol(new Symbol("constant"));
+
+        builder.addSymbolTable("file",table);
+        JsonObject file = builder.build().getJsonObject(0);
+
+        String comment = file.getJsonObject("symbols").getJsonObject("constant").getString(JsonSymbolTableBuilder.KEY_COMMENT);
+
+        assertTrue(comment.isBlank());
+    }
+
+    @Test
+    public void testSymbolWithComment(){
+        JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
+
+        SymbolTable table = new SymbolTable();
+        Symbol constant = new Symbol("constant");
+        constant.setComment("extremely important comment");
+        table.addSymbol(constant);
+
+        builder.addSymbolTable("file",table);
+        JsonObject file = builder.build().getJsonObject(0);
+
+        String comment = file.getJsonObject("symbols").getJsonObject("constant").getString(JsonSymbolTableBuilder.KEY_COMMENT);
+
+        assertEquals("extremely important comment",comment);
+    }
+
+    @Test
+    public void testSymbolWithoutUnits(){
+        JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
+
+        SymbolTable table = new SymbolTable();
+        table.addSymbol(new Symbol("constant"));
+
+        builder.addSymbolTable("file",table);
+        JsonObject file = builder.build().getJsonObject(0);
+
+        String units = file.getJsonObject("symbols").getJsonObject("constant").getString(JsonSymbolTableBuilder.KEY_UNITS);
+
+        assertTrue(units.isBlank());
+    }
+
+    @Test
+    public void testSymbolWithUnits(){
+        JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
+
+        SymbolTable table = new SymbolTable();
+        Symbol constant = new Symbol("constant");
+        constant.setUnits("kg");
+        table.addSymbol(constant);
+
+        builder.addSymbolTable("file",table);
+        JsonObject file = builder.build().getJsonObject(0);
+
+        String units = file.getJsonObject("symbols").getJsonObject("constant").getString(JsonSymbolTableBuilder.KEY_UNITS);
+
+        assertEquals("kg",units);
+    }
+
+
+
 }
