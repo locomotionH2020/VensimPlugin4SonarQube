@@ -1,9 +1,9 @@
-package parser.visitors;
+package es.uva.medeas.parser.visitors;
 
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.plugin.VensimVisitorContext;
-import es.uva.medeas.parser.visitors.MagicNumberTableVisitor;
+
 import static org.junit.Assert.*;
 
 

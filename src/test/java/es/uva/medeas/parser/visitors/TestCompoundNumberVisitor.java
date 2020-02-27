@@ -1,9 +1,8 @@
-package parser.visitors;
+package es.uva.medeas.parser.visitors;
 
 
 
 import es.uva.medeas.parser.ModelParser;
-import es.uva.medeas.parser.visitors.CompoundMagicNumberVisitor;
 import org.junit.Before;
 import org.junit.Test;
 

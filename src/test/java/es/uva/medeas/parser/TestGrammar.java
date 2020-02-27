@@ -1,8 +1,5 @@
-package parser;
+package es.uva.medeas.parser;
 
-
-import es.uva.medeas.parser.ModelParser;
-import es.uva.medeas.parser.SymbolTable;
 
 import static org.junit.Assert.*;
 

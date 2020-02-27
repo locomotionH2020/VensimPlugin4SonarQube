@@ -1,10 +1,7 @@
-package parser;
+package es.uva.medeas.parser;
 
-import es.uva.medeas.parser.Symbol;
-import es.uva.medeas.parser.SymbolTable;
 import  static org.junit.Assert.*;
 
-import es.uva.medeas.parser.SymbolType;
 import org.junit.Before;
 import org.junit.Test;
 
