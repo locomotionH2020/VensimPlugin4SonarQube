@@ -25,7 +25,7 @@ subscriptMapping : Id | '(' Id ':' subscriptIdList ')' ;
 // The RHS is a formula expression, a constant list, or a Vensim lookup.
 // The RHS is empty for data equations.
 equation : lhs  Equal (expr|constList)  (':IGNORE:' exprList)? ;
-lhs : Id ( subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
+lhs : Id ( indexes=subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
 
 
 // https://www.vensim.com/documentation/ref_subscript_mapping.htm
@@ -39,8 +39,8 @@ lookupDefinition: lhs (lookup|('('(call|numberList)')')) ;
 // The call is needed for direct and xls lookups. For example: historic_demand_lt( GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' ))~~|
 
 
-constraint: Id ':THE CONDITION:' expr? ':IMPLIES:' expr ;
-realityCheck: Id subscript? ':TEST INPUT:' expr ;
+constraint: lhs ':THE CONDITION:' expr? ':IMPLIES:' expr ;
+realityCheck: lhs ':TEST INPUT:' expr ;
 
 
 stringAssign: lhs StringAssignOp StringConst  (':IGNORE:' exprList)? ;

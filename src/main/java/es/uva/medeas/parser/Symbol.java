@@ -8,7 +8,7 @@ public class Symbol {
 
     private String token;
     private List<Integer> linesDefined;
-    private List<Symbol> indexes;
+    private List<List<Symbol>> indexes;
     private String units;
     private String comment;
     private Set<Symbol> dependencies;
@@ -22,6 +22,7 @@ public class Symbol {
         linesDefined = new ArrayList<>();
         units = "";
         comment ="";
+        indexes = new ArrayList<>();
     }
 
 
@@ -71,14 +72,25 @@ public class Symbol {
         return getType()!=SymbolType.UNDETERMINED;
     }
 
-    public void addIndex(Symbol index){
-        if(index.getType() != SymbolType.SUBSCRIPT_NAME && index.getType()!= SymbolType.SUBSCRIPT_VALUE)
-            throw new IllegalArgumentException("Indexes must be a subscript name or a subscript value");
+    public void addIndexLine(List<Symbol> indexLine){
 
-        indexes.add(index);
+        int sizeDiff = indexLine.size() - indexes.size();
+        if(sizeDiff>0)
+            for(int i=0;i<sizeDiff;i++)
+                indexes.add(new ArrayList<>());
+
+
+        for(int i = 0; i<indexLine.size();i++){
+            Symbol index = indexLine.get(i);
+            indexes.get(i).add(index);
+        }
+
+
     }
 
-    public List<Symbol> getIndexes(){
+
+
+    public List<List<Symbol>> getIndexes(){
         return indexes;
     }
 
