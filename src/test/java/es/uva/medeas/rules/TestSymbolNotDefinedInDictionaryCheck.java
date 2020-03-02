@@ -5,6 +5,7 @@ import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
 import es.uva.medeas.plugin.VensimVisitorContext;
 
+import es.uva.medeas.utilities.Constants;
 import org.junit.Test;
 
 
@@ -12,8 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static es.uva.medeas.testutilities.RuleTestUtilities.assertDoesntHaveIssueInLine;
-import static es.uva.medeas.testutilities.RuleTestUtilities.assertHasIssue;
+import static es.uva.medeas.testutilities.RuleTestUtilities.assertDoesntHaveIssueInLines;
+import static es.uva.medeas.testutilities.RuleTestUtilities.assertHasIssueInLines;
 import static es.uva.medeas.testutilities.TestUtilities.addSymbolInLines;
 import static org.junit.Assert.*;
 
@@ -53,8 +54,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,1);
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,2);
+        assertHasIssueInLines(context, SymbolNotDefinedInDictionaryCheck.class,1,2);
     }
 
     @Test
@@ -117,12 +117,9 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         check.scan(context);
 
 
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,1);
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,3);
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,5);
+        assertHasIssueInLines(context, SymbolNotDefinedInDictionaryCheck.class,1,3,5);
 
-        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,2);
-        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,4);
+        assertDoesntHaveIssueInLines(context, SymbolNotDefinedInDictionaryCheck.class,2,4);
 
     }
 
@@ -163,16 +160,9 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         check.scan(context);
 
 
-        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,1);
-        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,5);
-        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,9);
+        assertDoesntHaveIssueInLines(context, SymbolNotDefinedInDictionaryCheck.class,1,5,9);
 
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,2);
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,3);
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,4);
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,6);
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,7);
-        assertHasIssue(context, SymbolNotDefinedInDictionaryCheck.class,8);
+        assertHasIssueInLines(context, SymbolNotDefinedInDictionaryCheck.class,2,3,4,6,7,8);
     }
 
     @Test
@@ -181,7 +171,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         SymbolTable parsedTable = new SymbolTable();
 
 
-        List<Symbol> symbols = Arrays.asList("FINAL TIME", "INITIAL TIME", "SAVEPER", "TIME STEP").stream().map(Symbol::new).collect(Collectors.toList());
+        List<Symbol> symbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         symbols.forEach(symbol -> {symbol.addDefinitionLine(1);
                                     parsedTable.addSymbol(symbol);
                                     });
@@ -191,7 +181,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
 
-        assertDoesntHaveIssueInLine(context, SymbolNotDefinedInDictionaryCheck.class,1);
+        assertDoesntHaveIssueInLines(context, SymbolNotDefinedInDictionaryCheck.class,1);
 
     }
 

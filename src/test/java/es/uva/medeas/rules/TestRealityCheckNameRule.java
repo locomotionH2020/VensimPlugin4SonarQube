@@ -1,12 +1,8 @@
 package es.uva.medeas.rules;
 
-import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
-import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.Test;
-
-import java.util.List;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 import static org.junit.Assert.assertTrue;
@@ -48,7 +44,7 @@ public class TestRealityCheckNameRule {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1);
     }
 
     @Test
@@ -59,7 +55,7 @@ public class TestRealityCheckNameRule {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1);
     }
 
     @Test
@@ -70,7 +66,7 @@ public class TestRealityCheckNameRule {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1);
     }
 
     @Test
@@ -81,7 +77,7 @@ public class TestRealityCheckNameRule {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,2);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,2);
     }
 
 
@@ -94,7 +90,7 @@ public class TestRealityCheckNameRule {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1);
     }
 
 
@@ -107,7 +103,7 @@ public class TestRealityCheckNameRule {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1);
     }
 
     @Test
@@ -118,7 +114,7 @@ public class TestRealityCheckNameRule {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1);
     }
 
     @Test
@@ -129,7 +125,7 @@ public class TestRealityCheckNameRule {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1);
     }
 
     @Test
@@ -141,7 +137,7 @@ public class TestRealityCheckNameRule {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1);
     }
 
     @Test
@@ -153,8 +149,7 @@ public class TestRealityCheckNameRule {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,2);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1,2);
 
     }
 
@@ -167,7 +162,7 @@ public class TestRealityCheckNameRule {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,RealityCheckNameRule.class,1);
+        assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1);
     }
 
 

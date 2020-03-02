@@ -1,13 +1,9 @@
 package es.uva.medeas.rules;
 
 
-import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
-import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.Test;
-
-import java.util.List;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 import static org.junit.Assert.assertTrue;
@@ -49,7 +45,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,2);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,2);
 
     }
 
@@ -63,7 +59,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,2);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,2);
 
     }
 
@@ -78,7 +74,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,2);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,2);
     }
 
     @Test
@@ -90,7 +86,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
@@ -102,7 +98,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
@@ -114,7 +110,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
@@ -126,7 +122,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
@@ -138,7 +134,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
@@ -150,7 +146,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
@@ -162,7 +158,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,1);
     }
 
     @Test
@@ -175,8 +171,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,1);
-        assertHasIssue(visitorContext,LookupNameCheck.class,2);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,1,2);
     }
 
     @Test
@@ -188,7 +183,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,1);
 
     }
 
@@ -202,8 +197,7 @@ public class TestLookupNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,LookupNameCheck.class,1);
-        assertHasIssue(visitorContext,LookupNameCheck.class,2);
+        assertHasIssueInLines(visitorContext,LookupNameCheck.class,1,2);
     }
 
 

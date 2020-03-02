@@ -1,16 +1,10 @@
 package es.uva.medeas.rules;
 
 
-import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 
-import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.Test;
-
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
@@ -67,7 +61,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1);
 
     }
 
@@ -81,7 +75,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1);
 
     }
 
@@ -96,7 +90,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1);
 
     }
 
@@ -110,7 +104,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1);
 
     }
 
@@ -123,7 +117,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1);
     }
 
     @Test
@@ -135,7 +129,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1);
     }
 
     @Test
@@ -147,7 +141,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1);
     }
 
     @Test
@@ -159,7 +153,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1);
     }
 
     @Test
@@ -171,7 +165,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1);
     }
 
 
@@ -184,7 +178,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1);
     }
 
     @Test
@@ -197,8 +191,7 @@ public class TestSubscriptNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,1);
-        assertHasIssue(visitorContext,SubscriptNameCheck.class,2);
+        assertHasIssueInLines(visitorContext,SubscriptNameCheck.class,1,2);
 
     }
 

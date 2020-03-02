@@ -1,12 +1,8 @@
 package es.uva.medeas.rules;
 
-import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
-import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.Test;
-
-import java.util.List;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 import static org.junit.Assert.assertTrue;
@@ -47,7 +43,7 @@ public class TestConstantNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,ConstantNameCheck.class,1);
     }
 
     @Test
@@ -58,7 +54,7 @@ public class TestConstantNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,ConstantNameCheck.class,1);
     }
 
     @Test
@@ -69,7 +65,7 @@ public class TestConstantNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,ConstantNameCheck.class,2);
+        assertHasIssueInLines(visitorContext,ConstantNameCheck.class,2);
     }
 
     @Test
@@ -80,7 +76,7 @@ public class TestConstantNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,ConstantNameCheck.class,1);
     }
 
     @Test
@@ -91,7 +87,7 @@ public class TestConstantNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,ConstantNameCheck.class,1);
     }
 
     @Test
@@ -103,7 +99,7 @@ public class TestConstantNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
+        assertHasIssueInLines(visitorContext,ConstantNameCheck.class,1);
     }
 
     @Test
@@ -115,8 +111,7 @@ public class TestConstantNameCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext,ConstantNameCheck.class,1);
-        assertHasIssue(visitorContext,ConstantNameCheck.class,2);
+        assertHasIssueInLines(visitorContext,ConstantNameCheck.class,1,2);
 
     }
 
@@ -143,8 +138,7 @@ public class TestConstantNameCheck {
 
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext, ConstantNameCheck.class, 1);
-        assertHasIssue(visitorContext, ConstantNameCheck.class, 2);
+        assertHasIssueInLines(visitorContext, ConstantNameCheck.class, 1,2);
     }
 
     @Test

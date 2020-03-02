@@ -7,7 +7,7 @@ import es.uva.medeas.plugin.VensimVisitorContext;
 import org.junit.Before;
 import org.junit.Test;
 
-import static es.uva.medeas.testutilities.RuleTestUtilities.assertHasIssue;
+import static es.uva.medeas.testutilities.RuleTestUtilities.assertHasIssueInLines;
 import static es.uva.medeas.testutilities.TestUtilities.addSymbolInLines;
 import static junit.framework.TestCase.assertTrue;
 
@@ -29,9 +29,7 @@ public class TestSymbolWithoutUnitsCheck {
 
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutUnitsCheck.class,1);
-        assertHasIssue(context,SymbolWithoutUnitsCheck.class,2);
-        assertHasIssue(context,SymbolWithoutUnitsCheck.class,3);
+        assertHasIssueInLines(context,SymbolWithoutUnitsCheck.class,1,2,3);
 
     }
 
@@ -44,7 +42,7 @@ public class TestSymbolWithoutUnitsCheck {
 
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutUnitsCheck.class,9);
+        assertHasIssueInLines(context,SymbolWithoutUnitsCheck.class,9);
     }
 
     @Test
@@ -56,7 +54,7 @@ public class TestSymbolWithoutUnitsCheck {
 
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutUnitsCheck.class,9);
+        assertHasIssueInLines(context,SymbolWithoutUnitsCheck.class,9);
 
     }
 
@@ -69,7 +67,7 @@ public class TestSymbolWithoutUnitsCheck {
 
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutUnitsCheck.class,9);
+        assertHasIssueInLines(context,SymbolWithoutUnitsCheck.class,9);
 
     }
 
@@ -82,7 +80,7 @@ public class TestSymbolWithoutUnitsCheck {
 
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutUnitsCheck.class,9);
+        assertHasIssueInLines(context,SymbolWithoutUnitsCheck.class,9);
     }
 
     @Test
@@ -146,7 +144,7 @@ public class TestSymbolWithoutUnitsCheck {
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutUnitsCheck.class,7);
+        assertHasIssueInLines(context,SymbolWithoutUnitsCheck.class,7);
     }
 
 

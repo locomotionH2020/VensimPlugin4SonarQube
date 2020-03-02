@@ -6,11 +6,9 @@ import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.visitors.MagicNumberTableVisitor;
 import es.uva.medeas.plugin.Issue;
-import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import static org.junit.Assert.*;
 
-import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -69,7 +67,7 @@ public class TestMagicNumberCheck {
         }
 
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            assertHasIssue(context,MagicNumberCheck.class,i);
+            assertHasIssueInLines(context,MagicNumberCheck.class,i);
 
     }
 
@@ -144,7 +142,7 @@ public class TestMagicNumberCheck {
             assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
 
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            assertHasIssue(context,MagicNumberCheck.class,10);
+            assertHasIssueInLines(context,MagicNumberCheck.class,10);
     }
 
      @Test
@@ -259,7 +257,7 @@ public class TestMagicNumberCheck {
              assertEquals("The number 51 is repeated "+ REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
 
          for(int i = 0; i< REPETITIONS; i++)
-             assertHasIssue(context,MagicNumberCheck.class,i);
+             assertHasIssueInLines(context,MagicNumberCheck.class,i);
      }
 
      @Test
@@ -303,7 +301,7 @@ public class TestMagicNumberCheck {
             assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
 
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            assertHasIssue(context,MagicNumberCheck.class,i);
+            assertHasIssueInLines(context,MagicNumberCheck.class,i);
 
     }
 
@@ -351,9 +349,7 @@ public class TestMagicNumberCheck {
         check.scan(context);
 
 
-        assertHasIssue(context,MagicNumberCheck.class,1);
-        assertHasIssue(context,MagicNumberCheck.class,2);
-        assertHasIssue(context,MagicNumberCheck.class,3);
+        assertHasIssueInLines(context,MagicNumberCheck.class,1,2,3);
         for(Issue issue:context.getIssues())
             assertEquals(Severity.MAJOR,issue.getSeverity());
 
@@ -379,7 +375,7 @@ public class TestMagicNumberCheck {
             assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
 
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            assertHasIssue(context,MagicNumberCheck.class,i);
+            assertHasIssueInLines(context,MagicNumberCheck.class,i);
 
     }
 
@@ -425,7 +421,7 @@ public class TestMagicNumberCheck {
             assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
 
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            assertHasIssue(context,MagicNumberCheck.class,i);
+            assertHasIssueInLines(context,MagicNumberCheck.class,i);
 
     }
 
@@ -471,7 +467,7 @@ public class TestMagicNumberCheck {
             assertEquals("The number 51 is repeated "+ DEFAULT_MINIMUM_REPETITIONS +" times. Consider replacing it by a constant",issue.getMessage());
 
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            assertHasIssue(context,MagicNumberCheck.class,i);
+            assertHasIssueInLines(context,MagicNumberCheck.class,i);
 
     }
 

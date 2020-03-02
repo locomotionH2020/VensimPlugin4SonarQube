@@ -32,7 +32,7 @@ public class TestIntegrationMagicNumberCheck {
 
 
         for(int i=1;i<DEFAULT_MINIMUM_REPETITIONS+1;i++)
-            assertHasIssue(visitorContext,MagicNumberCheck.class,i);
+            assertHasIssueInLines(visitorContext,MagicNumberCheck.class,i);
 
         for(Issue issue:issues) {
             assertEquals(Severity.MAJOR, issue.getSeverity());
@@ -78,7 +78,7 @@ public class TestIntegrationMagicNumberCheck {
 
         assertEquals(DEFAULT_MINIMUM_REPETITIONS,issues.size());
 
-        assertHasIssue(visitorContext,MagicNumberCheck.class,1);
+        assertHasIssueInLines(visitorContext,MagicNumberCheck.class,1);
     }
 
     @Test
@@ -208,7 +208,8 @@ public class TestIntegrationMagicNumberCheck {
         VensimScanner scanner = getScanner();
 
         scanner.checkIssues(visitorContext);
-        assertHasIssue(visitorContext, MagicNumberCheck.class,1);
+
+        assertHasIssueInLines(visitorContext, MagicNumberCheck.class,1);
     }
 
 
@@ -340,7 +341,7 @@ public class TestIntegrationMagicNumberCheck {
         List<Issue> magicNumberIssue = visitorContext.getIssues().stream()
                 .filter(issue -> issue.getCheck().getClass()==MagicNumberCheck.class).collect(Collectors.toList());
 
-        assertHasIssue(visitorContext,MagicNumberCheck.class,1);
+        assertHasIssueInLines(visitorContext,MagicNumberCheck.class,1);
         for(Issue issue:magicNumberIssue)
             assertEquals(Severity.MAJOR,issue.getSeverity());
     }

@@ -49,6 +49,7 @@ public class VensimRuleRepository implements RulesDefinition{
         set.add(SymbolNotDefinedInDictionaryCheck.class);
         set.add(SymbolWithoutCommentCheck.class);
         set.add(SymbolWithoutUnitsCheck.class);
+        set.add(DictionaryTypeMismatchCheck.class);
 
         return set;
     }

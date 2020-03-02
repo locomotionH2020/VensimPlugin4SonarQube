@@ -21,6 +21,7 @@ import org.sonar.api.rule.RuleKey;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import static org.junit.Assert.*;
 
@@ -68,24 +69,24 @@ public class RuleTestUtilities {
         //service controller
     }
 
-    public static void assertHasIssue(VensimVisitorContext context,Class type, int line){
-        boolean found = false;
-        List<Integer> foundInOtherLines = new ArrayList<>();
+    public static void assertHasIssueInLines(VensimVisitorContext context, Class type, Integer... lines){
+        assertTrue("You must specify the lines where you expect the issue",lines.length>0);
+
+        List<Integer> foundIn = new ArrayList<>();
 
         for(Issue issue:context.getIssues()){
             if(isSameRule(issue.getCheck().getClass(),type)) {
-                if(issue.getLine()==line)
-                    found = true;
-                else
-                    foundInOtherLines.add(issue.getLine());
+                    foundIn.add(issue.getLine());
             }
         }
+        List<Integer> expected = Arrays.asList(lines);
 
-        if(!found)
-            if(foundInOtherLines.isEmpty())
-                throw new AssertionError("Issue of type '"+ type.getSimpleName() + "'  not found.");
-            else
-                throw new AssertionError("Issue of type: '" + type.getSimpleName() + "' not found in line "+ line + ".But was found in lines: " + foundInOtherLines );
+        if(foundIn.isEmpty() && !expected.isEmpty())
+            throw new AssertionError("The context doesn't have any issue of type '"+ type.getSimpleName() + ".");
+        if(!foundIn.containsAll(expected))
+            throw new AssertionError("Issue of type: '" + type.getSimpleName() + "' not found in lines "+ expected + ".But was found in lines: " + foundIn );
+
+
     }
 
     private static boolean isSameRule(Class rule1, Class rule2){ //Compares check-keys instead of classes to allow the use of mocks
@@ -96,16 +97,19 @@ public class RuleTestUtilities {
         }
     }
 
-    public static void assertDoesntHaveIssueInLine(VensimVisitorContext context, Class type, int line){
+    public static void assertDoesntHaveIssueInLines(VensimVisitorContext context, Class type, Integer... lines){
+        assertTrue("You must specify the lines where an issue isn't expected. To test that the context doesnt have any issue you can use 'assertDoesntHaveIssueOfType'",lines.length>0);
+
+        List<Integer> lineList = Arrays.asList(lines);
         for(Issue issue:context.getIssues()){
-            assertFalse(issue.getCheck().getClass().equals(type) && issue.getLine()==line);
+            assertFalse(issue.getCheck().getClass().equals(type) && lineList.contains(issue.getLine()));
         }
 
 
     }
     public static void assertDoesntHaveIssueOfType(VensimVisitorContext context, Class type){
         for(Issue issue:context.getIssues()){
-            assertFalse(issue.getCheck().getClass().equals(type));
+            assertNotEquals(issue.getCheck().getClass(), type);
         }
     }
 

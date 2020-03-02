@@ -4,12 +4,10 @@ import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
 import es.uva.medeas.plugin.VensimVisitorContext;
-import es.uva.medeas.testutilities.RuleTestUtilities;
-import es.uva.medeas.testutilities.TestUtilities;
 import org.junit.Before;
 import org.junit.Test;
 
-import static es.uva.medeas.testutilities.RuleTestUtilities.assertHasIssue;
+import static es.uva.medeas.testutilities.RuleTestUtilities.assertHasIssueInLines;
 import static es.uva.medeas.testutilities.TestUtilities.addSymbolInLines;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
@@ -32,10 +30,7 @@ public class TestSymbolWithoutCommentCheck {
 
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutCommentCheck.class,1);
-        assertHasIssue(context,SymbolWithoutCommentCheck.class,2);
-        assertHasIssue(context,SymbolWithoutCommentCheck.class,3);
-
+        assertHasIssueInLines(context,SymbolWithoutCommentCheck.class,1,2,3);
     }
 
     @Test
@@ -47,7 +42,7 @@ public class TestSymbolWithoutCommentCheck {
 
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutCommentCheck.class,9);
+        assertHasIssueInLines(context,SymbolWithoutCommentCheck.class,9);
     }
 
     @Test
@@ -59,7 +54,7 @@ public class TestSymbolWithoutCommentCheck {
 
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutCommentCheck.class,9);
+        assertHasIssueInLines(context,SymbolWithoutCommentCheck.class,9);
 
     }
 
@@ -72,7 +67,7 @@ public class TestSymbolWithoutCommentCheck {
 
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutCommentCheck.class,9);
+        assertHasIssueInLines(context,SymbolWithoutCommentCheck.class,9);
 
     }
 
@@ -85,7 +80,7 @@ public class TestSymbolWithoutCommentCheck {
 
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutCommentCheck.class,9);
+        assertHasIssueInLines(context,SymbolWithoutCommentCheck.class,9);
     }
 
     @Test
@@ -149,6 +144,6 @@ public class TestSymbolWithoutCommentCheck {
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
         check.scan(context);
 
-        assertHasIssue(context,SymbolWithoutCommentCheck.class,7);
+        assertHasIssueInLines(context,SymbolWithoutCommentCheck.class,7);
     }
 }
