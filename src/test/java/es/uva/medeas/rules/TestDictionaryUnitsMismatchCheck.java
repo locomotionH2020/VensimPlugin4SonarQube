@@ -17,38 +17,62 @@ import static es.uva.medeas.testutilities.TestUtilities.addSymbolInLines;
 import static org.junit.Assert.assertEquals;
 
 
-public class TestDictionaryCommentMismatchCheck {
+public class TestDictionaryUnitsMismatchCheck {
     @Test
     public void testIssue(){
         SymbolTable dbTable = new SymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
-        parsedVar.setComment("A comment");
+        parsedVar.setUnits("kg");
         parsedVar.addDefinitionLine(1);
         parsedVar.addDefinitionLine(2);
         parsedTable.addSymbol(parsedVar);
 
         Symbol dbVar = new Symbol("var");
-        dbVar.setComment("Doesn't match");
+        dbVar.setUnits("meters");
         dbTable.addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
 
-        DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
+        DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
         assertEquals(2,context.getIssues().size());
-        assertHasIssueInLines(context,DictionaryCommentMismatchCheck.class,1,2);
+        assertHasIssueInLines(context,DictionaryUnitsMismatchCheck.class,1,2);
 
 
         for(Issue issue:context.getIssues())
-            assertEquals("The symbol 'var' has a comment 'A comment' but the dictionary has 'Doesn't match'.",issue.getMessage());
+            assertEquals("The symbol 'var' has 'kg' as units but the dictionary has 'meters'.",issue.getMessage());
     }
 
+
     @Test
-    public void testParsedSymbolDoesntHaveComment(){
+    public void testBothUnitsAreTrimmed(){
+        SymbolTable dbTable = new SymbolTable();
+        SymbolTable parsedTable = new SymbolTable();
+
+        Symbol parsedVar = new Symbol("var");
+        parsedVar.setUnits("                                                                               kg                                              ");
+        parsedVar.addDefinitionLine(1);
+        parsedTable.addSymbol(parsedVar);
+
+        Symbol dbVar = new Symbol("var");
+        dbVar.setUnits("    kg   ");
+        dbTable.addSymbol(dbVar);
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+
+        DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
+        check.scan(context);
+
+       assertDoesntHaveIssueOfType(context,DictionaryUnitsMismatchCheck.class);
+    }
+
+
+    @Test
+    public void testParsedSymbolDoesntHaveUnits(){
         SymbolTable dbTable = new SymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
@@ -58,42 +82,17 @@ public class TestDictionaryCommentMismatchCheck {
         parsedTable.addSymbol(parsedVar);
 
         Symbol dbVar = new Symbol("var");
-        dbVar.setComment("comment");
+        dbVar.setUnits("l");
         dbTable.addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
 
-        DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
+        DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
-        assertDoesntHaveIssueOfType(context,DictionaryCommentMismatchCheck.class);
+        assertDoesntHaveIssueOfType(context,DictionaryUnitsMismatchCheck.class);
     }
-
-    @Test
-    public void testBothCommentsAreTrimmed(){
-        SymbolTable dbTable = new SymbolTable();
-        SymbolTable parsedTable = new SymbolTable();
-
-        Symbol parsedVar = new Symbol("var");
-        parsedVar.setComment("                                                                               Some comment                                              ");
-        parsedVar.addDefinitionLine(1);
-        parsedTable.addSymbol(parsedVar);
-
-        Symbol dbVar = new Symbol("var");
-        dbVar.setComment("    Some comment    ");
-        dbTable.addSymbol(dbVar);
-
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
-
-        DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
-        check.scan(context);
-
-       assertDoesntHaveIssueOfType(context,DictionaryCommentMismatchCheck.class);
-    }
-
-
-
 
     @Test
     public void testIssueInDifferentSymbols(){
@@ -106,11 +105,11 @@ public class TestDictionaryCommentMismatchCheck {
         Symbol valid2 = TestUtilities.addSymbolInLines(parsedTable, "valid2", SymbolType.VARIABLE, 4);
         Symbol var3 = TestUtilities.addSymbolInLines(parsedTable, "var3", SymbolType.VARIABLE, 5);
 
-        var.setComment("different comment");
-        var2.setComment("different comment");
-        var3.setComment("different comment");
-        valid1.setComment("Same comment");
-        valid2.setComment("Same comment");
+        var.setUnits("different units");
+        var2.setUnits("different units");
+        var3.setUnits("different units");
+        valid1.setUnits("Same units");
+        valid2.setUnits("Same units");
 
         Symbol dbVar = TestUtilities.addSymbolInLines(dbTable,"var", SymbolType.VARIABLE);
         Symbol dbValid = TestUtilities.addSymbolInLines(dbTable, "valid1", SymbolType.VARIABLE);
@@ -118,20 +117,20 @@ public class TestDictionaryCommentMismatchCheck {
         Symbol dbValid2 = TestUtilities.addSymbolInLines(dbTable, "valid2", SymbolType.VARIABLE);
         Symbol dbVar3 = TestUtilities.addSymbolInLines(dbTable, "var3", SymbolType.VARIABLE);
 
-        dbVar.setComment("mismatch");
-        dbVar2.setComment("mismatch");
-        dbVar3.setComment("mismatch");
-        dbValid.setComment("Same comment");
-        dbValid2.setComment("Same comment");
+        dbVar.setUnits("mismatch");
+        dbVar2.setUnits("mismatch");
+        dbVar3.setUnits("mismatch");
+        dbValid.setUnits("Same units");
+        dbValid2.setUnits("Same units");
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
-        DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
+        DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
 
-        assertHasIssueInLines(context,DictionaryCommentMismatchCheck.class,1,3,5);
-        assertDoesntHaveIssueInLines(context,DictionaryCommentMismatchCheck.class,2,4);
+        assertHasIssueInLines(context,DictionaryUnitsMismatchCheck.class,1,3,5);
+        assertDoesntHaveIssueInLines(context,DictionaryUnitsMismatchCheck.class,2,4);
 
 
     }
@@ -144,13 +143,13 @@ public class TestDictionaryCommentMismatchCheck {
 
 
         Symbol var = new Symbol("var");
-        var.setComment("Some comment");
+        var.setUnits("kg");
         parsedTable.addSymbol(var);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new SymbolTable());
 
 
-        DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
+        DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
         assertDoesntHaveIssueOfType(context,DictionaryTypeMismatchCheck.class);
@@ -162,13 +161,13 @@ public class TestDictionaryCommentMismatchCheck {
 
 
         Symbol dbVar = new Symbol("var");
-        dbVar.setComment("Some comment");
+        dbVar.setUnits("kg");
         dbTable.addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,new SymbolTable(),dbTable);
 
 
-        DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
+        DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
         assertDoesntHaveIssueOfType(context,DictionaryTypeMismatchCheck.class);
@@ -181,20 +180,20 @@ public class TestDictionaryCommentMismatchCheck {
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
-        parsedVar.setComment("A comment");
+        parsedVar.setUnits("kg");
         parsedTable.addSymbol(parsedVar);
 
         Symbol dbVar = new Symbol("var");
-        dbVar.setComment("Doesn't match");
+        dbVar.setUnits("l");
         dbTable.addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
 
-        DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
+        DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
-        assertDoesntHaveIssueOfType(context,DictionaryCommentMismatchCheck.class);
+        assertDoesntHaveIssueOfType(context,DictionaryUnitsMismatchCheck.class);
     }
 
     @Test
@@ -203,16 +202,16 @@ public class TestDictionaryCommentMismatchCheck {
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
-        parsedVar.setComment("A comment");
+        parsedVar.setUnits("Units");
         parsedTable.addSymbol(parsedVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,null);
 
 
-        DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
+        DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
-        assertDoesntHaveIssueOfType(context,DictionaryCommentMismatchCheck.class);
+        assertDoesntHaveIssueOfType(context,DictionaryUnitsMismatchCheck.class);
     }
 
     @Test
@@ -223,21 +222,21 @@ public class TestDictionaryCommentMismatchCheck {
 
         List<Symbol> parsedSymbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         parsedSymbols.forEach(symbol -> {symbol.addDefinitionLine(1);
-           symbol.setComment("Parsed comment");
+           symbol.setUnits("Parsed units");
             parsedTable.addSymbol(symbol);
         });
 
         List<Symbol> dbSymbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         dbSymbols.forEach(symbol -> {
-            symbol.setComment("DB comment");
+            symbol.setUnits("DB units");
             dbTable.addSymbol(symbol);
         });
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
-        DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
+        DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
-        assertDoesntHaveIssueOfType(context,DictionaryCommentMismatchCheck.class);
+        assertDoesntHaveIssueOfType(context,DictionaryUnitsMismatchCheck.class);
     }
 
     @Test
@@ -252,7 +251,7 @@ public class TestDictionaryCommentMismatchCheck {
         addSymbolInLines(parsedTable,"realityCheck",SymbolType.REALITY_CHECK,7);
 
         for(Symbol s:parsedTable.getSymbols())
-            s.setComment("Parsed Comment");
+            s.setUnits("Parsed units");
 
         SymbolTable dbTable = new SymbolTable();
 
@@ -265,14 +264,14 @@ public class TestDictionaryCommentMismatchCheck {
         addSymbolInLines(dbTable,"realityCheck",SymbolType.VARIABLE);
 
         for(Symbol s:dbTable.getSymbols())
-            s.setComment("Db Comment");
+            s.setUnits("Db units");
 
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
-        DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
+        DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
         
-        assertHasIssueInLines(context,DictionaryCommentMismatchCheck.class,2,3,4,5,6,7);
-        assertDoesntHaveIssueInLines(context,DictionaryCommentMismatchCheck.class,1);
+        assertHasIssueInLines(context,DictionaryUnitsMismatchCheck.class,2,3,4,5,6,7);
+        assertDoesntHaveIssueInLines(context,DictionaryUnitsMismatchCheck.class,1);
     }
 }

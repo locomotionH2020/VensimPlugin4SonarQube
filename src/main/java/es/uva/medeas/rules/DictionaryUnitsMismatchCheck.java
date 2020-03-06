@@ -8,14 +8,14 @@ import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.utilities.Constants;
 import org.sonar.check.Rule;
 
-@Rule(key = DictionaryCommentMismatchCheck.CHECK_KEY, name = DictionaryCommentMismatchCheck.NAME, description = DictionaryCommentMismatchCheck.HTML_DESCRIPTION)
-public class DictionaryCommentMismatchCheck implements VensimCheck {
-    public static final String CHECK_KEY = "symbol-comment-mismatch-db" ;
+@Rule(key = DictionaryUnitsMismatchCheck.CHECK_KEY, name = DictionaryUnitsMismatchCheck.NAME, description = DictionaryUnitsMismatchCheck.HTML_DESCRIPTION)
+public class DictionaryUnitsMismatchCheck implements VensimCheck {
+    public static final String CHECK_KEY = "symbol-units-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that all the symbols in the file have the same comment as the symbols stored in the database. " +
-            "If the symbol found in the file doesn't have a comment the rule is ignored.<br> " +
+            "<p>This rule checks that all the symbols in the file have the same units as the symbols stored in the database. " +
+            "If the symbol found in the file doesn't have units the rule is ignored.<br> " +
             "The symbols predefined by Vensim (FINAL TIME, TIME STEP, etc) and functions are ignored (except lookups)</p>";
-    public static final String NAME = "DictionaryCommentMismatch" ;
+    public static final String NAME = "DictionaryUnitsMismatch" ;
 
     @Override
     public void scan(VensimVisitorContext context) {
@@ -23,15 +23,15 @@ public class DictionaryCommentMismatchCheck implements VensimCheck {
         SymbolTable dbTable = context.getDbSymbolTable();
 
         if(dbTable!=null)
-            checkSymbolsComment(context, parsedTable, dbTable);
+            checkSymbolsUnits(context, parsedTable, dbTable);
     }
 
-    private void checkSymbolsComment(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
+    private void checkSymbolsUnits(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
-                String expectedComment = dbTable.getSymbol(foundSymbol.getToken()).getComment().trim();
+                String expectedUnits = dbTable.getSymbol(foundSymbol.getToken()).getUnits().trim();
                 for(int line: foundSymbol.getDefinitionLines()) {
-                    Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has a comment '"+foundSymbol.getComment().trim() + "' but the dictionary has '"+ expectedComment + "'." );
+                    Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has '"+foundSymbol.getUnits().trim() + "' as units but the dictionary has '"+ expectedUnits + "'." );
                     context.addIssue(issue);
                 }
             }
@@ -45,9 +45,9 @@ public class DictionaryCommentMismatchCheck implements VensimCheck {
         if(!dbTable.hasSymbol(foundSymbol.getToken()))
             return false;
 
-        String dbComment = dbTable.getSymbol(foundSymbol.getToken()).getComment();
-        String fileComment = foundSymbol.getComment();
-        return !fileComment.isBlank()  && !fileComment.trim().equals(dbComment.trim());
+        String dbUnits = dbTable.getSymbol(foundSymbol.getToken()).getUnits();
+        String fileUnits = foundSymbol.getUnits();
+        return !fileUnits.isBlank()  && !fileUnits.trim().equals(dbUnits.trim());
 
     }
 
