@@ -109,7 +109,7 @@ public class RuleTestUtilities {
     }
     public static void assertDoesntHaveIssueOfType(VensimVisitorContext context, Class type){
         for(Issue issue:context.getIssues()){
-            assertNotEquals(issue.getCheck().getClass(), type);
+            assertNotEquals("Found unexpected issue in line: " + issue.getLine() ,issue.getCheck().getClass(), type);
         }
     }
 

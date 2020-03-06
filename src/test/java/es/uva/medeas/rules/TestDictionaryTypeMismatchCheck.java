@@ -49,7 +49,7 @@ public class TestDictionaryTypeMismatchCheck {
         SymbolTable parsedTable = new SymbolTable();
 
         TestUtilities.addSymbolInLines(dbTable,"var", SymbolType.VARIABLE);
-        TestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.FUNCTION,1);
+        TestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.REALITY_CHECK,1);
 
         TestUtilities.addSymbolInLines(dbTable,"valid", SymbolType.CONSTANT);
         TestUtilities.addSymbolInLines(parsedTable,"valid", SymbolType.CONSTANT,2);
@@ -61,7 +61,7 @@ public class TestDictionaryTypeMismatchCheck {
         TestUtilities.addSymbolInLines(parsedTable,"valid2", SymbolType.SUBSCRIPT_VALUE,4);
 
         TestUtilities.addSymbolInLines(dbTable,"var3", SymbolType.LOOKUP);
-        TestUtilities.addSymbolInLines(parsedTable,"var3", SymbolType.FUNCTION,5);
+        TestUtilities.addSymbolInLines(parsedTable,"var3", SymbolType.SUBSCRIPT_NAME,5);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
@@ -180,6 +180,21 @@ public class TestDictionaryTypeMismatchCheck {
         assertDoesntHaveIssueOfType(context,DictionaryTypeMismatchCheck.class);
 
 
+    }
+    @Test
+    public void testSymbolInDbButNotInFile(){
+        SymbolTable parsedTable = new SymbolTable();
+
+        SymbolTable dbTable = new SymbolTable();
+        dbTable.addSymbol(new Symbol("var", SymbolType.REALITY_CHECK));
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+
+
+        DictionaryTypeMismatchCheck check = new DictionaryTypeMismatchCheck();
+        check.scan(context);
+
+        assertDoesntHaveIssueOfType(context,DictionaryTypeMismatchCheck.class);
     }
 
 }

@@ -28,10 +28,6 @@ public class VensimRuleRepository implements RulesDefinition{
         getChecks().forEach(checks::add);
 
         loader.load(repository, checks.toArray(new Class[0]));
-
-
-
-
         repository.done();
     }
 
@@ -50,6 +46,7 @@ public class VensimRuleRepository implements RulesDefinition{
         set.add(SymbolWithoutCommentCheck.class);
         set.add(SymbolWithoutUnitsCheck.class);
         set.add(DictionaryTypeMismatchCheck.class);
+        set.add(DictionaryCommentMismatchCheck.class);
 
         return set;
     }
