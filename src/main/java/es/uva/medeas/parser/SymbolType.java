@@ -9,5 +9,6 @@ public enum SymbolType {
     REALITY_CHECK,
     LOOKUP,
     SUBSCRIPT_NAME,
-    SUBSCRIPT_VALUE
+    SUBSCRIPT_VALUE,
+    SWITCHES,
 }

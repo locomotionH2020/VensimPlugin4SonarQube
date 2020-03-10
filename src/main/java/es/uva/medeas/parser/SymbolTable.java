@@ -72,5 +72,10 @@ public class SymbolTable {
         return table.equals(table1.table);
     }
 
-
+    @Override
+    public String toString() {
+        return "SymbolTable{" +
+                "table=" + table +
+                '}';
+    }
 }

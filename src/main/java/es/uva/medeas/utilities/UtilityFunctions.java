@@ -1,5 +1,7 @@
 package es.uva.medeas.utilities;
 
+import es.uva.medeas.parser.Symbol;
+import es.uva.medeas.parser.SymbolTable;
 import org.apache.commons.lang.StringUtils;
 
 public class UtilityFunctions {
@@ -70,7 +72,14 @@ public class UtilityFunctions {
 
        return Float.parseFloat(number);
 
+    }
 
+    public static Symbol getSymbolOrCreate(SymbolTable table, String token){
+        if(table.hasSymbol(token))
+            return table.getSymbol(token);
 
+        else{
+            return table.addSymbol(new Symbol(token));
+        }
     }
 }

@@ -9,10 +9,12 @@ public class Symbol {
     private String token;
     private List<Integer> linesDefined;
     private List<List<Symbol>> indexes;
+    private List<String> modules;
     private String units;
     private String comment;
     private Set<Symbol> dependencies;
     private SymbolType type;
+    private String category;
 
 
     public Symbol(String token){
@@ -20,8 +22,10 @@ public class Symbol {
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
         linesDefined = new ArrayList<>();
+        modules = new ArrayList<>();
         units = "";
         comment ="";
+        category = "";
         indexes = new ArrayList<>();
     }
 
@@ -94,19 +98,41 @@ public class Symbol {
         return indexes;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Symbol)) return false;
         Symbol symbol = (Symbol) o;
-        return Objects.equals(getToken(), symbol.getToken()) &&
-                Objects.equals(linesDefined, symbol.linesDefined) &&
-                Objects.equals(getIndexes(), symbol.getIndexes()) &&
-                Objects.equals(getDependencies(), symbol.getDependencies()) &&
-                getType() == symbol.getType();
+        return getToken().equals(symbol.getToken()) &&
+                linesDefined.equals(symbol.linesDefined) &&
+                getIndexes().equals(symbol.getIndexes()) &&
+                getModules().equals(symbol.getModules()) &&
+                getUnits().equals(symbol.getUnits()) &&
+                getComment().equals(symbol.getComment()) &&
+                getDependencies().equals(symbol.getDependencies()) &&
+                getType() == symbol.getType() &&
+                getCategory().equals(symbol.getCategory());
     }
 
+    @Override
+    public String toString() {
+        return "Symbol{" +
+                "token='" + token + '\'' +
+                ", linesDefined=" + linesDefined +
+                ", indexes=" + indexes +
+                ", modules=" + modules +
+                ", units='" + units + '\'' +
+                ", comment='" + comment + '\'' +
+                ", dependencies=" + dependencies +
+                ", type=" + type +
+                ", category='" + category + '\'' +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getToken(), linesDefined, getIndexes(), getModules(), getUnits(), getComment(), getDependencies(), getType(), getCategory());
+    }
 
     public void setUnits(String units) {
         this.units = units.strip();
@@ -124,4 +150,19 @@ public class Symbol {
         return comment;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory(){
+        return category;
+    }
+
+    public List<String> getModules() {
+        return modules;
+    }
+
+    public void addModule(String module){
+        modules.add(module.trim());
+    }
 }
