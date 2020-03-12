@@ -31,9 +31,9 @@ public class TestRawSymbolTableVisitor {
         Symbol option1 = table.getSymbol("OPTION1");
         Symbol option2 = table.getSymbol("OPTION2");
 
-        assertSymbol(subscriptName, SymbolType.SUBSCRIPT_NAME,2,NO_DEPENDENCIES);
-        assertSymbol(option1,SymbolType.SUBSCRIPT_VALUE,2,NO_DEPENDENCIES);
-        assertSymbol(option2,SymbolType.SUBSCRIPT_VALUE,3,NO_DEPENDENCIES);
+        assertSymbol(subscriptName, SymbolType.Subscript,2,NO_DEPENDENCIES);
+        assertSymbol(option1,SymbolType.Subscript_Value,2,NO_DEPENDENCIES);
+        assertSymbol(option2,SymbolType.Subscript_Value,3,NO_DEPENDENCIES);
         assertEquals("units",subscriptName.getUnits());
         assertEquals("comment",subscriptName.getComment());
 
@@ -64,7 +64,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol country = table.getSymbol("country");
-        assertSymbolType(country,SymbolType.SUBSCRIPT_NAME);
+        assertSymbolType(country,SymbolType.Subscript);
 
     }
 
@@ -79,7 +79,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol copy = table.getSymbol("copy");
-        assertSymbolType(copy,SymbolType.SUBSCRIPT_NAME);
+        assertSymbolType(copy,SymbolType.Subscript);
         assertSymbolDefinedOnlyIn(3,copy);
         assertEquals("units",copy.getUnits());
         assertEquals("comment",copy.getComment());
@@ -94,8 +94,8 @@ public class TestRawSymbolTableVisitor {
         Symbol age15 = table.getSymbol("AGE 15");
         Symbol age45 = table.getSymbol("AGE 45");
 
-        assertSymbol(age15,SymbolType.SUBSCRIPT_VALUE,1,NO_DEPENDENCIES);
-        assertSymbol(age45,SymbolType.SUBSCRIPT_VALUE,1,NO_DEPENDENCIES);
+        assertSymbol(age15,SymbolType.Subscript_Value,1,NO_DEPENDENCIES);
+        assertSymbol(age45,SymbolType.Subscript_Value,1,NO_DEPENDENCIES);
     }
 
     @Test
@@ -106,10 +106,10 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol xlsSubscript = table.getSymbol("xlsSubscript");
-        assertSymbolType(xlsSubscript,SymbolType.SUBSCRIPT_NAME);
+        assertSymbolType(xlsSubscript,SymbolType.Subscript);
 
         Symbol directSubscript = table.getSymbol("directSubscript");
-        assertSymbolType(directSubscript,SymbolType.SUBSCRIPT_NAME);
+        assertSymbolType(directSubscript,SymbolType.Subscript);
     }
 
 
@@ -122,7 +122,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myLookup = table.getSymbol("myLookup");
-        assertSymbol(myLookup,SymbolType.LOOKUP,2,NO_DEPENDENCIES);
+        assertSymbol(myLookup,SymbolType.Lookup_Table,2,NO_DEPENDENCIES);
         assertEquals("units",myLookup.getUnits());
         assertEquals("comment",myLookup.getComment());
 
@@ -136,7 +136,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myLookup = table.getSymbol("myLookup");
-        assertSymbolType(myLookup,SymbolType.LOOKUP);
+        assertSymbolType(myLookup,SymbolType.Lookup_Table);
     }
 
     @Test
@@ -148,10 +148,10 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol xlsLookup = table.getSymbol("testXLSLookup");
-        assertSymbolType(xlsLookup,SymbolType.LOOKUP);
+        assertSymbolType(xlsLookup,SymbolType.Lookup_Table);
 
         Symbol directLookup = table.getSymbol("testDirectLookup");
-        assertSymbolType(directLookup,SymbolType.LOOKUP);
+        assertSymbolType(directLookup,SymbolType.Lookup_Table);
     }
 
     @Test
@@ -164,7 +164,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myMacro = table.getSymbol("myMacro");
-        assertSymbolType(myMacro,SymbolType.FUNCTION);
+        assertSymbolType(myMacro,SymbolType.Function);
         assertEquals(Arrays.asList(3,4),myMacro.getDefinitionLines());
         assertTrue(table.hasSymbol("supportValue"));
 
@@ -198,7 +198,7 @@ public class TestRawSymbolTableVisitor {
 
 
         Symbol pi = table.getSymbol("PI");
-        assertSymbol(pi,SymbolType.CONSTANT,4,NO_DEPENDENCIES);
+        assertSymbol(pi,SymbolType.Constant,4,NO_DEPENDENCIES);
         assertEquals("units",pi.getUnits());
         assertEquals("comment",pi.getComment());
     }
@@ -210,7 +210,7 @@ public class TestRawSymbolTableVisitor {
 
 
         Symbol filename = table.getSymbol("filename");
-        assertSymbol(filename,SymbolType.CONSTANT,3,NO_DEPENDENCIES);
+        assertSymbol(filename,SymbolType.Constant,3,NO_DEPENDENCIES);
 
         assertEquals("units",filename.getUnits());
         assertEquals("comment",filename.getComment());
@@ -291,14 +291,14 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testExprLookupCal(){
-        String program = "lookup_inside_expr= WITH LOOKUP ( constVensim,\n" +
+        String program = "lookup_inside_expr= WITH Lookup_Table ( constVensim,\n" +
                 "([(0,0)-(4,2)],(0,0.9),(1,1),(2,1.2),(3,1.5),(4,2) ))~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol lookupExpr = table.getSymbol("lookup_inside_expr");
 
-        assertEquals(getSymbols(table,"WITH LOOKUP","constVensim"),lookupExpr.getDependencies());
+        assertEquals(getSymbols(table,"WITH Lookup_Table","constVensim"),lookupExpr.getDependencies());
     }
 
     @Test
@@ -362,7 +362,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myCondition = table.getSymbol("myCondition");
-        assertSymbol(myCondition,SymbolType.REALITY_CHECK,6,NO_DEPENDENCIES);
+        assertSymbol(myCondition,SymbolType.Reality_Check,6,NO_DEPENDENCIES);
         assertEquals("comment", myCondition.getComment());
         assertEquals("units", myCondition.getUnits());
     }
@@ -375,7 +375,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myTestInput = table.getSymbol("myTestInput");
-        assertSymbol(myTestInput,SymbolType.REALITY_CHECK,2,NO_DEPENDENCIES);
+        assertSymbol(myTestInput,SymbolType.Reality_Check,2,NO_DEPENDENCIES);
         assertEquals("comment", myTestInput.getComment());
         assertEquals("units", myTestInput.getUnits());
     }

@@ -38,7 +38,7 @@ public class RealityCheckNameRule implements VensimCheck {
 
 
         for(Symbol symbol:table.getSymbols()){
-            if(symbol.getType()== SymbolType.REALITY_CHECK && !checkRealityCheckFollowsConvention(symbol.getToken())){
+            if(symbol.getType()== SymbolType.Reality_Check && !checkRealityCheckFollowsConvention(symbol.getToken())){
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The name of the reality check doesn't follow the naming convention.");
                     context.addIssue(issue);

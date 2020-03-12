@@ -100,11 +100,11 @@ public class TestDictionaryCommentMismatchCheck {
         SymbolTable dbTable = new SymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol var = TestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.VARIABLE,1);
-        Symbol valid1 = TestUtilities.addSymbolInLines(parsedTable, "valid1", SymbolType.VARIABLE, 2);
-        Symbol var2 = TestUtilities.addSymbolInLines(parsedTable, "var2", SymbolType.VARIABLE, 3);
-        Symbol valid2 = TestUtilities.addSymbolInLines(parsedTable, "valid2", SymbolType.VARIABLE, 4);
-        Symbol var3 = TestUtilities.addSymbolInLines(parsedTable, "var3", SymbolType.VARIABLE, 5);
+        Symbol var = TestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.Variable,1);
+        Symbol valid1 = TestUtilities.addSymbolInLines(parsedTable, "valid1", SymbolType.Variable, 2);
+        Symbol var2 = TestUtilities.addSymbolInLines(parsedTable, "var2", SymbolType.Variable, 3);
+        Symbol valid2 = TestUtilities.addSymbolInLines(parsedTable, "valid2", SymbolType.Variable, 4);
+        Symbol var3 = TestUtilities.addSymbolInLines(parsedTable, "var3", SymbolType.Variable, 5);
 
         var.setComment("different comment");
         var2.setComment("different comment");
@@ -112,11 +112,11 @@ public class TestDictionaryCommentMismatchCheck {
         valid1.setComment("Same comment");
         valid2.setComment("Same comment");
 
-        Symbol dbVar = TestUtilities.addSymbolInLines(dbTable,"var", SymbolType.VARIABLE);
-        Symbol dbValid = TestUtilities.addSymbolInLines(dbTable, "valid1", SymbolType.VARIABLE);
-        Symbol dbVar2 = TestUtilities.addSymbolInLines(dbTable, "var2", SymbolType.VARIABLE, 3);
-        Symbol dbValid2 = TestUtilities.addSymbolInLines(dbTable, "valid2", SymbolType.VARIABLE);
-        Symbol dbVar3 = TestUtilities.addSymbolInLines(dbTable, "var3", SymbolType.VARIABLE);
+        Symbol dbVar = TestUtilities.addSymbolInLines(dbTable,"var", SymbolType.Variable);
+        Symbol dbValid = TestUtilities.addSymbolInLines(dbTable, "valid1", SymbolType.Variable);
+        Symbol dbVar2 = TestUtilities.addSymbolInLines(dbTable, "var2", SymbolType.Variable, 3);
+        Symbol dbValid2 = TestUtilities.addSymbolInLines(dbTable, "valid2", SymbolType.Variable);
+        Symbol dbVar3 = TestUtilities.addSymbolInLines(dbTable, "var3", SymbolType.Variable);
 
         dbVar.setComment("mismatch");
         dbVar2.setComment("mismatch");
@@ -243,26 +243,26 @@ public class TestDictionaryCommentMismatchCheck {
     @Test
     public void testIgnoresFunctions(){
         SymbolTable parsedTable = new SymbolTable();
-        addSymbolInLines(parsedTable,"function",SymbolType.FUNCTION,1);
-        addSymbolInLines(parsedTable,"constant",SymbolType.CONSTANT,2);
-        addSymbolInLines(parsedTable,"var",SymbolType.VARIABLE,3);
-        addSymbolInLines(parsedTable, "subscript",SymbolType.SUBSCRIPT_NAME,4);
-        addSymbolInLines(parsedTable,"subscriptValue",SymbolType.SUBSCRIPT_VALUE,5);
-        addSymbolInLines(parsedTable,"lookup",SymbolType.LOOKUP,6);
-        addSymbolInLines(parsedTable,"realityCheck",SymbolType.REALITY_CHECK,7);
+        addSymbolInLines(parsedTable,"function",SymbolType.Function,1);
+        addSymbolInLines(parsedTable,"constant",SymbolType.Constant,2);
+        addSymbolInLines(parsedTable,"var",SymbolType.Variable,3);
+        addSymbolInLines(parsedTable, "subscript",SymbolType.Subscript,4);
+        addSymbolInLines(parsedTable,"subscriptValue",SymbolType.Subscript_Value,5);
+        addSymbolInLines(parsedTable,"lookup",SymbolType.Lookup_Table,6);
+        addSymbolInLines(parsedTable,"realityCheck",SymbolType.Reality_Check,7);
 
         for(Symbol s:parsedTable.getSymbols())
             s.setComment("Parsed Comment");
 
         SymbolTable dbTable = new SymbolTable();
 
-        addSymbolInLines(dbTable,"function",SymbolType.VARIABLE);
-        addSymbolInLines(dbTable,"constant",SymbolType.VARIABLE);
-        addSymbolInLines(dbTable,"var",SymbolType.VARIABLE);
-        addSymbolInLines(dbTable, "subscript",SymbolType.VARIABLE);
-        addSymbolInLines(dbTable,"subscriptValue",SymbolType.VARIABLE);
-        addSymbolInLines(dbTable,"lookup",SymbolType.VARIABLE);
-        addSymbolInLines(dbTable,"realityCheck",SymbolType.VARIABLE);
+        addSymbolInLines(dbTable,"function",SymbolType.Variable);
+        addSymbolInLines(dbTable,"constant",SymbolType.Variable);
+        addSymbolInLines(dbTable,"var",SymbolType.Variable);
+        addSymbolInLines(dbTable, "subscript",SymbolType.Variable);
+        addSymbolInLines(dbTable,"subscriptValue",SymbolType.Variable);
+        addSymbolInLines(dbTable,"lookup",SymbolType.Variable);
+        addSymbolInLines(dbTable,"realityCheck",SymbolType.Variable);
 
         for(Symbol s:dbTable.getSymbols())
             s.setComment("Db Comment");

@@ -147,7 +147,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor<Void> {
     public Void visitCall(ModelParser.CallContext ctx) {
         String functionName = getFunctionName(ctx);
 
-        if ("WITH LOOKUP".equals(functionName)) {
+        if ("WITH Lookup_Table".equals(functionName)) {
             return visit(ctx.exprList().expr(0));
         }
 

@@ -318,7 +318,7 @@ public class TestAPI {
         JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
         JsonObject symbol = symbols.getJsonObject("SYMBOL_WITH_MULTIPLE_DEPENDENCIES");
 
-        assertEquals("VARIABLE",symbol.getString(JsonSymbolTableBuilder.KEY_TYPE));
+        assertEquals("Variable",symbol.getString(JsonSymbolTableBuilder.KEY_TYPE));
     }
 
 

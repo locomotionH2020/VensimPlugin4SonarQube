@@ -102,14 +102,14 @@ public class TestJsonSymbolTableBuilder {
         JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
 
         SymbolTable table = new SymbolTable();
-        Symbol symbol = table.addSymbol(new Symbol("scenario1",SymbolType.SUBSCRIPT_VALUE));
+        Symbol symbol = table.addSymbol(new Symbol("scenario1",SymbolType.Subscript_Value));
 
         builder.addSymbolTable("file",table);
         JsonObject file = builder.build().getJsonObject(0);
 
         String type = file.getJsonObject("symbols").getJsonObject("scenario1").getString(JsonSymbolTableBuilder.KEY_TYPE);
 
-        assertEquals("SUBSCRIPT_VALUE",type);
+        assertEquals("Subscript_Value",type);
 
     }
 

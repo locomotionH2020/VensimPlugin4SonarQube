@@ -27,7 +27,7 @@ public class SymbolIndexesValidator {
 
             for(Symbol indexFound: indexColumn)
                 switch (indexFound.getType()){
-                    case SUBSCRIPT_NAME:
+                    case Subscript:
                         if(subscriptFound)
                             throw new MultipleSubscriptIndexesException();
                         if(valueFound)
@@ -36,7 +36,7 @@ public class SymbolIndexesValidator {
                         subscriptFound = true;
                         break;
 
-                    case SUBSCRIPT_VALUE:
+                    case Subscript_Value:
                         if(subscriptFound)
                             throw new MixedIndexTypeException();
 

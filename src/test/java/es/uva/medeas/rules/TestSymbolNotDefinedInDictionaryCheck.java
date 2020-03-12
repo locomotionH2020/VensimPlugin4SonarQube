@@ -9,7 +9,6 @@ import es.uva.medeas.utilities.Constants;
 import org.junit.Test;
 
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +46,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
     @Test
     public void testMissingSymbolInDB(){
         SymbolTable parsedTable = new SymbolTable();
-        addSymbolInLines(parsedTable,"foo",SymbolType.CONSTANT,1,2);
+        addSymbolInLines(parsedTable,"foo",SymbolType.Constant,1,2);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new SymbolTable());
 
@@ -77,13 +76,13 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         SymbolTable dbTable = new SymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
-        addSymbolInLines(parsedTable,"var1",SymbolType.CONSTANT,1,2,3);
+        addSymbolInLines(parsedTable,"var1",SymbolType.Constant,1,2,3);
         dbTable.addSymbol(new Symbol("var1"));
 
-        addSymbolInLines(parsedTable,"foo",SymbolType.VARIABLE,4);
+        addSymbolInLines(parsedTable,"foo",SymbolType.Variable,4);
         dbTable.addSymbol(new Symbol("foo"));
 
-        addSymbolInLines(parsedTable,"easter_egg",SymbolType.LOOKUP,2,3);
+        addSymbolInLines(parsedTable,"easter_egg",SymbolType.Lookup_Table,2,3);
         dbTable.addSymbol(new Symbol("easter_egg"));
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
@@ -104,11 +103,11 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         dbTable.addSymbol(new Symbol("var1"));
         dbTable.addSymbol(new Symbol("var2"));
 
-        addSymbolInLines(parsedTable,"var0",SymbolType.VARIABLE,1);
-        addSymbolInLines(parsedTable,"var1",SymbolType.CONSTANT,2);
-        addSymbolInLines(parsedTable,"var1.5",SymbolType.SUBSCRIPT_NAME,3);
-        addSymbolInLines(parsedTable, "var2",SymbolType.SUBSCRIPT_VALUE,4);
-        addSymbolInLines(parsedTable,"var2.5",SymbolType.LOOKUP,5);
+        addSymbolInLines(parsedTable,"var0",SymbolType.Variable,1);
+        addSymbolInLines(parsedTable,"var1",SymbolType.Constant,2);
+        addSymbolInLines(parsedTable,"var1.5",SymbolType.Subscript,3);
+        addSymbolInLines(parsedTable, "var2",SymbolType.Subscript_Value,4);
+        addSymbolInLines(parsedTable,"var2.5",SymbolType.Lookup_Table,5);
 
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
@@ -143,15 +142,15 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         SymbolTable parsedTable = new SymbolTable();
 
 
-        addSymbolInLines(parsedTable,"funko",SymbolType.FUNCTION,1);
-        addSymbolInLines(parsedTable,"constant",SymbolType.CONSTANT,2);
-        addSymbolInLines(parsedTable,"var",SymbolType.VARIABLE,3);
-        addSymbolInLines(parsedTable, "subscript",SymbolType.SUBSCRIPT_NAME,4);
-        addSymbolInLines(parsedTable,"funko2",SymbolType.FUNCTION,5);
-        addSymbolInLines(parsedTable,"subscriptValue",SymbolType.SUBSCRIPT_VALUE,6);
-        addSymbolInLines(parsedTable,"lookup",SymbolType.LOOKUP,7);
-        addSymbolInLines(parsedTable,"realityCheck",SymbolType.REALITY_CHECK,8);
-        addSymbolInLines(parsedTable,"funko3",SymbolType.FUNCTION,9);
+        addSymbolInLines(parsedTable,"funko",SymbolType.Function,1);
+        addSymbolInLines(parsedTable,"constant",SymbolType.Constant,2);
+        addSymbolInLines(parsedTable,"var",SymbolType.Variable,3);
+        addSymbolInLines(parsedTable, "subscript",SymbolType.Subscript,4);
+        addSymbolInLines(parsedTable,"funko2",SymbolType.Function,5);
+        addSymbolInLines(parsedTable,"subscriptValue",SymbolType.Subscript_Value,6);
+        addSymbolInLines(parsedTable,"lookup",SymbolType.Lookup_Table,7);
+        addSymbolInLines(parsedTable,"realityCheck",SymbolType.Reality_Check,8);
+        addSymbolInLines(parsedTable,"funko3",SymbolType.Function,9);
 
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);

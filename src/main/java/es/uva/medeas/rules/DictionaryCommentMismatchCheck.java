@@ -52,6 +52,6 @@ public class DictionaryCommentMismatchCheck implements VensimCheck {
     }
 
     private boolean symbolIsIgnored(Symbol symbol){
-        return symbol.getType()== SymbolType.FUNCTION || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
+        return symbol.getType()== SymbolType.Function || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
     }
 }

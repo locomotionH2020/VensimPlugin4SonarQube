@@ -33,15 +33,15 @@ public class TestServiceController {
 
         Utilities.setDbFacadeHandler(mockHandler);
 
-        List<Symbol> symbols = Arrays.asList(new Symbol("func1", SymbolType.FUNCTION),
-                new Symbol("var", SymbolType.VARIABLE),
-                new Symbol("func2", SymbolType.FUNCTION),
-                new Symbol("const", SymbolType.CONSTANT),
-                new Symbol("lookup", SymbolType.LOOKUP),
-                new Symbol("subscript", SymbolType.SUBSCRIPT_NAME),
-                new Symbol("sValue", SymbolType.SUBSCRIPT_VALUE),
-                new Symbol("realityCheck", SymbolType.REALITY_CHECK),
-                new Symbol("func3", SymbolType.FUNCTION)
+        List<Symbol> symbols = Arrays.asList(new Symbol("func1", SymbolType.Function),
+                new Symbol("var", SymbolType.Variable),
+                new Symbol("func2", SymbolType.Function),
+                new Symbol("const", SymbolType.Constant),
+                new Symbol("lookup", SymbolType.Lookup_Table),
+                new Symbol("subscript", SymbolType.Subscript),
+                new Symbol("sValue", SymbolType.Subscript_Value),
+                new Symbol("realityCheck", SymbolType.Reality_Check),
+                new Symbol("func3", SymbolType.Function)
         );
         controller.getSymbolsFromDb(symbols);
 

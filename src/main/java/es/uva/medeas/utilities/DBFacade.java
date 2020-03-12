@@ -29,6 +29,9 @@ public class DBFacade {
     public static final String FIELD_SYMBOL_MODULES = "modules";
     public static final String FIELD_INDEX_VALUES = "values";
     public static  final  String    FIELD_SyMBOL_UNITS = "unit";
+
+    public static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_SYMBOL_NAME,FIELD_SYMBOL_TYPE,FIELD_SYMBOL_COMMENT,FIELD_SYMBOL_CATEGORY,FIELD_SYMBOL_INDEXES,FIELD_SYMBOL_MODULES,FIELD_SyMBOL_UNITS);
+    public static final List<String> REQUIRED_FIELDS_IN_INDEXES = List.of(FIELD_SYMBOL_NAME,FIELD_INDEX_VALUES, FIELD_SYMBOL_COMMENT);
     protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
 
     protected static Logger LOG = Loggers.get(DBFacade.class.getSimpleName());
@@ -58,8 +61,14 @@ public class DBFacade {
 
             return createSymbolTableFromJson(symbolsFound);
         } catch (JsonException ex) {
-            throw new ServiceResponseFormatNotValid("Expected an object,\nActual response:" + serviceResponse);
-        } finally {
+            ex.printStackTrace(); //TODO Mejorar el mensaje que dice el throw, porque esta bien por si manda un array en vez de un object,
+                                  // pero no si el object no es valido (porque falta una coma por ejemplo)
+            throw new ServiceResponseFormatNotValid("Expected an object.",serviceResponse);
+        }catch (ServiceResponseFormatNotValid ex){
+            ex.setServiceResponse(serviceResponse);
+            throw ex;
+        }
+        finally {
             jsonReader.close();
         }
     }
@@ -67,11 +76,20 @@ public class DBFacade {
     protected static SymbolTable createSymbolTableFromJson(JsonObject symbolsFound) {
         SymbolTable table = new SymbolTable();
 
+        if(!symbolsFound.containsKey(FIELD_SYMBOLS)){
+            throw new ServiceResponseFormatNotValid("Missing '"+FIELD_SYMBOLS+"' field.");
+        }
+
+        if(!symbolsFound.containsKey(FIELD_INDEXES)){
+            throw new ServiceResponseFormatNotValid("Missing '"+FIELD_INDEXES+"' field.");
+        }
+
         JsonArray symbols = symbolsFound.getJsonArray(FIELD_SYMBOLS);
         JsonArray indexes = symbolsFound.getJsonArray(FIELD_INDEXES);
 
         loadSymbols(table,symbols);
         loadIndexes(table,indexes);
+
 
         return table;
     }
@@ -80,29 +98,66 @@ public class DBFacade {
         for(int i=0;i<indexes.size();i++) {
 
             JsonObject jsonIndex = indexes.getJsonObject(i);
+            validateJsonIndex(jsonIndex);
 
             String name = jsonIndex.getString(FIELD_SYMBOL_NAME);
             Symbol index = UtilityFunctions.getSymbolOrCreate(table,name);
 
             String comment = jsonIndex.getString(FIELD_SYMBOL_COMMENT);
             index.setComment(comment);
+            index.setType(SymbolType.Subscript);
 
 
             JsonArray jsonValues= jsonIndex.getJsonArray(FIELD_INDEX_VALUES);
             for(int v=0;v<jsonValues.size();v++) {
-                String indexValue = jsonValues.getString(i);
-                index.addDependency(UtilityFunctions.getSymbolOrCreate(table,indexValue));
+                String indexValue = jsonValues.getString(v);
+                Symbol valueSymbol = UtilityFunctions.getSymbolOrCreate(table,indexValue);
+                valueSymbol.setType(SymbolType.Subscript_Value);
+                index.addDependency(valueSymbol);
             }
 
         }
     }
 
+    private static void validateJsonIndex(JsonObject jsonIndex){
+        if(! jsonIndex.containsKey(FIELD_SYMBOL_NAME)){
+            throw new ServiceResponseFormatNotValid("Missing '"+FIELD_SYMBOL_NAME+"' field from an index.");
+        }
+
+        String name = jsonIndex.getString(FIELD_SYMBOL_NAME);
+        for(String field: REQUIRED_FIELDS_IN_INDEXES){
+            if(!jsonIndex.containsKey(field)){
+                throw new ServiceResponseFormatNotValid("Missing '"+field+"' field in the index '"+name+"'.");
+            }
+        }
+    }
+
+    private static void validateJsonSymbol(JsonObject jsonSymbol){
+        if(! jsonSymbol.containsKey(FIELD_SYMBOL_NAME)){
+            throw new ServiceResponseFormatNotValid("Missing '"+FIELD_SYMBOL_NAME+"' field from a symbol.");
+        }
+
+        String name = jsonSymbol.getString(FIELD_SYMBOL_NAME);
+        for(String field: REQUIRED_FIELDS_IN_SYMBOL){
+            if(! jsonSymbol.containsKey(field)){
+                throw new ServiceResponseFormatNotValid("Missing '"+field+"' field in symbol '"+name+"'.");
+            }
+        }
+    }
     private static void loadSymbols(SymbolTable table, JsonArray symbols) {
         for(int s=0;s<symbols.size();s++) {
 
             JsonObject jsonSymbol = symbols.getJsonObject(s);
+            validateJsonSymbol(jsonSymbol);
+
             String name = jsonSymbol.getString(FIELD_SYMBOL_NAME);
-            Symbol symbol = UtilityFunctions.getSymbolOrCreate(table,name);
+
+            if(table.hasSymbol(name)){
+                LOG.warn("Received duplicated symbol '" +name+"' from the dictionary service.");
+                continue;
+            }
+
+            Symbol symbol = new Symbol(name);
 
             String comment = jsonSymbol.getString(FIELD_SYMBOL_COMMENT);
             symbol.setComment(comment);
@@ -130,6 +185,7 @@ public class DBFacade {
                 String module = modules.getString(i);
                 symbol.addModule(module);
             }
+            table.addSymbol(symbol);
 
         }
     }

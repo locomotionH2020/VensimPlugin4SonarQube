@@ -39,13 +39,13 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     public Symbol visitSubscriptRange(ModelParser.SubscriptRangeContext ctx) {
         Symbol symbol = getSymbolOrCreate(table,ctx.Id().getSymbol().getText());
         symbol.addDefinitionLine(getStartLine(ctx));
-        symbol.setType(SymbolType.SUBSCRIPT_NAME);
+        symbol.setType(SymbolType.Subscript);
 
 
         if(ctx.subscriptIdList()!=null) {
             for(ModelParser.SubscriptIdContext value:ctx.subscriptIdList().subscriptId()){
                 Symbol subscriptValue = visitSubscriptId(value);
-                subscriptValue.setType(SymbolType.SUBSCRIPT_VALUE);
+                subscriptValue.setType(SymbolType.Subscript_Value);
                 subscriptValue.addDefinitionLine(getStartLine(value));
 
             }
@@ -75,7 +75,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     @Override
     public Symbol visitConstraint(ModelParser.ConstraintContext ctx) {
         Symbol symbol = visitLhs(ctx.lhs());
-        symbol.setType(SymbolType.REALITY_CHECK);
+        symbol.setType(SymbolType.Reality_Check);
         symbol.addDefinitionLine(getStartLine(ctx));
 
         return symbol;
@@ -84,7 +84,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     @Override
     public Object visitMacroDefinition(ModelParser.MacroDefinitionContext ctx) {
         Symbol symbol = getSymbolOrCreate(table,ctx.macroHeader().Id().getSymbol().getText());
-        symbol.setType(SymbolType.FUNCTION);
+        symbol.setType(SymbolType.Function);
         symbol.addDefinitionLine(getStartLine(ctx));
 
         return super.visitMacroDefinition(ctx);
@@ -93,7 +93,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     @Override
     public Symbol visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
         Symbol symbol = visitLhs(ctx.lhs());
-        symbol.setType(SymbolType.CONSTANT);
+        symbol.setType(SymbolType.Constant);
         symbol.addDefinitionLine(getStartLine(ctx));
         return symbol;
     }
@@ -113,7 +113,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     public Symbol visitLookupDefinition(ModelParser.LookupDefinitionContext ctx) {
         Symbol symbol = visitLhs(ctx.lhs());
         symbol.addDefinitionLine(getStartLine(ctx));
-        symbol.setType(SymbolType.LOOKUP);
+        symbol.setType(SymbolType.Lookup_Table);
 
         if (ctx.lookup()!=null)
             symbol.addDependencies(  visitLookup(ctx.lookup()));
@@ -127,7 +127,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     @Override
     public Symbol visitStringAssign(ModelParser.StringAssignContext ctx) {
         Symbol symbol = visitLhs(ctx.lhs());
-        symbol.setType(SymbolType.CONSTANT);
+        symbol.setType(SymbolType.Constant);
         symbol.addDefinitionLine(getStartLine(ctx));
 
         return symbol;
@@ -138,7 +138,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     public Symbol visitSubscriptCopy(ModelParser.SubscriptCopyContext ctx) {
 
         Symbol symbol = getSymbolOrCreate(table,ctx.Id(0).getSymbol().getText());
-        symbol.setType(SymbolType.SUBSCRIPT_NAME);
+        symbol.setType(SymbolType.Subscript);
         symbol.addDefinitionLine(getStartLine(ctx));
 
         return symbol;
@@ -147,7 +147,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     @Override
     public Symbol visitRealityCheck(ModelParser.RealityCheckContext ctx) {
         Symbol symbol = visitLhs(ctx.lhs());
-        symbol.setType(SymbolType.REALITY_CHECK);
+        symbol.setType(SymbolType.Reality_Check);
         symbol.addDefinitionLine(getStartLine(ctx));
 
         return symbol;
@@ -166,9 +166,9 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
         Symbol firstSymbol = getSymbolOrCreate(table,ctx.Id(0).getSymbol().getText());
         Symbol secondSymbol = getSymbolOrCreate(table,ctx.Id(1).getSymbol().getText());
 
-        firstSymbol.setType(SymbolType.SUBSCRIPT_VALUE);
+        firstSymbol.setType(SymbolType.Subscript_Value);
         firstSymbol.addDefinitionLine(getStartLine(ctx));
-        secondSymbol.setType(SymbolType.SUBSCRIPT_VALUE);
+        secondSymbol.setType(SymbolType.Subscript_Value);
         secondSymbol.addDefinitionLine(getStartLine(ctx));
 
         return Arrays.asList(firstSymbol,secondSymbol);
@@ -234,7 +234,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
         List<Symbol> input = (List<Symbol>) visit(ctx.expr(0));
         List<Symbol> delayTime = (List<Symbol>) visit(ctx.expr(1));
         Symbol pipeline = getSymbolOrCreate(table,ctx.Id().getSymbol().getText());
-        pipeline.setType(SymbolType.VARIABLE);
+        pipeline.setType(SymbolType.Variable);
         pipeline.addDefinitionLine(ctx.Id().getSymbol().getLine());
 
 

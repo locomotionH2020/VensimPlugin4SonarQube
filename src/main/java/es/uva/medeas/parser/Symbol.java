@@ -131,7 +131,7 @@ public class Symbol {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getToken(), linesDefined, getIndexes(), getModules(), getUnits(), getComment(), getDependencies(), getType(), getCategory());
+        return Objects.hash(getToken(), linesDefined, getIndexes(), getModules(), getUnits(), getComment(), getType(), getCategory());
     }
 
     public void setUnits(String units) {

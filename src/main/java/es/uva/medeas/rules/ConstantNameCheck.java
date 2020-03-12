@@ -49,7 +49,7 @@ public class ConstantNameCheck implements VensimCheck {
     }
 
     private boolean mustGenerateIssue(Symbol symbol){
-        return  symbol.getType() == SymbolType.CONSTANT
+        return  symbol.getType() == SymbolType.Constant
                 && !symbol.getDefinitionLines().isEmpty()
                 && !isDefinedByDefaultInVensim(symbol)
                 && !checkConstantFollowsConvention(symbol.getToken());

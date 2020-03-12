@@ -23,7 +23,7 @@ public class TestSymbolWithoutUnitsCheck {
     @Test
     public void testConstantCreatesIssue(){
         SymbolTable table = new SymbolTable();
-        addSymbolInLines(table,"CONST", SymbolType.CONSTANT,1,2,3);
+        addSymbolInLines(table,"CONST", SymbolType.Constant,1,2,3);
 
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
@@ -36,7 +36,7 @@ public class TestSymbolWithoutUnitsCheck {
     @Test
     public void testVariablesCreatesIssue(){
         SymbolTable table = new SymbolTable();
-        addSymbolInLines(table,"var", SymbolType.VARIABLE,9);
+        addSymbolInLines(table,"var", SymbolType.Variable,9);
 
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
@@ -48,7 +48,7 @@ public class TestSymbolWithoutUnitsCheck {
     @Test
     public void testRealityCheckCreatesIssue(){
         SymbolTable table = new SymbolTable();
-        addSymbolInLines(table,"reality_check", SymbolType.REALITY_CHECK,9);
+        addSymbolInLines(table,"reality_check", SymbolType.Reality_Check,9);
 
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
@@ -61,7 +61,7 @@ public class TestSymbolWithoutUnitsCheck {
     @Test
     public void testSubscriptNameCreatesIssue(){
         SymbolTable table = new SymbolTable();
-        addSymbolInLines(table,"MATERIALS_I", SymbolType.SUBSCRIPT_NAME,9);
+        addSymbolInLines(table,"MATERIALS_I", SymbolType.Subscript,9);
 
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
@@ -74,7 +74,7 @@ public class TestSymbolWithoutUnitsCheck {
     @Test
     public void testLookupCreatesIssue(){
         SymbolTable table = new SymbolTable();
-        addSymbolInLines(table,"my_lookup_lt", SymbolType.LOOKUP,9);
+        addSymbolInLines(table,"my_lookup_lt", SymbolType.Lookup_Table,9);
 
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
@@ -86,7 +86,7 @@ public class TestSymbolWithoutUnitsCheck {
     @Test
     public void testFunctionDoesntCreateIssue(){
         SymbolTable table = new SymbolTable();
-        addSymbolInLines(table,"my_macro", SymbolType.FUNCTION,9);
+        addSymbolInLines(table,"my_macro", SymbolType.Function,9);
 
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
@@ -98,7 +98,7 @@ public class TestSymbolWithoutUnitsCheck {
     @Test
     public void testSubscriptValueDoesntCreateIssue(){
         SymbolTable table = new SymbolTable();
-        addSymbolInLines(table,"SCENARIO1", SymbolType.SUBSCRIPT_VALUE,9);
+        addSymbolInLines(table,"SCENARIO1", SymbolType.Subscript_Value,9);
 
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
 
@@ -110,7 +110,7 @@ public class TestSymbolWithoutUnitsCheck {
     @Test
     public void testCaseWithoutIssue(){
         SymbolTable table = new SymbolTable();
-        Symbol symbol = addSymbolInLines(table,"CONST", SymbolType.CONSTANT,1,2,3,4,5);
+        Symbol symbol = addSymbolInLines(table,"CONST", SymbolType.Constant,1,2,3,4,5);
         symbol.setUnits("    units ");
 
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
@@ -125,7 +125,7 @@ public class TestSymbolWithoutUnitsCheck {
         SymbolTable table = new SymbolTable();
 
         Symbol symbol = new Symbol("CONST");
-        symbol.setType(SymbolType.CONSTANT);
+        symbol.setType(SymbolType.Constant);
         table.addSymbol(symbol);
 
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);
@@ -138,7 +138,7 @@ public class TestSymbolWithoutUnitsCheck {
     @Test
     public void testEmptyUnitsWithSpaces(){
         SymbolTable table = new SymbolTable();
-        Symbol symbol = addSymbolInLines(table,"CONST", SymbolType.CONSTANT,7);
+        Symbol symbol = addSymbolInLines(table,"CONST", SymbolType.Constant,7);
         symbol.setUnits("                                                                                 ");
 
         VensimVisitorContext context = new VensimVisitorContext(null,table,null);

@@ -1,7 +1,6 @@
 package es.uva.medeas.utilities;
 
 import es.uva.medeas.parser.ModelParser;
-import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
@@ -17,7 +16,7 @@ public class SymbolTableGenerator {
     private static  final List<String> symbolVariables = Arrays.asList("Time");
     private static final List<String> nonPureFunctions = Arrays.asList("INTEG","STEP","DELAY1", "DELAY1I", "DELAY3", "DELAY3I",
             "FORECAST", "SMOOTH3", "SMOOTH3I", "SMOOTHI", "SMOOTH", "TREND","RAMP","RANDOM 0 1","RANDOM BETA","RANDOM BINOMIAL",
-            "RANDOM EXPONENTIAL", "RANDOM GAMMA", "RANDOM LOOKUP","RANDOM NEGATIVE BINOMIAL","RANDOM NORMAL", "RANDOM PINK NOISE",
+            "RANDOM EXPONENTIAL", "RANDOM GAMMA", "RANDOM Lookup_Table","RANDOM NEGATIVE BINOMIAL","RANDOM NORMAL", "RANDOM PINK NOISE",
             "RANDOM POISSON","RANDOM TRIANGULAR","RANDOM UNIFORM","RANDOM WEIBULL");
     private static final List<String> lookupGeneratorFunctions  = Arrays.asList("GET DIRECT LOOKUPS", "GET XLS LOOKUPS");
 
@@ -67,10 +66,10 @@ public class SymbolTableGenerator {
     public static void addDefaultSymbols(SymbolTable table){
         for(String variable: symbolVariables) {
             if (table.hasSymbol(variable))
-                table.getSymbol(variable).setType(SymbolType.VARIABLE);
+                table.getSymbol(variable).setType(SymbolType.Variable);
             else {
                 Symbol s = new Symbol(variable);
-                s.setType(SymbolType.VARIABLE);
+                s.setType(SymbolType.Variable);
                 table.addSymbol(s);
             }
         }
@@ -84,14 +83,14 @@ public class SymbolTableGenerator {
         for (Symbol dependency : symbol.getDependencies()) {
             if (isFunction(dependency)) {
                 if (lookupGeneratorFunctions.contains(dependency.getToken())) {
-                    symbol.setType(SymbolType.LOOKUP);
+                    symbol.setType(SymbolType.Lookup_Table);
                     return;
                 }
             }
 
 
         }
-        symbol.setType(SymbolType.FUNCTION);
+        symbol.setType(SymbolType.Function);
     }
 
     private static void tryToDetermineType(Symbol symbol) {
@@ -100,16 +99,16 @@ public class SymbolTableGenerator {
         for (Symbol dependency : symbol.getDependencies()) {
 
 
-            if (dependency.getType() == SymbolType.FUNCTION) {
+            if (dependency.getType() == SymbolType.Function) {
                 if (nonPureFunctions.contains(dependency.getToken())) {
-                    symbol.setType(SymbolType.VARIABLE);
+                    symbol.setType(SymbolType.Variable);
                     break;
                 }else if(lookupGeneratorFunctions.contains(dependency.getToken())){
-                    symbol.setType(SymbolType.LOOKUP);
+                    symbol.setType(SymbolType.Lookup_Table);
                 }
 
-            }else if (dependency.getType() == SymbolType.VARIABLE) {
-                symbol.setType(SymbolType.VARIABLE);
+            }else if (dependency.getType() == SymbolType.Variable) {
+                symbol.setType(SymbolType.Variable);
 
                 break;
             }else if(dependency.getType() == SymbolType.UNDETERMINED || dependency.getType() == SymbolType.UNDETERMINED_FUNCTION) {
@@ -119,12 +118,12 @@ public class SymbolTableGenerator {
 
         }
         if(!undeterminedDependency && !symbol.hasType())
-            symbol.setType(SymbolType.CONSTANT);
+            symbol.setType(SymbolType.Constant);
 
 
     }
 
     private static boolean isFunction(Symbol symbol){
-        return symbol.getType() == SymbolType.FUNCTION || symbol.getType() == SymbolType.UNDETERMINED_FUNCTION;
+        return symbol.getType() == SymbolType.Function || symbol.getType() == SymbolType.UNDETERMINED_FUNCTION;
     }
 }

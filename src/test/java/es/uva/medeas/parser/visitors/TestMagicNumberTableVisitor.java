@@ -251,7 +251,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testTraversesFunctionPath(){
-        String program = "var = - FUNCTION( 3, ANOTHER FUNCTION(3),3)~ ~|";
+        String program = "var = - Function( 3, ANOTHER Function(3),3)~ ~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -340,7 +340,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testNumbersInCalledFunctionIdDontCount(){
-        String program = "foo = FUNCTION 1(Time)~~|";
+        String program = "foo = Function 1(Time)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -397,7 +397,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionLookupInsideFunctionEquation(){
-        String program = "var =WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~~|";
+        String program = "var =WITH Lookup_Table(6,((0,1),(1,1),(2,2)))\n~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -409,7 +409,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionLookupInsideFunctionDataEquation(){
-        String program = "var :=WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~~|";
+        String program = "var :=WITH Lookup_Table(6,((0,1),(1,1),(2,2)))\n~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
