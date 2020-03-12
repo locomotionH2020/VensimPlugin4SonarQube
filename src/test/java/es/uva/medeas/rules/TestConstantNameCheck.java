@@ -117,7 +117,7 @@ public class TestConstantNameCheck {
 
     @Test
     public void testDoesntGenerateIssuesInUndefinedSymbols(){
-        String program = "Constant= undefINED~~|";
+        String program = "CONSTANT= undefINED~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();

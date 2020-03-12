@@ -162,15 +162,15 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).error(  "The response of the dictionary service wasn't valid. Expected an array of symbols.\n"+
+        verify(logger).error(  "The response of the dictionary service wasn't valid. Expected an object.\n"+
         "Actual response: [1,2,3]\nThe rules that require the data from the dictionary service will be skipped. "+"["+ VensimPlugin.PLUGIN_KEY +"]");
 
     }
 
 
     @Test
-    public void testDictionaryInvalidFormatNotAList(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{\"symbol\":\"foo\"}"));
+    public void testDictionaryInvalidFormatNotAnObject(){
+        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("[{\"symbol\":\"foo\"}]"));
 
         ServiceController controller = new ServiceController("http://localhost");
         Logger logger = Mockito.mock(Logger.class);
@@ -179,8 +179,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't valid. Expected a JSON array of symbols.\n" +
-                "Actual response:{\"symbol\":\"foo\"}\n"+
+        verify(logger).error("The response of the dictionary service wasn't valid. Expected an object.\n" +
+                "Actual response: [{\"symbol\":\"foo\"}]\n"+
                 "The rules that require the data from the dictionary service will be skipped. "+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
@@ -196,8 +196,8 @@ public class TestServiceController {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't valid. Expected a JSON array of symbols.\n"+
-                "Actual response:{\"randomKey\":\"foo\"}\n"+
+        verify(logger).error("The response of the dictionary service wasn't valid. Missing 'symbols' field.\n"+
+                "Actual response: {\"randomKey\":\"foo\"}\n"+
                 "The rules that require the data from the dictionary service will be skipped. "+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
@@ -215,9 +215,8 @@ public class TestServiceController {
         controller.getSymbolsFromDb(new ArrayList<>());
         controller.getSymbolsFromDb(new ArrayList<>());
 
-
-        verify(logger,times(1)).error("The response of the dictionary service wasn't valid. Expected a JSON array of symbols.\n"+
-                "Actual response:{\"randomKey\":\"foo\"}\n"+
+        verify(logger,times(1)).error("The response of the dictionary service wasn't valid. Missing 'symbols' field.\n"+
+                "Actual response: {\"randomKey\":\"foo\"}\n"+
                 "The rules that require the data from the dictionary service will be skipped. "+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 
@@ -236,13 +235,13 @@ public class TestServiceController {
         controller.getSymbolsFromDb(new ArrayList<>());
 
 
-        verify(logger).error("The response of the dictionary service wasn't valid. Expected a JSON array of symbols.\n"+
-                "Actual response:{\"randomKey\":\"foo\"}\n"+
+        verify(logger).error("The response of the dictionary service wasn't valid. Missing 'symbols' field.\n"+
+                "Actual response: {\"randomKey\":\"foo\"}\n"+
                 "The rules that require the data from the dictionary service will be skipped. "+"["+ VensimPlugin.PLUGIN_KEY +"]");
 
 
-        verify(logger).error("The response of the dictionary service wasn't valid. Expected a JSON array of symbols.\n" +
-                "Actual response:{\"symbol\":\"foo\"}\n"+
+        verify(logger).error("The response of the dictionary service wasn't valid. Missing 'symbols' field.\n" +
+                "Actual response: {\"symbol\":\"foo\"}\n"+
                 "The rules that require the data from the dictionary service will be skipped. "+"["+ VensimPlugin.PLUGIN_KEY +"]");
     }
 

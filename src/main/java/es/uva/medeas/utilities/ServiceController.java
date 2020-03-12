@@ -64,6 +64,7 @@ public class ServiceController {
             return null;
         }catch (ServiceResponseFormatNotValid ex){
            logMessage = "The response of the dictionary service wasn't valid. "+ ex.getMessage() + "\n"+
+                   "Actual response: " + ex.getServiceResponse() + "\n" +
                     RULES_DISABLED_MESSAGE+"["+ VensimPlugin.PLUGIN_KEY +"]";
 
            logError(logMessage);
