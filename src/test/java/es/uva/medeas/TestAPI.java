@@ -155,6 +155,37 @@ public class TestAPI {
         assertIssueLine(issueList.get(0),3);
     }
 
+    @Test
+    public void testDictionaryCommentMismatchCheck() throws IOException {
+        JsonArray issues =  getIssues("testDictionaryCommentMismatch.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, DictionaryCommentMismatchCheck.CHECK_KEY);
+
+        assertEquals(1,issueList.size());
+
+        assertIssueLine(issueList.get(0),2);
+    }
+
+    @Test
+    public void testDictionaryUnitsMismatchCheck() throws IOException {
+        JsonArray issues =  getIssues("testDictionaryUnitsMismatch.mdl",SONAR_TOKEN);
+        List<JsonObject> issueList =  filterIssuesOfType(issues, DictionaryUnitsMismatchCheck.CHECK_KEY);
+
+        assertEquals(1,issueList.size());
+
+        assertIssueLine(issueList.get(0),2);
+    }
+
+    @Test
+    public void testDictionaryTypeMismatchCheck() throws IOException {
+        JsonArray issues =  getIssues("testDictionaryTypeMismatch.mdl",SONAR_TOKEN);
+
+        List<JsonObject> issueList =  filterIssuesOfType(issues, DictionaryTypeMismatchCheck.CHECK_KEY);
+
+        assertEquals(1,issueList.size());
+
+        assertIssueLine(issueList.get(0),2);
+    }
+
 
     @Test
     public void testSymbolWithoutCommentCheck() throws IOException{
@@ -165,6 +196,8 @@ public class TestAPI {
 
         assertIssueLine(issueList.get(0),3);
     }
+
+
 
     @Test
     public void testSymbolWithoutUnitsCheck() throws IOException{

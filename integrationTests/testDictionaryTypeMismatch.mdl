@@ -1,8 +1,7 @@
 
+type_mismatch = Time ~ ~ | 
 
-SYMBOL_NOT_DEFINED  = 5 ~~|
-
-defined_variable = Time ~~|
+expected_type = Time ~ ~|
 
 
 

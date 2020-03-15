@@ -1,8 +1,7 @@
 
+DIFFERENT_UNITS = 3 ~ unexpected random units ~ | 
 
-SYMBOL_NOT_DEFINED  = 5 ~~|
-
-defined_variable = Time ~~|
+SAME_UNITS = 4 ~ units ~|
 
 
 

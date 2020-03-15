@@ -1,8 +1,8 @@
 
+DIFFERENT_COMMENT = 3 ~ kg ~ This is a random comment | 
 
-SYMBOL_NOT_DEFINED  = 5 ~~|
-
-defined_variable = Time ~~|
+SAME_COMMENT = 4 ~	kg
+	~	Expected comment |
 
 
 

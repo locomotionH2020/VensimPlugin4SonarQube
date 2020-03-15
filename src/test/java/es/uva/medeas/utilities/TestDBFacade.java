@@ -298,6 +298,19 @@ public class TestDBFacade {
     }
 
     @Test
+    public void testUnexpectedFormatUnknownProgrammingType(){
+        String jsonDbTable = "{\"symbols\":[" +
+                "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\", \"category\":\"\", \"modules\":[], \"programming symbol type\":\"Unexpected random type\",\"indexes\":[]}], " +
+                "\"indexes\":[]}";
+        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+
+        ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
+        assertEquals("The symbol 'var' has an unknown programming type: 'Unexpected random type'",ex.getMessage());
+        assertEquals(jsonDbTable,ex.getServiceResponse());
+
+    }
+
+    @Test
     public void testResponseJsonContainsDuplicatedSymbols(){
 
         String jsonDbTable = "{\"symbols\":[" +
@@ -350,6 +363,9 @@ public class TestDBFacade {
         assertEquals(jsonDbTable,ex.getServiceResponse());
 
     }
+
+
+
 
     @Test(expected = ServiceResponseFormatNotValid.class)
     public void testResponseIsntAJson() {

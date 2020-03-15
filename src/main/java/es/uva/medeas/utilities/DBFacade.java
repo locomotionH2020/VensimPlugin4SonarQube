@@ -169,7 +169,11 @@ public class DBFacade {
             symbol.setCategory(category);
 
             String type = jsonSymbol.getString(FIELD_SYMBOL_TYPE);
-            symbol.setType(SymbolType.valueOf(type));
+            try {
+                symbol.setType(SymbolType.valueOf(type));
+            }catch (IllegalArgumentException ex){
+                throw new ServiceResponseFormatNotValid("The symbol '"+ name +"' has an unknown programming type: '"+ type +"'");
+            }
             
             JsonArray jsonIndexes = jsonSymbol.getJsonArray(FIELD_SYMBOL_INDEXES);
             List<Symbol> indexes = new ArrayList<>();

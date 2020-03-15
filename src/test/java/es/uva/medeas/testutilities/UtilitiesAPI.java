@@ -76,8 +76,13 @@ public class UtilitiesAPI {
             JsonObject object = jsonReader.readObject();
             jsonReader.close();
 
+            JsonArray issues = object.getJsonArray("issues");
+            if(issues.size()==0){
+                System.out.println("Warning: The file '" + file_name+  "' doesn't have issues. You might have written the wrong file name.");
+            }
 
-            return object.getJsonArray("issues");
+
+            return issues;
         } catch (InterruptedException e) {
             e.printStackTrace();
             return null;
