@@ -232,11 +232,17 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExprList(ModelParser.ExprListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ModelParser#subscriptIdList}.
+	 * Visit a parse tree produced by {@link ModelParser#subscriptValueList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSubscriptIdList(ModelParser.SubscriptIdListContext ctx);
+	T visitSubscriptValueList(ModelParser.SubscriptValueListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#indexList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIndexList(ModelParser.IndexListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ModelParser#subscript}.
 	 * @param ctx the parse tree

@@ -16,10 +16,10 @@ symbolWithDocDefinition: ( lookupDefinition | subscriptRange | equation |constra
 
 
 // A subscript range definition names subscripts in a dimension.
-subscriptRange : Id ':' ( subscriptIdList| call) subscriptMappingList? ;
-subscriptSequence : '(' Id '-' Id ')' ;
+subscriptRange : Id ':' (  subscriptSequence| subscriptValueList |call) subscriptMappingList? ;
+subscriptSequence : '(' start=Id '-' end=Id ')' ;
 subscriptMappingList : '->' subscriptMapping ( ',' subscriptMapping )* ;
-subscriptMapping : Id | '(' Id ':' subscriptIdList ')' ;
+subscriptMapping : Id | '(' Id ':' indexList ')' ;
 
 // An equation has a left-hand side and a right-hand side.
 // The RHS is a formula expression, a constant list, or a Vensim lookup.
@@ -29,7 +29,7 @@ lhs : Id ( indexes=subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript 
 
 
 // https://www.vensim.com/documentation/ref_subscript_mapping.htm
-subscriptCopy: Id '<->' Id ;
+subscriptCopy: copy=Id '<->' original=Id ;
 unchangeableConstant: lhs TwoEqual (constList|call|Keyword) ;
 dataEquation: lhs ( DataEquationOp ( expr | constList ) )? (':IGNORE:' exprList)? ;
 
@@ -113,8 +113,9 @@ call:  Id (subscript)? '(' exprList? ')';
 macroHeader: Id '(' macroArguments? ')';  
 macroArguments: exprList (':' exprList)?;
 exprList : expr (',' expr)* ;
-subscriptIdList : (subscriptId|subscriptSequence) (',' (subscriptId|subscriptSequence))* ;
-subscript: '[' subscriptIdList ']'; 
+subscriptValueList : (subscriptId|subscriptSequence) (',' (subscriptId|subscriptSequence))* ;
+indexList: subscriptId (',' subscriptId)*;
+subscript: '[' indexList ']'; 
 lookup : '(' (lookupRange? lookupPointList) ')' ;
 
 

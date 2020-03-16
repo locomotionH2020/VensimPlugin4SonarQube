@@ -130,7 +130,7 @@ public class TestGrammar {
         SymbolTable table = getRAWSymbolTableFromString(program);
         ModelParser.FileContext file = getParseTreeFromString(program);
 
-        assertEquals("\"Electric/electronic components\"",file.model().symbolWithDoc(0).symbolWithDocDefinition().equation().lhs().subscript(0).subscriptIdList().subscriptId(0).getText());
+        assertEquals("\"Electric/electronic components\"",file.model().symbolWithDoc(0).symbolWithDocDefinition().equation().lhs().subscript(0).indexList().subscriptId(0).getText());
     }
 
     @Test

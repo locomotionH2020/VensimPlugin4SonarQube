@@ -1,18 +1,24 @@
 package es.uva.medeas.parser.visitors;
 
+import es.uva.medeas.VensimPlugin;
 import es.uva.medeas.parser.*;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class RawSymbolTableVisitor extends ModelBaseVisitor {
     //TODO add javadocs for RawSymbolTableVisitor y SymbolTableGenerator
 
     private SymbolTable table;
+    protected static Logger LOG = Loggers.get(RawSymbolTableVisitor.class.getSimpleName());
+    private static Pattern sequencePattern = Pattern.compile("(.*?)(\\d+)");
 
     public SymbolTable getSymbolTable(ModelParser.FileContext context){
         table = new SymbolTable();
@@ -37,25 +43,24 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
 
     @Override
     public Symbol visitSubscriptRange(ModelParser.SubscriptRangeContext ctx) {
-        Symbol symbol = getSymbolOrCreate(table,ctx.Id().getSymbol().getText());
-        symbol.addDefinitionLine(getStartLine(ctx));
-        symbol.setType(SymbolType.Subscript);
+        Symbol subscript = getSymbolOrCreate(table,ctx.Id().getSymbol().getText());
+        subscript.addDefinitionLine(getStartLine(ctx));
+        subscript.setType(SymbolType.Subscript);
 
 
-        if(ctx.subscriptIdList()!=null) {
-            for(ModelParser.SubscriptIdContext value:ctx.subscriptIdList().subscriptId()){
-                Symbol subscriptValue = visitSubscriptId(value);
-                subscriptValue.setType(SymbolType.Subscript_Value);
-                subscriptValue.addDefinitionLine(getStartLine(value));
-
-            }
-            for(ModelParser.SubscriptSequenceContext sequence:ctx.subscriptIdList().subscriptSequence())
-                visitSubscriptSequence(sequence);
+        if(ctx.subscriptValueList()!=null) {
+            List<Symbol> values = visitSubscriptValueList(ctx.subscriptValueList());
+            subscript.addDependencies(values);
         }
-        if(ctx.call()!=null)
-            symbol.addDependencies(visitCall(ctx.call()));
 
-        return symbol;
+        if(ctx.subscriptSequence()!=null)
+            subscript.addDependencies(visitSubscriptSequence(ctx.subscriptSequence()));
+
+
+        if(ctx.call()!=null)
+            subscript.addDependencies(visitCall(ctx.call()));
+
+        return subscript;
     }
 
 
@@ -137,11 +142,14 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
     @Override
     public Symbol visitSubscriptCopy(ModelParser.SubscriptCopyContext ctx) {
 
-        Symbol symbol = getSymbolOrCreate(table,ctx.Id(0).getSymbol().getText());
-        symbol.setType(SymbolType.Subscript);
-        symbol.addDefinitionLine(getStartLine(ctx));
+        Symbol copy = getSymbolOrCreate(table,ctx.copy.getText());
+        copy.setType(SymbolType.Subscript);
+        copy.addDefinitionLine(getStartLine(ctx));
 
-        return symbol;
+        Symbol original = getSymbolOrCreate(table, ctx.original.getText());
+        copy.addDependencies(original.getDependencies());
+
+        return copy;
     }
 
     @Override
@@ -163,23 +171,63 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
 
     @Override
     public List<Symbol> visitSubscriptSequence(ModelParser.SubscriptSequenceContext ctx) {
-        Symbol firstSymbol = getSymbolOrCreate(table,ctx.Id(0).getSymbol().getText());
-        Symbol secondSymbol = getSymbolOrCreate(table,ctx.Id(1).getSymbol().getText());
 
-        firstSymbol.setType(SymbolType.Subscript_Value);
-        firstSymbol.addDefinitionLine(getStartLine(ctx));
-        secondSymbol.setType(SymbolType.Subscript_Value);
-        secondSymbol.addDefinitionLine(getStartLine(ctx));
 
-        return Arrays.asList(firstSymbol,secondSymbol);
+        try{
+            return parseSubscriptSequence(ctx);
+        }catch (IllegalArgumentException ex){
+            LOG.warn(ex.getMessage() + "\nThe in-between values of the range will be ignored. [" + VensimPlugin.PLUGIN_KEY + "]");
+            Symbol firstSymbol = getSymbolOrCreate(table,ctx.Id(0).getSymbol().getText());
+            Symbol secondSymbol = getSymbolOrCreate(table,ctx.Id(1).getSymbol().getText());
+
+            firstSymbol.setType(SymbolType.Subscript_Value);
+            firstSymbol.addDefinitionLine(getStartLine(ctx));
+            secondSymbol.setType(SymbolType.Subscript_Value);
+            secondSymbol.addDefinitionLine(getStartLine(ctx));
+
+            return Arrays.asList(firstSymbol,secondSymbol);
+        }
+
 
     }
 
+    private List<Symbol> parseSubscriptSequence(ModelParser.SubscriptSequenceContext ctx) {
+        Matcher startMatcher = sequencePattern.matcher(ctx.start.getText().trim());
+        Matcher endMatcher = sequencePattern.matcher(ctx.end.getText().trim());
+
+        if (startMatcher.matches() && endMatcher.matches()) {
 
 
+            List<Symbol> symbolSequence = new ArrayList<>();
+            String startText = startMatcher.group(1).trim();
+            String endText = endMatcher.group(1).trim();
+
+            if (!startText.equals(endText)) {
+                throw new IllegalArgumentException("The subscript sequence: '" + ctx.getText() + "doesn't match. The text '" + startText + "' and '" + endText + "' should be the same.");
+            }
+
+            int startNumber = Integer.parseInt(startMatcher.group(2));
+            int endNumber = Integer.parseInt(endMatcher.group(2));
+
+            if (startNumber>=endNumber) {
+                throw new IllegalArgumentException("The end number of a sequence must be greater than the start number.  Found: '" + ctx.getText() + "'.");
+            }
+
+            String text = ctx.start.getText().trim();
+            for (int i = startNumber; i < endNumber + 1; i++) {
+                Symbol value = getSymbolOrCreate(table,text.replace(startMatcher.group(2),String.valueOf(i)));
+                value.setType(SymbolType.Subscript_Value);
+                value.addDefinitionLine(getStartLine(ctx));
+                symbolSequence.add(value);
+            }
+
+            return symbolSequence;
+        }else{
+            throw new IllegalArgumentException("The subscript sequence " + ctx.getText() + " is invalid.");
+        }
 
 
-
+    }
 
 
     @Override
@@ -299,14 +347,34 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
         return symbols;
     }
 
+
     @Override
-    public List<Symbol> visitSubscriptIdList(ModelParser.SubscriptIdListContext ctx) {
+    public List<Symbol> visitIndexList(ModelParser.IndexListContext ctx) {
         List<Symbol> symbols = new ArrayList<>();
 
 
         if(!ctx.subscriptId().isEmpty()){
             for(ModelParser.SubscriptIdContext subscript: ctx.subscriptId()){
                 symbols.add( visitSubscriptId(subscript));
+            }
+        }
+
+        return symbols;
+    }
+
+
+    @Override
+    public List<Symbol> visitSubscriptValueList(ModelParser.SubscriptValueListContext ctx) {
+        List<Symbol> symbols = new ArrayList<>();
+
+
+        if(!ctx.subscriptId().isEmpty()){
+            for(ModelParser.SubscriptIdContext value: ctx.subscriptId()){
+                Symbol valueSymbol = visitSubscriptId(value);
+                valueSymbol.setType(SymbolType.Subscript_Value);
+                valueSymbol.addDefinitionLine(getStartLine(value));
+
+                symbols.add(valueSymbol);
             }
         }
 
@@ -317,7 +385,6 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
         }
         return symbols;
     }
-
 
     @Override
     public List<Symbol> visitLookup(ModelParser.LookupContext ctx) {
@@ -410,7 +477,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
 
     @Override
     public List<Symbol> visitSubscript(ModelParser.SubscriptContext ctx) {
-        return  visitSubscriptIdList(ctx.subscriptIdList());
+       return  visitIndexList(ctx.indexList());
     }
 
 

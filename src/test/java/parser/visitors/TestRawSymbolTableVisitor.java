@@ -1,5 +1,6 @@
 package parser.visitors;
 
+import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
@@ -7,6 +8,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,7 +33,8 @@ public class TestRawSymbolTableVisitor {
         Symbol option1 = table.getSymbol("OPTION1");
         Symbol option2 = table.getSymbol("OPTION2");
 
-        assertSymbol(subscriptName, SymbolType.Subscript,2,NO_DEPENDENCIES);
+
+        assertSymbol(subscriptName, SymbolType.Subscript,2, new HashSet<>(Arrays.asList(option1,option2)));
         assertSymbol(option1,SymbolType.Subscript_Value,2,NO_DEPENDENCIES);
         assertSymbol(option2,SymbolType.Subscript_Value,3,NO_DEPENDENCIES);
         assertEquals("units",subscriptName.getUnits());
@@ -80,25 +83,89 @@ public class TestRawSymbolTableVisitor {
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
+        Symbol original = table.getSymbol("original");
+
         Symbol copy = table.getSymbol("copy");
         assertSymbolType(copy,SymbolType.Subscript);
         assertSymbolDefinedOnlyIn(3,copy);
         assertEquals("units",copy.getUnits());
         assertEquals("comment",copy.getComment());
         assertTrue(copy.getIndexes().isEmpty());
+        assertEquals(copy.getDependencies(),original.getDependencies());
+        assertFalse(copy.getDependencies().isEmpty());
+    }
+
+    @Test
+    public void testSubscriptCopyWhenOriginalNotDefinedYet(){
+        String program = "copy\n <-> original  ~ units ~ comment|\n" +
+                "original: OPTION1, OPTION2 ~~|\n";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        Symbol copy = table.getSymbol("copy");
+        Symbol option1 = table.getSymbol("OPTION1");
+        Symbol option2 = table.getSymbol("OPTION2");
+
+        assertEquals(copy.getDependencies(),new HashSet<>(Arrays.asList(option1,option2)));
+
+
     }
 
 
     @Test
     public void testSubscriptSequence(){
-        String program = "age: (AGE 15-AGE 45)~~|\n";
+        String program = "age: (AGE_15-AGE_45)~~|\n";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
-        Symbol age15 = table.getSymbol("AGE 15");
-        Symbol age45 = table.getSymbol("AGE 45");
 
-        assertSymbol(age15,SymbolType.Subscript_Value,1,NO_DEPENDENCIES);
-        assertSymbol(age45,SymbolType.Subscript_Value,1,NO_DEPENDENCIES);
+        Symbol subscript = table.getSymbol("age");
+
+        for(int i=15;i<=45;i++){
+            Symbol value = table.getSymbol("AGE_"+i);
+            assertSymbolType(value,SymbolType.Subscript_Value);
+            assertSymbolDefinedOnlyIn(1,value);
+            assertTrue(subscript.getDependencies().contains(value));
+        }
+
+    }
+
+    @Test
+    public void testSubscriptSequenceWithSpaces(){
+        String program = "age: (     AGE 15-AGE 45      )~~|\n";
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        for(int i=15;i<=45;i++){
+            assertTrue(table.hasSymbol("AGE "+ i));
+        }
+    }
+
+    @Test
+    public void testSubscriptSequenceWithoutSpacesOrUnderscore(){
+        String program = "age: (AGE15-AGE45)~~|\n";
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        for(int i=15;i<=45;i++)
+            assertTrue(table.hasSymbol("AGE"+ i));
+
+    }
+
+    @Test
+    public void testValuesAndSequencesInTheSameSubscript(){
+        String program = "age: ONE_VALUE, (AGE15-AGE45), ANOTHER_VALUE ~~|\n";
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        Symbol subscript = table.getSymbol("age");
+
+        for(int i=15;i<=45;i++)
+            assertTrue(table.hasSymbol("AGE"+ i));
+
+        Symbol one_value = table.getSymbol("ONE_VALUE");
+        Symbol another_value = table.getSymbol("ANOTHER_VALUE");
+
+        assertTrue(subscript.getDependencies().contains(one_value));
+        assertTrue(subscript.getDependencies().contains(another_value));
+
+
     }
 
     @Test

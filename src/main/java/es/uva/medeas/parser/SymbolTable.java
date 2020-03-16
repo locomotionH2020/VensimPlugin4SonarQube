@@ -25,14 +25,7 @@ public class SymbolTable {
     public void print(){
         //TODO Temporal para comprobar visualmente si funciona:
         for(Symbol symbol: table.values()){
-            System.out.println(symbol.getToken() + ": " + symbol.getType());
-            if (!symbol.getDefinitionLines().isEmpty())
-                System.out.println("Línea: " + symbol.getDefinitionLines());
-            System.out.print("Dependenencias: ");
-            for(Symbol dep: symbol.getDependencies()){
-                System.out.print(dep.getToken() + "  ");
-            }
-            System.out.print("\n");
+            System.out.println(symbol);
         }
     }
 

@@ -2,6 +2,7 @@ package es.uva.medeas.parser;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Symbol {
 
@@ -67,6 +68,8 @@ public class Symbol {
         }
     }
 
+
+
     public String getToken() {
         return token;
     }
@@ -119,11 +122,11 @@ public class Symbol {
         return "Symbol{" +
                 "token='" + token + '\'' +
                 ", linesDefined=" + linesDefined +
-                ", indexes=" + indexes +
+                ", indexes=" + indexes+
                 ", modules=" + modules +
                 ", units='" + units + '\'' +
                 ", comment='" + comment + '\'' +
-                ", dependencies=" + dependencies +
+                ", dependencies=" + dependencies.stream().map(Symbol::getToken).collect(Collectors.toList()) +
                 ", type=" + type +
                 ", category='" + category + '\'' +
                 '}';
