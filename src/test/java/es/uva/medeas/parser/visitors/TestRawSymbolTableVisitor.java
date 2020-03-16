@@ -1,5 +1,6 @@
 package es.uva.medeas.parser.visitors;
 
+import es.uva.medeas.parser.ModelParser;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
@@ -7,6 +8,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,11 +33,14 @@ public class TestRawSymbolTableVisitor {
         Symbol option1 = table.getSymbol("OPTION1");
         Symbol option2 = table.getSymbol("OPTION2");
 
-        assertSymbol(subscriptName, SymbolType.Subscript,2,NO_DEPENDENCIES);
+
+        assertSymbol(subscriptName, SymbolType.Subscript,2, new HashSet<>(Arrays.asList(option1,option2)));
         assertSymbol(option1,SymbolType.Subscript_Value,2,NO_DEPENDENCIES);
         assertSymbol(option2,SymbolType.Subscript_Value,3,NO_DEPENDENCIES);
         assertEquals("units",subscriptName.getUnits());
         assertEquals("comment",subscriptName.getComment());
+        assertTrue(subscriptName.getIndexes().isEmpty());
+        assertTrue(option1.getIndexes().isEmpty());
 
     }
 
@@ -78,24 +83,89 @@ public class TestRawSymbolTableVisitor {
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
+        Symbol original = table.getSymbol("original");
+
         Symbol copy = table.getSymbol("copy");
         assertSymbolType(copy,SymbolType.Subscript);
         assertSymbolDefinedOnlyIn(3,copy);
         assertEquals("units",copy.getUnits());
         assertEquals("comment",copy.getComment());
+        assertTrue(copy.getIndexes().isEmpty());
+        assertEquals(copy.getDependencies(),original.getDependencies());
+        assertFalse(copy.getDependencies().isEmpty());
+    }
+
+    @Test
+    public void testSubscriptCopyWhenOriginalNotDefinedYet(){
+        String program = "copy\n <-> original  ~ units ~ comment|\n" +
+                "original: OPTION1, OPTION2 ~~|\n";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        Symbol copy = table.getSymbol("copy");
+        Symbol option1 = table.getSymbol("OPTION1");
+        Symbol option2 = table.getSymbol("OPTION2");
+
+        assertEquals(new HashSet<>(Arrays.asList(option1,option2)),copy.getDependencies());
+
+
     }
 
 
     @Test
     public void testSubscriptSequence(){
-        String program = "age: (AGE 15-AGE 45)~~|\n";
+        String program = "age: (AGE_15-AGE_45)~~|\n";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
-        Symbol age15 = table.getSymbol("AGE 15");
-        Symbol age45 = table.getSymbol("AGE 45");
 
-        assertSymbol(age15,SymbolType.Subscript_Value,1,NO_DEPENDENCIES);
-        assertSymbol(age45,SymbolType.Subscript_Value,1,NO_DEPENDENCIES);
+        Symbol subscript = table.getSymbol("age");
+
+        for(int i=15;i<=45;i++){
+            Symbol value = table.getSymbol("AGE_"+i);
+            assertSymbolType(value,SymbolType.Subscript_Value);
+            assertSymbolDefinedOnlyIn(1,value);
+            assertTrue(subscript.getDependencies().contains(value));
+        }
+
+    }
+
+    @Test
+    public void testSubscriptSequenceWithSpaces(){
+        String program = "age: (     AGE 15-AGE 45      )~~|\n";
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        for(int i=15;i<=45;i++){
+            assertTrue(table.hasSymbol("AGE "+ i));
+        }
+    }
+
+    @Test
+    public void testSubscriptSequenceWithoutSpacesOrUnderscore(){
+        String program = "age: (AGE15-AGE45)~~|\n";
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        for(int i=15;i<=45;i++)
+            assertTrue(table.hasSymbol("AGE"+ i));
+
+    }
+
+    @Test
+    public void testValuesAndSequencesInTheSameSubscript(){
+        String program = "age: ONE_VALUE, (AGE15-AGE45), ANOTHER_VALUE ~~|\n";
+        SymbolTable table = getRAWSymbolTableFromString(program);
+
+        Symbol subscript = table.getSymbol("age");
+
+        for(int i=15;i<=45;i++)
+            assertTrue(table.hasSymbol("AGE"+ i));
+
+        Symbol one_value = table.getSymbol("ONE_VALUE");
+        Symbol another_value = table.getSymbol("ANOTHER_VALUE");
+
+        assertTrue(subscript.getDependencies().contains(one_value));
+        assertTrue(subscript.getDependencies().contains(another_value));
+
+
     }
 
     @Test
@@ -167,6 +237,7 @@ public class TestRawSymbolTableVisitor {
         assertSymbolType(myMacro,SymbolType.Function);
         assertEquals(Arrays.asList(3,4),myMacro.getDefinitionLines());
         assertTrue(table.hasSymbol("supportValue"));
+        assertTrue(myMacro.getIndexes().isEmpty());
 
     }
 
@@ -365,6 +436,7 @@ public class TestRawSymbolTableVisitor {
         assertSymbol(myCondition,SymbolType.Reality_Check,6,NO_DEPENDENCIES);
         assertEquals("comment", myCondition.getComment());
         assertEquals("units", myCondition.getUnits());
+        assertTrue(myCondition.getIndexes().isEmpty());
     }
 
 
@@ -378,6 +450,7 @@ public class TestRawSymbolTableVisitor {
         assertSymbol(myTestInput,SymbolType.Reality_Check,2,NO_DEPENDENCIES);
         assertEquals("comment", myTestInput.getComment());
         assertEquals("units", myTestInput.getUnits());
+        assertTrue(myTestInput.getIndexes().isEmpty());
     }
 
     @Test
@@ -412,7 +485,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testRepeatedEquationUsingExcept(){
         String program = "variable[subscript] :EXCEPT: [value1,value2] = firstSymbol~~|\n"+
-                         "variable[subscript] :EXCEPT: [value3,value4] = secondSymbol~~|";
+                "variable[subscript] :EXCEPT: [value3,value4] = secondSymbol~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -514,13 +587,13 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testEquationWithoutCommentAndUnit(){
-       String program = "var = 5 ~     ~    |";
+        String program = "var = 5 ~     ~    |";
 
-       SymbolTable table = getRAWSymbolTableFromString(program);
-       Symbol var = table.getSymbol("var");
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol var = table.getSymbol("var");
 
-       assertEquals("",var.getComment());
-       assertEquals("",var.getUnits());
+        assertEquals("",var.getComment());
+        assertEquals("",var.getUnits());
     }
 
 
@@ -583,5 +656,188 @@ public class TestRawSymbolTableVisitor {
         //TODO No tengo del todo claro lo que tendría que hacer en este caso, si lanzar excepción, ignorar el primer comentario o ignorar el segundo.
     }
 
+    @Test
+    public void testDetectSubscriptsOneDefinition(){
+        String program = "var[firstSubscript,secondSubscript] = 5 ~     ~   |\n";
 
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol var = table.getSymbol("var");
+
+        List<List<Symbol>> indexes = var.getIndexes();
+
+        assertEquals(2,indexes.size());
+        List<Symbol> firstIndex = indexes.get(0);
+        List<Symbol> secondIndex = indexes.get(1);
+
+
+        assertEquals(List.of(table.getSymbol("firstSubscript")),firstIndex);
+        assertEquals(List.of(table.getSymbol("secondSubscript")),secondIndex);
+
+    }
+
+    @Test
+    public void testDetectSubscriptMultipleDefinition(){
+        String program = "var[v11,v21] = 5 ~     ~   |\n"+
+                "var[v12,v22] = 5 ~     ~   |\n"+
+                "var[v13,v23] = 5 ~     ~   |\n";
+
+
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol var = table.getSymbol("var");
+
+        List<List<Symbol>> indexes = var.getIndexes();
+
+        assertEquals(2,indexes.size());
+        List<Symbol> firstIndex = indexes.get(0);
+        List<Symbol> secondIndex = indexes.get(1);
+
+        assertEquals(List.of(table.getSymbol("v11"),table.getSymbol("v12"),table.getSymbol("v13")),
+                firstIndex);
+        assertEquals(List.of(table.getSymbol("v21"),table.getSymbol("v22"),table.getSymbol("v23")),
+                secondIndex);
+    }
+
+    @Test
+    public void testInconsistentNumberOfIndexes(){
+        String program = "var[SCENARIO_1] = 5 ~     ~   |\n"+
+                "var[SCENARIO_2,ANOTHER_VALUE] = 3 ~     ~   |\n";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol var = table.getSymbol("var");
+
+        List<List<Symbol>> indexes = var.getIndexes();
+
+        assertEquals(2,indexes.size());
+        List<Symbol> firstIndex = indexes.get(0);
+        List<Symbol> secondIndex = indexes.get(1);
+
+        assertEquals(List.of(table.getSymbol("SCENARIO_1"),table.getSymbol("SCENARIO_2")), firstIndex);
+        assertEquals(List.of(table.getSymbol("ANOTHER_VALUE")), secondIndex);
+    }
+
+
+    @Test
+    public void testIndexesInEquation(){
+        String program = "withIndexes[FIRST_INDEX,SECOND_INDEX] = 5 ~     ~   |\n"+
+                "withoutIndex = 3 ~     ~   |\n";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol withIndexes = table.getSymbol("withIndexes");
+        Symbol withoutIndex = table.getSymbol("withoutIndex");
+
+        assertEquals(List.of(
+                List.of(table.getSymbol("FIRST_INDEX")),
+                List.of(table.getSymbol("SECOND_INDEX")
+                )),withIndexes.getIndexes());
+
+        assertTrue(withoutIndex.getIndexes().isEmpty());
+    }
+
+    @Test
+    public void testIndexesInDataEquation(){
+        String program = "withIndexes[FIRST_INDEX,SECOND_INDEX] := 5 ~     ~   |\n"+
+                "withoutIndex = 3 ~     ~   |\n";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol withIndexes = table.getSymbol("withIndexes");
+        Symbol withoutIndex = table.getSymbol("withoutIndex");
+
+        assertEquals(List.of(
+                List.of(table.getSymbol("FIRST_INDEX")),
+                List.of(table.getSymbol("SECOND_INDEX")
+                )),withIndexes.getIndexes());
+
+        assertTrue(withoutIndex.getIndexes().isEmpty());
+    }
+
+    @Test
+    public void testIndexesInLookups(){
+        String program = "withIndexes[FIRST_INDEX,SECOND_INDEX](\n" +
+                "GET XLS LOOKUPS('subscriptedInputs.xlsx', 'ssData' , 'a', 'b3' ))~     ~   | \n"+
+                "withoutIndex([(0,0)-(10,10)],(0,0),(1,1),(2,0.5),(3,1),(4,0))~units~ comment|\n";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol withIndexes = table.getSymbol("withIndexes");
+        Symbol withoutIndex = table.getSymbol("withoutIndex");
+
+        assertEquals(List.of(
+                List.of(table.getSymbol("FIRST_INDEX")),
+                List.of(table.getSymbol("SECOND_INDEX")
+                )),withIndexes.getIndexes());
+
+        assertTrue(withoutIndex.getIndexes().isEmpty());
+
+    }
+
+
+
+    @Test
+    public void testIndexesInStringAssign(){
+        String program = "withIndexes[FIRST_INDEX,SECOND_INDEX]:IS: 'string' ~~|\n" +
+                " withoutIndex :IS: 'string' ~~|";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol withIndexes = table.getSymbol("withIndexes");
+        Symbol withoutIndex = table.getSymbol("withoutIndex");
+
+        assertEquals(List.of(
+                List.of(table.getSymbol("FIRST_INDEX")),
+                List.of(table.getSymbol("SECOND_INDEX")
+                )),withIndexes.getIndexes());
+
+        assertTrue(withoutIndex.getIndexes().isEmpty());
+    }
+
+    @Test
+    public void testIndexesInUnchangeableConstant(){
+        String program = "withIndexes[FIRST_INDEX,SECOND_INDEX] == 5 ~     ~   |\n"+
+                "withoutIndex == 3 ~     ~   |\n";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol withIndexes = table.getSymbol("withIndexes");
+        Symbol withoutIndex = table.getSymbol("withoutIndex");
+
+        assertEquals(List.of(
+                List.of(table.getSymbol("FIRST_INDEX")),
+                List.of(table.getSymbol("SECOND_INDEX")
+                )),withIndexes.getIndexes());
+
+        assertTrue(withoutIndex.getIndexes().isEmpty());
+    }
+
+    @Test
+    public void testIndexesInRealityCheckConstraint(){
+        String program = "withIndexes[FIRST_INDEX,SECOND_INDEX] :THE CONDITION: var=3 :IMPLIES: positiveVar>0 ~ ~ |"+
+                "withoutIndex :THE CONDITION: var=3 :IMPLIES: positiveVar>0 ~ ~ |";
+
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol withIndexes = table.getSymbol("withIndexes");
+        Symbol withoutIndex = table.getSymbol("withoutIndex");
+
+        assertEquals(List.of(
+                List.of(table.getSymbol("FIRST_INDEX")),
+                List.of(table.getSymbol("SECOND_INDEX")
+                )),withIndexes.getIndexes());
+
+        assertTrue(withoutIndex.getIndexes().isEmpty());
+    }
+
+    @Test
+    public void testIndexesInRealityCheckTestInput(){
+        String program = "withIndexes[FIRST_INDEX,SECOND_INDEX] :TEST INPUT: positiveVariable[subscript] >= 0 ~ units ~ comment|"+
+                "withoutIndex :TEST INPUT: positiveVariable[subscript] >= 0 ~~ |";
+
+        SymbolTable table = getRAWSymbolTableFromString(program);
+        Symbol withIndexes = table.getSymbol("withIndexes");
+        Symbol withoutIndex = table.getSymbol("withoutIndex");
+
+        assertEquals(List.of(
+                List.of(table.getSymbol("FIRST_INDEX")),
+                List.of(table.getSymbol("SECOND_INDEX")
+                )),withIndexes.getIndexes());
+
+        assertTrue(withoutIndex.getIndexes().isEmpty());
+    }
 }

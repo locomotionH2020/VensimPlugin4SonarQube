@@ -168,4 +168,12 @@ public class Symbol {
     public void addModule(String module){
         modules.add(module.trim());
     }
+
+    /**
+     * Overrides the dependencies
+     * @param dependencies
+     */
+    public void setDependencies(Set<Symbol> dependencies) {
+        this.dependencies = dependencies;
+    }
 }

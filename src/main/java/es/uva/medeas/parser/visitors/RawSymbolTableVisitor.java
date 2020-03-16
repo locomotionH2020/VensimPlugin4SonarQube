@@ -147,7 +147,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
         copy.addDefinitionLine(getStartLine(ctx));
 
         Symbol original = getSymbolOrCreate(table, ctx.original.getText());
-        copy.addDependencies(original.getDependencies());
+        copy.setDependencies(original.getDependencies()); // Must be setDependencies instead of addDependencies so it works even if 'original' hasn't been defined yet.
 
         return copy;
     }
