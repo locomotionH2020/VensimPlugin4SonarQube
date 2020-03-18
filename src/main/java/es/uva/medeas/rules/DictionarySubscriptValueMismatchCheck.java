@@ -24,7 +24,6 @@ public class DictionarySubscriptValueMismatchCheck implements VensimCheck{
     public void scan(VensimVisitorContext context) {
         SymbolTable parsedTable = context.getParsedSymbolTable();
         SymbolTable dbTable = context.getDbSymbolTable();
-
         if(dbTable!=null)
             checkSymbolsType(context, parsedTable, dbTable);
     }

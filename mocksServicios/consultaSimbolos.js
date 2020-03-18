@@ -12,7 +12,7 @@ module.exports = [
     {name:"expected_type",unit:"units", definition:"", "programming symbol type":"Variable", indexes:[],modules:["module 2"],category:"some category"},
 
   ],
-  indexes: [],
+  indexes: [{name: "VALUE_MISMATCH", definition: "Subscript for the test 'testDictionarySubscriptValueMismatch.mdl'", values:["value1","value2"]}],
   modules:["module 1","module 2"],
   categories: ["some category","another category","extremely creative category name"]
 

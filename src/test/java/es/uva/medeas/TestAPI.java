@@ -186,6 +186,17 @@ public class TestAPI {
         assertIssueLine(issueList.get(0),2);
     }
 
+    @Test
+    public void testDictionarySubscriptValueMismatchCheck() throws IOException{
+        JsonArray issues =  getIssues("testDictionarySubscriptValueMismatch.mdl",SONAR_TOKEN);
+
+        List<JsonObject> issueList =  filterIssuesOfType(issues, DictionarySubscriptValueMismatchCheck.CHECK_KEY);
+
+        assertEquals(1,issueList.size());
+
+        assertIssueLine(issueList.get(0),3);
+    }
+
 
     @Test
     public void testSymbolWithoutCommentCheck() throws IOException{
