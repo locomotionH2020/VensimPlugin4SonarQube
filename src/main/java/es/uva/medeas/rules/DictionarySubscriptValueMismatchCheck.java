@@ -7,7 +7,9 @@ import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import org.sonar.check.Rule;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Rule(key = DictionarySubscriptValueMismatchCheck.CHECK_KEY, name = DictionarySubscriptValueMismatchCheck.NAME, description = DictionarySubscriptValueMismatchCheck.HTML_DESCRIPTION)
 public class DictionarySubscriptValueMismatchCheck implements VensimCheck{
@@ -30,20 +32,27 @@ public class DictionarySubscriptValueMismatchCheck implements VensimCheck{
     private void checkSymbolsType(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
-                for(int line: foundSymbol.getDefinitionLines()) {
-                    Set<Symbol> dbValues = parsedTable.getSymbol(foundSymbol.getToken().trim()).getDependencies();
-                    Set<Symbol> foundValues = foundSymbol.getDependencies();
-                    dbValues.removeAll(foundValues);
 
-                    Issue issue = new Issue(this, line,"The subscript '"+ foundSymbol.getToken() + "' has values that aren't defined in the database. Unexpected values: '"+dbValues+"'.");
+                for(int line: foundSymbol.getDefinitionLines()) {
+                    Issue issue = new Issue(this, line,"The subscript '"+ foundSymbol.getToken() + "' has values that aren't defined in the database. Unexpected values: '["+ getUnexpectedSymbolsString(foundSymbol,dbTable)+"]'.");
                     context.addIssue(issue);
                 }
             }
         }
     }
 
+    private String getUnexpectedSymbolsString(Symbol foundSymbol, SymbolTable dbTable){
+        Set<Symbol> dbValues = dbTable.getSymbol(foundSymbol.getToken().trim()).getDependencies();
+        Set<Symbol> foundValues = new HashSet<>(foundSymbol.getDependencies());
+
+        foundValues.removeAll(dbValues);
+
+        return foundValues.stream().map(Symbol::getToken).sorted().collect(Collectors.joining(", "));
+
+    }
+
     private boolean raisesIssue(Symbol foundSymbol, SymbolTable dbTable) {
-        if(foundSymbol.getType() == SymbolType.Subscript)
+        if(foundSymbol.getType() != SymbolType.Subscript)
             return false;
 
         if(!dbTable.hasSymbol(foundSymbol.getToken()))
