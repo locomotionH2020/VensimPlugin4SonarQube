@@ -7,6 +7,7 @@ import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.rules.VensimCheck;
 import es.uva.medeas.utilities.SymbolTableGenerator;
+import es.uva.medeas.utilities.UtilityFunctions;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -162,6 +163,26 @@ public class TestUtilities {
         if(!VensimCheck.class.isAssignableFrom(type))
             throw new IllegalArgumentException("The type: '"+ type+"' isn't a rule.");
         return context.getIssues().stream().filter(issue -> issue.getCheck().getClass()==type).collect(Collectors.toList());
+    }
+
+
+    public static Symbol createSubscript(SymbolTable table,String subscriptName, String... values){
+
+        Symbol subscript = new Symbol(subscriptName,SymbolType.Subscript);
+
+        for(String value:values){
+            Symbol valueSymbol = UtilityFunctions.getSymbolOrCreate(table, value);
+
+            if(valueSymbol.getType()!=SymbolType.Subscript_Value && valueSymbol.getType()!=SymbolType.UNDETERMINED)
+                throw new IllegalStateException("The table already contains a symbol named '"+value+"' that isn't a Subscript_Value");
+
+            valueSymbol.setType(SymbolType.Subscript_Value);
+            subscript.addDependency(valueSymbol);
+        }
+
+        table.addSymbol(subscript);
+
+        return subscript;
     }
 
 
