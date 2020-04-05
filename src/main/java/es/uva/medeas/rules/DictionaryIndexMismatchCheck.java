@@ -5,6 +5,9 @@ import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
 import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimVisitorContext;
+import es.uva.medeas.utilities.UtilityFunctions;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.check.Rule;
 
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ public class DictionaryIndexMismatchCheck implements VensimCheck{
             "The symbols predefined by Vensim (FINAL TIME, TIME STEP, etc) and functions are ignored (except lookups)</p>";
     public static final String NAME = "DictionaryCommentMismatch" ;
 
+    protected static Logger LOG = Loggers.get(MagicNumberCheck.class);
 
     @Override
     public void scan(VensimVisitorContext context) {
@@ -34,29 +38,36 @@ public class DictionaryIndexMismatchCheck implements VensimCheck{
 
     private void checkSymbolsIndexes(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
+
             if(raisesIssue(foundSymbol,dbTable)){
                 for(int line: foundSymbol.getDefinitionLines()) {
                     List<List<String>> foundTxt = foundSymbol.getIndexes().stream().map(list -> list.stream().map(Symbol::getToken).collect(Collectors.toList())).collect(Collectors.toList());
                     Symbol dbSymbol = dbTable.getSymbol(foundSymbol.getToken().trim());
                     List<String> dbTxt = dbSymbol.getIndexes().stream().map(list -> list.get(0).getToken()).collect(Collectors.toList());
-                    Issue issue = new Issue(this, line,"The symbol is indexed by values that aren't stored in the database.'\nFound:" + foundTxt + ".\nExpected a subset of:" + dbTxt );
+                    Issue issue = new Issue(this, line,"The symbol '" +  foundSymbol.getToken() +"' is indexed by values that aren't stored in the database.'\nFound:" + foundTxt + ".\nExpected a subset of:" + dbTxt );
                     context.addIssue(issue);
                 }
             }
         }
+
     }
 
     private boolean raisesIssue(Symbol foundSymbol, SymbolTable dbTable) {
+
         if(!dbTable.hasSymbol(foundSymbol.getToken().trim()))
             return false;
 
         Symbol dbSymbol = dbTable.getSymbol(foundSymbol.getToken().trim());
 
         List<List<Symbol>> foundIndexes = foundSymbol.getIndexes();
-        List<List<Symbol>> dbIndexes = dbSymbol.getIndexes();
+        List<List<Symbol>> dbIndexes =  dbSymbol.getIndexes();
 
-        return !tryToMatchIndexes(foundIndexes, dbIndexes);
-
+        try{
+            return !tryToMatchIndexes(foundIndexes, dbIndexes);
+        }catch (IllegalStateException ex){
+            LOG.warn(UtilityFunctions.formatLogMessage("The symbol '" + foundSymbol.getToken() + "' is indexed by a subscript and a subscript value in the same column."));
+            return true;
+        }
 
     }
 
@@ -65,14 +76,13 @@ public class DictionaryIndexMismatchCheck implements VensimCheck{
             return true;
 
         if(dbIndexes.isEmpty())
-            return false; //TODO Si esto ocurre, debería de parar todo el algoritmo porque ya se sabe que es false, no hace falta seguir el backtracking
-
-
+            return false;
         for(List<Symbol> index:foundIndexes){
 
             for(List<Symbol> dbIndex:dbIndexes){
                 if(matchIndex(index,dbIndex.get(0))){
                     ArrayList<List<Symbol>> newFound = new ArrayList<>(foundIndexes);
+
                     newFound.remove(index);
                     ArrayList<List<Symbol>> newDb = new ArrayList<>(dbIndexes);
                     newDb.remove(dbIndex);

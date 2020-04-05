@@ -197,6 +197,18 @@ public class TestAPI {
         assertIssueLine(issueList.get(0),3);
     }
 
+    @Test
+    public void testDictionaryIndexMismatchCheck() throws IOException{
+        JsonArray issues =  getIssues("testDictionaryIndexMismatch.mdl",SONAR_TOKEN);
+
+        List<JsonObject> issueList =  filterIssuesOfType(issues, DictionaryIndexMismatchCheck.CHECK_KEY);
+
+        assertEquals(2,issueList.size());
+
+       assertIssueLine(issueList.get(0),6);
+        assertIssueLine(issueList.get(1),7);
+    }
+
 
     @Test
     public void testSymbolWithoutCommentCheck() throws IOException{
@@ -219,8 +231,6 @@ public class TestAPI {
 
         assertIssueLine(issueList.get(0),1);
     }
-
-
 
 
 

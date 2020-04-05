@@ -1,0 +1,7 @@
+
+miRango: (VALOR_1-VALOR_100)~~|
+SUBSCRIPT: a,b,c ~~|
+esteNoEstaEnLaDB: d,e,f ~~|
+
+INDEX_MISMATCH[VALOR_2, SUBSCRIPT,d]= 3 ~~|
+INDEX_MISMATCH[VALOR_3, SUBSCRIPT,e]= 4  ~~|

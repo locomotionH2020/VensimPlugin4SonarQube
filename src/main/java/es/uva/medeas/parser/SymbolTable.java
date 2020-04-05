@@ -30,7 +30,9 @@ public class SymbolTable {
     }
 
     public Collection<Symbol> getSymbols(){
-        return table.values();
+        List<Symbol> symbols =  new ArrayList<>(table.values());
+        symbols.sort(Comparator.comparing(Symbol::getToken));
+        return symbols;
     }
 
 

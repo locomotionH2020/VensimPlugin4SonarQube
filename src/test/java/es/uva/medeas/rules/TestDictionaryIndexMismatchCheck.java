@@ -6,13 +6,17 @@ import es.uva.medeas.parser.SymbolType;
 import es.uva.medeas.plugin.Issue;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import es.uva.medeas.testutilities.TestUtilities;
+import es.uva.medeas.utilities.DBFacade;
 import org.junit.Test;
+import org.sonar.api.utils.log.Logger;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class TestDictionaryIndexMismatchCheck {
 
@@ -241,7 +245,7 @@ public class TestDictionaryIndexMismatchCheck {
         Set<Integer> foundInLines = new HashSet<>();
 
         for(Issue issue: context.getIssues()){
-            assertEquals("The symbol is indexed by values that aren't stored in the database.'\n" +
+            assertEquals("The symbol 'var' is indexed by values that aren't stored in the database.'\n" +
                     "Found:[[FOO]].\n" +
                     "Expected a subset of:[SCENARIO, ENERGY_TYPE]",issue.getMessage());
             foundInLines.add(issue.getLine());
@@ -446,7 +450,188 @@ public class TestDictionaryIndexMismatchCheck {
         assertEquals(0,context.getIssues().size());
     }
 
+    @Test
+    public void testIndexIsBothSubscriptAndValue(){
+        SymbolTable parsedTable = new SymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+
+        Logger logger = mock(Logger.class);
+        DictionaryIndexMismatchCheck.LOG = logger;
 
 
+        Symbol firstSubscript = TestUtilities.createSubscript(parsedTable,"FIRST_SUBSCRIPT","S1");
+        Symbol secondSubscript = TestUtilities.createSubscript(parsedTable, "SECOND_SUBSCRIPT", "SUBSCRIPT_VALUE");
+
+        Symbol varBefore = TestUtilities.addSymbolInLines(parsedTable,"varBefore",SymbolType.Variable,1,3);
+        varBefore.addIndexLine(List.of(secondSubscript));
+
+
+        Symbol invalidVariable = TestUtilities.addSymbolInLines(parsedTable,"invalidVariable",SymbolType.Variable,4);
+        invalidVariable.addIndexLine(List.of(firstSubscript));
+        invalidVariable.addIndexLine(List.of(parsedTable.getSymbol("SUBSCRIPT_VALUE")));
+
+        Symbol varAfter = TestUtilities.addSymbolInLines(parsedTable,"varAfter",SymbolType.Variable,1,3);
+        varAfter.addIndexLine(List.of(secondSubscript));
+
+        Symbol dbSecondSubscript = TestUtilities.createSubscript(dbTable, "SECOND_SUBSCRIPT", "SUBSCRIPT_VALUE");
+
+        Symbol dbVar = new Symbol("invalidVariable",SymbolType.Variable);
+        dbVar.addIndexLine(List.of(dbSecondSubscript));
+        dbTable.addSymbol(dbVar);
+
+        Symbol dbVarBefore = new Symbol("varBefore",SymbolType.Variable);
+        dbVarBefore.addIndexLine(List.of(dbSecondSubscript));
+        dbTable.addSymbol(dbVarBefore);
+
+        Symbol dbVarAfter = new Symbol("varAfter",SymbolType.Variable);
+        dbVarAfter.addIndexLine(List.of(dbSecondSubscript));
+        dbTable.addSymbol(dbVarAfter);
+
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
+        check.scan(context);
+
+       verify(logger).warn( "The symbol 'invalidVariable' is indexed by a subscript and a subscript value in the same column. [vensim]");
+        assertEquals(1,context.getIssues().size());
+        assertEquals(4,context.getIssues().get(0).getLine());
+    }
+
+
+
+    @Test
+    public void testDictionaryIndexesAreConsumed(){
+        SymbolTable parsedTable = new SymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+
+        Symbol subscript = TestUtilities.createSubscript(parsedTable,"SUBSCRIPT","S1");
+
+
+        Symbol var = TestUtilities.addSymbolInLines(parsedTable,"var",SymbolType.Variable,7);
+        var.addIndexLine(List.of(subscript,subscript));
+
+
+        Symbol dbSubscript = TestUtilities.createSubscript(dbTable,"SUBSCRIPT","S1");
+        Symbol dbVar = new Symbol("var");
+        dbVar.addIndexLine(List.of(dbSubscript));
+        dbTable.addSymbol(dbVar);
+
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
+        check.scan(context);
+
+        assertEquals(1,context.getIssues().size());
+        assertEquals(7,context.getIssues().get(0).getLine());
+    }
+
+    @Test
+    public void testSameIndexTwiceInRow(){
+        SymbolTable parsedTable = new SymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+
+        Symbol subscript = TestUtilities.createSubscript(parsedTable,"SUBSCRIPT","S1");
+
+
+        Symbol var = TestUtilities.addSymbolInLines(parsedTable,"var",SymbolType.Variable,1);
+        var.addIndexLine(List.of(subscript,subscript));
+
+
+        Symbol dbSubscript = TestUtilities.createSubscript(dbTable,"SUBSCRIPT","S1");
+        Symbol dbVar = new Symbol("var");
+        dbVar.addIndexLine(List.of(dbSubscript,dbSubscript));
+        dbTable.addSymbol(dbVar);
+
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
+        check.scan(context);
+
+        assertEquals(0,context.getIssues().size());
+    }
+
+    @Test
+    public void testSameIndexTwiceInColumn_Subscript(){
+        SymbolTable parsedTable = new SymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+
+        Symbol subscript = TestUtilities.createSubscript(parsedTable,"SUBSCRIPT","S1");
+
+
+        Symbol var = TestUtilities.addSymbolInLines(parsedTable,"var",SymbolType.Variable,1);
+        var.addIndexLine(List.of(subscript));
+        var.addIndexLine(List.of(subscript));
+
+
+        Symbol dbSubscript = TestUtilities.createSubscript(dbTable,"SUBSCRIPT","S1");
+        Symbol dbVar = new Symbol("var");
+        dbVar.addIndexLine(List.of(dbSubscript,dbSubscript));
+        dbTable.addSymbol(dbVar);
+
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
+        check.scan(context);
+
+        assertEquals(0,context.getIssues().size());
+    }
+
+
+    @Test
+    public void testSameIndexTwiceInColumn_Value(){
+        SymbolTable parsedTable = new SymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+
+        TestUtilities.createSubscript(parsedTable,"SUBSCRIPT","S1");
+
+
+        Symbol var = TestUtilities.addSymbolInLines(parsedTable,"var",SymbolType.Variable,1);
+        var.addIndexLine(List.of(parsedTable.getSymbol("S1")));
+        var.addIndexLine(List.of(parsedTable.getSymbol("S1")));
+
+
+        Symbol dbSubscript = TestUtilities.createSubscript(dbTable,"SUBSCRIPT","S1");
+        Symbol dbVar = new Symbol("var");
+        dbVar.addIndexLine(List.of(dbSubscript,dbSubscript));
+        dbTable.addSymbol(dbVar);
+
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
+        check.scan(context);
+
+        assertEquals(0,context.getIssues().size());
+    }
+
+
+    @Test
+    public void testIssuesInMultipleSymbols(){
+        SymbolTable parsedTable = new SymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+
+        Symbol subscript = TestUtilities.createSubscript(parsedTable,"SUBSCRIPT","S1");
+
+
+        Symbol varOne = TestUtilities.addSymbolInLines(parsedTable,"varOne",SymbolType.Variable,1);
+        varOne.addIndexLine(List.of(subscript));
+
+        Symbol varTwo = TestUtilities.addSymbolInLines(parsedTable,"varTwo",SymbolType.Variable,2);
+        varTwo.addIndexLine(List.of(subscript));
+
+        dbTable.addSymbol(new Symbol("varOne"));
+        dbTable.addSymbol(new Symbol("varTwo"));
+
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
+        check.scan(context);
+
+        Set<Integer> foundIn = new HashSet<>();
+        for (Issue i:context.getIssues())
+            foundIn.add(i.getLine());
+
+        assertEquals(2,context.getIssues().size());
+        assertEquals(Set.of(1,2),foundIn);
+    }
 
 }

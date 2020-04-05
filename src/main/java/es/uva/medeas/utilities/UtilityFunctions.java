@@ -1,5 +1,6 @@
 package es.uva.medeas.utilities;
 
+import es.uva.medeas.VensimPlugin;
 import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import org.apache.commons.lang.StringUtils;
@@ -81,5 +82,9 @@ public class UtilityFunctions {
         else{
             return table.addSymbol(new Symbol(token));
         }
+    }
+
+    public static String formatLogMessage(String message){
+        return message + " ["+ VensimPlugin.PLUGIN_KEY +"]";
     }
 }
