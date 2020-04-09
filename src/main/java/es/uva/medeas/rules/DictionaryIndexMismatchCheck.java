@@ -21,8 +21,12 @@ import java.util.stream.Collectors;
 public class DictionaryIndexMismatchCheck implements VensimCheck{
     public static final String CHECK_KEY = "symbol-index-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that all the symbols in the file have at least a subset of the indexes stored in the database. " +
-            "The symbols predefined by Vensim (FINAL TIME, TIME STEP, etc) and functions are ignored (except lookups)</p>";
+            "<p>This rule checks that all the symbols in the file have at least a subset of the indexes stored in the database.\n " +
+            "It checks if the indexes of the symbol have the same SUBSCRIPT VALUES as the ones in the db.\n" +
+            "If the symbol doesn't exist in the database, the rule is ignored,\n " +
+            "If a variable is indexed by both a subscript and a subscript value in the same index (column), the rule is" +
+            "ignored."+
+            "</p>";
     public static final String NAME = "DictionaryCommentMismatch" ;
 
     protected static Logger LOG = Loggers.get(MagicNumberCheck.class);
@@ -66,7 +70,7 @@ public class DictionaryIndexMismatchCheck implements VensimCheck{
             return !tryToMatchIndexes(foundIndexes, dbIndexes);
         }catch (IllegalStateException ex){
             LOG.warn(UtilityFunctions.formatLogMessage("The symbol '" + foundSymbol.getToken() + "' is indexed by a subscript and a subscript value in the same column."));
-            return true;
+            return false;
         }
 
     }

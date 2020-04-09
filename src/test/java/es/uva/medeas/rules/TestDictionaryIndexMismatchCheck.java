@@ -493,8 +493,7 @@ public class TestDictionaryIndexMismatchCheck {
         check.scan(context);
 
        verify(logger).warn( "The symbol 'invalidVariable' is indexed by a subscript and a subscript value in the same column. [vensim]");
-        assertEquals(1,context.getIssues().size());
-        assertEquals(4,context.getIssues().get(0).getLine());
+        assertEquals(0,context.getIssues().size());
     }
 
 
