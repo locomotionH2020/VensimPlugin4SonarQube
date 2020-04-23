@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 import static es.uva.medeas.testutilities.TestUtilities.addSymbolInLines;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 
 public class TestDictionaryCommentMismatchCheck {
@@ -43,6 +43,7 @@ public class TestDictionaryCommentMismatchCheck {
         assertHasIssueInLines(context,DictionaryCommentMismatchCheck.class,1,2);
 
 
+        assertFalse(parsedVar.isValid());
         for(Issue issue:context.getIssues())
             assertEquals("The symbol 'var' has a comment 'A comment' but the dictionary has 'Doesn't match'.",issue.getMessage());
     }
@@ -67,6 +68,7 @@ public class TestDictionaryCommentMismatchCheck {
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
         check.scan(context);
 
+        assertTrue(parsedVar.isValid());
         assertDoesntHaveIssueOfType(context,DictionaryCommentMismatchCheck.class);
     }
 

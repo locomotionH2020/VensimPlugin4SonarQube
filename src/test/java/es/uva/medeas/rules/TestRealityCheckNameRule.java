@@ -1,10 +1,14 @@
 package es.uva.medeas.rules;
 
+import es.uva.medeas.parser.Symbol;
+import es.uva.medeas.parser.SymbolTable;
+import es.uva.medeas.parser.SymbolType;
 import es.uva.medeas.plugin.VensimScanner;
 import es.uva.medeas.plugin.VensimVisitorContext;
 import org.junit.Test;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class TestRealityCheckNameRule {
@@ -165,5 +169,23 @@ public class TestRealityCheckNameRule {
         assertHasIssueInLines(visitorContext,RealityCheckNameRule.class,1);
     }
 
+    @Test
+    public void testFailingRuleMakesSymbolInvalid(){
+        RealityCheckNameRule check = new RealityCheckNameRule();
+
+        SymbolTable table = new SymbolTable();
+        Symbol invalid = new Symbol("invalid", SymbolType.Reality_Check);
+        invalid.addDefinitionLine(1);
+        Symbol valid = new Symbol("valid_test", SymbolType.Reality_Check);
+        valid.addDefinitionLine(2);
+        table.addSymbol(invalid);
+        table.addSymbol(valid);
+
+        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        check.scan(context);
+
+        assertTrue(valid.isValid());
+        assertFalse(invalid.isValid());
+    }
 
 }

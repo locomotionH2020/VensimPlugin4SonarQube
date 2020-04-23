@@ -4,12 +4,14 @@ import es.uva.medeas.parser.Symbol;
 import es.uva.medeas.parser.SymbolTable;
 import es.uva.medeas.parser.SymbolType;
 import es.uva.medeas.plugin.VensimVisitorContext;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.assertHasIssueInLines;
 import static es.uva.medeas.testutilities.TestUtilities.addSymbolInLines;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class TestSymbolWithoutUnitsCheck {
 
@@ -145,6 +147,26 @@ public class TestSymbolWithoutUnitsCheck {
         check.scan(context);
 
         assertHasIssueInLines(context,SymbolWithoutUnitsCheck.class,7);
+    }
+
+    @Test
+    public void testFailingRuleMakesSymbolInvalid(){
+        SymbolWithoutUnitsCheck check = new SymbolWithoutUnitsCheck();
+
+        SymbolTable table = new SymbolTable();
+        Symbol invalid = new Symbol("invalid", SymbolType.Constant);
+        invalid.addDefinitionLine(1);
+        Symbol valid = new Symbol("VALID", SymbolType.Constant);
+        valid.addDefinitionLine(2);
+        valid.setUnits("units");
+        table.addSymbol(invalid);
+        table.addSymbol(valid);
+
+        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        check.scan(context);
+
+        Assert.assertTrue(valid.isValid());
+        assertFalse(invalid.isValid());
     }
 
 

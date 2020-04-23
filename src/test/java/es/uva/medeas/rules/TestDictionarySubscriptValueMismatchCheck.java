@@ -36,6 +36,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
         assertEquals(2,context.getIssues().size());
         assertHasIssueInLines(context,DictionarySubscriptValueMismatchCheck.class,1,2);
+        assertFalse(parsedSubscript.isValid());
 
 
         for(Issue issue:context.getIssues())
@@ -122,6 +123,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         check.scan(context);
 
         assertTrue(context.getIssues().isEmpty());
+        assertTrue(parsedSubscript.isValid());
     }
 
     @Test

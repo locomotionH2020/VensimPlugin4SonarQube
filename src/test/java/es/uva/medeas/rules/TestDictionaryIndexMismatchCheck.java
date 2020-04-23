@@ -49,6 +49,8 @@ public class TestDictionaryIndexMismatchCheck {
         check.scan(context);
 
         assertTrue(context.getIssues().isEmpty());
+        assertTrue(parsedVar.isValid());
+
 
     }
 
@@ -241,6 +243,7 @@ public class TestDictionaryIndexMismatchCheck {
         check.scan(context);
 
         assertEquals(2,context.getIssues().size());
+        assertFalse(parsedVar.isValid());
 
         Set<Integer> foundInLines = new HashSet<>();
 

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static es.uva.medeas.testutilities.RuleTestUtilities.*;
 import static es.uva.medeas.testutilities.TestUtilities.addSymbolInLines;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 
 public class TestDictionaryUnitsMismatchCheck {
@@ -42,7 +42,7 @@ public class TestDictionaryUnitsMismatchCheck {
         assertEquals(2,context.getIssues().size());
         assertHasIssueInLines(context,DictionaryUnitsMismatchCheck.class,1,2);
 
-
+        assertFalse(parsedVar.isValid());
         for(Issue issue:context.getIssues())
             assertEquals("The symbol 'var' has 'kg' as units but the dictionary has 'meters'.",issue.getMessage());
     }
@@ -67,7 +67,8 @@ public class TestDictionaryUnitsMismatchCheck {
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
-       assertDoesntHaveIssueOfType(context,DictionaryUnitsMismatchCheck.class);
+        assertTrue(parsedVar.isValid());
+        assertDoesntHaveIssueOfType(context,DictionaryUnitsMismatchCheck.class);
     }
 
 

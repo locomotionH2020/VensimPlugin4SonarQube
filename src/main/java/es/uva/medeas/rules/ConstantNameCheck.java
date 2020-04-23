@@ -38,6 +38,7 @@ public class ConstantNameCheck implements VensimCheck {
 
 
         for(Symbol symbol:table.getSymbols()){
+
             if(mustGenerateIssue(symbol)){
 
                 symbol.setAsInvalid();
