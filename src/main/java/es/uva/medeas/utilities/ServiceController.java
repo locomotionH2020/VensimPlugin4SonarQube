@@ -74,6 +74,9 @@ public class ServiceController {
     }
 
     public void injectNewSymbols( String module, List<Symbol> foundSymbols, SymbolTable dbSymbolTable){
+        if(dbSymbolTable==null)
+            return;
+
         List<Symbol> newSymbols = foundSymbols.stream().filter(symbol -> !dbSymbolTable.hasSymbol(symbol.getToken().trim()) && hasToFetchSymbolFromDB(symbol))
                 .collect(Collectors.toList());
 

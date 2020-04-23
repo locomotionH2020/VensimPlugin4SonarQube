@@ -268,6 +268,27 @@ public class TestServiceController {
     }
 
     @Test
+    public void testInjectNewSymbolsNullDbSymbolTable(){
+        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{}"));
+        Logger logger = Mockito.mock(Logger.class);
+        ServiceController.LOG = logger;
+
+
+        SymbolTable table = new SymbolTable();
+        table.addSymbol(new Symbol("function",SymbolType.Function));
+        table.addSymbol(new Symbol("undetermined function", SymbolType.UNDETERMINED_FUNCTION));
+        table.addSymbol(new Symbol("undetermined", SymbolType.UNDETERMINED));
+
+        ServiceController controller = new ServiceController("https://something");
+        controller.injectNewSymbols("module",new ArrayList<>(table.getSymbols()),null);
+
+
+        verify(logger,never()).info(anyString());
+        verify(DBFacade.handler,never()).injectSymbols(any(), any());
+    }
+
+
+    @Test
     public void testInjectNewSymbolsRemovesDefaultSymbols(){
         Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{}"));
         Logger logger = Mockito.mock(Logger.class);
