@@ -1,6 +1,6 @@
 module.exports = [
 {
-  path: '/symbols/integrationTest',
+  path: '/integrationTest/qaGetSymbolsDefinition',
   method: 'POST',
   template: {symbols:
     [{name:"defined_variable",unit:"kg", definition:"A variable", "programming symbol type":"Variable", indexes:[],modules:["module 1"],category:"some category"},
