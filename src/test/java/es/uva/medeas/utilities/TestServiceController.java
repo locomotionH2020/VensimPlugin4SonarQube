@@ -407,7 +407,7 @@ public class TestServiceController {
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
 
-        verify(logger,times(1)).info("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\nNew symbols won't be injected to the service. [vensim]");
+        verify(logger,times(1)).error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\nNew symbols won't be injected to the service. [vensim]");
     }
 
 

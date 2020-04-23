@@ -459,7 +459,7 @@ public class TestDBFacade {
 
         symbols.add(subscript);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [], \"indexes\": [{\"name\":\"subscript\",\"values\":[\"value2\",\"value1\"]}], \"module\": \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [], \"indexes\": [{\"name\":\"subscript\",\"values\":[\"value1\",\"value2\"]}], \"module\": \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 

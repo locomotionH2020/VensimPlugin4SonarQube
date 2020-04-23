@@ -39,7 +39,7 @@ public class TestDictionaryTypeMismatchCheck {
         assertHasIssueInLines(context,DictionaryTypeMismatchCheck.class,1,2,3);
 
 
-        assertTrue(parsedVar.isValid());
+        assertFalse(parsedVar.isValid());
         for(Issue issue:context.getIssues())
             assertEquals("The symbol 'var' has type 'Variable' but the dictionary has 'Subscript'.",issue.getMessage());
     }
@@ -50,10 +50,10 @@ public class TestDictionaryTypeMismatchCheck {
         SymbolTable parsedTable = new SymbolTable();
 
         TestUtilities.addSymbolInLines(dbTable,"var", SymbolType.Variable);
-        Symbol parsedInvalid = addSymbolInLines(parsedTable, "var", SymbolType.Reality_Check, 1);
+        addSymbolInLines(parsedTable, "var", SymbolType.Reality_Check, 1);
 
         TestUtilities.addSymbolInLines(dbTable,"valid", SymbolType.Constant);
-        addSymbolInLines(parsedTable, "valid", SymbolType.Constant, 2);
+        Symbol valid = addSymbolInLines(parsedTable, "valid", SymbolType.Constant, 2);
 
         TestUtilities.addSymbolInLines(dbTable,"var2", SymbolType.Reality_Check);
         TestUtilities.addSymbolInLines(parsedTable,"var2", SymbolType.Subscript_Value,3);
@@ -72,7 +72,7 @@ public class TestDictionaryTypeMismatchCheck {
         assertHasIssueInLines(context,DictionaryTypeMismatchCheck.class,1,3,5);
         assertDoesntHaveIssueInLines(context,DictionaryTypeMismatchCheck.class,2,4);
 
-        assertFalse(parsedInvalid.isValid());
+        assertTrue(valid.isValid());
 
     }
 

@@ -14,8 +14,7 @@ import org.sonar.api.utils.log.Loggers;
 import javax.json.*;
 
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DBFacade {
@@ -204,6 +203,9 @@ public class DBFacade {
 
         List<Symbol> indexes = symbols.stream().filter(symbol -> symbol.getType()==SymbolType.Subscript).collect(Collectors.toList());
 
+        rawSymbols.sort(Comparator.comparing(Symbol::getToken));
+        indexes.sort(Comparator.comparing(Symbol::getToken));
+
         JsonArray jsonSymbols = getInjectSymbolsJson(rawSymbols);
         JsonArray jsonIndexes = getInjectIndexesJson(indexes);
 
@@ -244,7 +246,9 @@ public class DBFacade {
             jsonSymbol.add(FIELD_SYMBOL_NAME, index.getToken().trim());
 
             JsonArrayBuilder jsonValues = Json.createArrayBuilder();
-            for(Symbol value: index.getDependencies()){
+            List<Symbol> dependencies = new ArrayList<>(index.getDependencies());
+            dependencies.sort(Comparator.comparing(Symbol::getToken));
+            for(Symbol value:dependencies){
                 jsonValues.add(value.getToken().trim());
             }
             jsonSymbol.add(FIELD_INDEX_VALUES, jsonValues.build());
