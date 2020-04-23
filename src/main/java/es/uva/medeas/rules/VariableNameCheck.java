@@ -37,11 +37,10 @@ public class VariableNameCheck implements VensimCheck{
     public void scan(VensimVisitorContext context) {
         SymbolTable table = context.getParsedSymbolTable();
 
-
-
-
         for(Symbol symbol:table.getSymbols()){
             if(symbol.getType()== SymbolType.Variable && !"Time".equals(symbol.getToken()) && !checkVariableFollowsConvention(symbol.getToken())){
+                symbol.setAsInvalid();
+
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The name of the variable doesn't follow the naming convention.");
                     context.addIssue(issue);

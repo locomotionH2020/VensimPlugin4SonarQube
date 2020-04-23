@@ -29,6 +29,8 @@ public class DictionaryUnitsMismatchCheck implements VensimCheck {
     private void checkSymbolsUnits(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
+                foundSymbol.setAsInvalid();
+
                 String expectedUnits = dbTable.getSymbol(foundSymbol.getToken()).getUnits().trim();
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has '"+foundSymbol.getUnits().trim() + "' as units but the dictionary has '"+ expectedUnits + "'." );

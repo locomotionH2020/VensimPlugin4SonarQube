@@ -18,6 +18,9 @@ public class Symbol {
     private String category;
 
 
+    private boolean isValid;
+
+
     public Symbol(String token){
         this.token = token;
         dependencies = new HashSet<>();
@@ -28,6 +31,7 @@ public class Symbol {
         comment ="";
         category = "";
         indexes = new ArrayList<>();
+        isValid = true;
     }
 
 
@@ -176,4 +180,13 @@ public class Symbol {
     public void setDependencies(Set<Symbol> dependencies) {
         this.dependencies = dependencies;
     }
+
+    public void setAsInvalid(){
+        isValid = false;
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
 }

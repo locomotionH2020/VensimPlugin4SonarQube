@@ -28,6 +28,7 @@ public class ServiceController {
 
     // I used to put this message in a separate log call, but there were another logs in between the two. So I decided to join them.
     private final String RULES_DISABLED_MESSAGE = "The rules that require the data from the dictionary service will be skipped. ";
+    private final String INJECTION_DISABLED_MESSAGE = "New symbols won't be injected to the service. ";
 
     public ServiceController(String dictionaryService){
         this.dictionaryService = dictionaryService;
@@ -46,7 +47,7 @@ public class ServiceController {
      *    </ul>
      */
     public SymbolTable getSymbolsFromDb(List<Symbol> symbols){
-        List<String> symbolsFound = symbols.stream().filter(s -> !symbolIsIgnored(s)).map(Symbol::getToken).collect(Collectors.toList());
+        List<String> symbolsFound = symbols.stream().filter(this::hasToFetchSymbolFromDB).map(Symbol::getToken).collect(Collectors.toList());
         String logMessage="";
         try {
             return  DBFacade.getExistingSymbolsFromDB(dictionaryService, symbolsFound);
@@ -70,6 +71,32 @@ public class ServiceController {
            logError(logMessage);
             return null;
         }
+    }
+
+    public void injectNewSymbols( String module, List<Symbol> foundSymbols, SymbolTable dbSymbolTable){
+        List<Symbol> newSymbols = foundSymbols.stream().filter(symbol -> !dbSymbolTable.hasSymbol(symbol.getToken().trim()) && hasToFetchSymbolFromDB(symbol))
+                .collect(Collectors.toList());
+
+        List<Symbol> validSymbols = newSymbols.stream().filter(Symbol::isValid).collect(Collectors.toList());
+
+        if(validSymbols.size()>=1){
+            String logMessage="";
+            try {
+                DBFacade.injectSymbols(dictionaryService, module, validSymbols);
+                List<String> tokensInjected = validSymbols.stream().map(Symbol::getToken).collect(Collectors.toList());
+                logInfo("Injected  symbols:" + tokensInjected);
+            }catch (InvalidServiceUrlException ex){
+                logMessage = "The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n"+ INJECTION_DISABLED_MESSAGE +"["+ VensimPlugin.PLUGIN_KEY +"]";
+                logError(logMessage);
+            }catch (EmptyServiceException ex){
+                logMessage = "Missing dictionary service parameter.\n" + INJECTION_DISABLED_MESSAGE + "[" + VensimPlugin.PLUGIN_KEY + "]";
+                logInfo(logMessage);
+            }catch (ConnectionFailedException ex){
+                logMessage = "The dictionary service was unreachable.\n"+ INJECTION_DISABLED_MESSAGE + "["+ VensimPlugin.PLUGIN_KEY +"]";
+                logError(logMessage);
+            }
+
+        }
 
     }
 
@@ -88,9 +115,9 @@ public class ServiceController {
     }
 
 
-    private boolean symbolIsIgnored(Symbol symbol){
-
-        return symbol.getType()==SymbolType.Function || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
+    private boolean hasToFetchSymbolFromDB(Symbol symbol){
+        return !List.of(SymbolType.Function, SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION).
+                contains(symbol.getType()) && !Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
 
     }
 }

@@ -116,7 +116,7 @@ public class VensimScanner {
 
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
-
+            serviceController.injectNewSymbols(inputFile.filename(),new ArrayList<>(table.getSymbols()),dbTable);
         } catch (IOException e) {
             LOG.error("Unable to analyze file '{}'. Error: {}", inputFile.toString(), e);
         }catch (ParseCancellationException e){

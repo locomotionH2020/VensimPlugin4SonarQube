@@ -29,7 +29,10 @@ public class DictionaryCommentMismatchCheck implements VensimCheck {
     private void checkSymbolsComment(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
+
+                foundSymbol.setAsInvalid();
                 String expectedComment = dbTable.getSymbol(foundSymbol.getToken()).getComment().trim();
+
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has a comment '"+foundSymbol.getComment().trim() + "' but the dictionary has '"+ expectedComment + "'." );
                     context.addIssue(issue);

@@ -30,6 +30,8 @@ public class DictionaryTypeMismatchCheck implements VensimCheck {
     private void checkSymbolsType(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
+                foundSymbol.setAsInvalid();
+
                 SymbolType expectedType = dbTable.getSymbol(foundSymbol.getToken()).getType();
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has type '"+foundSymbol.getType() + "' but the dictionary has '"+ expectedType + "'." );

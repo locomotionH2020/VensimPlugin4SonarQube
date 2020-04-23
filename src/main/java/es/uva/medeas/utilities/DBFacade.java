@@ -16,6 +16,7 @@ import javax.json.*;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DBFacade {
 
@@ -28,9 +29,11 @@ public class DBFacade {
     public static final String FIELD_SYMBOL_INDEXES = "indexes";
     public static final String FIELD_SYMBOL_MODULES = "modules";
     public static final String FIELD_INDEX_VALUES = "values";
-    public static  final  String    FIELD_SyMBOL_UNITS = "unit";
+    public static final String FIELD_INJECTION_IS_INDEXED = "is_indexed";
+    public static final String FIELD_INJECTION_MODULE = "module";
+    public static  final String FIELD_SYMBOL_UNITS = "unit";
 
-    public static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_SYMBOL_NAME,FIELD_SYMBOL_TYPE,FIELD_SYMBOL_COMMENT,FIELD_SYMBOL_CATEGORY,FIELD_SYMBOL_INDEXES,FIELD_SYMBOL_MODULES,FIELD_SyMBOL_UNITS);
+    public static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_SYMBOL_NAME,FIELD_SYMBOL_TYPE,FIELD_SYMBOL_COMMENT,FIELD_SYMBOL_CATEGORY,FIELD_SYMBOL_INDEXES,FIELD_SYMBOL_MODULES, FIELD_SYMBOL_UNITS);
     public static final List<String> REQUIRED_FIELDS_IN_INDEXES = List.of(FIELD_SYMBOL_NAME,FIELD_INDEX_VALUES, FIELD_SYMBOL_COMMENT);
     protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
 
@@ -162,7 +165,7 @@ public class DBFacade {
             String comment = jsonSymbol.getString(FIELD_SYMBOL_COMMENT);
             symbol.setComment(comment);
 
-            String units = jsonSymbol.getString(FIELD_SyMBOL_UNITS);
+            String units = jsonSymbol.getString(FIELD_SYMBOL_UNITS);
             symbol.setUnits(units);
 
             String category = jsonSymbol.getString(FIELD_SYMBOL_CATEGORY);
@@ -195,5 +198,60 @@ public class DBFacade {
     }
 
 
+    public static void injectSymbols(String serviceUrl, String module, List<Symbol> symbols) {
+        List<Symbol> rawSymbols = symbols.stream().filter(symbol -> !List.of(SymbolType.Subscript_Value, SymbolType.Subscript,
+                SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION, SymbolType.Function).contains(symbol.getType())).collect(Collectors.toList());
 
+        List<Symbol> indexes = symbols.stream().filter(symbol -> symbol.getType()==SymbolType.Subscript).collect(Collectors.toList());
+
+        JsonArray jsonSymbols = getInjectSymbolsJson(rawSymbols);
+        JsonArray jsonIndexes = getInjectIndexesJson(indexes);
+
+        JsonObjectBuilder requestBuilder = Json.createObjectBuilder();
+
+        requestBuilder.add(FIELD_SYMBOLS, jsonSymbols);
+        requestBuilder.add(FIELD_INDEXES, jsonIndexes);
+        requestBuilder.add(FIELD_INJECTION_MODULE,module.trim());
+
+        handler.injectSymbols(serviceUrl,requestBuilder.build());
+    }
+
+    private static JsonArray getInjectSymbolsJson(List<Symbol> symbols){
+        JsonArrayBuilder jsonSymbols = Json.createArrayBuilder();
+
+        for(Symbol s:symbols){
+            JsonObjectBuilder jsonSymbol = Json.createObjectBuilder();
+
+            jsonSymbol.add(FIELD_SYMBOL_NAME, s.getToken().trim());
+            jsonSymbol.add(FIELD_SYMBOL_UNITS, s.getUnits().trim());
+            jsonSymbol.add(FIELD_SYMBOL_COMMENT, s.getComment().trim());
+            jsonSymbol.add(FIELD_INJECTION_IS_INDEXED,!s.getIndexes().isEmpty());
+            jsonSymbol.add(FIELD_SYMBOL_CATEGORY, s.getCategory().trim());
+            jsonSymbol.add(FIELD_SYMBOL_TYPE, s.getType().toString());
+
+            jsonSymbols.add(jsonSymbol);
+        }
+
+        return jsonSymbols.build();
+    }
+
+    private static JsonArray getInjectIndexesJson(List<Symbol> indexes){
+        JsonArrayBuilder jsonIndexes = Json.createArrayBuilder();
+
+        for(Symbol index:indexes){
+            JsonObjectBuilder jsonSymbol = Json.createObjectBuilder();
+
+            jsonSymbol.add(FIELD_SYMBOL_NAME, index.getToken().trim());
+
+            JsonArrayBuilder jsonValues = Json.createArrayBuilder();
+            for(Symbol value: index.getDependencies()){
+                jsonValues.add(value.getToken().trim());
+            }
+            jsonSymbol.add(FIELD_INDEX_VALUES, jsonValues.build());
+
+            jsonIndexes.add(jsonSymbol);
+        }
+
+        return jsonIndexes.build();
+    }
 }

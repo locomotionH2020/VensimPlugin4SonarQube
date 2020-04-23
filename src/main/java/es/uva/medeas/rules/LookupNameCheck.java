@@ -44,6 +44,8 @@ public class LookupNameCheck implements VensimCheck{
 
         for(Symbol symbol:table.getSymbols()){
             if(symbol.getType()== SymbolType.Lookup_Table && !checkLookupFollowsConvention(symbol.getToken())){
+                symbol.setAsInvalid();
+
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line, "The name of the lookup doesn't follow the naming conventions");
                     context.addIssue(issue);

@@ -24,6 +24,7 @@ public class DictionarySubscriptValueMismatchCheck implements VensimCheck{
     public void scan(VensimVisitorContext context) {
         SymbolTable parsedTable = context.getParsedSymbolTable();
         SymbolTable dbTable = context.getDbSymbolTable();
+
         if(dbTable!=null)
             checkSubscriptValueMismatch(context, parsedTable, dbTable);
     }
@@ -31,6 +32,7 @@ public class DictionarySubscriptValueMismatchCheck implements VensimCheck{
     private void checkSubscriptValueMismatch(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
+                foundSymbol.setAsInvalid();
 
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The subscript '"+ foundSymbol.getToken() + "' has values that aren't defined in the database. Unexpected values: '["+ getUnexpectedSymbolsString(foundSymbol,dbTable)+"]'.");

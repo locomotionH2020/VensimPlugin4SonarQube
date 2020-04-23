@@ -42,6 +42,8 @@ public class SubscriptNameCheck implements VensimCheck {
         for(Symbol symbol:table.getSymbols()){
 
             if(symbol.getType()== SymbolType.Subscript && !checkSubscriptNameFollowsConvention(symbol.getToken())){
+                symbol.setAsInvalid();
+
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The name of the subscript doesn't follow the naming conventions");
                     context.addIssue(issue);
