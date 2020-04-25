@@ -27,7 +27,7 @@ public class DictionaryIndexMismatchCheck implements VensimCheck{
             "If a variable is indexed by both a subscript and a subscript value in the same index (column), the rule is" +
             "ignored."+
             "</p>";
-    public static final String NAME = "DictionaryCommentMismatch" ;
+    public static final String NAME = "DictionaryIndextMismatch" ;
 
     protected static Logger LOG = Loggers.get(MagicNumberCheck.class);
 
