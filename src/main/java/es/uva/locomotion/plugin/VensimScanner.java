@@ -51,6 +51,7 @@ public class VensimScanner {
 
     public void scanFiles(List<InputFile> inputFiles) {
         for (InputFile vensimFile : inputFiles) {
+            System.out.println("Analizando: " + vensimFile.filename());
             if (context.isCancelled()) {
                 return;
             }

@@ -23,6 +23,7 @@ public class TestAPI {
 
     private static final String SONAR_TOKEN = System.getenv("SONAR_TOKEN");
     private static File integrationTestsFolder;
+    private static File mocksFolder;
 
     @BeforeClass
     public static void runSonarScanner() throws IOException {
@@ -32,6 +33,11 @@ public class TestAPI {
 
 
        integrationTestsFolder = new File(file.getParentFile().getParentFile(),"integrationTests");
+       mocksFolder = new File(file.getParentFile().getParentFile(), "mocksServicios");
+
+       File injectionFlag = new File(mocksFolder,"flagInjection");
+       if(injectionFlag.exists())
+           injectionFlag.delete();
 
       UtilitiesAPI.runSonarScanner(integrationTestsFolder,SONAR_TOKEN);
 
@@ -232,6 +238,10 @@ public class TestAPI {
         assertIssueLine(issueList.get(0),1);
     }
 
+    @Test
+    public void testSymbolInjection(){
+        assertTrue(new File(mocksFolder,"flagInjection").exists());
+    }
 
 
 

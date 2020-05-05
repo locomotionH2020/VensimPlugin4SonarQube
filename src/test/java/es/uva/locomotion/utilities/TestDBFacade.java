@@ -80,15 +80,14 @@ public class TestDBFacade {
         dbTable.addSymbol(var);
 
         String jsonDbTable = "{\"symbols\":[" +
-                "{\"name\":\"foo\", \"category\":\"foo category\", \"modules\":[\"module 1\", \"module 2\"]," +
+                "{\"name\":\"foo\", \"category\":\"foo category\", \"modules\":{\"main\":\"module 1\", \"secondary\":[\"module 2\"]}," +
                 "\"programming symbol type\": \"Constant\",\"indexes\":[], \"definition\": \"foo comment\", \"unit\":\"foo unit\"}," +
-                "{\"name\":\"var\",\"programming symbol type\":\"Variable\",\"unit\":\"var unit\", \"definition\":\"var comment\", \"modules\":[\"module 3\",\"module 4\"], \"category\":\"var category\",\"indexes\":[\"index1\",\"index2\"]}" +
+                "{\"name\":\"var\",\"programming symbol type\":\"Variable\",\"unit\":\"var unit\", \"definition\":\"var comment\", \"modules\":{\"main\":\"module 3\", \"secondary\":[\"module 4\"]}, \"category\":\"var category\",\"indexes\":[\"index1\",\"index2\"]}" +
                 "]," +
                 "\"indexes\":[{\"name\":\"index1\", \"values\":[],\"definition\":\"index1 comment\"}," +
                 "{\"name\":\"index2\", \"values\":[],\"definition\":\"\"}]," +
-                "\"modules\":[\"module 1\",\"module 2\",\"module 3\",\"module 4\"]," +
+                "\"modules\":{\"main\":\"module 1\", \"secondary\":[\"module 2\",\"module 3\", \"module 4\"]}," +
                 "\"categories\":[\"var category\", \"foo category\"]}";
-
 
         DBFacade.handler = mockSymbolServiceHandlerToReturnSymbols(jsonDbTable);
 
@@ -138,10 +137,9 @@ public class TestDBFacade {
 
 
         String jsonDbTable = "{\"symbols\":[" +
-                "{\"name\":\"foo\", \"category\":\"foo category\", \"modules\":[\"module 1\", \"module 2\"]," +
+                "{\"name\":\"foo\", \"category\":\"foo category\", \"modules\":{\"main\":\"module 1\", \"secondary\":[ \"module 2\"]}," +
                 "\"programming symbol type\": \"Constant\",\"indexes\":[], \"definition\": \"foo comment\", \"unit\":\"foo unit\"}]," +
                 "\"indexes\":[]}";
-
 
         DBFacade.handler = mockSymbolServiceHandlerToReturnSymbols(jsonDbTable);
 
@@ -315,7 +313,7 @@ public class TestDBFacade {
     public void testGetSymbolsResponseJsonContainsDuplicatedSymbols(){
 
         String jsonDbTable = "{\"symbols\":[" +
-                "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\", \"category\":\"\",\"modules\":[], \"programming symbol type\":\"Constant\",\"indexes\":[]}, " +
+                "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\", \"category\":\"\",\"modules\":{\"main\":\"foo\", \"secondary\":[]}, \"programming symbol type\":\"Constant\",\"indexes\":[]}, " +
                 "{\"name\":\"var\",\"unit\":\"other units\", \"definition\":\"other comment\", \"category\":\"\",\"modules\":[], \"programming symbol type\":\"Constant\",\"indexes\":[]}], " +
                 "\"indexes\":[]}";
         Logger logger = mock(Logger.class);

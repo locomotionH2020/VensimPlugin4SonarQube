@@ -11,6 +11,7 @@ import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,8 +78,13 @@ public class ServiceController {
         if(dbSymbolTable==null)
             return;
 
+        System.out.println("Simbolos: " + foundSymbols.stream().map(Symbol::getToken).collect(Collectors.toList()));
+
         List<Symbol> newSymbols = foundSymbols.stream().filter(symbol -> !dbSymbolTable.hasSymbol(symbol.getToken().trim()) && hasToFetchSymbolFromDB(symbol))
                 .collect(Collectors.toList());
+
+        System.out.println("New Simbolos: " + newSymbols.stream().map(Symbol::getToken).collect(Collectors.toList()));
+
 
         List<Symbol> validSymbols = newSymbols.stream().filter(Symbol::isValid).collect(Collectors.toList());
 
@@ -86,7 +92,7 @@ public class ServiceController {
             String logMessage="";
             try {
                 DBFacade.injectSymbols(dictionaryService, module, validSymbols);
-                List<String> tokensInjected = validSymbols.stream().map(Symbol::getToken).collect(Collectors.toList());
+                List<String> tokensInjected = validSymbols.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
                 logInfo("Injected  symbols:" + tokensInjected);
             }catch (InvalidServiceUrlException ex){
                 logMessage = "The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n"+ INJECTION_DISABLED_MESSAGE +"["+ VensimPlugin.PLUGIN_KEY +"]";
@@ -120,7 +126,8 @@ public class ServiceController {
 
     private boolean hasToFetchSymbolFromDB(Symbol symbol){
         return !List.of(SymbolType.Function, SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION).
-                contains(symbol.getType()) && !Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
+                contains(symbol.getType()) && !Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim()) &&
+                !symbol.getDefinitionLines().isEmpty();
 
     }
 }

@@ -4,6 +4,7 @@ import es.uva.locomotion.VensimPlugin;
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.testutilities.TestUtilities;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import org.junit.After;
 import org.junit.Assert;
@@ -45,6 +46,10 @@ public class TestServiceController {
                 new Symbol("realityCheck", SymbolType.Reality_Check),
                 new Symbol("func3", SymbolType.Function)
         );
+
+        for(Symbol s:symbols)
+            s.addDefinitionLine(1);
+
         controller.getSymbolsFromDb(symbols);
 
         verify(mockHandler,Mockito.times(1)).sendRequestToDictionaryService(any(), argThat(arg->{
@@ -255,9 +260,10 @@ public class TestServiceController {
 
 
         SymbolTable table = new SymbolTable();
-        table.addSymbol(new Symbol("function",SymbolType.Function));
-        table.addSymbol(new Symbol("undetermined function", SymbolType.UNDETERMINED_FUNCTION));
-        table.addSymbol(new Symbol("undetermined", SymbolType.UNDETERMINED));
+        TestUtilities.addSymbolInLines(table,"function", SymbolType.Function,1);
+        TestUtilities.addSymbolInLines(table,"undetermined function", SymbolType.UNDETERMINED_FUNCTION,2);
+        TestUtilities.addSymbolInLines(table,"undetermined", SymbolType.UNDETERMINED,3);
+
 
         ServiceController controller = new ServiceController("https://something");
         controller.injectNewSymbols("module",new ArrayList<>(table.getSymbols()),new SymbolTable());
@@ -275,9 +281,7 @@ public class TestServiceController {
 
 
         SymbolTable table = new SymbolTable();
-        table.addSymbol(new Symbol("function",SymbolType.Function));
-        table.addSymbol(new Symbol("undetermined function", SymbolType.UNDETERMINED_FUNCTION));
-        table.addSymbol(new Symbol("undetermined", SymbolType.UNDETERMINED));
+        TestUtilities.addSymbolInLines(table,"  constant  ",SymbolType.Constant, 1);
 
         ServiceController controller = new ServiceController("https://something");
         controller.injectNewSymbols("module",new ArrayList<>(table.getSymbols()),null);
@@ -297,6 +301,7 @@ public class TestServiceController {
         SymbolTable table = new SymbolTable();
         for(String symbol: Constants.DEFAULT_VENSIM_SYMBOLS){
             Symbol s = new Symbol(symbol, SymbolType.Constant);
+            s.addDefinitionLine(1);
             table.addSymbol(s);
         }
 
@@ -318,17 +323,18 @@ public class TestServiceController {
         ServiceController.LOG = logger;
 
         SymbolTable foundTable = new SymbolTable();
-        foundTable.addSymbol(new Symbol("constant",SymbolType.Constant));
-        foundTable.addSymbol(new Symbol("variable", SymbolType.Variable));
-        foundTable.addSymbol(new Symbol("switch", SymbolType.Switch));
-        foundTable.addSymbol(new Symbol("subscript", SymbolType.Subscript));
-        foundTable.addSymbol(new Symbol("subscript value", SymbolType.Subscript_Value));
-        foundTable.addSymbol(new Symbol("reality check", SymbolType.Reality_Check));
-        foundTable.addSymbol(new Symbol("Lookup table", SymbolType.Lookup_Table));
-        foundTable.addSymbol(new Symbol("  Symbol found in db  ", SymbolType.Constant));
-        Symbol notValid = new Symbol("invalid symbol",SymbolType.Constant);
+        TestUtilities.addSymbolInLines(foundTable,"  constant  ",SymbolType.Constant, 1);
+        TestUtilities.addSymbolInLines(foundTable, "variable", SymbolType.Variable,2);
+        TestUtilities.addSymbolInLines(foundTable, "swtich", SymbolType.Switch,3);
+        TestUtilities.addSymbolInLines(foundTable, "subscript",SymbolType.Subscript,4);
+        TestUtilities.addSymbolInLines(foundTable,"subscript value", SymbolType.Subscript_Value,5);
+        TestUtilities.addSymbolInLines(foundTable, "reality check", SymbolType.Reality_Check,6);
+        TestUtilities.addSymbolInLines(foundTable, "lookup table", SymbolType.Lookup_Table, 7);
+        TestUtilities.addSymbolInLines(foundTable, "Symbol found in db", SymbolType.Constant, 8);
+
+        Symbol notValid = TestUtilities.addSymbolInLines(foundTable, "invalid symbol", SymbolType.Constant, 9);
         notValid.setAsInvalid();
-        foundTable.addSymbol(notValid);
+
 
         SymbolTable dbTable = new SymbolTable();
         dbTable.addSymbol(new Symbol("            Symbol found in db     ",SymbolType.Constant));
@@ -337,7 +343,7 @@ public class TestServiceController {
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), dbTable);
 
 
-        verify(logger,times(1)).info("Injected  symbols:[Lookup table, constant, reality check, subscript, subscript value, switch, variable]");
+        verify(logger,times(1)).info("Injected  symbols:[constant, lookup table, reality check, subscript, subscript value, swtich, variable]");
     }
 
     @Test
@@ -348,7 +354,7 @@ public class TestServiceController {
         ServiceController controller = new ServiceController("");
 
         SymbolTable foundTable = new SymbolTable();
-        foundTable.addSymbol(new Symbol("constant",SymbolType.Constant));
+        TestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
 
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
@@ -364,7 +370,7 @@ public class TestServiceController {
         ServiceController controller = new ServiceController(null);
 
         SymbolTable foundTable = new SymbolTable();
-        foundTable.addSymbol(new Symbol("constant",SymbolType.Constant));
+        TestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
 
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
@@ -383,7 +389,7 @@ public class TestServiceController {
         ServiceController.LOG = logger;
 
         SymbolTable foundTable = new SymbolTable();
-        foundTable.addSymbol(new Symbol("constant",SymbolType.Constant));
+        TestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
 
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
@@ -402,7 +408,7 @@ public class TestServiceController {
         ServiceController.LOG = logger;
 
         SymbolTable foundTable = new SymbolTable();
-        foundTable.addSymbol(new Symbol("constant",SymbolType.Constant));
+        TestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
 
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
@@ -423,7 +429,7 @@ public class TestServiceController {
         ServiceController controller = new ServiceController("www.google.com");
 
         SymbolTable foundTable = new SymbolTable();
-        foundTable.addSymbol(new Symbol("constant",SymbolType.Constant));
+        TestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
 
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
@@ -431,6 +437,25 @@ public class TestServiceController {
         verify(logger,times(1)).error("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\nNew symbols won't be injected to the service. [vensim]");
     }
 
+
+    @Test
+    public void testInjectNewSymbolsNotDefinedInAnyLine(){
+        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{}"));
+
+        Logger logger = Mockito.mock(Logger.class);
+        ServiceController.LOG = logger;
+
+        ServiceController controller = new ServiceController("https://www.google.com");
+
+        SymbolTable foundTable = new SymbolTable();
+        foundTable.addSymbol(new Symbol("constant",SymbolType.Constant));
+
+        controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
+
+
+        verify(logger,never()).info(anyString());
+        verify(DBFacade.handler,never()).injectSymbols(any(), any());
+    }
 
 }
 

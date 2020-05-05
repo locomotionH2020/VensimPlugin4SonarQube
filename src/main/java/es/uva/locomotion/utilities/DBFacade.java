@@ -34,6 +34,8 @@ public class DBFacade {
 
     public static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_SYMBOL_NAME,FIELD_SYMBOL_TYPE,FIELD_SYMBOL_COMMENT,FIELD_SYMBOL_CATEGORY,FIELD_SYMBOL_INDEXES,FIELD_SYMBOL_MODULES, FIELD_SYMBOL_UNITS);
     public static final List<String> REQUIRED_FIELDS_IN_INDEXES = List.of(FIELD_SYMBOL_NAME,FIELD_INDEX_VALUES, FIELD_SYMBOL_COMMENT);
+    private static final String FIELD_SYMBOL_MODULES_MAIN = "main";
+    private static final String FIELD_SYMBOL_MODULES_SECONDARY = "secondary";
     protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
 
     protected static Logger LOG = Loggers.get(DBFacade.class.getSimpleName());
@@ -186,9 +188,12 @@ public class DBFacade {
 
             symbol.addIndexLine(indexes);
 
-            JsonArray modules = jsonSymbol.getJsonArray(FIELD_SYMBOL_MODULES);
-            for(int i=0;i<modules.size();i++) {
-                String module = modules.getString(i);
+            JsonObject modules = jsonSymbol.getJsonObject(FIELD_SYMBOL_MODULES);
+            symbol.addModule(modules.getString(FIELD_SYMBOL_MODULES_MAIN));
+
+            JsonArray secondaryModules = modules.getJsonArray(FIELD_SYMBOL_MODULES_SECONDARY);
+            for(int i=0;i<secondaryModules.size();i++) {
+                String module = secondaryModules.getString(i);
                 symbol.addModule(module);
             }
             table.addSymbol(symbol);

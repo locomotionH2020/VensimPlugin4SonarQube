@@ -22,7 +22,7 @@ public class Symbol {
 
 
     public Symbol(String token){
-        this.token = token;
+        this.token = token.strip();
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
         linesDefined = new ArrayList<>();
