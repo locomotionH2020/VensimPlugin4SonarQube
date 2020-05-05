@@ -185,15 +185,15 @@ public class TestSymbolNotDefinedInDictionaryCheck {
     }
 
     @Test
-    public void testFailingRuleMakesSymbolInvalid(){
+    public void testFailingRuleDoesntMakeSymbolInvalid(){
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
 
         SymbolTable parsedTable = new SymbolTable();
-        Symbol invalid = new Symbol("invalid", SymbolType.Subscript_Value);
-        invalid.addDefinitionLine(1);
+        Symbol symbolNotInDB = new Symbol("invalid", SymbolType.Subscript_Value);
+        symbolNotInDB.addDefinitionLine(1);
         Symbol valid = new Symbol("valid", SymbolType.Subscript_Value);
         valid.addDefinitionLine(2);
-        parsedTable.addSymbol(invalid);
+        parsedTable.addSymbol(symbolNotInDB);
         parsedTable.addSymbol(valid);
 
         SymbolTable dbTable = new SymbolTable();
@@ -204,7 +204,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         check.scan(context);
 
         assertTrue(valid.isValid());
-        assertFalse(invalid.isValid());
+        assertTrue(symbolNotInDB.isValid());
     }
 
 }
