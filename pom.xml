@@ -91,7 +91,7 @@
         <extensions>true</extensions>
         <configuration>
           <pluginKey>vensim</pluginKey>
-          <pluginClass>es.uva.medeas.VensimPlugin</pluginClass>
+          <pluginClass>es.uva.locomotion.VensimPlugin</pluginClass>
         </configuration>
       </plugin>
       <plugin>
@@ -123,11 +123,11 @@
 
         <configuration>
           <sourceDirectory>${basedir}/src/main/resources</sourceDirectory>
-          <outputDirectory>${basedir}/src/main/java/es/uva/medeas/parser</outputDirectory>
+          <outputDirectory>src/main/java/es/uva/locomotion/parser</outputDirectory>
           <excludes>Expr.g4</excludes>
           <arguments>
             <argument>-package</argument>
-            <argument>es.uva.medeas.parser</argument>
+            <argument>es.uva.locomotion.parser</argument>
             <argument>-no-listener</argument>
             <argument>-visitor</argument>
           </arguments>
