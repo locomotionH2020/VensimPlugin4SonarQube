@@ -1,5 +1,6 @@
-package es.uva.locomotion.utilities;
+package es.uva.locomotion.service;
 
+import es.uva.locomotion.service.ServiceConnectionHandler;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;

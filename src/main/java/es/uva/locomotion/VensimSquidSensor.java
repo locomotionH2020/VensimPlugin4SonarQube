@@ -5,7 +5,7 @@ import es.uva.locomotion.plugin.VensimRuleRepository;
 import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
-import es.uva.locomotion.utilities.ServiceController;
+import es.uva.locomotion.service.ServiceController;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;

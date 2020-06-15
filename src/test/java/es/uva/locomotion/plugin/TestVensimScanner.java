@@ -1,7 +1,7 @@
 package es.uva.locomotion.plugin;
 
 
-import es.uva.locomotion.utilities.ServiceController;
+import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.testutilities.RuleTestUtilities;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
@@ -55,7 +55,7 @@ public class TestVensimScanner {
 
 
     @Test
-    public void testIfAfileFailsTheRestExecutes() throws IOException, NoSuchFieldException, IllegalAccessException { //TODO Refactor
+    public void testIfAfileFailsTheRestExecutes() throws IOException, NoSuchFieldException, IllegalAccessException {
 
 
         Logger logger = Mockito.mock(Logger.class);

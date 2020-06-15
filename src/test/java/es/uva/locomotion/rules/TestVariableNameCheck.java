@@ -4,7 +4,7 @@ import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
 import es.uva.locomotion.plugin.VensimScanner;
-import es.uva.locomotion.plugin.VensimVisitorContext;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import org.junit.Test;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.*;

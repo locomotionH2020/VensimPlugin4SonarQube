@@ -122,9 +122,8 @@
         <version>${antlr4-version}</version>
 
         <configuration>
-          <sourceDirectory>${basedir}/src/main/resources</sourceDirectory>
+          <sourceDirectory>${basedir}/src/main/antlr</sourceDirectory>
           <outputDirectory>src/main/java/es/uva/locomotion/parser</outputDirectory>
-          <excludes>Expr.g4</excludes>
           <arguments>
             <argument>-package</argument>
             <argument>es.uva.locomotion.parser</argument>
@@ -141,8 +140,6 @@
           </execution>
         </executions>
       </plugin>
-
-
     </plugins>
   </build>
 </project>

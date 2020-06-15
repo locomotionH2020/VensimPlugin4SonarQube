@@ -1,6 +1,7 @@
 package es.uva.locomotion.plugin;
 
-import es.uva.locomotion.utilities.ServiceController;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.parser.*;
 import es.uva.locomotion.rules.VensimCheck;
 
@@ -51,7 +52,6 @@ public class VensimScanner {
 
     public void scanFiles(List<InputFile> inputFiles) {
         for (InputFile vensimFile : inputFiles) {
-            System.out.println("Analizando: " + vensimFile.filename());
             if (context.isCancelled()) {
                 return;
             }
@@ -94,7 +94,7 @@ public class VensimScanner {
         return parser.file();
     }
 
-    public void scanFile(InputFile inputFile) { //TODO refactor
+    public void scanFile(InputFile inputFile) {
 
         try {
             String content = inputFile.contents();

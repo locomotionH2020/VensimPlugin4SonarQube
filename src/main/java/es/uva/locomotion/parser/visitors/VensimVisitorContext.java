@@ -1,8 +1,9 @@
-package es.uva.locomotion.plugin;
+package es.uva.locomotion.parser.visitors;
 
 
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.parser.SymbolTable;
+import es.uva.locomotion.plugin.Issue;
 
 import java.util.ArrayList;
 import java.util.List;

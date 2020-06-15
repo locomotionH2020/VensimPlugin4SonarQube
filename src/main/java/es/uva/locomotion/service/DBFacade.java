@@ -1,8 +1,9 @@
-package es.uva.locomotion.utilities;
+package es.uva.locomotion.service;
 
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.utilities.UtilityFunctions;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
@@ -65,8 +66,7 @@ public class DBFacade {
 
             return createSymbolTableFromJson(symbolsFound);
         } catch (JsonException ex) {
-            ex.printStackTrace(); //TODO Mejorar el mensaje que dice el throw, porque esta bien por si manda un array en vez de un object,
-                                  // pero no si el object no es valido (porque falta una coma por ejemplo)
+            ex.printStackTrace();
             throw new ServiceResponseFormatNotValid("Expected an object.",serviceResponse);
         }catch (ServiceResponseFormatNotValid ex){
             ex.setServiceResponse(serviceResponse);

@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 
 public class RawSymbolTableVisitor extends ModelBaseVisitor {
-    //TODO add javadocs for RawSymbolTableVisitor y SymbolTableGenerator
 
     private SymbolTable table;
     protected static Logger LOG = Loggers.get(RawSymbolTableVisitor.class.getSimpleName());
@@ -321,7 +320,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
             call = table.getSymbol(token);
         else{
             call = table.addSymbol(new Symbol(token));
-            call.setType(SymbolType.UNDETERMINED_FUNCTION);  //TODO hacer un builder o un método que se encargue de crear los símbolos por si necesito cambiar el tipo de todos los simbolos de golpe
+            call.setType(SymbolType.UNDETERMINED_FUNCTION);
         }
 
 
