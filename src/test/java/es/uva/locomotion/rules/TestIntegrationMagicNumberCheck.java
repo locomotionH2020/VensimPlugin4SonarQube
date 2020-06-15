@@ -2,7 +2,7 @@ package es.uva.locomotion.rules;
 
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.plugin.VensimScanner;
-import es.uva.locomotion.plugin.VensimVisitorContext;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.TestUtilities;
 import org.junit.Test;
 import org.sonar.api.batch.rule.Severity;
@@ -173,7 +173,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testWithLookupSecondArgumentDoesntCountEquation(){
-        String program = "var =WITH Lookup_Table(Time,((0,1),(1,1),(2,2)))\n~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "var =WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -186,7 +186,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testWithLookupSecondArgumentDoesntCountDataEquation(){
-        String program = "var :=WITH Lookup_Table(Time,((0,1),(1,1),(2,2)))\n~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "var :=WITH LOOKUP(Time,((0,1),(1,1),(2,2)))\n~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -200,7 +200,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testWithLookupFirstArgument(){
-        String program = "var =WITH Lookup_Table(14,((0,1),(1,1),(2,2)))\n~~|" +
+        String program = "var =WITH LOOKUP(14,((0,1),(1,1),(2,2)))\n~~|" +
                 "A = 14 * 0~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS -1);
 
 

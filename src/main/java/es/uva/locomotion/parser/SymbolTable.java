@@ -22,13 +22,6 @@ public class SymbolTable {
 
 
 
-    public void print(){
-        //TODO Temporal para comprobar visualmente si funciona:
-        for(Symbol symbol: table.values()){
-            System.out.println(symbol);
-        }
-    }
-
     public Collection<Symbol> getSymbols(){
         List<Symbol> symbols =  new ArrayList<>(table.values());
         symbols.sort(Comparator.comparing(Symbol::getToken));

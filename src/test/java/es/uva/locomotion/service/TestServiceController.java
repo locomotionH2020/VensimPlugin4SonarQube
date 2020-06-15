@@ -1,10 +1,11 @@
-package es.uva.locomotion.utilities;
+package es.uva.locomotion.service;
 
 import es.uva.locomotion.VensimPlugin;
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
 import es.uva.locomotion.testutilities.TestUtilities;
+import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import org.junit.After;
 import org.junit.Assert;
@@ -25,16 +26,16 @@ public class TestServiceController {
 
     @After
     public void  resetDbFacade(){
-        Utilities.setDbFacadeHandler(new ServiceConnectionHandler());
+        ServiceTestUtilities.setDbFacadeHandler(new ServiceConnectionHandler());
     }
 
     @Test
     public void testGetSymbolsControllerIgnoresFunctions(){
         ServiceController controller = new ServiceController("https://localhost");
 
-        ServiceConnectionHandler mockHandler = Utilities.getMockDbServiceHandlerThatReturns("[]");
+        ServiceConnectionHandler mockHandler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[]");
 
-        Utilities.setDbFacadeHandler(mockHandler);
+        ServiceTestUtilities.setDbFacadeHandler(mockHandler);
 
         List<Symbol> symbols = Arrays.asList(new Symbol("func1", SymbolType.Function),
                 new Symbol("var", SymbolType.Variable),
@@ -65,8 +66,8 @@ public class TestServiceController {
         ServiceController controller = new ServiceController("http://localhost");
 
         List<Symbol> symbols = Arrays.asList("FINAL TIME", "INITIAL TIME", "SAVEPER", "TIME STEP").stream().map(Symbol::new).collect(Collectors.toList());
-        ServiceConnectionHandler mockHandler = Utilities.getMockDbServiceHandlerThatReturns("[]");
-        Utilities.setDbFacadeHandler(mockHandler);
+        ServiceConnectionHandler mockHandler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[]");
+        ServiceTestUtilities.setDbFacadeHandler(mockHandler);
 
         controller.getSymbolsFromDb(symbols);
 
@@ -144,7 +145,7 @@ public class TestServiceController {
     public void testGetSymbolsDictionaryConnectionFailed(){
         ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
         when(handler.sendRequestToDictionaryService(any(),anyList())).thenThrow(new ConnectionFailedException(null));
-        Utilities.setDbFacadeHandler(handler);
+        ServiceTestUtilities.setDbFacadeHandler(handler);
 
         ServiceController controller = new ServiceController("http://localhost");
         Logger logger = Mockito.mock(Logger.class);
@@ -160,7 +161,7 @@ public class TestServiceController {
 
     @Test
     public void testGetSymbolsDictionaryInvalidFormatLiteralList(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("[1,2,3]"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[1,2,3]"));
 
         ServiceController controller = new ServiceController("http://localhost");
         Logger logger = Mockito.mock(Logger.class);
@@ -177,7 +178,7 @@ public class TestServiceController {
 
     @Test
     public void testGetSymbolsDictionaryInvalidFormatNotAnObject(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("[{\"symbol\":\"foo\"}]"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[{\"symbol\":\"foo\"}]"));
 
         ServiceController controller = new ServiceController("http://localhost");
         Logger logger = Mockito.mock(Logger.class);
@@ -194,7 +195,7 @@ public class TestServiceController {
 
     @Test
     public void testGetSymbolsDictionaryInvalidFormatMissingKey(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}"));
 
         ServiceController controller = new ServiceController("http://localhost");
         Logger logger = Mockito.mock(Logger.class);
@@ -211,7 +212,7 @@ public class TestServiceController {
 
     @Test
     public void testGetSymbolsConsecutiveSameErrorsAreOnlyLoggedOnce(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}"));
 
         ServiceController controller = new ServiceController("http://localhost");
         Logger logger = Mockito.mock(Logger.class);
@@ -229,7 +230,7 @@ public class TestServiceController {
 
     @Test
     public void testGetSymbolsConsecutiveDifferentErrorsAreLogged(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}"));
 
         ServiceController controller = new ServiceController("http://localhost");
         Logger logger = Mockito.mock(Logger.class);
@@ -237,7 +238,7 @@ public class TestServiceController {
 
         controller.getSymbolsFromDb(new ArrayList<>());
         controller.getSymbolsFromDb(new ArrayList<>());
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{\"symbol\":\"foo\"}"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"symbol\":\"foo\"}"));
         controller.getSymbolsFromDb(new ArrayList<>());
         controller.getSymbolsFromDb(new ArrayList<>());
 
@@ -254,7 +255,7 @@ public class TestServiceController {
 
     @Test
     public void testInjectNewSymbolsRemovesFunctionsAndUndetermined(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{}"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}"));
         Logger logger = Mockito.mock(Logger.class);
         ServiceController.LOG = logger;
 
@@ -275,7 +276,7 @@ public class TestServiceController {
 
     @Test
     public void testInjectNewSymbolsNullDbSymbolTable(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{}"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}"));
         Logger logger = Mockito.mock(Logger.class);
         ServiceController.LOG = logger;
 
@@ -294,7 +295,7 @@ public class TestServiceController {
 
     @Test
     public void testInjectNewSymbolsRemovesDefaultSymbols(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{}"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}"));
         Logger logger = Mockito.mock(Logger.class);
         ServiceController.LOG = logger;
 
@@ -318,7 +319,7 @@ public class TestServiceController {
 
     @Test
     public void testInjectNewSymbolsOnlyIncludesNewAndValidSymbols(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{}"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}"));
         Logger logger = Mockito.mock(Logger.class);
         ServiceController.LOG = logger;
 
@@ -382,7 +383,7 @@ public class TestServiceController {
     public void testInjectNewSymbolsConnectionFailed(){
         ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
         when(handler.injectSymbols(any(),any())).thenThrow(new ConnectionFailedException(null));
-        Utilities.setDbFacadeHandler(handler);
+        ServiceTestUtilities.setDbFacadeHandler(handler);
 
         ServiceController controller = new ServiceController("http://localhost");
         Logger logger = Mockito.mock(Logger.class);
@@ -401,7 +402,7 @@ public class TestServiceController {
     public void testInjectNewSymbolsDoesntRepeatLogMessages(){
         ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
         when(handler.injectSymbols(any(),any())).thenThrow(new ConnectionFailedException(null));
-        Utilities.setDbFacadeHandler(handler);
+        ServiceTestUtilities.setDbFacadeHandler(handler);
 
         ServiceController controller = new ServiceController("http://localhost");
         Logger logger = Mockito.mock(Logger.class);
@@ -440,7 +441,7 @@ public class TestServiceController {
 
     @Test
     public void testInjectNewSymbolsNotDefinedInAnyLine(){
-        Utilities.setDbFacadeHandler(Utilities.getMockDbServiceHandlerThatReturns("{}"));
+        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}"));
 
         Logger logger = Mockito.mock(Logger.class);
         ServiceController.LOG = logger;

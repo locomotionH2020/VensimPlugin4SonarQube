@@ -1,11 +1,11 @@
 package es.uva.locomotion.testutilities;
 
-import es.uva.locomotion.utilities.ServiceController;
+import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.plugin.VensimRuleRepository;
 import es.uva.locomotion.plugin.VensimScanner;
-import es.uva.locomotion.plugin.VensimVisitorContext;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import org.sonar.api.batch.rule.ActiveRules;
@@ -65,8 +65,7 @@ public class RuleTestUtilities {
 
         Path path = Paths.get("");
         SensorContextTester context = SensorContextTester.create(path);
-        return  new VensimScanner(context,checks, new JsonSymbolTableBuilder(), new ServiceController("")); //TODO revisar uso del metodo y si debería hacer mock de
-        //service controller
+        return  new VensimScanner(context,checks, new JsonSymbolTableBuilder(), new ServiceController(""));
     }
 
     public static void assertHasIssueInLines(VensimVisitorContext context, Class type, Integer... lines){

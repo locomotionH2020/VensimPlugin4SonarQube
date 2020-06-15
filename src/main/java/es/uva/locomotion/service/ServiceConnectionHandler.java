@@ -1,4 +1,4 @@
-package es.uva.locomotion.utilities;
+package es.uva.locomotion.service;
 
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
@@ -15,7 +15,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-    public class ServiceConnectionHandler {
+public class ServiceConnectionHandler {
 
 
     protected HttpClient client;

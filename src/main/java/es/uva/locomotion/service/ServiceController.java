@@ -1,9 +1,10 @@
-package es.uva.locomotion.utilities;
+package es.uva.locomotion.service;
 
 import es.uva.locomotion.VensimPlugin;
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
@@ -11,7 +12,6 @@ import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,13 +78,8 @@ public class ServiceController {
         if(dbSymbolTable==null)
             return;
 
-        System.out.println("Simbolos: " + foundSymbols.stream().map(Symbol::getToken).collect(Collectors.toList()));
-
         List<Symbol> newSymbols = foundSymbols.stream().filter(symbol -> !dbSymbolTable.hasSymbol(symbol.getToken().trim()) && hasToFetchSymbolFromDB(symbol))
                 .collect(Collectors.toList());
-
-        System.out.println("New Simbolos: " + newSymbols.stream().map(Symbol::getToken).collect(Collectors.toList()));
-
 
         List<Symbol> validSymbols = newSymbols.stream().filter(Symbol::isValid).collect(Collectors.toList());
 

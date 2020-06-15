@@ -3,7 +3,7 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
-import es.uva.locomotion.plugin.VensimVisitorContext;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 
 import es.uva.locomotion.utilities.Constants;
 import org.junit.Test;

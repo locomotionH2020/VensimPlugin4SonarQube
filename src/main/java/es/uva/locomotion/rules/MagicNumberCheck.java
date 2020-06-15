@@ -3,7 +3,7 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.VensimPlugin;
 import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
 import es.uva.locomotion.plugin.Issue;
-import es.uva.locomotion.plugin.VensimVisitorContext;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.utilities.Constants;

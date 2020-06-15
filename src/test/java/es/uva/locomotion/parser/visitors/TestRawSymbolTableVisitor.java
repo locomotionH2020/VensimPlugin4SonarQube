@@ -361,14 +361,14 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testExprLookupCal(){
-        String program = "lookup_inside_expr= WITH Lookup_Table ( constVensim,\n" +
+        String program = "lookup_inside_expr= WITH LOOKUP ( constVensim,\n" +
                 "([(0,0)-(4,2)],(0,0.9),(1,1),(2,1.2),(3,1.5),(4,2) ))~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol lookupExpr = table.getSymbol("lookup_inside_expr");
 
-        assertEquals(getSymbols(table,"WITH Lookup_Table","constVensim"),lookupExpr.getDependencies());
+        assertEquals(getSymbols(table,"WITH LOOKUP","constVensim"),lookupExpr.getDependencies());
     }
 
     @Test
@@ -652,7 +652,6 @@ public class TestRawSymbolTableVisitor {
 
         assertEquals("comment second definition",var.getComment());
         assertEquals("units second definition",var.getUnits());
-        //TODO No tengo del todo claro lo que tendría que hacer en este caso, si lanzar excepción, ignorar el primer comentario o ignorar el segundo.
     }
 
     @Test

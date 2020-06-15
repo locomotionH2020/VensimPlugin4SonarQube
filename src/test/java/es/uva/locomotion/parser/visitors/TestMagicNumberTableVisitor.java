@@ -2,7 +2,6 @@ package es.uva.locomotion.parser.visitors;
 
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
-import es.uva.locomotion.plugin.VensimVisitorContext;
 
 import static org.junit.Assert.*;
 
@@ -397,7 +396,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionLookupInsideFunctionEquation(){
-        String program = "var =WITH Lookup_Table(6,((0,1),(1,1),(2,2)))\n~~|";
+        String program = "var =WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -409,7 +408,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionLookupInsideFunctionDataEquation(){
-        String program = "var :=WITH Lookup_Table(6,((0,1),(1,1),(2,2)))\n~~|";
+        String program = "var :=WITH LOOKUP(6,((0,1),(1,1),(2,2)))\n~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -442,7 +441,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testNumberListDoesntCountUnchangeableConstant(){ //TODO revisar si tiene sentido
+    public void testNumberListDoesntCountUnchangeableConstant(){
         String program = "A := 1,2,3,4,5~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);

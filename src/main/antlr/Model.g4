@@ -58,7 +58,7 @@ CommentOrEncoding: '{' .*? '}' -> skip;
 Group : '********************************************************' .*? '|' -> skip ;
 
 
-// Backslash tokens are ignored in Expr.g4, so this rule doesn't take them into account.
+// Backslash tokens are ignored, so this rule doesn't take them into account.
 sketchInfo: '---///' 'Sketch information - do not modify anything except names' .*? ;
 sketches: sketchInfo*;
 

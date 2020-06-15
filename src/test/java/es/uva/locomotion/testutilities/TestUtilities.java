@@ -4,7 +4,7 @@ package es.uva.locomotion.testutilities;
 import es.uva.locomotion.parser.*;
 import es.uva.locomotion.parser.visitors.RawSymbolTableVisitor;
 import es.uva.locomotion.plugin.Issue;
-import es.uva.locomotion.plugin.VensimVisitorContext;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.SymbolTableGenerator;
 import es.uva.locomotion.utilities.UtilityFunctions;

@@ -1,9 +1,8 @@
-package es.uva.locomotion.utilities;
+package es.uva.locomotion.service;
 
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
-import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
@@ -172,7 +171,7 @@ public class TestDBFacade {
     public void testGetSymbolsUnexpectedFormatNoSymbolField(){
         String jsonDbTable =  "{\"indexes\":[],\"categories\":[],\"modules\":[]}";
 
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'symbols' field.",ex.getMessage());
         assertEquals(jsonDbTable,ex.getServiceResponse());
@@ -182,7 +181,7 @@ public class TestDBFacade {
     public void testGetSymbolsUnexpectedFormatNoIndexField(){
         String jsonDbTable =  "{\"symbols\":[],\"categories\":[],\"modules\":[]}";
 
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'indexes' field.",ex.getMessage());
         assertEquals(jsonDbTable,ex.getServiceResponse());
@@ -191,14 +190,14 @@ public class TestDBFacade {
 
     @Test(expected = ServiceResponseFormatNotValid.class)
     public void testGetSymbolsUnexpectedFormatArrayOfLiterals() {
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns("[1,3,4]");
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[1,3,4]");
 
         DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("foo","var"));
     }
 
     @Test(expected = ServiceResponseFormatNotValid.class)
     public void testGetSymbolsUnexpectedFormatNotAnObject(){
-       DBFacade.handler = Utilities.getMockDbServiceHandlerThatReturns("[{\"symbol\":\"foo\"}]");
+       DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[{\"symbol\":\"foo\"}]");
 
        DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("foo"));
 
@@ -210,7 +209,7 @@ public class TestDBFacade {
                 "{\"definition\":\"var comment\",\"unit\":\"\",  \"category\":\"\",\"modules\":[], \"programming symbol type\":\"Constant\",\"indexes\":[]}], " +
                 "\"indexes\":[]}";
 
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'name' field from a symbol.",ex.getMessage());
         assertEquals(jsonDbTable,ex.getServiceResponse());
@@ -222,7 +221,7 @@ public class TestDBFacade {
         String jsonDbTable = "{\"symbols\":[" +
                 "{\"name\":\"var\",\"unit\":\"\",  \"category\":\"\",\"modules\":[], \"programming symbol type\":\"Constant\",\"indexes\":[]}], " +
                 "\"indexes\":[]}";
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'definition' field in symbol 'var'.",ex.getMessage());
@@ -236,7 +235,7 @@ public class TestDBFacade {
                 "{\"name\":\"var\", \"definition\":\"var comment\",  \"category\":\"\",\"modules\":[], \"programming symbol type\":\"Constant\",\"indexes\":[]}], " +
 
                 "\"indexes\":[]}";
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'unit' field in symbol 'var'.",ex.getMessage());
@@ -249,7 +248,7 @@ public class TestDBFacade {
         String jsonDbTable = "{\"symbols\":[" +
                 "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\",\"modules\":[], \"programming symbol type\":\"Constant\",\"indexes\":[]}], " +
                 "\"indexes\":[]}";
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'category' field in symbol 'var'.",ex.getMessage());
@@ -262,7 +261,7 @@ public class TestDBFacade {
         String jsonDbTable = "{\"symbols\":[" +
                 "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\", \"category\":\"\", \"programming symbol type\":\"Constant\",\"indexes\":[]}], " +
                 "\"indexes\":[]}";
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'modules' field in symbol 'var'.",ex.getMessage());
@@ -275,7 +274,7 @@ public class TestDBFacade {
         String jsonDbTable = "{\"symbols\":[" +
                 "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\", \"category\":\"\", \"modules\":[],\"indexes\":[]}], " +
                 "\"indexes\":[]}";
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'programming symbol type' field in symbol 'var'.",ex.getMessage());
@@ -288,7 +287,7 @@ public class TestDBFacade {
         String jsonDbTable = "{\"symbols\":[" +
                 "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\", \"category\":\"\", \"modules\":[], \"programming symbol type\":\"Constant\"}], " +
                 "\"indexes\":[]}";
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'indexes' field in symbol 'var'.",ex.getMessage());
@@ -301,7 +300,7 @@ public class TestDBFacade {
         String jsonDbTable = "{\"symbols\":[" +
                 "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\", \"category\":\"\", \"modules\":[], \"programming symbol type\":\"Unexpected random type\",\"indexes\":[]}], " +
                 "\"indexes\":[]}";
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("The symbol 'var' has an unknown programming type: 'Unexpected random type'",ex.getMessage());
@@ -318,7 +317,7 @@ public class TestDBFacade {
                 "\"indexes\":[]}";
         Logger logger = mock(Logger.class);
         DBFacade.LOG = logger;
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
 
         DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("var"));
@@ -331,7 +330,7 @@ public class TestDBFacade {
     public void testGetSymbolsUnexpectedFormatIndexDoesntHaveNameKey(){
         String jsonDbTable = "{\"symbols\":[],"+
                 "\"indexes\":[{\"definition\":\"\",\"values\":[\"first value\", \"second value\"]}]}";
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'name' field from an index.",ex.getMessage());
@@ -343,7 +342,7 @@ public class TestDBFacade {
     public void testGetSymbolsUnexpectedFormatIndexDoesntHaveDefinitionKey(){
         String jsonDbTable = "{\"symbols\":[],"+
                 "\"indexes\":[{\"name\":\"index\",\"values\":[\"first value\", \"second value\"]}]}";
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'definition' field in the index 'index'.",ex.getMessage());
@@ -355,7 +354,7 @@ public class TestDBFacade {
     public void testGetSymbolsUnexpectedFormatIndexDoesntHaveValuesKey(){
         String jsonDbTable = "{\"symbols\":[],"+
                 "\"indexes\":[{\"name\":\"index\", \"definition\":\"index comment\"}]}";
-        DBFacade.handler =  Utilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
+        DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingSymbolsFromDB("http://localhost", List.of("foo", "var")));
         assertEquals("Missing 'values' field in the index 'index'.",ex.getMessage());
@@ -368,7 +367,7 @@ public class TestDBFacade {
 
     @Test(expected = ServiceResponseFormatNotValid.class)
     public void testGetSymbolsResponseIsntAJson() {
-        DBFacade.handler = Utilities.getMockDbServiceHandlerThatReturns("some text");
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("some text");
 
         DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("foo","var"));
     }
@@ -397,12 +396,6 @@ public class TestDBFacade {
     @Test(expected = InvalidServiceUrlException.class)
     public void testGetSymbolsDomainWithoutProtocol(){
         DBFacade.getExistingSymbolsFromDB("www.google.com",List.of("foo","var"));
-    }
-
-    @Test(expected = ConnectionFailedException.class)
-    public void testGetSymbolsDomainNotFound(){
-        //TODO Cambiar/Quitar/Repensar
-        DBFacade.getExistingSymbolsFromDB("https://adsmfmgekrhadbsfsfaf.com",List.of("foo","var"));
     }
 
 
