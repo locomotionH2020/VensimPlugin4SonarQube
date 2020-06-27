@@ -192,16 +192,11 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor<Void> {
 
     @Override
     public Void visitExprOperation(ModelParser.ExprOperationContext ctx) {
-        if(ctx.op.getType() == ModelLexer.Equal){
-            if(!isASwitch(ctx.expr(0).getText()))
-                visit(ctx.expr(1));
-            if(!isASwitch(ctx.expr(1).getText()))
-                visit(ctx.expr(0));
+        if(ctx.op.getType() == ModelLexer.Equal)
+            if(isASwitch(ctx.expr(0).getText()) || isASwitch(ctx.expr(1).getText()) )
+              return null;
 
-        }else{
-            super.visitExprOperation(ctx);
-        }
+        return super.visitExprOperation(ctx);
 
-        return null;
     }
 }
