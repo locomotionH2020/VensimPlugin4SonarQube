@@ -52,8 +52,6 @@ template: function(params,query,body){
     module: 'testInjectSymbols.mdl'
   }
   
-  console.log("Recibido: -----------------------------------------------------------");
-  console.log(body)
   
   if(JSON.stringify(body)==JSON.stringify(expectedObject)){
     fs.writeFile("flagInjection", "it worked :D", function (err) {
