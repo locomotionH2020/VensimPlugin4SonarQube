@@ -9,7 +9,7 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>sonar-plugin</packaging>
 
-  <name>Vensim Example Plugin for SonarQube 6.7.x LTS</name>
+  <name>Vensim Plugin for SonarQube 7.9.x LTS</name>
   <description>Vensim plugin for Sonarqube</description>
 
 
