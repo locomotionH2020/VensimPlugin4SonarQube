@@ -65,7 +65,7 @@ public class RuleTestUtilities {
 
         Path path = Paths.get("");
         SensorContextTester context = SensorContextTester.create(path);
-        return  new VensimScanner(context,checks, new JsonSymbolTableBuilder(), new ServiceController(""));
+        return  new VensimScanner(context,checks, new JsonSymbolTableBuilder(), new ServiceController("","",""));
     }
 
     public static void assertHasIssueInLines(VensimVisitorContext context, Class type, Integer... lines){

@@ -24,7 +24,8 @@ public class VensimSquidSensor implements Sensor {
 
     private static final String NAME = "Vensim Squid Sensor";
     private static final String DICTIONARY_SERVICE_PARAMETER = "vensim.dictionaryService";
-
+    private static final String DICTIONARY_USERNAME_PARAMETER =  "vensim.dictionaryUsername";
+    private static final String DICTIONARY_PASSWORD_PARAMETER = "vensim.dictionaryPassword";
 
     private final Checks<VensimCheck> checks;
 
@@ -49,7 +50,10 @@ public class VensimSquidSensor implements Sensor {
         FilePredicates p = sensorContext.fileSystem().predicates();
 
 
-        String dictionaryService = sensorContext.config().get(DICTIONARY_SERVICE_PARAMETER).orElse("");
+        String dictionaryService = sensorContext.config().get(DICTIONARY_SERVICE_PARAMETER).orElse("").trim();
+        String dictionaryUsername = sensorContext.config().get(DICTIONARY_USERNAME_PARAMETER).orElse("").trim();
+        String dictionaryPassword = sensorContext.config().get(DICTIONARY_PASSWORD_PARAMETER).orElse("").trim();
+
 
 
         Iterable<InputFile> files = sensorContext.fileSystem().inputFiles(p.hasLanguage(VensimLanguage.KEY));
@@ -57,7 +61,8 @@ public class VensimSquidSensor implements Sensor {
         files.forEach(list::add);
         List<InputFile> inputFiles = Collections.unmodifiableList(list);
 
-        VensimScanner scanner = new VensimScanner(sensorContext, checks, new JsonSymbolTableBuilder(), new ServiceController(dictionaryService));
+        VensimScanner scanner = new VensimScanner(sensorContext, checks, new JsonSymbolTableBuilder(),
+                new ServiceController(dictionaryService, dictionaryUsername, dictionaryPassword));
         scanner.scanFiles(inputFiles);
     }
 }

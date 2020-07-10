@@ -105,7 +105,9 @@ public class VensimScanner {
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
             jsonBuilder.addSymbolTable(inputFile.filename(),table);
 
-            SymbolTable dbTable = serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols()));
+            SymbolTable dbTable = null;
+            if(serviceController.isAuthenticated())
+                dbTable = serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols()));
 
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
 
@@ -117,7 +119,8 @@ public class VensimScanner {
 
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
-            serviceController.injectNewSymbols(inputFile.filename(),new ArrayList<>(table.getSymbols()),dbTable);
+            if(serviceController.isAuthenticated() && dbTable != null)
+                serviceController.injectNewSymbols(inputFile.filename(),new ArrayList<>(table.getSymbols()),dbTable);
         } catch (IOException e) {
             LOG.error("Unable to analyze file '{}'. Error: {}", inputFile.toString(), e);
         }catch (ParseCancellationException e){

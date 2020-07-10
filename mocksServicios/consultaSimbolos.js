@@ -32,7 +32,7 @@ template: function(params,query,body){
         name: 'CONSTANT_NOT_IN_DB',
         unit: 'units',
         definition: 'comment',
-        is_indexed: false,
+        is_indexed: "false",
         category: '',
         'programming symbol type': 'Constant'
       },
@@ -40,7 +40,7 @@ template: function(params,query,body){
         name: 'variable_not_in_db',
         unit: 'units',
         definition: 'comment',
-        is_indexed: false,
+        is_indexed: "false",
         category: '',
         'programming symbol type': 'Variable'
       }

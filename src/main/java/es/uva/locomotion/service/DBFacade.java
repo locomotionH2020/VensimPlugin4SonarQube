@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class DBFacade {
 
     public static final String FIELD_SYMBOL_NAME = "name";
+    public static final String FIELD_INDEX_NAME = "indexName";
     public static final String FIELD_SYMBOLS = "symbols";
     public static final String FIELD_INDEXES = "indexes";
     public static final String FIELD_SYMBOL_COMMENT = "definition";
@@ -42,6 +43,10 @@ public class DBFacade {
     protected static Logger LOG = Loggers.get(DBFacade.class.getSimpleName());
 
 
+
+    public static String getAuthenticationToken(String serviceUrl, String user, String password){
+        return handler.authenticateForInjection(serviceUrl, user, password);
+    }
     /**
      * Searches for the symbols given as a parameter in the DB
      * @param symbols
@@ -56,9 +61,8 @@ public class DBFacade {
      * @throws EmptyServiceException If {@code serviceUrl} is empty if null
      * @throws IllegalArgumentException If {@code symbols} is null
      */
-    public static SymbolTable getExistingSymbolsFromDB(String serviceUrl, List<String> symbols) {
-
-        String serviceResponse = handler.sendRequestToDictionaryService(serviceUrl, symbols);
+    public static SymbolTable getExistingSymbolsFromDB(String serviceUrl, List<String> symbols, String token) {
+        String serviceResponse = handler.sendRequestToDictionaryService(serviceUrl, symbols, token);
 
         JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse));
         try {
@@ -202,7 +206,7 @@ public class DBFacade {
     }
 
 
-    public static void injectSymbols(String serviceUrl, String module, List<Symbol> symbols) {
+    public static void injectSymbols(String serviceUrl, String module, List<Symbol> symbols, String token) {
         List<Symbol> rawSymbols = symbols.stream().filter(symbol -> !List.of(SymbolType.Subscript_Value, SymbolType.Subscript,
                 SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION, SymbolType.Function).contains(symbol.getType())).collect(Collectors.toList());
 
@@ -220,7 +224,7 @@ public class DBFacade {
         requestBuilder.add(FIELD_INDEXES, jsonIndexes);
         requestBuilder.add(FIELD_INJECTION_MODULE,module.trim());
 
-        handler.injectSymbols(serviceUrl,requestBuilder.build());
+        handler.injectSymbols(serviceUrl,requestBuilder.build(), token);
     }
 
     private static JsonArray getInjectSymbolsJson(List<Symbol> symbols){
@@ -229,10 +233,13 @@ public class DBFacade {
         for(Symbol s:symbols){
             JsonObjectBuilder jsonSymbol = Json.createObjectBuilder();
 
-            jsonSymbol.add(FIELD_SYMBOL_NAME, s.getToken().trim());
+            if(s.getType()==SymbolType.Subscript)
+                jsonSymbol.add(FIELD_INDEX_NAME, s.getToken().trim());
+            else
+                jsonSymbol.add(FIELD_SYMBOL_NAME, s.getToken().trim());
             jsonSymbol.add(FIELD_SYMBOL_UNITS, s.getUnits().trim());
             jsonSymbol.add(FIELD_SYMBOL_COMMENT, s.getComment().trim());
-            jsonSymbol.add(FIELD_INJECTION_IS_INDEXED,!s.getIndexes().isEmpty());
+            jsonSymbol.add(FIELD_INJECTION_IS_INDEXED,String.valueOf(!s.getIndexes().isEmpty()).toLowerCase());
             jsonSymbol.add(FIELD_SYMBOL_CATEGORY, s.getCategory().trim());
             jsonSymbol.add(FIELD_SYMBOL_TYPE, s.getType().toString());
 

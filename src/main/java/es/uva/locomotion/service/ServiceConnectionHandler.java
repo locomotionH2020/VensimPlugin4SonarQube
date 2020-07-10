@@ -4,11 +4,9 @@ import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
+import javax.json.*;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -34,19 +32,23 @@ public class ServiceConnectionHandler {
      * @throws EmptyServiceException If {@code serviceUrl} is empty if null
      * @throws IllegalArgumentException If {@code symbols} is null
      */
-    public String sendRequestToDictionaryService(String serviceUrl, List<String> symbols){
+    public String sendRequestToDictionaryService(String serviceUrl, List<String> symbols, String token){
         if(serviceUrl==null || "".equals(serviceUrl.trim()))
-            throw new EmptyServiceException("Service Url is null or empty string");
+            throw new EmptyServiceException("Service Url is null or an empty string");
         if(symbols==null)
             throw new IllegalArgumentException("The list of symbols can't be null.");
 
-
-        JsonArrayBuilder jsonBuilder = Json.createArrayBuilder();
+        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for(String s: symbols)
-            jsonBuilder.add(s);
+            arrayBuilder.add(s);
 
-        JsonArray jsonSymbols = jsonBuilder.build();
+        jsonBuilder.add("symbols",jsonBuilder);
+        JsonObject jsonSymbols = jsonBuilder.build();
+
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
+        requestBuilder.setHeader("Authorization","Bearer "+ token);
+
 
         if(serviceUrl.charAt(serviceUrl.length()-1)!='/')
             serviceUrl = serviceUrl + "/";
@@ -63,7 +65,10 @@ public class ServiceConnectionHandler {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body();
+            if (response.statusCode() == HttpURLConnection.HTTP_OK)
+                return response.body();
+            else
+                return null;
         } catch (InterruptedException | IOException e) {
             throw new ConnectionFailedException(e);
         }
@@ -79,9 +84,9 @@ public class ServiceConnectionHandler {
      * @throws EmptyServiceException If {@code serviceUrl} is empty if null
      * @throws IllegalArgumentException If {@code symbols} is null or empty
      */
-    public String injectSymbols(String serviceUrl, JsonObject symbols) {
+    public String injectSymbols(String serviceUrl, JsonObject symbols, String token) {
         if(serviceUrl == null || "".equals(serviceUrl.trim()))
-            throw new EmptyServiceException("Service Url is null or empty string");
+            throw new EmptyServiceException("Service Url is null or an empty string");
         if(symbols == null || symbols.isEmpty())
             throw new IllegalArgumentException("The symbols can't be empty");
 
@@ -90,6 +95,8 @@ public class ServiceConnectionHandler {
             serviceUrl = serviceUrl + "/";
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
+        requestBuilder.setHeader("Authorization","Bearer "+ token);
+
 
         try{
             URI url = URI.create(serviceUrl);
@@ -99,6 +106,39 @@ public class ServiceConnectionHandler {
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
         }
         HttpRequest request  =requestBuilder.POST(HttpRequest.BodyPublishers.ofString(symbols.toString()))
+                .header("Content-Type", "application/json").build();
+
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (InterruptedException | IOException e) {
+            throw new ConnectionFailedException(e);
+        }
+
+    }
+
+
+    public String authenticateForInjection(String serviceUrl, String user, String password){
+        if(serviceUrl == null || "".equals(serviceUrl.trim()))
+            throw new EmptyServiceException("Service Url is null or an empty string");
+
+        if(serviceUrl.charAt(serviceUrl.length()-1)!='/')
+            serviceUrl = serviceUrl + "/";
+
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
+
+        try{
+            URI url = URI.create(serviceUrl);
+            url = url.resolve("authenticate");
+            System.out.println("Uri final: " +  url.toString());
+            requestBuilder.uri(url);
+        }catch (IllegalArgumentException ex){
+            throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
+        }
+
+        HttpRequest request  =requestBuilder.POST(HttpRequest.BodyPublishers.ofString(
+                "{\"username\":\"" + user + "\"," +
+                        " \"password\":\""+ password + "\"}"))
                 .header("Content-Type", "application/json").build();
 
         try {
