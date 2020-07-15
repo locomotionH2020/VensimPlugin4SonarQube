@@ -6,18 +6,19 @@ module.exports = [
   path: '/integrationTest/qaGetSymbolsDefinition',
   method: 'POST',
   template: {symbols:
-    [{name:"defined_variable",unit:"kg", definition:"A variable", "programming symbol type":"Variable", indexes:[],modules:{main:"module 1", secondary:[]},category:"some category"},
-    {name:"DIFFERENT_COMMENT",unit:"kg", definition:"Not the expected comment", "programming symbol type":"Constant", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
-    {name:"SAME_COMMENT",unit:"kg", definition:"    Expected comment    ", "programming symbol type":"Constant", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
-    {name:"DIFFERENT_UNITS",unit:"Not the expected units", definition:"", "programming symbol type":"Constant", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
-    {name:"SAME_UNITS",unit:"units", definition:"", "programming symbol type":"Constant", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
-    {name:"type_mismatch",unit:"units", definition:"", "programming symbol type":"Reality_Check", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
-    {name:"expected_type",unit:"units", definition:"", "programming symbol type":"Variable", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
-    {name:"INDEX_MISMATCH",unit:"units",definition:"","programming symbol type":"Constant", indexes:["miRango","SUBSCRIPT"],modules:{main:"module 1", secondary:[]}, category:"foo"}
+    [{name:"defined_variable",unit:"kg", definition:"A variable", "ProgrammingSymbolType":"Variable", indexes:[],modules:{main:"module 1", secondary:[]},category:"some category"},
+    {name:"DIFFERENT_COMMENT",unit:"kg", definition:"Not the expected comment", "ProgrammingSymbolType":"Constant", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
+    {name:"SAME_COMMENT",unit:"kg", definition:"    Expected comment    ", "ProgrammingSymbolType":"Constant", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
+    {name:"DIFFERENT_UNITS",unit:"Not the expected units", definition:"", "ProgrammingSymbolType":"Constant", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
+    {name:"SAME_UNITS",unit:"units", definition:"", "ProgrammingSymbolType":"Constant", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
+    {name:"type_mismatch",unit:"units", definition:"", "ProgrammingSymbolType":"Reality_Check", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
+    {name:"expected_type",unit:"units", definition:"", "ProgrammingSymbolType":"Variable", indexes:[],modules:{main:"module 2", secondary:[]},category:"some category"},
+    {name:"INDEX_MISMATCH",unit:"units",definition:"","ProgrammingSymbolType":"Constant", indexes:["miRango","SUBSCRIPT"],modules:{main:"module 1", secondary:[]}, category:"foo"}
   ],
-  indexes: [{name: "VALUE_MISMATCH", definition: "Subscript for the test 'testDictionarySubscriptValueMismatch.mdl'", values:["value1","value2"]},
-    {name: "miRango", definition: "Subscript for the test 'testDictionaryIndexMismatch.mdl'", values:["VALOR_1","VALOR_2","VALOR_3","VALOR_4"]},
-    {name: "SUBSCRIPT", definition: "Subscript for the test 'testDictionaryIndexMismatch.mdl'", values:["a","b","c"]}],
+  indexes: [
+    {indexName: "VALUE_MISMATCH", definition: "Subscript for the test 'testDictionarySubscriptValueMismatch.mdl'", values:["value1","value2"]},
+    {indexName: "miRango", definition: "Subscript for the test 'testDictionaryIndexMismatch.mdl'", values:["VALOR_1","VALOR_2","VALOR_3","VALOR_4"]},
+    {indexName: "SUBSCRIPT", definition: "Subscript for the test 'testDictionaryIndexMismatch.mdl'", values:["a","b","c"]}],
   modules:{main: "module 1", secondary:["module 2"]},
   categories: ["some category","another category","extremely creative category name"]
 
@@ -32,17 +33,17 @@ template: function(params,query,body){
         name: 'CONSTANT_NOT_IN_DB',
         unit: 'units',
         definition: 'comment',
-        is_indexed: "false",
+        isIndexed: "false",
         category: '',
-        'programming symbol type': 'Constant'
+        'ProgrammingSymbolType': 'Constant'
       },
       {
         name: 'variable_not_in_db',
         unit: 'units',
         definition: 'comment',
-        is_indexed: "false",
+        isIndexed: "false",
         category: '',
-        'programming symbol type': 'Variable'
+        'ProgrammingSymbolType': 'Variable'
       }
     ],
     indexes: [{
@@ -74,7 +75,7 @@ template:  {"symbols": [{
 		"secondary": []
 	},
 	"category": "CategoryExampleTopLevel",
-	"programming symbol type": "Constant"
+	"ProgrammingSymbolType": "Constant"
 }, {
 	"name": "SymbolExample2",
 	"definition": "definition example for symbol 2 example",
@@ -85,7 +86,7 @@ template:  {"symbols": [{
 		"secondary": ["Testing_modules"]
 	},
 	"category": "CategoryExampleBottomLevel",
-	"programming symbol type": "Function"
+	"ProgrammingSymbolType": "Function"
 }],
 "modules": ["IAM Number One", "Testing_modules"],
 "indexes": [{

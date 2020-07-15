@@ -12,7 +12,6 @@ public class ServiceTestUtilities {
         ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
 
         doReturn(returnValue).when(handler).sendRequestToDictionaryService(anyString(),anyList(),anyString());
-
         doReturn("").when(handler).authenticateForInjection(any(),any(),any());
 
         return handler;

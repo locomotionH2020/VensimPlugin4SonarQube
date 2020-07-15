@@ -26,16 +26,16 @@ public class DBFacade {
     public static final String FIELD_INDEXES = "indexes";
     public static final String FIELD_SYMBOL_COMMENT = "definition";
     public static final String FIELD_SYMBOL_CATEGORY = "category";
-    public static final String FIELD_SYMBOL_TYPE = "programming symbol type";
+    public static final String FIELD_SYMBOL_TYPE = "ProgrammingSymbolType";
     public static final String FIELD_SYMBOL_INDEXES = "indexes";
     public static final String FIELD_SYMBOL_MODULES = "modules";
     public static final String FIELD_INDEX_VALUES = "values";
-    public static final String FIELD_INJECTION_IS_INDEXED = "is_indexed";
+    public static final String FIELD_INJECTION_IS_INDEXED = "isIndexed";
     public static final String FIELD_INJECTION_MODULE = "module";
     public static  final String FIELD_SYMBOL_UNITS = "unit";
 
     public static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_SYMBOL_NAME,FIELD_SYMBOL_TYPE,FIELD_SYMBOL_COMMENT,FIELD_SYMBOL_CATEGORY,FIELD_SYMBOL_INDEXES,FIELD_SYMBOL_MODULES, FIELD_SYMBOL_UNITS);
-    public static final List<String> REQUIRED_FIELDS_IN_INDEXES = List.of(FIELD_SYMBOL_NAME,FIELD_INDEX_VALUES, FIELD_SYMBOL_COMMENT);
+    public static final List<String> REQUIRED_FIELDS_IN_INDEXES = List.of(FIELD_INDEX_NAME,FIELD_INDEX_VALUES, FIELD_SYMBOL_COMMENT);
     private static final String FIELD_SYMBOL_MODULES_MAIN = "main";
     private static final String FIELD_SYMBOL_MODULES_SECONDARY = "secondary";
     protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
@@ -63,6 +63,8 @@ public class DBFacade {
      */
     public static SymbolTable getExistingSymbolsFromDB(String serviceUrl, List<String> symbols, String token) {
         String serviceResponse = handler.sendRequestToDictionaryService(serviceUrl, symbols, token);
+        if(serviceResponse==null)
+            return null;
 
         JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse));
         try {
@@ -108,7 +110,7 @@ public class DBFacade {
             JsonObject jsonIndex = indexes.getJsonObject(i);
             validateJsonIndex(jsonIndex);
 
-            String name = jsonIndex.getString(FIELD_SYMBOL_NAME);
+            String name = jsonIndex.getString(FIELD_INDEX_NAME);
             Symbol index = UtilityFunctions.getSymbolOrCreate(table,name);
 
             String comment = jsonIndex.getString(FIELD_SYMBOL_COMMENT);
@@ -128,11 +130,11 @@ public class DBFacade {
     }
 
     private static void validateJsonIndex(JsonObject jsonIndex){
-        if(! jsonIndex.containsKey(FIELD_SYMBOL_NAME)){
-            throw new ServiceResponseFormatNotValid("Missing '"+FIELD_SYMBOL_NAME+"' field from an index.");
+        if(! jsonIndex.containsKey(FIELD_INDEX_NAME)){
+            throw new ServiceResponseFormatNotValid("Missing '"+FIELD_INDEX_NAME+"' field from an index.");
         }
 
-        String name = jsonIndex.getString(FIELD_SYMBOL_NAME);
+        String name = jsonIndex.getString(FIELD_INDEX_NAME);
         for(String field: REQUIRED_FIELDS_IN_INDEXES){
             if(!jsonIndex.containsKey(field)){
                 throw new ServiceResponseFormatNotValid("Missing '"+field+"' field in the index '"+name+"'.");

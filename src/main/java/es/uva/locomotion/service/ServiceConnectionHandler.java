@@ -67,8 +67,10 @@ public class ServiceConnectionHandler {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == HttpURLConnection.HTTP_OK)
                 return response.body();
-            else
+            else{
+                System.out.println(response.body());
                 return null;
+            }
         } catch (InterruptedException | IOException e) {
             throw new ConnectionFailedException(e);
         }
