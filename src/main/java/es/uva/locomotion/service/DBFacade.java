@@ -45,7 +45,7 @@ public class DBFacade {
 
 
     public static String getAuthenticationToken(String serviceUrl, String user, String password){
-        return handler.authenticateForInjection(serviceUrl, user, password);
+        return handler.authenticate(serviceUrl, user, password);
     }
     /**
      * Searches for the symbols given as a parameter in the DB
