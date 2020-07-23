@@ -98,6 +98,7 @@ public class VensimScanner {
 
         try {
             String content = inputFile.contents();
+            String module = getModuleNameFromFileName(inputFile.filename());
 
             ModelParser.FileContext root = getParseTree(content);
 
@@ -111,7 +112,6 @@ public class VensimScanner {
 
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
 
-
             checkIssues(visitorContext);
             saveIssues(inputFile,visitorContext.getIssues());
 
@@ -120,15 +120,24 @@ public class VensimScanner {
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
             if(serviceController.isAuthenticated() && dbTable != null)
-                serviceController.injectNewSymbols(inputFile.filename(),new ArrayList<>(table.getSymbols()),dbTable);
+                serviceController.injectNewSymbols(module,new ArrayList<>(table.getSymbols()),dbTable);
         } catch (IOException e) {
-            LOG.error("Unable to analyze file '{}'. Error: {}", inputFile.toString(), e);
+            LOG.error("Unable to analyze file '{}'. Error: {}", inputFile.filename(), e);
         }catch (ParseCancellationException e){
-            LOG.error("Unable to parse the file '{}'. Message {}",inputFile.toString(),e.getLocalizedMessage());
+            LOG.error("Unable to parse the file '{}'. Message {}",inputFile.filename(),e.getLocalizedMessage());
         }
 
     }
 
+    protected String getModuleNameFromFileName(String fileName){
+        String suffix = VensimLanguage.VENSIM_PLAIN_TEXT_SUFIX;
+        if(fileName.endsWith(suffix))
+            return fileName.substring(0,fileName.length()-suffix.length());
+        else
+            return fileName;
+
+
+    }
 
 
     public void checkIssues(VensimVisitorContext fileContext){
@@ -139,7 +148,7 @@ public class VensimScanner {
     }
 
 
-    private void saveIssues(InputFile file, List<Issue> issues){
+    protected void saveIssues(InputFile file, List<Issue> issues){
         for (Issue preciseIssue : issues) {
             RuleKey ruleKey = checks.ruleKey(preciseIssue.getCheck());
  

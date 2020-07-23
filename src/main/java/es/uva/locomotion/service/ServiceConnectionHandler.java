@@ -97,7 +97,6 @@ public class ServiceConnectionHandler {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
         requestBuilder.setHeader("Authorization","Bearer "+ token);
 
-
         try{
             URI url = URI.create(serviceUrl);
             url = url.resolve("qaAddSymbolsDefinition");
@@ -130,7 +129,6 @@ public class ServiceConnectionHandler {
         try{
             URI url = URI.create(serviceUrl);
             url = url.resolve("authenticate");
-            System.out.println("Uri final: " +  url.toString());
             requestBuilder.uri(url);
         }catch (IllegalArgumentException ex){
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");

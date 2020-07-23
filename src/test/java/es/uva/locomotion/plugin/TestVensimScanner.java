@@ -1,6 +1,7 @@
 package es.uva.locomotion.plugin;
 
 
+import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.testutilities.RuleTestUtilities;
 import es.uva.locomotion.rules.VensimCheck;
@@ -38,7 +39,7 @@ public class TestVensimScanner {
         VensimScanner.LOG = logger;
         InputFile inputFile = Mockito.mock(InputFile.class);
         when(inputFile.contents()).thenReturn("This isn't a vensim model");
-        when(inputFile.toString()).thenReturn("notAVensimModel.mdl");
+        when(inputFile.filename()).thenReturn("notAVensimModel.mdl");
 
 
 
@@ -53,6 +54,34 @@ public class TestVensimScanner {
 
     }
 
+    @Test
+    public void testScannerGetsModuleNameCorrectly() throws IOException {
+        InputFile file = Mockito.mock(InputFile.class);
+        when(file.contents()).thenReturn(""); // Esto se podría mejorar si se inyecta un generador de tabla de símbolos en
+                                              // el escáner en vez de usar un método estático
+        when(file.filename()).thenReturn("climate.mdl");
+
+
+
+        SensorContext context = Mockito.mock(SensorContext.class,Mockito.RETURNS_DEEP_STUBS);
+        Checks<VensimCheck> checks = (Checks<VensimCheck>) Mockito.mock(Checks.class);
+        JsonSymbolTableBuilder builder = mock(JsonSymbolTableBuilder.class);
+        ServiceController controller = mock(ServiceController.class);
+        when(controller.isAuthenticated()).thenReturn(true);
+        when(controller.getSymbolsFromDb(any())).thenReturn(mock(SymbolTable.class));
+
+
+        VensimScanner scanner = spy(new VensimScanner(context,checks,builder,controller));
+
+        Mockito.doNothing().when(scanner).generateJsonOutput();
+        Mockito.doNothing().when(scanner).checkIssues(any());
+        Mockito.doNothing().when(scanner).saveIssues(any(),anyList());
+        Mockito.doCallRealMethod().when(scanner).scanFile(file);
+        scanner.scanFile(file);
+        Mockito.verify(controller).injectNewSymbols(eq("climate"),any(),any());
+
+
+    }
 
     @Test
     public void testIfAfileFailsTheRestExecutes() throws IOException, NoSuchFieldException, IllegalAccessException {
@@ -99,7 +128,7 @@ public class TestVensimScanner {
         Mockito.doCallRealMethod().when(scanner).scanFile(Mockito.any());
         Mockito.doCallRealMethod().when(scanner).getParseTree(Mockito.any());
         Mockito.doCallRealMethod().when(scanner).checkIssues(Mockito.any());
-
+        Mockito.doReturn("").when(scanner).getModuleNameFromFileName(any());
 
 
         Mockito.doNothing().when(scanner).generateJsonOutput();

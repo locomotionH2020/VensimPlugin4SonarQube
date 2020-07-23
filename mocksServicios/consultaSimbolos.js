@@ -46,10 +46,10 @@ template: function(params,query,body){
       }
     ],
     indexes: [{
-      name: 'SUBSCRIPT_NOT_IN_DB_I',
+      indexName: 'SUBSCRIPT_NOT_IN_DB_I',
       values: ["VALUE_1", "VALUE_2"]
     }],
-    module: 'testInjectSymbols.mdl'
+    module: 'testInjectSymbols'
   }
   
   
