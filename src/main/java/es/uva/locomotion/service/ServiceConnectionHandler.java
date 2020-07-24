@@ -74,7 +74,7 @@ public class ServiceConnectionHandler {
                 return responseBody;
             else
                 return null;
-            }
+            
         } catch (InterruptedException | IOException e) {
             throw new ConnectionFailedException(e);
         }
