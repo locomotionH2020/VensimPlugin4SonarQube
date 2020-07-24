@@ -316,6 +316,18 @@ public class TestIntegrationMagicNumberCheck {
     }
 
     @Test
+    public void testIgnoresMinusOnesWithFractionDigits(){
+        String program = "CONST = -1.000 + -1.000~~|".repeat(DEFAULT_MINIMUM_REPETITIONS +4);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+
+        assertDoesntHaveIssueOfType(visitorContext,MagicNumberCheck.class);
+    }
+
+    @Test
     public void testIgnores100WithFractionDigits(){
         String program = "CONST = 100.000 + 100.000~~|".repeat(DEFAULT_MINIMUM_REPETITIONS +4);
 

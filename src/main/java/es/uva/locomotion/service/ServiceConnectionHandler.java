@@ -1,5 +1,6 @@
 package es.uva.locomotion.service;
 
+import es.uva.locomotion.utilities.VensimLogger;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class ServiceConnectionHandler {
 
-
+    protected VensimLogger LOG = VensimLogger.getInstance();
     protected HttpClient client;
 
     public ServiceConnectionHandler(){
@@ -49,6 +50,7 @@ public class ServiceConnectionHandler {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
         requestBuilder.setHeader("Authorization","Bearer "+ token);
 
+        LOG.server("Sending POST request to: " + serviceUrl + "with data: \n" + symbols);
 
         if(serviceUrl.charAt(serviceUrl.length()-1)!='/')
             serviceUrl = serviceUrl + "/";
@@ -65,10 +67,12 @@ public class ServiceConnectionHandler {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            String responseBody = response.body();
+            LOG.server("The response of the server to the request to " + serviceUrl + " was: \n" + responseBody);
             if (response.statusCode() == HttpURLConnection.HTTP_OK)
-                return response.body();
-            else{
-                System.out.println(response.body());
+                return responseBody;
+            else
                 return null;
             }
         } catch (InterruptedException | IOException e) {
@@ -99,6 +103,7 @@ public class ServiceConnectionHandler {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
         requestBuilder.setHeader("Authorization","Bearer "+ token);
 
+        LOG.server("Sending POST request to: " + serviceUrl + "with data: \n" + symbols.toString());
 
         try{
             URI url = URI.create(serviceUrl);
@@ -112,7 +117,9 @@ public class ServiceConnectionHandler {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body();
+            String responseBody = response.body();
+            LOG.server("The response of the server to the request to " + serviceUrl + " was: \n" + responseBody);
+            return responseBody;
         } catch (InterruptedException | IOException e) {
             throw new ConnectionFailedException(e);
         }
@@ -120,7 +127,7 @@ public class ServiceConnectionHandler {
     }
 
 
-    public String authenticateForInjection(String serviceUrl, String user, String password){
+    public String authenticate(String serviceUrl, String user, String password){
         if(serviceUrl == null || "".equals(serviceUrl.trim()))
             throw new EmptyServiceException("Service Url is null or an empty string");
 
@@ -129,23 +136,26 @@ public class ServiceConnectionHandler {
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
 
+        String requestBody= "{\"username\":\"" + user + "\"," +
+                " \"password\":\""+ password + "\"}";
+
+        LOG.server("Sending POST request to: " + serviceUrl + " with data: \n" + requestBody);
         try{
             URI url = URI.create(serviceUrl);
             url = url.resolve("authenticate");
-            System.out.println("Uri final: " +  url.toString());
             requestBuilder.uri(url);
         }catch (IllegalArgumentException ex){
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
         }
 
-        HttpRequest request  =requestBuilder.POST(HttpRequest.BodyPublishers.ofString(
-                "{\"username\":\"" + user + "\"," +
-                        " \"password\":\""+ password + "\"}"))
+        HttpRequest request  =requestBuilder.POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .header("Content-Type", "application/json").build();
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body();
+            String responseBody = response.body();
+            LOG.server("The response of the server to the request to " + serviceUrl + " was: \n" + responseBody);
+            return responseBody;
         } catch (InterruptedException | IOException e) {
             throw new ConnectionFailedException(e);
         }

@@ -12,5 +12,5 @@ public class Constants {
     // This symbols are defined by default in every Vensim file
     public static final List<String> DEFAULT_VENSIM_SYMBOLS= Arrays.asList("FINAL TIME", "INITIAL TIME", "SAVEPER", "TIME STEP");
 
-    public static  final List<String> IGNORED_MAGIC_NUMBERS = Arrays.asList("0","1","100");
+    public static  final List<String> IGNORED_MAGIC_NUMBERS = Arrays.asList("0","1","100","-1");
 }

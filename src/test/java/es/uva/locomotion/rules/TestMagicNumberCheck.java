@@ -235,6 +235,23 @@ public class TestMagicNumberCheck {
 
     }
 
+    @Test
+    public void testMinusOnesAreIgnored(){
+        SymbolTable table = new SymbolTable();
+        Symbol magicNumber = new Symbol("-1");
+        for(int i=0; i<DEFAULT_MINIMUM_REPETITIONS+4;i++){
+            magicNumber.addDefinitionLine(3);
+        }
+
+        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+
+        MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
+        check.scan(context);
+
+        assertTrue(context.getIssues().isEmpty());
+
+    }
+
      @Test
     public void  testDifferentNumberOfMinimumRepetitionsMagicNumber(){
        final int REPETITIONS = 9;

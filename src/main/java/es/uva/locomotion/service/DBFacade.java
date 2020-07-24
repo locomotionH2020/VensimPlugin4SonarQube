@@ -45,7 +45,7 @@ public class DBFacade {
 
 
     public static String getAuthenticationToken(String serviceUrl, String user, String password){
-        return handler.authenticateForInjection(serviceUrl, user, password);
+        return handler.authenticate(serviceUrl, user, password);
     }
     /**
      * Searches for the symbols given as a parameter in the DB
@@ -230,15 +230,13 @@ public class DBFacade {
     }
 
     private static JsonArray getInjectSymbolsJson(List<Symbol> symbols){
+        // No incluye los índices, para eso está getInjectIndexesJson
         JsonArrayBuilder jsonSymbols = Json.createArrayBuilder();
 
         for(Symbol s:symbols){
             JsonObjectBuilder jsonSymbol = Json.createObjectBuilder();
 
-            if(s.getType()==SymbolType.Subscript)
-                jsonSymbol.add(FIELD_INDEX_NAME, s.getToken().trim());
-            else
-                jsonSymbol.add(FIELD_SYMBOL_NAME, s.getToken().trim());
+            jsonSymbol.add(FIELD_SYMBOL_NAME, s.getToken().trim());
             jsonSymbol.add(FIELD_SYMBOL_UNITS, s.getUnits().trim());
             jsonSymbol.add(FIELD_SYMBOL_COMMENT, s.getComment().trim());
             jsonSymbol.add(FIELD_INJECTION_IS_INDEXED,String.valueOf(!s.getIndexes().isEmpty()).toLowerCase());
@@ -257,7 +255,7 @@ public class DBFacade {
         for(Symbol index:indexes){
             JsonObjectBuilder jsonSymbol = Json.createObjectBuilder();
 
-            jsonSymbol.add(FIELD_SYMBOL_NAME, index.getToken().trim());
+            jsonSymbol.add(FIELD_INDEX_NAME, index.getToken().trim());
 
             JsonArrayBuilder jsonValues = Json.createArrayBuilder();
             List<Symbol> dependencies = new ArrayList<>(index.getDependencies());
