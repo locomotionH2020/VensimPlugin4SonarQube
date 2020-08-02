@@ -44,20 +44,22 @@ public class ServiceConnectionHandler {
         for(String s: symbols)
             arrayBuilder.add(s);
 
-        jsonBuilder.add("symbols",jsonBuilder);
+        jsonBuilder.add("symbols",arrayBuilder);
         JsonObject jsonSymbols = jsonBuilder.build();
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
         requestBuilder.setHeader("Authorization","Bearer "+ token);
 
-        LOG.server("Sending POST request to: " + serviceUrl + "with data: \n" + symbols);
+
 
         if(serviceUrl.charAt(serviceUrl.length()-1)!='/')
             serviceUrl = serviceUrl + "/";
 
+        URI url;
         try{
-            URI url = URI.create(serviceUrl);
+            url = URI.create(serviceUrl);
             url = url.resolve("qaGetSymbolsDefinition");
+            LOG.server("Sending POST request to: " + url.toString() + " with data: \n" + jsonSymbols);
             requestBuilder.uri(url);
         }catch (IllegalArgumentException ex){
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
@@ -69,13 +71,14 @@ public class ServiceConnectionHandler {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             String responseBody = response.body();
-            LOG.server("The response of the server to the request to " + serviceUrl + " was: \n" + responseBody);
+            LOG.server("The response of the server to the request to " + url.toString() + " was: \n" + responseBody);
             if (response.statusCode() == HttpURLConnection.HTTP_OK)
                 return responseBody;
             else
                 return null;
             
         } catch (InterruptedException | IOException e) {
+            LOG.server("The connection failed: " + e.getMessage());
             throw new ConnectionFailedException(e);
         }
     }
@@ -103,11 +106,12 @@ public class ServiceConnectionHandler {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
         requestBuilder.setHeader("Authorization","Bearer "+ token);
 
-        LOG.server("Sending POST request to: " + serviceUrl + "with data: \n" + symbols.toString());
 
+        URI url;
         try{
-            URI url = URI.create(serviceUrl);
+            url = URI.create(serviceUrl);
             url = url.resolve("qaAddSymbolsDefinition");
+            LOG.server("Sending POST request to: " + url.toString() + "with data: \n" + symbols.toString());
             requestBuilder.uri(url);
         }catch (IllegalArgumentException ex){
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
@@ -118,9 +122,10 @@ public class ServiceConnectionHandler {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            LOG.server("The response of the server to the request to " + serviceUrl + " was: \n" + responseBody);
+            LOG.server("The response of the server to the request to " + url.toString() + " was: \n" + responseBody);
             return responseBody;
         } catch (InterruptedException | IOException e) {
+            LOG.server("The connection failed: " + e.getMessage());
             throw new ConnectionFailedException(e);
         }
 
@@ -139,10 +144,12 @@ public class ServiceConnectionHandler {
         String requestBody= "{\"username\":\"" + user + "\"," +
                 " \"password\":\""+ password + "\"}";
 
-        LOG.server("Sending POST request to: " + serviceUrl + " with data: \n" + requestBody);
+        URI url;
         try{
-            URI url = URI.create(serviceUrl);
+            url = URI.create(serviceUrl);
             url = url.resolve("authenticate");
+            LOG.server("Sending POST request to: " + url.toString() + " with data: \n" + requestBody);
+
             requestBuilder.uri(url);
         }catch (IllegalArgumentException ex){
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
@@ -154,9 +161,10 @@ public class ServiceConnectionHandler {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            LOG.server("The response of the server to the request to " + serviceUrl + " was: \n" + responseBody);
+            LOG.server("The response of the server to the request to " + url.toString() + " was: \n" + responseBody);
             return responseBody;
         } catch (InterruptedException | IOException e) {
+            LOG.server("The connection failed: " + e.getMessage());
             throw new ConnectionFailedException(e);
         }
 
