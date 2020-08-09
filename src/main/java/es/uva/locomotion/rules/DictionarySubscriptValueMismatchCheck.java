@@ -43,12 +43,12 @@ public class DictionarySubscriptValueMismatchCheck implements VensimCheck{
     }
 
     private String getUnexpectedSymbolsString(Symbol foundSymbol, SymbolTable dbTable){
-        Set<Symbol> dbValues = dbTable.getSymbol(foundSymbol.getToken().trim()).getDependencies();
-        Set<Symbol> foundValues = new HashSet<>(foundSymbol.getDependencies());
+        Set<String> dbValues = dbTable.getSymbol(foundSymbol.getToken().trim()).getDependencies().stream().map(Symbol::getToken).collect(Collectors.toSet());
+        Set<String> foundValues = foundSymbol.getDependencies().stream().map(Symbol::getToken).collect(Collectors.toSet());
 
         foundValues.removeAll(dbValues);
 
-        return foundValues.stream().map(Symbol::getToken).sorted().collect(Collectors.joining(", "));
+        return foundValues.stream().sorted().collect(Collectors.joining(", "));
 
     }
 
