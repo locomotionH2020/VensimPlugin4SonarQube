@@ -16,7 +16,7 @@ public class RealityCheckNameRule implements VensimCheck {
             "<p>This rule checks that reality checks follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+_test\"</p>\n" +
             "<ul>" +
             "   <li>The name must be in upper case.</li>\n" +
-            "   <li>The name must have the suffix _test</li>\n"+
+            "   <li>The name must have the suffix _check</li>\n"+
             "   <li>Each word must be separated by ONE underscore.</li>\n" +
             "   <li>The name shouldn't contain non-english characters.</li>\n"+
             "   <li>The name shouldn't start with a number</li>"+
@@ -28,8 +28,8 @@ public class RealityCheckNameRule implements VensimCheck {
             "</pre>\n" +
             "<h2>Compliant Solution</h2>\n" +
             "<pre>\n" +
-            "productivity_is_positive_test\n"+
-            "temperature_not_negative_test\n"+
+            "productivity_is_positive_check\n"+
+            "temperature_not_negative_check\n"+
             "</pre>\n";
 
     @Override

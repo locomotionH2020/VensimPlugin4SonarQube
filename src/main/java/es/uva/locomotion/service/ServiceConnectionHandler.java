@@ -26,7 +26,7 @@ public class ServiceConnectionHandler {
     /**
      *
      * @param serviceUrl
-     * @param symbols
+     * @param jsonSymbols
      * @return
      * @throws InvalidServiceUrlException If the url isn't valid (doesn't have a protocol or invalid format)
      * @throws ConnectionFailedException If the domain address can't be resolved or the page is inaccessible.

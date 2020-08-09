@@ -214,8 +214,8 @@ public class TestIntegrationMagicNumberCheck {
 
 
     @Test
-    public void testRealityCheckDoesntCount(){
-        String program = "big_growth_test :TEST INPUT: divisions = 1e+022~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS);
+    public void testRealityChecksDontCount(){
+        String program = "big_growth_check :TEST INPUT: divisions = 1e+022~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS);
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 
@@ -226,8 +226,8 @@ public class TestIntegrationMagicNumberCheck {
     }
 
     @Test
-    public void testConstraintDoesntCount(){
-        String program = "my_condition_test :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
+    public void testConstraintsDontCount(){
+        String program = "my_condition_check :THE CONDITION: firstVariable[subscript]>100 :IMPLIES: secondVariable<100 ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
