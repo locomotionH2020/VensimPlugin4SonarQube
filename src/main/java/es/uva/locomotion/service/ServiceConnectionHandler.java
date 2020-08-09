@@ -33,23 +33,14 @@ public class ServiceConnectionHandler {
      * @throws EmptyServiceException If {@code serviceUrl} is empty if null
      * @throws IllegalArgumentException If {@code symbols} is null
      */
-    public String sendRequestToDictionaryService(String serviceUrl, List<String> symbols, String token){
+    public String sendRequestToDictionaryService(String serviceUrl, JsonObject jsonSymbols, String token){
         if(serviceUrl==null || "".equals(serviceUrl.trim()))
             throw new EmptyServiceException("Service Url is null or an empty string");
-        if(symbols==null)
+        if(jsonSymbols==null)
             throw new IllegalArgumentException("The list of symbols can't be null.");
-
-        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-        for(String s: symbols)
-            arrayBuilder.add(s);
-
-        jsonBuilder.add("symbols",arrayBuilder);
-        JsonObject jsonSymbols = jsonBuilder.build();
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
         requestBuilder.setHeader("Authorization","Bearer "+ token);
-
 
 
         if(serviceUrl.charAt(serviceUrl.length()-1)!='/')

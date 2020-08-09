@@ -11,9 +11,11 @@ import es.uva.locomotion.utilities.UtilityFunctions;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+import javax.json.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -184,6 +186,20 @@ public class GeneralTestUtilities {
 
         return subscript;
     }
+
+
+    public static JsonObject getJsonObjectFromList(String ...symbols){
+        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        for(String s: symbols)
+            arrayBuilder.add(s);
+
+        jsonBuilder.add("symbols",arrayBuilder);
+        return jsonBuilder.build();
+    }
+
+
+
 
 
 }

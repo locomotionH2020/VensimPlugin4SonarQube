@@ -61,7 +61,9 @@ public class DBFacade {
      * @throws IllegalArgumentException If {@code symbols} is null
      */
     public static SymbolTable getExistingSymbolsFromDB(String serviceUrl, List<String> symbols, String token) {
-        String serviceResponse = handler.sendRequestToDictionaryService(serviceUrl, symbols, token);
+        JsonObject jsonSymbols = getJsonFromSymbolList(symbols);
+
+        String serviceResponse = handler.sendRequestToDictionaryService(serviceUrl, jsonSymbols, token);
         if(serviceResponse==null)
             return null;
 
@@ -79,6 +81,19 @@ public class DBFacade {
         finally {
             jsonReader.close();
         }
+    }
+
+    private static JsonObject getJsonFromSymbolList(List<String> symbols) {
+        if(symbols==null)
+            throw new IllegalArgumentException("The list of symbols can't be null.");
+
+        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        for(String s: symbols)
+            arrayBuilder.add(s);
+
+        jsonBuilder.add("symbols",arrayBuilder);
+        return jsonBuilder.build();
     }
 
     protected static SymbolTable createSymbolTableFromJson(JsonObject symbolsFound) {

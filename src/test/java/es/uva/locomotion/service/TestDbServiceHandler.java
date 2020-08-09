@@ -20,6 +20,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.getJsonObjectFromList;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,7 +56,7 @@ public class TestDbServiceHandler {
 
             return mockResponse;
         }).when(mockClient).send(any(), any());
-        String actualValue = handler.sendRequestToDictionaryService(serviceUrl, List.of("var", "foo", "duck"),"token");
+        String actualValue = handler.sendRequestToDictionaryService(serviceUrl, getJsonObjectFromList("var", "foo", "duck"),"token");
 
 
         verify(mockClient, times(1)).send(eq(request), any());
@@ -83,7 +84,7 @@ public class TestDbServiceHandler {
                 .header("Content-Type", "application/json").build();
 
         doReturn(mockResponse).when(mockClient).send(any(), any());
-        String actualValue = handler.sendRequestToDictionaryService(serviceUrl, List.of("var", "foo", "duck"),"token");
+        String actualValue = handler.sendRequestToDictionaryService(serviceUrl, getJsonObjectFromList("var", "foo", "duck"),"token");
 
 
         verify(mockClient, times(1)).send(eq(request), any());
@@ -111,7 +112,7 @@ public class TestDbServiceHandler {
 
             return mockResponse;
         }).when(mockClient).send(any(), any());
-        handler.sendRequestToDictionaryService("https://randomUrl", new ArrayList<>(), "token");
+        handler.sendRequestToDictionaryService("https://randomUrl", mock(JsonObject.class), "token");
 
 
         verify(mockClient, times(1)).send(any(), any());
@@ -120,32 +121,32 @@ public class TestDbServiceHandler {
 
     @Test(expected = EmptyServiceException.class)
     public void testGetSymbolsEmptyServiceRaisesException() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService("", List.of("foo", "var"), "token");
+        new ServiceConnectionHandler().sendRequestToDictionaryService("", getJsonObjectFromList("foo", "var"), "token");
     }
 
     @Test(expected = EmptyServiceException.class)
     public void testGetSymbolsNullServiceRaisesException() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService(null, List.of("foo", "var"), "token");
+        new ServiceConnectionHandler().sendRequestToDictionaryService(null, getJsonObjectFromList("foo", "var"), "token");
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testGetSymbolsServiceWithAnotherProtocol() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService("ftp://somedomain/folder/file.txt", List.of("foo", "var"), "token");
+        new ServiceConnectionHandler().sendRequestToDictionaryService("ftp://somedomain/folder/file.txt", getJsonObjectFromList("foo", "var"), "token");
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testGetSymbolsServiceWithInvalidProtocol() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService("\\some$randomtext", List.of("foo", "var"), "token");
+        new ServiceConnectionHandler().sendRequestToDictionaryService("\\some$randomtext", getJsonObjectFromList("foo", "var"), "token");
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testGetSymbolsDomainWithoutProtocol() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService("www.google.com", List.of("foo", "var"), "token");
+        new ServiceConnectionHandler().sendRequestToDictionaryService("www.google.com", getJsonObjectFromList("foo", "var"), "token");
     }
 
     @Test(expected = ConnectionFailedException.class)
     public void testGetSymbolsDomainNotFound() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService("https://adsmfmgekrhadbsfsfaf.com", List.of("foo", "var"), "token");
+        new ServiceConnectionHandler().sendRequestToDictionaryService("https://adsmfmgekrhadbsfsfaf.com", getJsonObjectFromList("foo", "var"), "token");
     }
 
 
@@ -160,7 +161,7 @@ public class TestDbServiceHandler {
 
         handler.client = mockClient;
 
-        String actualValue = handler.sendRequestToDictionaryService("http://google.com", List.of("foo", "var"), "token");
+        String actualValue = handler.sendRequestToDictionaryService("http://google.com", getJsonObjectFromList("foo", "var"), "token");
 
         assertEquals("honk", actualValue);
     }

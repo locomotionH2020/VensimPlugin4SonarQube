@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 
 import org.mockito.Mockito;
 
+import javax.json.JsonObject;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,10 +62,10 @@ public class TestServiceController {
 
         controller.getSymbolsFromDb(symbols);
 
-        verify(mockHandler,Mockito.times(1)).sendRequestToDictionaryService(any(), argThat(arg->{
-            Set<String> actualSet = new HashSet<>(arg);
-            Set<String> expectedSet =  new HashSet<>(Arrays.asList("var", "const", "lookup","subscript","realityCheck"));
-            return actualSet.equals(expectedSet);
+        verify(mockHandler,Mockito.times(1)).sendRequestToDictionaryService(any(), argThat(actualJson->{
+            JsonObject expectedJson = GeneralTestUtilities.getJsonObjectFromList("var", "const", "lookup","subscript","realityCheck");
+
+            return actualJson.equals(expectedJson);
 
         }),any());
     }
@@ -81,7 +82,8 @@ public class TestServiceController {
 
         controller.getSymbolsFromDb(symbols);
 
-        verify(mockHandler,Mockito.times(1)).sendRequestToDictionaryService(any(), argThat(List::isEmpty), any());
+        verify(mockHandler,Mockito.times(1)).sendRequestToDictionaryService(any(), argThat(jsonObject -> {
+            return jsonObject.toString().equals("{\"symbols\":[]}");}), any());
 
     }
 
@@ -154,7 +156,7 @@ public class TestServiceController {
     @Test
     public void testGetSymbolsDictionaryConnectionFailed(){
         ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
-        when(handler.sendRequestToDictionaryService(any(),anyList(), any())).thenThrow(new ConnectionFailedException(null));
+        when(handler.sendRequestToDictionaryService(any(),any(), any())).thenThrow(new ConnectionFailedException(null));
         DBFacade.handler = handler;
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
