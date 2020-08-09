@@ -84,7 +84,4 @@ public class UtilityFunctions {
         }
     }
 
-    public static String formatLogMessage(String message){
-        return message + " ["+ VensimPlugin.PLUGIN_KEY +"]";
-    }
 }

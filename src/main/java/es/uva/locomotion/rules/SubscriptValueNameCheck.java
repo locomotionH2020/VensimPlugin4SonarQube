@@ -43,7 +43,7 @@ public class SubscriptValueNameCheck implements VensimCheck {
                 symbol.setAsInvalid();
 
                 for(int line: symbol.getDefinitionLines()) {
-                    Issue issue = new Issue(this, line,"The value of the subscript doesn't follow the naming conventions");
+                    Issue issue = new Issue(this, line,"The subscript value '" + symbol.getToken() + "' doesn't follow the naming conventions");
                     context.addIssue(issue);
                 }
             }

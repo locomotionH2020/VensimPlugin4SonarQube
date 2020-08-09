@@ -34,7 +34,7 @@ public class SymbolNotDefinedInDictionaryCheck implements VensimCheck {
             if(!symbolIsIgnored(foundSymbol) && !dbTable.hasSymbol(foundSymbol.getToken())){
 
                 for(int line: foundSymbol.getDefinitionLines()) {
-                    Issue issue = new Issue(this, line,"This symbol isn't defined in the database.");
+                    Issue issue = new Issue(this, line,"The symbol '" + foundSymbol.getToken() +"' isn't defined in the database.");
                     context.addIssue(issue);
                 }
             }

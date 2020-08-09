@@ -42,7 +42,7 @@ public class VariableNameCheck implements VensimCheck{
                 symbol.setAsInvalid();
 
                 for(int line: symbol.getDefinitionLines()) {
-                    Issue issue = new Issue(this,line,"The name of the variable doesn't follow the naming convention.");
+                    Issue issue = new Issue(this,line,"The variable '"+ symbol.getToken() + "' doesn't follow the naming convention.");
                     context.addIssue(issue);
                 }
             }

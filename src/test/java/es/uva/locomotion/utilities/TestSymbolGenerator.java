@@ -14,13 +14,6 @@ import static es.uva.locomotion.testutilities.TestUtilities.*;
 
 public class TestSymbolGenerator {
 
-
-
-
-
-
-
-
     @Test
     public void testEquationDirectLookup(){
         String program = "myLookup= GET DIRECT LOOKUPS('simpleInputs.xlsx', 'data' , '1', 'e2' ) ~~|\n";

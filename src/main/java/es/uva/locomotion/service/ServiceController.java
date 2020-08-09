@@ -47,13 +47,6 @@ public class ServiceController {
             LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE, LoggingLevel.INFO);
         } catch (ConnectionFailedException ex) {
             LOG.unique(SERVICE_UNREACHABLE_MESSAGE, LoggingLevel.ERROR);
-        } catch (ServiceResponseFormatNotValid ex) {
-            //TODO: Revisar si esto es necesario aqui
-            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + "\n" +
-                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true\n" +
-                    RULES_DISABLED_MESSAGE;
-
-            LOG.error(logMessage);
         }
     }
 

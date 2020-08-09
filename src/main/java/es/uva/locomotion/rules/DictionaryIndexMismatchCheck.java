@@ -71,7 +71,7 @@ public class DictionaryIndexMismatchCheck implements VensimCheck{
         try{
             return !tryToMatchIndexes(foundIndexes, dbIndexes);
         }catch (IllegalStateException ex){
-            LOG.info(UtilityFunctions.formatLogMessage("The symbol '" + foundSymbol.getToken() + "' is indexed by a subscript and a subscript value in the same column."));
+            LOG.info("The symbol '" + foundSymbol.getToken() + "' is indexed by a subscript and a subscript value in the same column.");
             return false;
         }
 
