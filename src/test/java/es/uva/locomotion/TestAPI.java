@@ -3,8 +3,8 @@ package es.uva.locomotion;
 import static org.junit.Assert.*;
 
 import es.uva.locomotion.rules.*;
-import es.uva.locomotion.testutilities.TestUtilities;
-import es.uva.locomotion.testutilities.UtilitiesAPI;
+import es.uva.locomotion.testutilities.GeneralTestUtilities;
+import es.uva.locomotion.testutilities.APIUtilities;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import javax.json.*;
 
-import static es.uva.locomotion.testutilities.UtilitiesAPI.*;
+import static es.uva.locomotion.testutilities.APIUtilities.*;
 
 public class TestAPI {
 
@@ -28,7 +28,7 @@ public class TestAPI {
     @BeforeClass
     public static void runSonarScanner() throws IOException {
         File file = new File(
-                TestUtilities.class.getClassLoader().getResource(".").getFile()
+                GeneralTestUtilities.class.getClassLoader().getResource(".").getFile()
         );
 
        integrationTestsFolder = new File(file.getParentFile().getParentFile(),"integrationTests");
@@ -38,7 +38,7 @@ public class TestAPI {
        if(injectionFlag.exists())
            injectionFlag.delete();
 
-      UtilitiesAPI.runSonarScanner(integrationTestsFolder,SONAR_TOKEN);
+      APIUtilities.runSonarScanner(integrationTestsFolder,SONAR_TOKEN);
 
 
     }

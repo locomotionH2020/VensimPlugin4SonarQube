@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static es.uva.locomotion.testutilities.TestUtilities.*;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
 
 import static org.junit.Assert.*;
 

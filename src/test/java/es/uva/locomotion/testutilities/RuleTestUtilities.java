@@ -26,8 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 import static org.junit.Assert.*;
 
-import static es.uva.locomotion.testutilities.TestUtilities.getParseTreeFromString;
-import static es.uva.locomotion.testutilities.TestUtilities.getSymbolTableFromString;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.getParseTreeFromString;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.getSymbolTableFromString;
 
 public class RuleTestUtilities {
 

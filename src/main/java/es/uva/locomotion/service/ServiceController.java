@@ -38,7 +38,6 @@ public class ServiceController {
 
 
     public void authenticate(String dictionaryUser, String dictionaryPassword) {
-        String logMessage="";
         try {
             token = DBFacade.getAuthenticationToken(dictionaryService, dictionaryUser, dictionaryPassword);
         } catch (InvalidServiceUrlException ex) {
@@ -101,7 +100,6 @@ public class ServiceController {
         List<Symbol> validSymbols = newSymbols.stream().filter(Symbol::isValid).collect(Collectors.toList());
 
         if(validSymbols.size()>=1){
-            String logMessage="";
             try {
                 DBFacade.injectSymbols(dictionaryService, module, validSymbols, token);
                 List<String> tokensInjected = validSymbols.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
@@ -125,7 +123,7 @@ public class ServiceController {
 
 
     private boolean hasToFetchSymbolFromDB(Symbol symbol){
-        return !List.of(SymbolType.Function, SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION).
+        return !List.of(SymbolType.Function, SymbolType.Subscript_Value, SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION).
                 contains(symbol.getType()) && !Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim()) &&
                 !symbol.getDefinitionLines().isEmpty();
 

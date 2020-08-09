@@ -11,13 +11,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static es.uva.locomotion.utilities.Constants.IMPURE_FUNCTIONS;
+
 public class SymbolTableGenerator {
 
     private static  final List<String> symbolVariables = Arrays.asList("Time");
-    private static final List<String> nonPureFunctions = Arrays.asList("INTEG","STEP","DELAY1", "DELAY1I", "DELAY3", "DELAY3I",
-            "FORECAST", "SMOOTH3", "SMOOTH3I", "SMOOTHI", "SMOOTH", "TREND","RAMP","RANDOM 0 1","RANDOM BETA","RANDOM BINOMIAL",
-            "RANDOM EXPONENTIAL", "RANDOM GAMMA", "RANDOM Lookup_Table","RANDOM NEGATIVE BINOMIAL","RANDOM NORMAL", "RANDOM PINK NOISE",
-            "RANDOM POISSON","RANDOM TRIANGULAR","RANDOM UNIFORM","RANDOM WEIBULL");
     private static final List<String> lookupGeneratorFunctions  = Arrays.asList("GET DIRECT LOOKUPS", "GET XLS LOOKUPS");
 
 
@@ -100,7 +98,7 @@ public class SymbolTableGenerator {
 
 
             if (dependency.getType() == SymbolType.Function) {
-                if (nonPureFunctions.contains(dependency.getToken())) {
+                if (IMPURE_FUNCTIONS.contains(dependency.getToken())) {
                     symbol.setType(SymbolType.Variable);
                     break;
                 }else if(lookupGeneratorFunctions.contains(dependency.getToken())){

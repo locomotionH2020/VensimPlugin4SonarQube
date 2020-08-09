@@ -6,7 +6,7 @@ import es.uva.locomotion.parser.ModelParser;
 import org.junit.Before;
 import org.junit.Test;
 
-import static es.uva.locomotion.testutilities.TestUtilities.getParseTreeFromString;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.getParseTreeFromString;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 

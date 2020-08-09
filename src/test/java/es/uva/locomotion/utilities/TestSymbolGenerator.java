@@ -9,7 +9,7 @@ import java.io.IOException;
 
 
 import static org.junit.Assert.*;
-import static es.uva.locomotion.testutilities.TestUtilities.*;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
 
 
 public class TestSymbolGenerator {
@@ -318,7 +318,7 @@ public class TestSymbolGenerator {
     @Test
     public void testRandomLookupIsntPure(){
         String program = "variable=" +
-                "RANDOM Lookup_Table(1,1,1,1,1,1)~~|\n";
+                "RANDOM LOOKUP(1,1,1,1,1,1)~~|\n";
 
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");

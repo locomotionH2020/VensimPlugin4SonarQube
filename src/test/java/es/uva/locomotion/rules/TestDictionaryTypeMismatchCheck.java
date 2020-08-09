@@ -6,7 +6,7 @@ import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import es.uva.locomotion.testutilities.TestUtilities;
+import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import es.uva.locomotion.utilities.Constants;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
-import static es.uva.locomotion.testutilities.TestUtilities.addSymbolInLines;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
 import static org.junit.Assert.*;
 
 public class TestDictionaryTypeMismatchCheck {
@@ -25,7 +25,7 @@ public class TestDictionaryTypeMismatchCheck {
         SymbolTable dbTable = new SymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
-        TestUtilities.addSymbolInLines(dbTable,"var", SymbolType.Subscript);
+        GeneralTestUtilities.addSymbolInLines(dbTable,"var", SymbolType.Subscript);
         Symbol parsedVar = addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1, 2, 3);
 
 
@@ -49,20 +49,20 @@ public class TestDictionaryTypeMismatchCheck {
         SymbolTable dbTable = new SymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
-        TestUtilities.addSymbolInLines(dbTable,"var", SymbolType.Variable);
+        GeneralTestUtilities.addSymbolInLines(dbTable,"var", SymbolType.Variable);
         addSymbolInLines(parsedTable, "var", SymbolType.Reality_Check, 1);
 
-        TestUtilities.addSymbolInLines(dbTable,"valid", SymbolType.Constant);
+        GeneralTestUtilities.addSymbolInLines(dbTable,"valid", SymbolType.Constant);
         Symbol valid = addSymbolInLines(parsedTable, "valid", SymbolType.Constant, 2);
 
-        TestUtilities.addSymbolInLines(dbTable,"var2", SymbolType.Reality_Check);
-        TestUtilities.addSymbolInLines(parsedTable,"var2", SymbolType.Subscript_Value,3);
+        GeneralTestUtilities.addSymbolInLines(dbTable,"var2", SymbolType.Reality_Check);
+        GeneralTestUtilities.addSymbolInLines(parsedTable,"var2", SymbolType.Subscript_Value,3);
 
-        TestUtilities.addSymbolInLines(dbTable,"valid2", SymbolType.Subscript_Value);
-        TestUtilities.addSymbolInLines(parsedTable,"valid2", SymbolType.Subscript_Value,4);
+        GeneralTestUtilities.addSymbolInLines(dbTable,"valid2", SymbolType.Subscript_Value);
+        GeneralTestUtilities.addSymbolInLines(parsedTable,"valid2", SymbolType.Subscript_Value,4);
 
-        TestUtilities.addSymbolInLines(dbTable,"var3", SymbolType.Lookup_Table);
-        TestUtilities.addSymbolInLines(parsedTable,"var3", SymbolType.Subscript,5);
+        GeneralTestUtilities.addSymbolInLines(dbTable,"var3", SymbolType.Lookup_Table);
+        GeneralTestUtilities.addSymbolInLines(parsedTable,"var3", SymbolType.Subscript,5);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
@@ -80,7 +80,7 @@ public class TestDictionaryTypeMismatchCheck {
     public void testIgnoresSymbolsThatArentInTheDictionary(){
         SymbolTable parsedTable = new SymbolTable();
 
-        TestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.Variable,1,2,3);
+        GeneralTestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.Variable,1,2,3);
 
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new SymbolTable());
@@ -95,7 +95,7 @@ public class TestDictionaryTypeMismatchCheck {
     public void testRuleIsIgnoredIfDbTableIsNull(){
         SymbolTable parsedTable = new SymbolTable();
 
-        TestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.Variable,1,2,3);
+        GeneralTestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.Variable,1,2,3);
 
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,null);

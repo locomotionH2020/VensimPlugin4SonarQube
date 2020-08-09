@@ -5,7 +5,7 @@ import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import es.uva.locomotion.testutilities.TestUtilities;
+import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import es.uva.locomotion.utilities.Constants;
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
-import static es.uva.locomotion.testutilities.TestUtilities.addSymbolInLines;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
 import static org.junit.Assert.*;
 
 
@@ -102,11 +102,11 @@ public class TestDictionaryCommentMismatchCheck {
         SymbolTable dbTable = new SymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol var = TestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.Variable,1);
-        Symbol valid1 = TestUtilities.addSymbolInLines(parsedTable, "valid1", SymbolType.Variable, 2);
-        Symbol var2 = TestUtilities.addSymbolInLines(parsedTable, "var2", SymbolType.Variable, 3);
-        Symbol valid2 = TestUtilities.addSymbolInLines(parsedTable, "valid2", SymbolType.Variable, 4);
-        Symbol var3 = TestUtilities.addSymbolInLines(parsedTable, "var3", SymbolType.Variable, 5);
+        Symbol var = GeneralTestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.Variable,1);
+        Symbol valid1 = GeneralTestUtilities.addSymbolInLines(parsedTable, "valid1", SymbolType.Variable, 2);
+        Symbol var2 = GeneralTestUtilities.addSymbolInLines(parsedTable, "var2", SymbolType.Variable, 3);
+        Symbol valid2 = GeneralTestUtilities.addSymbolInLines(parsedTable, "valid2", SymbolType.Variable, 4);
+        Symbol var3 = GeneralTestUtilities.addSymbolInLines(parsedTable, "var3", SymbolType.Variable, 5);
 
         var.setComment("different comment");
         var2.setComment("different comment");
@@ -114,11 +114,11 @@ public class TestDictionaryCommentMismatchCheck {
         valid1.setComment("Same comment");
         valid2.setComment("Same comment");
 
-        Symbol dbVar = TestUtilities.addSymbolInLines(dbTable,"var", SymbolType.Variable);
-        Symbol dbValid = TestUtilities.addSymbolInLines(dbTable, "valid1", SymbolType.Variable);
-        Symbol dbVar2 = TestUtilities.addSymbolInLines(dbTable, "var2", SymbolType.Variable, 3);
-        Symbol dbValid2 = TestUtilities.addSymbolInLines(dbTable, "valid2", SymbolType.Variable);
-        Symbol dbVar3 = TestUtilities.addSymbolInLines(dbTable, "var3", SymbolType.Variable);
+        Symbol dbVar = GeneralTestUtilities.addSymbolInLines(dbTable,"var", SymbolType.Variable);
+        Symbol dbValid = GeneralTestUtilities.addSymbolInLines(dbTable, "valid1", SymbolType.Variable);
+        Symbol dbVar2 = GeneralTestUtilities.addSymbolInLines(dbTable, "var2", SymbolType.Variable, 3);
+        Symbol dbValid2 = GeneralTestUtilities.addSymbolInLines(dbTable, "valid2", SymbolType.Variable);
+        Symbol dbVar3 = GeneralTestUtilities.addSymbolInLines(dbTable, "var3", SymbolType.Variable);
 
         dbVar.setComment("mismatch");
         dbVar2.setComment("mismatch");

@@ -3,6 +3,7 @@ package es.uva.locomotion.service;
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
@@ -10,7 +11,6 @@ import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.sonar.api.utils.log.Logger;
 
 import javax.json.Json;
 import javax.json.JsonObject;

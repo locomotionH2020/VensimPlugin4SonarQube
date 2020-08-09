@@ -16,14 +16,13 @@ import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.measure.NewMeasure;
-import org.sonar.api.utils.log.Logger;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static es.uva.locomotion.testutilities.TestUtilities.*;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
 import static org.mockito.Mockito.*;
 
 public class TestVensimScanner {

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.assertDoesntHaveIssueInLines;
 import static es.uva.locomotion.testutilities.RuleTestUtilities.assertHasIssueInLines;
-import static es.uva.locomotion.testutilities.TestUtilities.addSymbolInLines;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
 import static org.junit.Assert.*;
 
 

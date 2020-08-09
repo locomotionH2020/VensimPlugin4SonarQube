@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-public class TestUtilities {
+public class GeneralTestUtilities {
 
     public static final Set<Symbol> NO_DEPENDENCIES = new HashSet<>();
 
 
     public static String loadFile(String file_path) throws IOException{
         File file = new File(
-                TestUtilities.class.getClassLoader().getResource(file_path).getFile()
+                GeneralTestUtilities.class.getClassLoader().getResource(file_path).getFile()
         );
 
 

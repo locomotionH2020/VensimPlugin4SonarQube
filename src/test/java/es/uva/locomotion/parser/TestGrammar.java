@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static es.uva.locomotion.testutilities.TestUtilities.*;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
 
 public class TestGrammar {
 

@@ -1,10 +1,10 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.VensimPlugin;
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
-import es.uva.locomotion.testutilities.TestUtilities;
+import es.uva.locomotion.testutilities.ServiceTestUtilities;
+import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
@@ -18,7 +18,6 @@ import static  org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.mockito.Mockito;
-import org.sonar.api.utils.log.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ public class TestServiceController {
 
     @After
     public void  resetDbFacade(){
-        ServiceTestUtilities.setDbFacadeHandler(new ServiceConnectionHandler());
+        DBFacade.handler = new ServiceConnectionHandler();
     }
 
     public ServiceController getAuthenticatedServiceController(String dictionaryService){
@@ -41,7 +40,7 @@ public class TestServiceController {
     @Test
     public void testGetSymbolsControllerIgnoresFunctions(){
         ServiceConnectionHandler mockHandler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[]");
-        ServiceTestUtilities.setDbFacadeHandler(mockHandler);
+        DBFacade.handler = mockHandler;
 
         ServiceController controller = getAuthenticatedServiceController("https://localhost");
 
@@ -64,7 +63,7 @@ public class TestServiceController {
 
         verify(mockHandler,Mockito.times(1)).sendRequestToDictionaryService(any(), argThat(arg->{
             Set<String> actualSet = new HashSet<>(arg);
-            Set<String> expectedSet =  new HashSet<>(Arrays.asList("var", "const", "lookup","subscript","sValue","realityCheck"));
+            Set<String> expectedSet =  new HashSet<>(Arrays.asList("var", "const", "lookup","subscript","realityCheck"));
             return actualSet.equals(expectedSet);
 
         }),any());
@@ -73,7 +72,7 @@ public class TestServiceController {
     @Test
     public void testGetSymbolsControllerIgnoresDefaultSymbols(){
         ServiceConnectionHandler mockHandler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[]");
-        ServiceTestUtilities.setDbFacadeHandler(mockHandler);
+        DBFacade.handler = mockHandler;
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
 
@@ -156,7 +155,7 @@ public class TestServiceController {
     public void testGetSymbolsDictionaryConnectionFailed(){
         ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
         when(handler.sendRequestToDictionaryService(any(),anyList(), any())).thenThrow(new ConnectionFailedException(null));
-        ServiceTestUtilities.setDbFacadeHandler(handler);
+        DBFacade.handler = handler;
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
@@ -172,7 +171,7 @@ public class TestServiceController {
 
     @Test
     public void testGetSymbolsDictionaryInvalidFormatLiteralList(){
-        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[1,2,3]"));
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[1,2,3]");
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
@@ -187,7 +186,7 @@ public class TestServiceController {
 
     @Test
     public void testGetSymbolsDictionaryInvalidFormatNotAnObject(){
-        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[{\"symbol\":\"foo\"}]"));
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[{\"symbol\":\"foo\"}]");
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
@@ -204,7 +203,7 @@ public class TestServiceController {
 
     @Test
     public void testGetSymbolsDictionaryInvalidFormatMissingKey(){
-        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}"));
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}");
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
@@ -221,7 +220,7 @@ public class TestServiceController {
 
     @Test
     public void testGetSymbolsConsecutiveDifferentErrorsAreLogged(){
-        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}"));
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}");
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
@@ -229,7 +228,7 @@ public class TestServiceController {
 
         controller.getSymbolsFromDb(new ArrayList<>());
         controller.getSymbolsFromDb(new ArrayList<>());
-        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"symbol\":\"foo\"}"));
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"symbol\":\"foo\"}");
         controller.getSymbolsFromDb(new ArrayList<>());
         controller.getSymbolsFromDb(new ArrayList<>());
 
@@ -241,15 +240,15 @@ public class TestServiceController {
 
     @Test
     public void testInjectNewSymbolsRemovesFunctionsAndUndetermined(){
-        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}"));
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
 
         SymbolTable table = new SymbolTable();
-        TestUtilities.addSymbolInLines(table,"function", SymbolType.Function,1);
-        TestUtilities.addSymbolInLines(table,"undetermined function", SymbolType.UNDETERMINED_FUNCTION,2);
-        TestUtilities.addSymbolInLines(table,"undetermined", SymbolType.UNDETERMINED,3);
+        GeneralTestUtilities.addSymbolInLines(table,"function", SymbolType.Function,1);
+        GeneralTestUtilities.addSymbolInLines(table,"undetermined function", SymbolType.UNDETERMINED_FUNCTION,2);
+        GeneralTestUtilities.addSymbolInLines(table,"undetermined", SymbolType.UNDETERMINED,3);
 
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
@@ -262,13 +261,13 @@ public class TestServiceController {
 
     @Test
     public void testInjectNewSymbolsNullDbSymbolTable(){
-        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}"));
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
 
         SymbolTable table = new SymbolTable();
-        TestUtilities.addSymbolInLines(table,"  constant  ",SymbolType.Constant, 1);
+        GeneralTestUtilities.addSymbolInLines(table,"  constant  ",SymbolType.Constant, 1);
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
         controller.injectNewSymbols("module",new ArrayList<>(table.getSymbols()),null);
@@ -281,7 +280,7 @@ public class TestServiceController {
 
     @Test
     public void testInjectNewSymbolsRemovesDefaultSymbols(){
-        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}"));
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
@@ -305,21 +304,21 @@ public class TestServiceController {
 
     @Test
     public void testInjectNewSymbolsOnlyIncludesNewAndValidSymbols(){
-        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}"));
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
         SymbolTable foundTable = new SymbolTable();
-        TestUtilities.addSymbolInLines(foundTable,"  constant  ",SymbolType.Constant, 1);
-        TestUtilities.addSymbolInLines(foundTable, "variable", SymbolType.Variable,2);
-        TestUtilities.addSymbolInLines(foundTable, "swtich", SymbolType.Switch,3);
-        TestUtilities.addSymbolInLines(foundTable, "subscript",SymbolType.Subscript,4);
-        TestUtilities.addSymbolInLines(foundTable,"subscript value", SymbolType.Subscript_Value,5);
-        TestUtilities.addSymbolInLines(foundTable, "reality check", SymbolType.Reality_Check,6);
-        TestUtilities.addSymbolInLines(foundTable, "lookup table", SymbolType.Lookup_Table, 7);
-        TestUtilities.addSymbolInLines(foundTable, "Symbol found in db", SymbolType.Constant, 8);
+        GeneralTestUtilities.addSymbolInLines(foundTable,"  constant  ",SymbolType.Constant, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "variable", SymbolType.Variable,2);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "swtich", SymbolType.Switch,3);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "subscript",SymbolType.Subscript,4);
+        GeneralTestUtilities.addSymbolInLines(foundTable,"subscript value", SymbolType.Subscript_Value,5);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "reality check", SymbolType.Reality_Check,6);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "lookup table", SymbolType.Lookup_Table, 7);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "Symbol found in db", SymbolType.Constant, 8);
 
-        Symbol notValid = TestUtilities.addSymbolInLines(foundTable, "invalid symbol", SymbolType.Constant, 9);
+        Symbol notValid = GeneralTestUtilities.addSymbolInLines(foundTable, "invalid symbol", SymbolType.Constant, 9);
         notValid.setAsInvalid();
 
 
@@ -330,7 +329,7 @@ public class TestServiceController {
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), dbTable);
 
 
-        verify(logger,times(1)).info("Injected symbols in module 'module': [constant, lookup table, reality check, subscript, subscript value, swtich, variable]");
+        verify(logger,times(1)).info("Injected symbols in module 'module': [constant, lookup table, reality check, subscript, swtich, variable]");
     }
 
     @Test
@@ -341,7 +340,7 @@ public class TestServiceController {
         ServiceController controller = getAuthenticatedServiceController("");
 
         SymbolTable foundTable = new SymbolTable();
-        TestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
+        GeneralTestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
 
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
@@ -358,7 +357,7 @@ public class TestServiceController {
         ServiceController controller = getAuthenticatedServiceController(null);
 
         SymbolTable foundTable = new SymbolTable();
-        TestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
+        GeneralTestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
 
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
@@ -371,14 +370,14 @@ public class TestServiceController {
     public void testInjectNewSymbolsConnectionFailed(){
         ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
         when(handler.injectSymbols(any(),any(),any())).thenThrow(new ConnectionFailedException(null));
-        ServiceTestUtilities.setDbFacadeHandler(handler);
+        DBFacade.handler = handler;
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
         SymbolTable foundTable = new SymbolTable();
-        TestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
+        GeneralTestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
 
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
@@ -396,7 +395,7 @@ public class TestServiceController {
         ServiceController controller = getAuthenticatedServiceController("www.google.com");
 
         SymbolTable foundTable = new SymbolTable();
-        TestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
+        GeneralTestUtilities.addSymbolInLines(foundTable,"constant",SymbolType.Constant,1);
 
         controller.injectNewSymbols("module",new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
@@ -408,7 +407,7 @@ public class TestServiceController {
 
     @Test
     public void testInjectNewSymbolsNotDefinedInAnyLine(){
-        ServiceTestUtilities.setDbFacadeHandler(ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}"));
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}");
 
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;

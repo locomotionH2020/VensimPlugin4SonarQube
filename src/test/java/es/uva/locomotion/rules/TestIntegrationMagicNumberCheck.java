@@ -3,7 +3,7 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import es.uva.locomotion.testutilities.TestUtilities;
+import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import org.junit.Test;
 import org.sonar.api.batch.rule.Severity;
 
@@ -28,7 +28,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        List<Issue> issues = GeneralTestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
 
 
         for(int i=1;i<DEFAULT_MINIMUM_REPETITIONS+1;i++)
@@ -52,7 +52,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        List<Issue> issues = GeneralTestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
 
         assertEquals((DEFAULT_MINIMUM_REPETITIONS-1)*2,issues.size());
         for(Issue issue:issues)
@@ -69,7 +69,7 @@ public class TestIntegrationMagicNumberCheck {
 
         scanner.checkIssues(visitorContext);
 
-        List<Issue> issues = TestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+        List<Issue> issues = GeneralTestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
 
         for(Issue issue: issues) {
             assertEquals(MagicNumberCheck.class, issue.getCheck().getClass());

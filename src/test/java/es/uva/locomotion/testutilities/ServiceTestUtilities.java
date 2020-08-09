@@ -1,12 +1,9 @@
-package es.uva.locomotion.service;
+package es.uva.locomotion.testutilities;
 
 
 
+import es.uva.locomotion.service.ServiceConnectionHandler;
 
-import java.util.ArrayList;
-
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class ServiceTestUtilities {
@@ -19,9 +16,6 @@ public class ServiceTestUtilities {
         return handler;
     }
 
-    public static void setDbFacadeHandler(ServiceConnectionHandler handler){
-      DBFacade.handler =  handler;
-    }
 
 
 }

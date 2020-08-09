@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static es.uva.locomotion.testutilities.TestUtilities.*;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
 
 public class TestSymbolTable {
 
