@@ -272,7 +272,7 @@ public class TestDictionaryUnitsMismatchCheck {
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
         
-        assertHasIssueInLines(context,DictionaryUnitsMismatchCheck.class,2,3,4,5,6,7);
-        assertDoesntHaveIssueInLines(context,DictionaryUnitsMismatchCheck.class,1);
+        assertHasIssueInLines(context,DictionaryUnitsMismatchCheck.class,2,3,4,6,7);
+        assertDoesntHaveIssueInLines(context,DictionaryUnitsMismatchCheck.class,1,5);
     }
 }
