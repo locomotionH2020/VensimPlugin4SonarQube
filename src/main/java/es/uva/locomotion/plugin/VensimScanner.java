@@ -8,6 +8,7 @@ import es.uva.locomotion.rules.VensimCheck;
 
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import es.uva.locomotion.utilities.SymbolTableGenerator;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.sonar.api.batch.fs.InputFile;
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class VensimScanner {
 
-    protected static Logger LOG = Loggers.get(VensimScanner.class);
+    protected static VensimLogger LOG = VensimLogger.getInstance();
 
     private final SensorContext context;
     private final Checks<VensimCheck> checks;
@@ -56,10 +57,9 @@ public class VensimScanner {
                 return;
             }
             try {
-
                 scanFile(vensimFile);
             } catch (Exception e) {
-                LOG.warn("Unable to analyze file '{}'. Error: {}", vensimFile.toString(), e);
+                LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.getMessage());
             }
         }
 
@@ -78,7 +78,7 @@ public class VensimScanner {
             writer.writeArray(symbolTable);
             writer.close();
         } catch (FileNotFoundException e) {
-            LOG.warn("Unable to create symbolTable.json, Error:{}",e.getMessage() );
+            LOG.error("Unable to create symbolTable.json. Error:" + e.getMessage() );
         }
 
     }
@@ -122,9 +122,9 @@ public class VensimScanner {
             if(serviceController.isAuthenticated() && dbTable != null)
                 serviceController.injectNewSymbols(module,new ArrayList<>(table.getSymbols()),dbTable);
         } catch (IOException e) {
-            LOG.error("Unable to analyze file '{}'. Error: {}", inputFile.filename(), e);
+            LOG.error("Unable to analyze file '"+ inputFile.filename() + "'. Error: " + e.getMessage());
         }catch (ParseCancellationException e){
-            LOG.error("Unable to parse the file '{}'. Message {}",inputFile.filename(),e.getLocalizedMessage());
+            LOG.error("Unable to parse the file '" + inputFile.filename() +  "'. Error: " + e.getLocalizedMessage());
         }
 
     }

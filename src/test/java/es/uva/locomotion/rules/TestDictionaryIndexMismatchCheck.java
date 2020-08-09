@@ -6,6 +6,7 @@ import es.uva.locomotion.parser.SymbolType;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.TestUtilities;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.Test;
 import org.sonar.api.utils.log.Logger;
 
@@ -457,7 +458,7 @@ public class TestDictionaryIndexMismatchCheck {
         SymbolTable parsedTable = new SymbolTable();
         SymbolTable dbTable = new SymbolTable();
 
-        Logger logger = mock(Logger.class);
+        VensimLogger logger = mock(VensimLogger.class);
         DictionaryIndexMismatchCheck.LOG = logger;
 
 
@@ -494,7 +495,7 @@ public class TestDictionaryIndexMismatchCheck {
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
-       verify(logger).warn( "The symbol 'invalidVariable' is indexed by a subscript and a subscript value in the same column. [vensim]");
+       verify(logger).info( "The symbol 'invalidVariable' is indexed by a subscript and a subscript value in the same column.");
         assertEquals(0,context.getIssues().size());
     }
 

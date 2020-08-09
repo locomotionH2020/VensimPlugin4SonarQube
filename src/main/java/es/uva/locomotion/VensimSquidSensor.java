@@ -6,9 +6,8 @@ import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import es.uva.locomotion.service.ServiceController;
-import es.uva.locomotion.utilities.LogConsolePrinter;
-import es.uva.locomotion.utilities.LogOutputMethod;
-import es.uva.locomotion.utilities.VensimLogger;
+import es.uva.locomotion.utilities.logs.LogConsolePrinter;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
@@ -68,8 +67,10 @@ public class VensimSquidSensor implements Sensor {
         files.forEach(list::add);
         List<InputFile> inputFiles = Collections.unmodifiableList(list);
 
-        VensimScanner scanner = new VensimScanner(sensorContext, checks, new JsonSymbolTableBuilder(),
-                new ServiceController(dictionaryService, dictionaryUsername, dictionaryPassword));
+        ServiceController controller = new ServiceController(dictionaryService);
+        controller.authenticate(dictionaryUsername, dictionaryPassword);
+
+        VensimScanner scanner = new VensimScanner(sensorContext, checks, new JsonSymbolTableBuilder(), controller);
         scanner.scanFiles(inputFiles);
     }
 }

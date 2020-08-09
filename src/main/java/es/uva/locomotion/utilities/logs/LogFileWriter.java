@@ -1,4 +1,4 @@
-package es.uva.locomotion.utilities;
+package es.uva.locomotion.utilities.logs;
 
 import java.io.FileWriter;
 import java.io.IOException;

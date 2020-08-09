@@ -6,6 +6,7 @@ import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.testutilities.RuleTestUtilities;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -35,7 +36,7 @@ public class TestVensimScanner {
     @Test
     public void testScannerLogMessageParseException() throws Exception {
 
-        Logger logger = Mockito.mock(Logger.class);
+        VensimLogger logger = mock(VensimLogger.class);
         VensimScanner.LOG = logger;
         InputFile inputFile = Mockito.mock(InputFile.class);
         when(inputFile.contents()).thenReturn("This isn't a vensim model");
@@ -50,7 +51,7 @@ public class TestVensimScanner {
         files.add(inputFile);
         scanner.scanFiles(files);
 
-        Mockito.verify(logger).error("Unable to parse the file '{}'. Message {}","notAVensimModel.mdl", "mismatched input '<EOF>' expecting {':IGNORE:', ':EXCEPT:', '[', ':=', Keyword, INFO_UNIT}");
+        Mockito.verify(logger).error("Unable to parse the file 'notAVensimModel.mdl'. Error: mismatched input '<EOF>' expecting {':IGNORE:', ':EXCEPT:', '[', ':=', Keyword, INFO_UNIT}");
 
     }
 
@@ -87,7 +88,7 @@ public class TestVensimScanner {
     public void testIfAfileFailsTheRestExecutes() throws IOException, NoSuchFieldException, IllegalAccessException {
 
 
-        Logger logger = Mockito.mock(Logger.class);
+        VensimLogger logger = mock(VensimLogger.class);
 
 
         JsonSymbolTableBuilder builder = Mockito.mock(JsonSymbolTableBuilder.class);
@@ -98,7 +99,6 @@ public class TestVensimScanner {
         when(wrongFile.contents()).thenReturn("This isn't a vensim model");
         when(fileBefore.contents()).thenReturn(loadFile("invertedDependencies.mdl"));
         when(fileAfter.contents()).thenReturn(loadFile("testCyclicDependencies.mdl"));
-
         ServiceController mockServiceController = mock(ServiceController.class);
 
 
@@ -129,17 +129,16 @@ public class TestVensimScanner {
         Mockito.doCallRealMethod().when(scanner).getParseTree(Mockito.any());
         Mockito.doCallRealMethod().when(scanner).checkIssues(Mockito.any());
         Mockito.doReturn("").when(scanner).getModuleNameFromFileName(any());
-
-
         Mockito.doNothing().when(scanner).generateJsonOutput();
+        Mockito.doNothing().when(scanner).saveIssues(any(),any());
 
 
         scanner.scanFiles(files);
 
 
         Mockito.verify(scanner,Mockito.times(2)).checkIssues(Mockito.any());
-        Mockito.verify(logger,Mockito.times(1)).error(Mockito.any(),Mockito.any(),Mockito.any());
-        Mockito.verify(logger,Mockito.times(0)).warn(Mockito.any());
+        Mockito.verify(logger,Mockito.times(1)).error(Mockito.any());
+        Mockito.verify(logger,Mockito.times(0)).info(Mockito.any());
 
     }
 

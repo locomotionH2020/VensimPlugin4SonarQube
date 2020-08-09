@@ -31,7 +31,6 @@ public class TestAPI {
                 TestUtilities.class.getClassLoader().getResource(".").getFile()
         );
 
-
        integrationTestsFolder = new File(file.getParentFile().getParentFile(),"integrationTests");
        mocksFolder = new File(file.getParentFile().getParentFile(), "mocksServicios");
 

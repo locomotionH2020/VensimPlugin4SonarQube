@@ -1,9 +1,7 @@
-package es.uva.locomotion.utilities;
+package es.uva.locomotion.utilities.logs;
 
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
-
-import java.io.IOException;
 
 public class LogConsolePrinter implements LogOutputMethod {
     protected static Logger LOG = Loggers.get(LogConsolePrinter.class.getSimpleName());

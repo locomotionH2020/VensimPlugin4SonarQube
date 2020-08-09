@@ -8,8 +8,7 @@ import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 
 
 import javax.json.*;
@@ -40,7 +39,7 @@ public class DBFacade {
     private static final String FIELD_SYMBOL_MODULES_SECONDARY = "secondary";
     protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
 
-    protected static Logger LOG = Loggers.get(DBFacade.class.getSimpleName());
+    protected static VensimLogger LOG = VensimLogger.getInstance();
 
 
 
@@ -72,7 +71,6 @@ public class DBFacade {
 
             return createSymbolTableFromJson(symbolsFound);
         } catch (JsonException ex) {
-            ex.printStackTrace();
             throw new ServiceResponseFormatNotValid("Expected an object.",serviceResponse);
         }catch (ServiceResponseFormatNotValid ex){
             ex.setServiceResponse(serviceResponse);
@@ -163,7 +161,7 @@ public class DBFacade {
             String name = jsonSymbol.getString(FIELD_SYMBOL_NAME);
 
             if(table.hasSymbol(name)){
-                LOG.warn("Received duplicated symbol '" +name+"' from the dictionary service.");
+                LOG.info("Received duplicated symbol '" +name+"' from the dictionary service.");
                 continue;
             }
 

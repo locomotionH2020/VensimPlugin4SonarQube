@@ -1,22 +1,19 @@
 package es.uva.locomotion.parser.visitors;
 
-import es.uva.locomotion.VensimPlugin;
 import es.uva.locomotion.parser.*;
 
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
-
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class RawSymbolTableVisitor extends ModelBaseVisitor {
+public class RawSymbolTableVisitor extends ModelBaseVisitor<Object> {
 
     private SymbolTable table;
-    protected static Logger LOG = Loggers.get(RawSymbolTableVisitor.class.getSimpleName());
+    protected static VensimLogger LOG = VensimLogger.getInstance();
     private static Pattern sequencePattern = Pattern.compile("(.*?)(\\d+)");
 
     public SymbolTable getSymbolTable(ModelParser.FileContext context){
@@ -175,7 +172,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor {
         try{
             return parseSubscriptSequence(ctx);
         }catch (IllegalArgumentException ex){
-            LOG.warn(ex.getMessage() + "\nThe in-between values of the range will be ignored. [" + VensimPlugin.PLUGIN_KEY + "]");
+            LOG.info(ex.getMessage() + "\nThe in-between values of the range will be ignored.");
             Symbol firstSymbol = getSymbolOrCreate(table,ctx.Id(0).getSymbol().getText());
             Symbol secondSymbol = getSymbolOrCreate(table,ctx.Id(1).getSymbol().getText());
 

@@ -1,15 +1,14 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.VensimPlugin;
 import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.utilities.Constants;
+import es.uva.locomotion.utilities.logs.LoggingLevel;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.api.batch.rule.Severity;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
@@ -46,12 +45,9 @@ public class MagicNumberCheck implements VensimCheck {
 
     public static final String DEFAULT_REPETITIONS = "3";
 
-    protected static Logger LOG = Loggers.get(MagicNumberCheck.class);
-
-    private boolean alreadyLoggedPropertyError;
+    protected static VensimLogger LOG = VensimLogger.getInstance();
 
     public MagicNumberCheck(){
-       alreadyLoggedPropertyError = false;
 
     }
 
@@ -105,20 +101,13 @@ public class MagicNumberCheck implements VensimCheck {
             int selectedRepetitions = Integer.parseInt(repetitions);
             if(selectedRepetitions>=1)
                 return selectedRepetitions;
-            else{
-               if(!alreadyLoggedPropertyError){
-                   LOG.warn( "The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 0."+"["+ VensimPlugin.PLUGIN_KEY +"]");
-                   alreadyLoggedPropertyError = true;
-               }
-                return Integer.parseInt(DEFAULT_REPETITIONS);
-            }
         }catch (NumberFormatException ex){
-            if(!alreadyLoggedPropertyError){
-                LOG.warn("The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 0."+"["+ VensimPlugin.PLUGIN_KEY +"]");
-                alreadyLoggedPropertyError = true;
-            }
-            return Integer.parseInt(DEFAULT_REPETITIONS);
+            // Empty catch block so that the error is logged if 'selectedRepetitions' is < 1 or if it isn't a number.
         }
+        LOG.unique( "The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 0.",
+                LoggingLevel.ERROR);
+        return Integer.parseInt(DEFAULT_REPETITIONS);
+
     }
 
     protected MagicNumberTableVisitor getVisitor(){

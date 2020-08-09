@@ -9,6 +9,8 @@ import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import static org.junit.Assert.*;
 
+import es.uva.locomotion.utilities.logs.LoggingLevel;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -519,14 +521,14 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null,null,null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
-        Logger logger = Mockito.mock(Logger.class);
+        VensimLogger logger = Mockito.mock(VensimLogger.class);
         MagicNumberCheck.LOG = logger;
 
         check.repetitions =  "F";
         check.scan(context);
 
-        verify(logger,times(1))
-                .warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 0."+"["+ VensimPlugin.PLUGIN_KEY +"]" );
+        verify(logger,atLeastOnce())
+                .unique("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 0.", LoggingLevel.ERROR );
     }
 
 
@@ -538,14 +540,14 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null,null,null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
-        Logger logger = Mockito.mock(Logger.class);
+        VensimLogger logger = Mockito.mock(VensimLogger.class);
         MagicNumberCheck.LOG = logger;
 
         check.repetitions =  "0";
         check.scan(context);
 
-        verify(logger,times(1))
-                .warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 0."+"["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger,atLeastOnce())
+                .unique("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 0.",LoggingLevel.ERROR);
     }
 
 
@@ -558,14 +560,14 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null,null,null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
-        Logger logger = Mockito.mock(Logger.class);
+        VensimLogger logger = Mockito.mock(VensimLogger.class);
         MagicNumberCheck.LOG = logger;
 
         check.repetitions =  "-1";
         check.scan(context);
 
-        verify(logger,times(1))
-                .warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 0."+"["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger,atLeastOnce())
+                .unique("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 0.",LoggingLevel.ERROR);
     }
 
 
@@ -577,7 +579,7 @@ public class TestMagicNumberCheck {
         VensimVisitorContext context = new VensimVisitorContext(null,null,null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
-        Logger logger = Mockito.mock(Logger.class);
+        VensimLogger logger = Mockito.mock(VensimLogger.class);
         MagicNumberCheck.LOG = logger;
 
         check.repetitions =  "-1";
@@ -587,8 +589,7 @@ public class TestMagicNumberCheck {
         check.scan(context);
 
 
-        verify(logger,times(1))
-                .warn("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 0."+"["+ VensimPlugin.PLUGIN_KEY +"]");
+        verify(logger,atLeastOnce()).unique("The rule MagicNumberCheck has an invalid configuration: The selected minimum repetitions must be a number greater than 0.",LoggingLevel.ERROR);
 
     }
 

@@ -1,6 +1,4 @@
-package es.uva.locomotion.utilities;
-
-import java.io.IOException;
+package es.uva.locomotion.utilities.logs;
 
 public interface LogOutputMethod {
 

@@ -1,6 +1,6 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.utilities.VensimLogger;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
@@ -71,11 +71,11 @@ public class ServiceConnectionHandler {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             String responseBody = response.body();
-            LOG.server("The response of the server to the request to " + url.toString() + " was: \n" + responseBody);
+            LOG.server("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() +": \n" + responseBody);
             if (response.statusCode() == HttpURLConnection.HTTP_OK)
                 return responseBody;
             else
-                return null;
+                throw new ConnectionFailedException(new IllegalArgumentException("The status code of the response to qaGetSymbolsDefinition was: " + response.statusCode()));
             
         } catch (InterruptedException | IOException e) {
             LOG.server("The connection failed: " + e.getMessage());
@@ -122,7 +122,7 @@ public class ServiceConnectionHandler {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            LOG.server("The response of the server to the request to " + url.toString() + " was: \n" + responseBody);
+            LOG.server("The response of the server to the request to " + url.toString() + " was HTTP " +response.statusCode() +": \n" + responseBody);
             return responseBody;
         } catch (InterruptedException | IOException e) {
             LOG.server("The connection failed: " + e.getMessage());
@@ -161,7 +161,7 @@ public class ServiceConnectionHandler {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            LOG.server("The response of the server to the request to " + url.toString() + " was: \n" + responseBody);
+            LOG.server("The response of the server to the request to " + url.toString() + " was HTTP " +response.statusCode() +": \n" + responseBody);
             return responseBody;
         } catch (InterruptedException | IOException e) {
             LOG.server("The connection failed: " + e.getMessage());

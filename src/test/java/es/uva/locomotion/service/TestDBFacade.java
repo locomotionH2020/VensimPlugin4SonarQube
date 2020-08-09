@@ -6,6 +6,7 @@ import es.uva.locomotion.parser.SymbolType;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -316,7 +317,7 @@ public class TestDBFacade {
                 "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\", \"category\":\"\",\"modules\":{\"main\":\"foo\", \"secondary\":[]}, \"ProgrammingSymbolType\":\"Constant\",\"indexes\":[]}, " +
                 "{\"name\":\"var\",\"unit\":\"other units\", \"definition\":\"other comment\", \"category\":\"\",\"modules\":[], \"ProgrammingSymbolType\":\"Constant\",\"indexes\":[]}], " +
                 "\"indexes\":[]}";
-        Logger logger = mock(Logger.class);
+        VensimLogger logger = mock(VensimLogger.class);
         DBFacade.LOG = logger;
         DBFacade.handler =  ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
@@ -324,7 +325,7 @@ public class TestDBFacade {
         DBFacade.getExistingSymbolsFromDB("http://localhost",List.of("var"),"token");
 
 
-        verify(logger).warn("Received duplicated symbol 'var' from the dictionary service.");
+        verify(logger).info("Received duplicated symbol 'var' from the dictionary service.");
     }
 
     @Test

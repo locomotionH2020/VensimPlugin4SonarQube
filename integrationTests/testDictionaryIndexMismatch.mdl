@@ -1,5 +1,5 @@
 
-miRango: (VALOR_1-VALOR_100)~~|
+miRango: (VALOR_1-VALOR_10)~~|
 SUBSCRIPT: a,b,c ~~|
 esteNoEstaEnLaDB: d,e,f ~~|
 

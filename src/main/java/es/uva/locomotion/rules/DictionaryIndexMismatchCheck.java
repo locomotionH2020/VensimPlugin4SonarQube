@@ -6,6 +6,7 @@ import es.uva.locomotion.parser.SymbolType;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.utilities.UtilityFunctions;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.check.Rule;
@@ -29,7 +30,7 @@ public class DictionaryIndexMismatchCheck implements VensimCheck{
             "</p>";
     public static final String NAME = "DictionaryIndextMismatch" ;
 
-    protected static Logger LOG = Loggers.get(MagicNumberCheck.class);
+    protected static VensimLogger LOG = VensimLogger.getInstance();
 
     @Override
     public void scan(VensimVisitorContext context) {
@@ -70,7 +71,7 @@ public class DictionaryIndexMismatchCheck implements VensimCheck{
         try{
             return !tryToMatchIndexes(foundIndexes, dbIndexes);
         }catch (IllegalStateException ex){
-            LOG.warn(UtilityFunctions.formatLogMessage("The symbol '" + foundSymbol.getToken() + "' is indexed by a subscript and a subscript value in the same column."));
+            LOG.info(UtilityFunctions.formatLogMessage("The symbol '" + foundSymbol.getToken() + "' is indexed by a subscript and a subscript value in the same column."));
             return false;
         }
 

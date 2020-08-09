@@ -1,4 +1,4 @@
-package es.uva.locomotion.utilities;
+package es.uva.locomotion.utilities.logs;
 
 public enum LoggingLevel {
     INFO,

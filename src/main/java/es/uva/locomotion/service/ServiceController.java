@@ -5,12 +5,10 @@ import es.uva.locomotion.parser.Symbol;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.parser.SymbolType;
 import es.uva.locomotion.utilities.Constants;
-import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
-import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
-import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
-import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import es.uva.locomotion.utilities.exceptions.*;
+import es.uva.locomotion.utilities.logs.LoggingLevel;
+import es.uva.locomotion.utilities.logs.VensimLogger;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,48 +21,39 @@ import java.util.stream.Collectors;
  */
 public class ServiceController {
 
-    protected static Logger LOG = Loggers.get(ServiceController.class.getSimpleName());
-    private final String token;
+    protected static VensimLogger LOG = VensimLogger.getInstance();
+    private String token;
     private String dictionaryService;
-    private String lastLoggedMessage; //Used to avoid sending the same message every time a file is analyzed.
 
     // I used to put this message in a separate log call, but there were another logs in between the two. So I decided to join them.
-    private final String RULES_DISABLED_MESSAGE = "The rules that require the data from the dictionary service will be skipped. ";
-    private final String INJECTION_DISABLED_MESSAGE = "New symbols won't be injected to the service. ";
+    private final String RULES_DISABLED_MESSAGE = "The rules that require the data from the dictionary service will be skipped.";
+    private final String INVALID_URL_MESSAGE = "The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n"+ RULES_DISABLED_MESSAGE ;
+    private final String MISSING_DICTIONARY_SERVICE_MESSAGE= "Missing dictionary service parameter.\n" + RULES_DISABLED_MESSAGE;
+    private final String SERVICE_UNREACHABLE_MESSAGE = "The dictionary service was unreachable.\n" + RULES_DISABLED_MESSAGE;
 
-    public ServiceController(String dictionaryService, String dictionaryUser, String dictionaryPassword){
+    public ServiceController(String dictionaryService){
         this.dictionaryService = dictionaryService;
-        lastLoggedMessage="";
-        token = authenticate(dictionaryUser, dictionaryPassword);
-
-        if(token == null)
-            logInfo("Unable to log in. The username/password were incorrect or there was an internal server error");
+        token = null;
     }
 
 
-    private String authenticate(String dictionaryUser, String dictionaryPassword) {
+    public void authenticate(String dictionaryUser, String dictionaryPassword) {
         String logMessage="";
         try {
-            return DBFacade.getAuthenticationToken(dictionaryService, dictionaryUser, dictionaryPassword);
+            token = DBFacade.getAuthenticationToken(dictionaryService, dictionaryUser, dictionaryPassword);
         } catch (InvalidServiceUrlException ex) {
-            logMessage = "The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" + RULES_DISABLED_MESSAGE + "[" + VensimPlugin.PLUGIN_KEY + "]";
-            logError(logMessage);
-            return null;
+            LOG.unique(INVALID_URL_MESSAGE, LoggingLevel.ERROR);
         } catch (EmptyServiceException ex) {
-            logMessage = "Missing dictionary service parameter.\n" + RULES_DISABLED_MESSAGE + "[" + VensimPlugin.PLUGIN_KEY + "]";
-            logInfo(logMessage);
-            return null;
+            LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE, LoggingLevel.INFO);
         } catch (ConnectionFailedException ex) {
-            logMessage = "The dictionary service was unreachable.\n" + RULES_DISABLED_MESSAGE + "[" + VensimPlugin.PLUGIN_KEY + "]";
-            logError(logMessage);
-            return null;
+            LOG.unique(SERVICE_UNREACHABLE_MESSAGE, LoggingLevel.ERROR);
         } catch (ServiceResponseFormatNotValid ex) {
+            //TODO: Revisar si esto es necesario aqui
             logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + "\n" +
-                    "Actual response: " + ex.getServiceResponse() + "\n" +
-                    RULES_DISABLED_MESSAGE + "[" + VensimPlugin.PLUGIN_KEY + "]";
+                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true\n" +
+                    RULES_DISABLED_MESSAGE;
 
-            logError(logMessage);
-            return null;
+            LOG.error(logMessage);
         }
     }
 
@@ -80,28 +69,28 @@ public class ServiceController {
      *    </ul>
      */
     public SymbolTable getSymbolsFromDb(List<Symbol> symbols){
+        if(!isAuthenticated())
+            throw new NotAuthenticatedException();
+
         List<String> symbolsFound = symbols.stream().filter(this::hasToFetchSymbolFromDB).map(Symbol::getToken).collect(Collectors.toList());
         String logMessage="";
         try {
             return  DBFacade.getExistingSymbolsFromDB(dictionaryService, symbolsFound, token);
         }catch (InvalidServiceUrlException ex){
-            logMessage = "The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n"+ RULES_DISABLED_MESSAGE +"["+ VensimPlugin.PLUGIN_KEY +"]";
-            logError(logMessage);
+            LOG.unique(INVALID_URL_MESSAGE, LoggingLevel.ERROR);
             return null;
         }catch (EmptyServiceException ex){
-            logMessage = "Missing dictionary service parameter.\n" + RULES_DISABLED_MESSAGE + "[" + VensimPlugin.PLUGIN_KEY + "]";
-            logInfo(logMessage);
+            LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE, LoggingLevel.INFO);
             return null;
         }catch (ConnectionFailedException ex){
-            logMessage = "The dictionary service was unreachable.\n"+ RULES_DISABLED_MESSAGE + "["+ VensimPlugin.PLUGIN_KEY +"]";
-            logError(logMessage);
+            LOG.unique(SERVICE_UNREACHABLE_MESSAGE, LoggingLevel.ERROR);
             return null;
         }catch (ServiceResponseFormatNotValid ex){
            logMessage = "The response of the dictionary service wasn't valid. "+ ex.getMessage() + "\n"+
-                   "Actual response: " + ex.getServiceResponse() + "\n" +
-                    RULES_DISABLED_MESSAGE+"["+ VensimPlugin.PLUGIN_KEY +"]";
+                   "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
+                    RULES_DISABLED_MESSAGE;
 
-           logError(logMessage);
+           LOG.error(logMessage);
             return null;
         }
     }
@@ -109,6 +98,9 @@ public class ServiceController {
     public void injectNewSymbols( String module, List<Symbol> foundSymbols, SymbolTable dbSymbolTable){
         if(dbSymbolTable==null)
             return;
+
+        if(!isAuthenticated())
+            throw new NotAuthenticatedException();
 
         List<Symbol> newSymbols = foundSymbols.stream().filter(symbol -> !dbSymbolTable.hasSymbol(symbol.getToken().trim()) && hasToFetchSymbolFromDB(symbol))
                 .collect(Collectors.toList());
@@ -120,16 +112,13 @@ public class ServiceController {
             try {
                 DBFacade.injectSymbols(dictionaryService, module, validSymbols, token);
                 List<String> tokensInjected = validSymbols.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
-                logInfo("Injected  symbols:" + tokensInjected);
+                LOG.info("Injected symbols in module '" + module + "': " + tokensInjected);
             }catch (InvalidServiceUrlException ex){
-                logMessage = "The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n"+ INJECTION_DISABLED_MESSAGE +"["+ VensimPlugin.PLUGIN_KEY +"]";
-                logError(logMessage);
+                LOG.unique(INVALID_URL_MESSAGE, LoggingLevel.ERROR);
             }catch (EmptyServiceException ex){
-                logMessage = "Missing dictionary service parameter.\n" + INJECTION_DISABLED_MESSAGE + "[" + VensimPlugin.PLUGIN_KEY + "]";
-                logInfo(logMessage);
+                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE, LoggingLevel.INFO);
             }catch (ConnectionFailedException ex){
-                logMessage = "The dictionary service was unreachable.\n"+ INJECTION_DISABLED_MESSAGE + "["+ VensimPlugin.PLUGIN_KEY +"]";
-                logError(logMessage);
+                LOG.unique(SERVICE_UNREACHABLE_MESSAGE, LoggingLevel.ERROR);
             }
 
         }
@@ -140,19 +129,6 @@ public class ServiceController {
         return token != null;
     }
 
-    private void logError(String message){
-        if(!message.equals(lastLoggedMessage)) {
-            LOG.error(message);
-            lastLoggedMessage = message;
-        }
-    }
-
-    private void logInfo(String message){
-        if(!message.equals(lastLoggedMessage)) {
-            lastLoggedMessage = message;
-            LOG.info(message);
-        }
-    }
 
 
     private boolean hasToFetchSymbolFromDB(Symbol symbol){
