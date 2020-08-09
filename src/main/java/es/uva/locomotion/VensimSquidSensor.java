@@ -7,6 +7,8 @@ import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.utilities.logs.LogConsolePrinter;
+import es.uva.locomotion.utilities.logs.LogFileWriter;
+import es.uva.locomotion.utilities.logs.LogOutputMethod;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.InputFile;
@@ -16,6 +18,7 @@ import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +32,8 @@ public class VensimSquidSensor implements Sensor {
     private static final String DICTIONARY_USERNAME_PARAMETER =  "vensim.dictionaryUsername";
     private static final String DICTIONARY_PASSWORD_PARAMETER = "vensim.dictionaryPassword";
     private static final String DICTIONARY_LOG_SERVER_COMMUNICATIONS = "vensim.logServerMessages";
+    private static final String LOG_IN_FILE = "vensim.logFile";
+
 
     private final Checks<VensimCheck> checks;
 
@@ -57,9 +62,24 @@ public class VensimSquidSensor implements Sensor {
         String dictionaryUsername = sensorContext.config().get(DICTIONARY_USERNAME_PARAMETER).orElse("").trim();
         String dictionaryPassword = sensorContext.config().get(DICTIONARY_PASSWORD_PARAMETER).orElse("").trim();
         String strLogServerComms = sensorContext.config().get(DICTIONARY_LOG_SERVER_COMMUNICATIONS).orElse("false");
+        String logFile = sensorContext.config().get(LOG_IN_FILE).orElse("");
+
         boolean logServerComms = !"false".equals(strLogServerComms);
 
-        VensimLogger.setOutputMethod(new LogConsolePrinter());
+        LogOutputMethod logMethod;
+        if(logFile.isEmpty())
+            logMethod = new LogConsolePrinter();
+        else {
+            try {
+                logMethod = new LogFileWriter(logFile.trim());
+            } catch (IOException e) {
+                logMethod = new LogConsolePrinter();
+                VensimLogger logger = VensimLogger.getInstance();
+                logger.error("I/O Exception while trying to access the log output file. Message: " + e.getMessage());
+            }
+        }
+
+        VensimLogger.setOutputMethod(logMethod);
         VensimLogger.logAllServerCommunications(logServerComms);
 
         Iterable<InputFile> files = sensorContext.fileSystem().inputFiles(p.hasLanguage(VensimLanguage.KEY));

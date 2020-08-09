@@ -9,7 +9,13 @@ public class LogFileWriter implements LogOutputMethod {
 
     public LogFileWriter(String fileName) throws IOException {
         writer = new FileWriter(fileName);
-
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
     }
 
     @Override
@@ -20,5 +26,6 @@ public class LogFileWriter implements LogOutputMethod {
             e.printStackTrace();
         }
     }
+    
 
 }
