@@ -25,7 +25,7 @@ public class DBFacade {
     public static final String FIELD_INDEXES = "indexes";
     public static final String FIELD_SYMBOL_COMMENT = "definition";
     public static final String FIELD_SYMBOL_CATEGORY = "category";
-    public static final String FIELD_SYMBOL_TYPE = "ProgrammingSymbolType";
+    public static final String FIELD_SYMBOL_TYPE = "programmingSymbolType";
     public static final String FIELD_SYMBOL_INDEXES = "indexes";
     public static final String FIELD_SYMBOL_MODULES = "modules";
     public static final String FIELD_INDEX_VALUES = "values";

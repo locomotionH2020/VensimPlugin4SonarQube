@@ -313,7 +313,7 @@ public class TestServiceController {
         SymbolTable foundTable = new SymbolTable();
         GeneralTestUtilities.addSymbolInLines(foundTable,"  constant  ",SymbolType.Constant, 1);
         GeneralTestUtilities.addSymbolInLines(foundTable, "variable", SymbolType.Variable,2);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "swtich", SymbolType.Switch,3);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "swtich", SymbolType.Switches,3);
         GeneralTestUtilities.addSymbolInLines(foundTable, "subscript",SymbolType.Subscript,4);
         GeneralTestUtilities.addSymbolInLines(foundTable,"subscript value", SymbolType.Subscript_Value,5);
         GeneralTestUtilities.addSymbolInLines(foundTable, "reality check", SymbolType.Reality_Check,6);

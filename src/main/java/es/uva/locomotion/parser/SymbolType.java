@@ -10,5 +10,5 @@ public enum SymbolType {
     Lookup_Table,
     Subscript,
     Subscript_Value,
-    Switch,
+    Switches,
 }

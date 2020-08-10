@@ -21,7 +21,7 @@ public class LogFileWriter implements LogOutputMethod {
     @Override
     public void log(LoggingLevel level, String message) {
         try {
-            writer.write(level.toString() + ":" + message);
+            writer.write(level.toString() + ":" + message+"\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

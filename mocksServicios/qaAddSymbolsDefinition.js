@@ -13,7 +13,7 @@ template: function(params,query,body){
         definition: 'comment',
         isIndexed: "false",
         category: '',
-        'ProgrammingSymbolType': 'Constant'
+        'programmingSymbolType': 'Constant'
       },
       {
         name: 'variable_not_in_db',
@@ -21,7 +21,7 @@ template: function(params,query,body){
         definition: 'comment',
         isIndexed: "false",
         category: '',
-        'ProgrammingSymbolType': 'Variable'
+        'programmingSymbolType': 'Variable'
       }
     ],
     indexes: [{
