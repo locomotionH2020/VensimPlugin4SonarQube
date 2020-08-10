@@ -4,7 +4,10 @@ import es.uva.locomotion.parser.ModelBaseVisitor;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.utilities.Constants;
 
-
+/**
+ * From the outside you should only call 'callIsACompoundNumber'. The other methods can't be protected/private
+ * due to inheritance.
+ */
 public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
 
@@ -67,7 +70,7 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
 
     @Override
-    public Object visitWildCard(ModelParser.WildCardContext ctx) {
+    public Boolean visitWildCard(ModelParser.WildCardContext ctx) {
         return false;
     }
 

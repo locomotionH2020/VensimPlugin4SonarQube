@@ -47,7 +47,7 @@ public class LookupNameCheck implements VensimCheck{
                 symbol.setAsInvalid();
 
                 for(int line: symbol.getDefinitionLines()) {
-                    Issue issue = new Issue(this, line, "The lookup '" + symbol.getToken() + "' doesn't follow the naming conventions");
+                    Issue issue = new Issue(this, line, "The lookup '" + symbol.getToken() + "' doesn't follow the naming convention");
                     context.addIssue(issue);
                 }
 

@@ -53,6 +53,10 @@ public class Symbol {
         return linesDefined;
     }
 
+    /*
+     * @return Dependencies of the symbol. For example in "a = b*func(c)" it would return 'b', 'c' and 'func'.
+     * Subscripts also contain subscript values as dependencies.
+     */
     public Set<Symbol> getDependencies() {
         return dependencies;
     }

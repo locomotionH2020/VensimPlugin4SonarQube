@@ -1,7 +1,5 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.service.ServiceConnectionHandler;
-import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 import org.junit.Ignore;
@@ -17,12 +15,10 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getJsonObjectFromList;
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -144,10 +140,6 @@ public class TestDbServiceHandler {
         new ServiceConnectionHandler().sendRequestToDictionaryService("www.google.com", getJsonObjectFromList("foo", "var"), "token");
     }
 
-    @Test(expected = ConnectionFailedException.class)
-    public void testGetSymbolsDomainNotFound() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService("https://adsmfmgekrhadbsfsfaf.com", getJsonObjectFromList("foo", "var"), "token");
-    }
 
 
     @Test
@@ -277,11 +269,6 @@ public class TestDbServiceHandler {
     @Test(expected = InvalidServiceUrlException.class)
     public void testInjectSymbolsDomainWithoutProtocol() {
         new ServiceConnectionHandler().injectSymbols("www.google.com", mock(JsonObject.class), "token");
-    }
-
-    @Test(expected = ConnectionFailedException.class)
-    public void testInjectSymbolsDomainNotFound() {
-        new ServiceConnectionHandler().injectSymbols("https://adsmfmgekrhadbsfsfaf.com", mock(JsonObject.class), "token");
     }
 
 

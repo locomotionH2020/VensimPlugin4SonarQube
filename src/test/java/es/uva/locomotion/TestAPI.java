@@ -22,6 +22,7 @@ public class TestAPI {
 
 
     private static final String SONAR_TOKEN = System.getenv("SONAR_TOKEN");
+    private static final String SERVER_FLAG_FILENAME= "flagInjection";
     private static File integrationTestsFolder;
     private static File mocksFolder;
 
@@ -34,7 +35,7 @@ public class TestAPI {
        integrationTestsFolder = new File(file.getParentFile().getParentFile(),"integrationTests");
        mocksFolder = new File(file.getParentFile().getParentFile(), "mocksServicios");
 
-       File injectionFlag = new File(mocksFolder,"flagInjection");
+       File injectionFlag = new File(mocksFolder,SERVER_FLAG_FILENAME);
        if(injectionFlag.exists())
            injectionFlag.delete();
 
