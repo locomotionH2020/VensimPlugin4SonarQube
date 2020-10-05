@@ -23,6 +23,12 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitModel(ModelParser.ModelContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ModelParser#sketchesGraphsAndMetadata}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSketchesGraphsAndMetadata(ModelParser.SketchesGraphsAndMetadataContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ModelParser#symbolWithDoc}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -118,18 +124,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMacroDefinition(ModelParser.MacroDefinitionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#sketchInfo}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSketchInfo(ModelParser.SketchInfoContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#sketches}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSketches(ModelParser.SketchesContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code const}
 	 * labeled alternative in {@link ModelParser#expr}.
@@ -297,6 +291,234 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNumberList(ModelParser.NumberListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#graphs}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGraphs(ModelParser.GraphsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#graph}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGraph(ModelParser.GraphContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#title}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTitle(ModelParser.TitleContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#xaxis}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXaxis(ModelParser.XaxisContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#xlabel}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXlabel(ModelParser.XlabelContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#xdiv}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXdiv(ModelParser.XdivContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#yaxis}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitYaxis(ModelParser.YaxisContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#ylabel}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitYlabel(ModelParser.YlabelContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#ydiv}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitYdiv(ModelParser.YdivContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#xmin}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXmin(ModelParser.XminContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#xmax}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXmax(ModelParser.XmaxContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#nolegend}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNolegend(ModelParser.NolegendContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#scale}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitScale(ModelParser.ScaleContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#graphvar}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGraphvar(ModelParser.GraphvarContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#gvar}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGvar(ModelParser.GvarContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#ymin}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitYmin(ModelParser.YminContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#ymax}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitYmax(ModelParser.YmaxContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#linewidthgraph}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLinewidthgraph(ModelParser.LinewidthgraphContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#metadata}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMetadata(ModelParser.MetadataContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#metadataLine}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMetadataLine(ModelParser.MetadataLineContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#sketches}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSketches(ModelParser.SketchesContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#sketchesDelimiter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSketchesDelimiter(ModelParser.SketchesDelimiterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#viewInfo}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitViewInfo(ModelParser.ViewInfoContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#sketchInfo}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSketchInfo(ModelParser.SketchInfoContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#versionCode}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVersionCode(ModelParser.VersionCodeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#viewName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitViewName(ModelParser.ViewNameContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#viewSettings}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitViewSettings(ModelParser.ViewSettingsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#viewVariables}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitViewVariables(ModelParser.ViewVariablesContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#shadowVariable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitShadowVariable(ModelParser.ShadowVariableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#lastShadowPart}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLastShadowPart(ModelParser.LastShadowPartContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#textVariable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTextVariable(ModelParser.TextVariableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#lastTextVarPart}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLastTextVarPart(ModelParser.LastTextVarPartContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#objectVariable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObjectVariable(ModelParser.ObjectVariableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#arrow}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrow(ModelParser.ArrowContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#points}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPoints(ModelParser.PointsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#rawText}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRawText(ModelParser.RawTextContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#rawTextObjects}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRawTextObjects(ModelParser.RawTextObjectsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#link}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLink(ModelParser.LinkContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ModelParser#subscriptId}.
 	 * @param ctx the parse tree
