@@ -61,7 +61,6 @@ public class GeneralTestUtilities {
         ModelParser parser = new ModelParser(tokens);
         parser.removeErrorListeners();
         parser.addErrorListener(new VensimErrorListener());
-
         return parser.file();
 
     }
