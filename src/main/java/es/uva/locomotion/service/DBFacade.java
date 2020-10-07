@@ -48,7 +48,7 @@ public class DBFacade {
     }
     /**
      * Searches for the symbols given as a parameter in the DB
-     * @param symbols
+     * @param symbols list of given symbols
      * @return A SymbolTable with the symbols that have been found in the DB (might not be all).
      * The symbols contain the information found in the DB (type, module, etc).
      *
@@ -67,19 +67,15 @@ public class DBFacade {
         if(serviceResponse==null)
             return null;
 
-        JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse));
-        try {
+        try (JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse))) {
             JsonObject symbolsFound = jsonReader.readObject();
 
             return createSymbolTableFromJson(symbolsFound);
         } catch (JsonException ex) {
-            throw new ServiceResponseFormatNotValid("Expected an object.",serviceResponse);
-        }catch (ServiceResponseFormatNotValid ex){
+            throw new ServiceResponseFormatNotValid("Expected an object.", serviceResponse);
+        } catch (ServiceResponseFormatNotValid ex) {
             ex.setServiceResponse(serviceResponse);
             throw ex;
-        }
-        finally {
-            jsonReader.close();
         }
     }
 
@@ -208,12 +204,12 @@ public class DBFacade {
             symbol.addIndexLine(indexes);
 
             JsonObject modules = jsonSymbol.getJsonObject(FIELD_SYMBOL_MODULES);
-            symbol.addModule(modules.getString(FIELD_SYMBOL_MODULES_MAIN));
+            symbol.setPrimary_module(modules.getString(FIELD_SYMBOL_MODULES_MAIN));
 
             JsonArray secondaryModules = modules.getJsonArray(FIELD_SYMBOL_MODULES_SECONDARY);
             for(int i=0;i<secondaryModules.size();i++) {
                 String module = secondaryModules.getString(i);
-                symbol.addModule(module);
+                symbol.addShadow_module(module);
             }
             table.addSymbol(symbol);
 

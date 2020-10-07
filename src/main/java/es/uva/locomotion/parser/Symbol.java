@@ -10,13 +10,13 @@ public class Symbol {
     private String token;
     private List<Integer> linesDefined;
     private List<List<Symbol>> indexes;
-    private List<String> modules;
     private String units;
     private String comment;
     private Set<Symbol> dependencies;
     private SymbolType type;
     private String category;
-
+    private String primary_module;
+    private List<String> shadow_modules;
 
     private boolean isValid;
 
@@ -26,12 +26,13 @@ public class Symbol {
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
         linesDefined = new ArrayList<>();
-        modules = new ArrayList<>();
         units = "";
         comment ="";
         category = "";
         indexes = new ArrayList<>();
         isValid = true;
+        primary_module = "";
+        shadow_modules = new ArrayList<>();
     }
 
 
@@ -117,12 +118,13 @@ public class Symbol {
         return getToken().equals(symbol.getToken()) &&
                 linesDefined.equals(symbol.linesDefined) &&
                 getIndexes().equals(symbol.getIndexes()) &&
-                getModules().equals(symbol.getModules()) &&
                 getUnits().equals(symbol.getUnits()) &&
                 getComment().equals(symbol.getComment()) &&
                 getDependencies().equals(symbol.getDependencies()) &&
                 getType() == symbol.getType() &&
-                getCategory().equals(symbol.getCategory());
+                getCategory().equals(symbol.getCategory()) &&
+                getPrimary_module().equals(symbol.getPrimary_module()) &&
+                getShadow_modules().equals(symbol.getShadow_modules());
     }
 
     @Override
@@ -131,18 +133,19 @@ public class Symbol {
                 "token='" + token + '\'' +
                 ", linesDefined=" + linesDefined +
                 ", indexes=" + indexes+
-                ", modules=" + modules +
                 ", units='" + units + '\'' +
                 ", comment='" + comment + '\'' +
                 ", dependencies=" + dependencies.stream().map(Symbol::getToken).collect(Collectors.toList()) +
                 ", type=" + type +
                 ", category='" + category + '\'' +
+                ", primary module='" + getPrimary_module() + '\'' +
+                ", shadow modules='" + getShadow_modules() +
                 '}';
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getToken(), linesDefined, getIndexes(), getModules(), getUnits(), getComment(), getType(), getCategory());
+        return Objects.hash(getToken(), linesDefined, getIndexes(), getUnits(), getComment(), getType(), getCategory(), getPrimary_module(), getShadow_modules());
     }
 
     public void setUnits(String units) {
@@ -169,17 +172,9 @@ public class Symbol {
         return category;
     }
 
-    public List<String> getModules() {
-        return modules;
-    }
-
-    public void addModule(String module){
-        modules.add(module.trim());
-    }
-
     /**
      * Overrides the dependencies
-     * @param dependencies
+     * @param dependencies new dependencies
      */
     public void setDependencies(Set<Symbol> dependencies) {
         this.dependencies = dependencies;
@@ -192,5 +187,18 @@ public class Symbol {
     public boolean isValid() {
         return isValid;
     }
+
+    public String getPrimary_module() { return primary_module; }
+
+    public void setPrimary_module(String primary_module) { this.primary_module = primary_module; }
+
+    public List<String> getShadow_modules() {
+        return shadow_modules;
+    }
+
+    public void addShadow_module(String module){
+        shadow_modules.add(module.trim());
+    }
+
 
 }
