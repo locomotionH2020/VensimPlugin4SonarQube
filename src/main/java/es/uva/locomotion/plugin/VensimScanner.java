@@ -42,6 +42,8 @@ public class VensimScanner {
   
     private ServiceController serviceController;
 
+    private static final String MODULE_FILTER = "vensim.filter.module";
+
     public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder, ServiceController serviceController) {
         this.context = context;
         this.checks = checks;
@@ -96,35 +98,40 @@ public class VensimScanner {
 
     public void scanFile(InputFile inputFile) {
 
+        String moduleFilter = context.config().get(MODULE_FILTER).orElse("");
+
         try {
             String content = inputFile.contents();
             String module = getModuleNameFromFileName(inputFile.filename());
 
             ModelParser.FileContext root = getParseTree(content);
-
-
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
-            jsonBuilder.addSymbolTable(inputFile.filename(),table);
+
+            if (!moduleFilter.isEmpty()) {
+                table = SymbolTableGenerator.filterSymbolsNotFromModule(table, moduleFilter);
+            }
+
+            jsonBuilder.addSymbolTable(inputFile.filename(), table);
 
             SymbolTable dbTable = null;
-            if(serviceController.isAuthenticated())
+            if (serviceController.isAuthenticated())
                 dbTable = serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols()));
 
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
 
             checkIssues(visitorContext);
-            saveIssues(inputFile,visitorContext.getIssues());
+            saveIssues(inputFile, visitorContext.getIssues());
 
             int lines = content.split("[\r\n]+").length;
 
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
-            if(serviceController.isAuthenticated() && dbTable != null)
-                serviceController.injectNewSymbols(module,new ArrayList<>(table.getSymbols()),dbTable);
+            if (serviceController.isAuthenticated() && dbTable != null)
+                serviceController.injectNewSymbols(module, new ArrayList<>(table.getSymbols()), dbTable);
         } catch (IOException e) {
-            LOG.error("Unable to analyze file '"+ inputFile.filename() + "'. Error: " + e.getMessage());
-        }catch (ParseCancellationException e){
-            LOG.error("Unable to parse the file '" + inputFile.filename() +  "'. Error: " + e.getLocalizedMessage());
+            LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
+        } catch (ParseCancellationException e) {
+            LOG.error("Unable to parse the file '" + inputFile.filename() + "'. Error: " + e.getLocalizedMessage());
         }
 
     }

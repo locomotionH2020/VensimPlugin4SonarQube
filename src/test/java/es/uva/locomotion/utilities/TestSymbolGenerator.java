@@ -532,5 +532,28 @@ public class TestSymbolGenerator {
     }
 
 
+    @Test
+    public void testFilterSymbolsNotFromModule() {
+        SymbolTable symbolTable = new SymbolTable();
+        Symbol symbol1 = new Symbol("symbol1");
+        symbol1.setPrimary_module("moduloSeleccionado");
+        symbolTable.addSymbol(symbol1);
+        Symbol symbol2 = new Symbol("symbol2");
+        symbol2.setPrimary_module("modulo2");
+        symbolTable.addSymbol(symbol2);
+        Symbol symbol3 = new Symbol("symbol3");
+        symbol3.setPrimary_module("moduloSeleccionado");
+        symbolTable.addSymbol(symbol3);
+        Symbol symbol4 = new Symbol("symbol4");
+        symbol4.setPrimary_module("modulo4");
+        symbolTable.addSymbol(symbol4);
+
+         symbolTable = SymbolTableGenerator.filterSymbolsNotFromModule(symbolTable, "moduloSeleccionado");
+
+         Symbol[] returnedSymbols = symbolTable.getSymbols().toArray(new Symbol[0]);
+         Symbol[] expectedSymbols ={symbol1,symbol3};
+
+         assertArrayEquals(expectedSymbols,returnedSymbols);
+    }
 
 }
