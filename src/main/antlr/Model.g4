@@ -1,13 +1,11 @@
 grammar Model;
 
 
-
-
 // A Vensim model is a sequence of equations and subscript ranges.
 
 file: model EOF;
 model: ( symbolWithDoc | macroDefinition)* sketchesGraphsAndMetadata?;
-sketchesGraphsAndMetadata: sketches graphs* metadata; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
+sketchesGraphsAndMetadata: sketches graphs* metadataDivisor; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
                                                                       //For example, a problematic equation.
 symbolWithDoc: symbolWithDocDefinition unitsDoc;
 
@@ -59,6 +57,7 @@ Group : '********************************************************' .*? '|' -> sk
 
 
 
+
 expr:     expr op=('^'|'*'|'/'|'-'|'+'|Less|Greater|LessEqual|GreaterEqual|Equal|NotEqual| ':AND:' | ':OR:') expr  # exprOperation
     |   constVensim                             # const
     |   Keyword expr?                        # Keyword
@@ -97,7 +96,7 @@ constantLine: ( constVensim ( ',' constVensim)*) ;
 constList : constantLine ((';' constantLine)* ';')?;
 
 numberList: (integerConst | floatingConst) (',' ( integerConst | floatingConst))*;
-    
+
 graphs: graph title xaxis? xlabel? xdiv? yaxis? ylabel? ydiv? xmin? xmax? nolegend? scale graphvar*;
 graph: ':GRAPH' .*?;
 title: ':TITLE' .*?;
@@ -116,44 +115,40 @@ gvar: ':VAR' .*?;
 ymin: ':Y-MIN' .*?;
 ymax: ':Y-MAX' .*?;
 linewidthgraph: ':LINE-WIDTH' .*?;
-metadata: ':L<%^E!@' metadataLine+;
+metadataDivisor: ':L<%^E!@' metadataLine+;
 metadataLine:DigitSeq':'.*?;
-  
+
 // Backslash tokens are ignored, so this rule doesn't take them into account.
 sketches: viewInfo* sketchesDelimiter;
 sketchesDelimiter: '///---';
 viewInfo:   sketchInfo versionCode viewName viewVariables;
 sketchInfo: '---///' 'Sketch information - do not modify anything except names' ;
-versionCode: 'V300  Do not put anything below this section - it will be ignored'; 
+versionCode: 'V300  Do not put anything below this section - it will be ignored';
 //Vensim versions 5,4 and 3 all use the same version code (300).
-viewName: '*' .*?; //All view names are preceeded by an '*'
-viewSettings: '$' ('-'|DigitSeq)* ',' (Id|'-'|DigitSeq)* ',' (Id|'-'|DigitSeq)* '|' (Id|'-'|DigitSeq)* '|' //REVISAR PARA CLARIFICARLO
-    (Id|'-'|DigitSeq)* '|' (Id|'-'|DigitSeq)* '|' (Id|'-'|DigitSeq)* '|' (Id|'-'|DigitSeq)* '|' (Id|'-'|DigitSeq)* '|' 
-    ((Id|'-'|DigitSeq)* '|')? (DigitSeq ',')? (DigitSeq ',')? (DigitSeq ',')? (DigitSeq)?; //USUALLY, The settings of each view always will have 2 commas separating
-                                                                                                            //fields, then 8 '|' and then again 3 commas.
-                                                                                                            //Sometimes, some fields are not necessary.
-viewVariables: viewSettings (arrow|shadowVariable|textVariable|rawText|objectVariable)*;
+viewName: '*' Id; //All view names are preceeded by an '*'
+//ARREGLAR A CUALQUIER NOMBRE
+
+viewSettings: '$'  color  ',' integerConst ',' typography integerConst ','integerConst ','integerConst ','integerConst;                                                                                                  //Sometimes, some fields are not necessary.
+viewVariables: viewSettings (arrow | viewVariable)*;
+
+arrow: internalId=integerConst ',' idInView=integerConst ','fromVariable=integerConst ','toVariable=integerConst ','integerConst ','integerConst ','polarityChar=integerConst ','integerConst ','integerConst ','integerConst ','integerConst ','color ','typography? ',' integerConst '|' arrowCoordinates '|';
+arrowCoordinates: '('integerConst','integerConst')';
+
+viewVariable:  internalId=integerConst ',' idInView=integerConst ',' (name=Id | integerConst)  ',' x=integerConst ',' y=integerConst ',' width=integerConst ',' height=integerConst ',' integerConst ',' objectType=integerConst ',' integerConst ',' metadata=integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst ((','color ',' color ',' typography)? ',' integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst)?;
+
+visualInfo:  Id| (Id ',' (Id | (integerConst ',' integerConst ( ',' integerConst)?)));
+//PULIR Y AÑADIR GRAMÁTICA DE COMENTARIOS
+
+typography: typographyName?'|' textSize=integerConst'|' textFormat '|' color ('|' color '|' color '|' color '|' color '|')?;
+typographyName: '@'? Id;
+textFormat: 'B'?'I'?'U'?'S'?'V'?'D'?;
+
+color: rgbColor | singleColor;
+rgbColor: integerConst '-' integerConst '-' integerConst;
+singleColor: integerConst;
 
 
-shadowVariable: (integerConst) (','(rawTextObjects|Id|integerConst|floatingConst|(DigitSeq'-'DigitSeq'-'DigitSeq)|('-'DigitSeq'-''-'DigitSeq'-''-'DigitSeq)))* lastShadowPart;
-                                 //Variables that do not belong to any view and do not depend on any other variables. Besides, other variables can depend on shadow variables.
-lastShadowPart: ',' '|'(integerConst|floatingConst)'|'(DigitSeq|Id)*'|'(DigitSeq'-'DigitSeq'-'DigitSeq);
-
-textVariable: (integerConst) (','(rawTextObjects|Id|integerConst|floatingConst|(DigitSeq'-'DigitSeq'-'DigitSeq)|('-'DigitSeq'-''-'DigitSeq'-''-'DigitSeq)))* lastTextVarPart; 
-                                                                                                //Object variables that its format has been modified(font, color...)
-lastTextVarPart: '|'(integerConst|floatingConst)'|'(DigitSeq|Id)*'|'(DigitSeq'-'DigitSeq'-'DigitSeq);
-
-objectVariable: (integerConst) (','(integerConst|floatingConst|rawTextObjects))*; //Variables, Valves, Comments, Bitmaps and Metafiles will have an undetermined
-                                                                                       //set of fields, always separated by commas.
-arrow: DigitSeq ','(Id|'-'|DigitSeq)* ','(Id|'-'|DigitSeq)* ','(Id|'-'|DigitSeq)* ','
-    (Id|'-'|DigitSeq)* ','(Id|'-'|DigitSeq)* ','(Id|'-'|DigitSeq)* ','(Id|'-'|DigitSeq)* ','(Id|'-'|DigitSeq)* ','
-    (Id|'-'|DigitSeq)* ','(Id|'-'|DigitSeq)* ','(Id|'-'|DigitSeq)* ','(Id|'-'|DigitSeq)* ','(points);  //Arrows always will have 13 fields and a last field that contains 
-                                                                                                        //the number of points of the object and where they are located.
-points: DigitSeq ('|''('integerConst','integerConst')')+'|';
-rawText: ('\''|'"'|Id|StringConst|'.'|'-'|'+'|'='|Less|Greater|'('|')'|'->'|Star|Div|'?'|'!'|'|'|'&'|'%'|'$'|'@'|':'|';'|','|'['|']'|link)+; 
  //Symbols that may affect the grammar. Those are contained in comments or variable names. They must be controlled.
-rawTextObjects: ('\''|Id|StringConst|'.'|'-'|'+'|'='|Less|Greater|'('|')'|'->'|Star|Div|'?'|'!'|'|'|'&'|'%'|'$'|'@'|':'|';'|'['|']'|link)+; 
- //Symbols that may affect the grammar. Those are contained in objects. It cannot contain any commas. They must be controlled.
 link: ('http://'|'https://'|': https://'| ': http://') .*?;
 
 
@@ -170,9 +165,8 @@ Exclamation : '!' ;
 DataEquationOp: ':=';
 StringAssignOp: ':IS:';
 
-
 subscriptId : Id  Exclamation?;
-Id: ( ( Nondigit IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) | StringLiteral );
+Id: ( ( Nondigit IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) |StringLiteral);
 
 fragment
 IdChar : [a-zA-Z0-9_$'"&%\u00A1-\u00ff\u0100-\u017f\u0180-\u024f\u1e02-\u1ef3] ;
@@ -221,8 +215,6 @@ ExponentPart
     |   'E' [+-]? DigitSeq
     ;
 
-
-
 DigitSeq
     :   Digit+
     ;
@@ -231,10 +223,10 @@ StringLiteral
     :   ["](~["\\]|[\\].)*?["\r\n]
     ;
 
+
 StringConst
     :    ['](~['\\]|[\\].)*?['\r\n]
     ;
-
 
 Keyword
     :   ':'[a-zA-Z ]*':'
