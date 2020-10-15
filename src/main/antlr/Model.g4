@@ -1,11 +1,10 @@
 grammar Model;
 
-
 // A Vensim model is a sequence of equations and subscript ranges.
 
 file: model EOF;
 model: ( symbolWithDoc | macroDefinition)* sketchesGraphsAndMetadata?;
-sketchesGraphsAndMetadata: sketches graphs* metadataDivisor; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
+sketchesGraphsAndMetadata: sketches graphsGroup metadataDivisor; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
                                                                       //For example, a problematic equation.
 symbolWithDoc: symbolWithDocDefinition unitsDoc;
 
@@ -43,17 +42,6 @@ realityCheck: lhs ':TEST INPUT:' expr ;
 
 stringAssign: lhs StringAssignOp StringConst  (':IGNORE:' exprList)? ;
 macroDefinition: ':MACRO:' macroHeader symbolWithDoc+ ':END OF MACRO:';
-
-
-
-// The lexer strips some tokens we are not interested in.
-// The character encoding is given at the start of a Vensim file.
-// The units and documentation sections and group markings are skipped for now.
-// Line continuation characters and the sketch must be stripped by a preprocessor.
-
-CommentOrEncoding: '{' .*? '}' -> skip;
-
-Group : '********************************************************' .*? '|' -> skip ;
 
 
 
@@ -97,6 +85,7 @@ constList : constantLine ((';' constantLine)* ';')?;
 
 numberList: (integerConst | floatingConst) (',' ( integerConst | floatingConst))*;
 
+graphsGroup: graphs*;
 graphs: graph title xaxis? xlabel? xdiv? yaxis? ylabel? ydiv? xmin? xmax? nolegend? scale graphvar*;
 graph: ':GRAPH' .*?;
 title: ':TITLE' .*?;
@@ -120,13 +109,12 @@ metadataLine:DigitSeq':'.*?;
 
 // Backslash tokens are ignored, so this rule doesn't take them into account.
 sketches: viewInfo* sketchesDelimiter;
-sketchesDelimiter: '///---';
+sketchesDelimiter: SketchesDelimiter;
 viewInfo:   sketchInfo versionCode viewName viewVariables;
 sketchInfo: '---///' 'Sketch information - do not modify anything except names' ;
 versionCode: 'V300  Do not put anything below this section - it will be ignored';
 //Vensim versions 5,4 and 3 all use the same version code (300).
-viewName: '*' Id; //All view names are preceeded by an '*'
-//ARREGLAR A CUALQUIER NOMBRE
+viewName: '*' .*?; //All view names are preceeded by an '*'
 
 viewSettings: '$'  color  ',' integerConst ',' typography integerConst ','integerConst ','integerConst ','integerConst;                                                                                                  //Sometimes, some fields are not necessary.
 viewVariables: viewSettings (arrow | viewVariable)*;
@@ -134,9 +122,9 @@ viewVariables: viewSettings (arrow | viewVariable)*;
 arrow: internalId=integerConst ',' idInView=integerConst ','fromVariable=integerConst ','toVariable=integerConst ','integerConst ','integerConst ','polarityChar=integerConst ','integerConst ','integerConst ','integerConst ','integerConst ','color ','typography? ',' integerConst '|' arrowCoordinates '|';
 arrowCoordinates: '('integerConst','integerConst')';
 
-viewVariable:  internalId=integerConst ',' idInView=integerConst ',' (name=Id | integerConst)  ',' x=integerConst ',' y=integerConst ',' width=integerConst ',' height=integerConst ',' integerConst ',' objectType=integerConst ',' integerConst ',' metadata=integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst ((','color ',' color ',' typography)? ',' integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst)?;
+viewVariable:  internalId=integerConst ',' idInView=integerConst ',' (name=Id | integerConst)  ',' x=integerConst ',' y=integerConst ',' width=integerConst ',' height=integerConst ',' integerConst ',' objectType=integerConst ',' integerConst ',' metadata=integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst (','color ',' color ',' typography)? (',' integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst)? visualInfo;
 
-visualInfo:  Id| (Id ',' (Id | (integerConst ',' integerConst ( ',' integerConst)?)));
+visualInfo:  .*?;
 //PULIR Y AÑADIR GRAMÁTICA DE COMENTARIOS
 
 typography: typographyName?'|' textSize=integerConst'|' textFormat '|' color ('|' color '|' color '|' color '|' color '|')?;
@@ -152,6 +140,38 @@ singleColor: integerConst;
 link: ('http://'|'https://'|': https://'| ': http://') .*?;
 
 
+
+subscriptId : Id  Exclamation?;
+
+constVensim
+    :   integerConst
+    |   floatingConst
+    |   StringConst
+    ;
+
+
+integerConst
+    :  ('+'|'-')* DigitSeq
+    ;
+
+
+floatingConst:
+    ('+'|'-')* FloatingConstNumber;
+
+
+
+ unitsDoc: units=INFO_UNIT comment=INFO_UNIT supplementary=INFO_UNIT?'|';
+
+// The lexer strips some tokens we are not interested in.
+// The character encoding is given at the start of a Vensim file.
+// The units and documentation sections and group markings are skipped for now.
+// Line continuation characters and the sketch must be stripped by a preprocessor.
+
+CommentOrEncoding: '{' .*? '}' -> skip;
+
+Group : '********************************************************' .*? '|' -> skip ;
+
+
 Star : '*' ;
 Div : '/' ;
 Less : '<' ;
@@ -165,12 +185,18 @@ Exclamation : '!' ;
 DataEquationOp: ':=';
 StringAssignOp: ':IS:';
 
-subscriptId : Id  Exclamation?;
-Id: ( ( Nondigit IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) |StringLiteral);
+Id: ( ( Nondigit  IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) |StringLiteral);
 
 fragment
 IdChar : [a-zA-Z0-9_$'"&%\u00A1-\u00ff\u0100-\u017f\u0180-\u024f\u1e02-\u1ef3] ;
 
+fragment
+IdCharWithDash : [a-zA-Z0-9_$'"&%\-\u00A1-\u00ff\u0100-\u017f\u0180-\u024f\u1e02-\u1ef3] ;
+
+fragment
+NonzeroDigit
+    :   [1-9]
+    ;
 
 fragment
 Nondigit : [a-zA-Z_] ;
@@ -179,25 +205,7 @@ fragment
 Digit
     :   [0-9]
     ;
-constVensim
-    :   integerConst
-    |   floatingConst
-    |   StringConst
-    ;
 
-
-integerConst
-    :  ('+'|'-')* DigitSeq
-    ;
-
-fragment
-NonzeroDigit
-    :   [1-9]
-    ;
-
-
-floatingConst:
-    ('+'|'-')* FloatingConstNumber;
 FloatingConstNumber
 : FractionalConstant ExponentPart?
 | DigitSeq ExponentPart
@@ -233,12 +241,10 @@ Keyword
     ;
 
 Whitespace : [ \t\n\r]+ -> skip ;
+
 // Backslashes are used as line continuators, so they can be ignored.
 Backslash: [\\] -> skip;
 INFO_UNIT: '~' ~('~'|'|')*;
 OtherCaracter: .;
 
-
-
-
- unitsDoc: units=INFO_UNIT comment=INFO_UNIT supplementary=INFO_UNIT?'|';
+SketchesDelimiter: '///---';
