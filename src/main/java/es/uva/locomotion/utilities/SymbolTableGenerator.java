@@ -125,14 +125,5 @@ public class SymbolTableGenerator {
         return symbol.getType() == SymbolType.Function || symbol.getType() == SymbolType.UNDETERMINED_FUNCTION;
     }
 
-    public static SymbolTable filterSymbolsNotFromModule(SymbolTable table, String moduleFilter) {
-        SymbolTable newTable = new SymbolTable();
-        for(Symbol symbol : table.getSymbols()){
-            if(symbol.getPrimary_module().equals(moduleFilter) || symbol.getShadow_modules().contains(moduleFilter)){
-                newTable.addSymbol(symbol);
-            }
-        }
-        return newTable;
-    }
 
 }

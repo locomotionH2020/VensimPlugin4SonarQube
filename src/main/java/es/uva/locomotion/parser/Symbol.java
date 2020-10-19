@@ -15,10 +15,13 @@ public class Symbol {
     private Set<Symbol> dependencies;
     private SymbolType type;
     private String category;
-    private String primary_module;
-    private List<String> shadow_modules;
+    private String primary_view;
+    private List<String> shadow_views;
 
     private boolean isValid;
+
+
+    private boolean isFiltered;
 
 
     public Symbol(String token){
@@ -31,8 +34,8 @@ public class Symbol {
         category = "";
         indexes = new ArrayList<>();
         isValid = true;
-        primary_module = "";
-        shadow_modules = new ArrayList<>();
+        primary_view = "";
+        shadow_views = new ArrayList<>();
     }
 
 
@@ -123,8 +126,8 @@ public class Symbol {
                 getDependencies().equals(symbol.getDependencies()) &&
                 getType() == symbol.getType() &&
                 getCategory().equals(symbol.getCategory()) &&
-                getPrimary_module().equals(symbol.getPrimary_module()) &&
-                getShadow_modules().equals(symbol.getShadow_modules());
+                getPrimary_view().equals(symbol.getPrimary_view()) &&
+                getShadow_views().equals(symbol.getShadow_views());
     }
 
     @Override
@@ -138,14 +141,14 @@ public class Symbol {
                 ", dependencies=" + dependencies.stream().map(Symbol::getToken).collect(Collectors.toList()) +
                 ", type=" + type +
                 ", category='" + category + '\'' +
-                ", primary module='" + getPrimary_module() + '\'' +
-                ", shadow modules='" + getShadow_modules() +
+                ", primary module='" + getPrimary_view() + '\'' +
+                ", shadow modules='" + getShadow_views() +
                 '}';
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getToken(), linesDefined, getIndexes(), getUnits(), getComment(), getType(), getCategory(), getPrimary_module(), getShadow_modules());
+        return Objects.hash(getToken(), linesDefined, getIndexes(), getUnits(), getComment(), getType(), getCategory(), getPrimary_view(), getShadow_views());
     }
 
     public void setUnits(String units) {
@@ -188,17 +191,29 @@ public class Symbol {
         return isValid;
     }
 
-    public String getPrimary_module() { return primary_module; }
+    public String getPrimary_view() { return primary_view; }
 
-    public void setPrimary_module(String primary_module) { this.primary_module = primary_module; }
+    public void setPrimary_view(String primary_view) { this.primary_view = primary_view; }
 
-    public List<String> getShadow_modules() {
-        return shadow_modules;
+    public List<String> getShadow_views() {
+        return shadow_views;
     }
 
-    public void addShadow_module(String module){
-        shadow_modules.add(module.trim());
+    public void addShadow_view(String module){
+        shadow_views.add(module.trim());
     }
 
+    public List<String> get_views(){
+        List<String> list = new ArrayList<>(getShadow_views());
+        list.add(getPrimary_view());
+        return list;
+    }
 
+    public boolean isFiltered() {
+        return isFiltered;
+    }
+
+    public void setFiltered(boolean filtered) {
+        isFiltered = filtered;
+    }
 }

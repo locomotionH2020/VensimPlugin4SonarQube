@@ -64,18 +64,18 @@ public class TestDBFacade {
         Symbol foo = new Symbol("foo");
         foo.setUnits("foo unit");
         foo.setComment("foo comment");
-        foo.addShadow_module("module 1");
+        foo.addShadow_view("module 1");
         foo.setCategory("foo category");
-        foo.addShadow_module("module 2");
+        foo.addShadow_view("module 2");
         foo.setType(SymbolType.Constant);
         dbTable.addSymbol(foo);
 
         Symbol var = new Symbol("var");
         var.setUnits("var unit");
         var.setComment("var comment");
-        var.addShadow_module("module 3");
+        var.addShadow_view("module 3");
         var.setCategory("var category");
-        var.addShadow_module("module 4");
+        var.addShadow_view("module 4");
         var.addIndexLine(List.of(index1,index2));
         var.setType(SymbolType.Variable);
         dbTable.addSymbol(var);
@@ -130,9 +130,9 @@ public class TestDBFacade {
         Symbol foo = new Symbol("foo");
         foo.setUnits("foo unit");
         foo.setComment("foo comment");
-        foo.addShadow_module("module 1");
+        foo.addShadow_view("module 1");
         foo.setCategory("foo category");
-        foo.addShadow_module("module 2");
+        foo.addShadow_view("module 2");
         foo.setType(SymbolType.Constant);
         dbTable.addSymbol(foo);
 
