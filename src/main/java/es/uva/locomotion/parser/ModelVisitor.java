@@ -526,12 +526,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSingleColor(ModelParser.SingleColorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ModelParser#link}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLink(ModelParser.LinkContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ModelParser#subscriptId}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -34,7 +34,7 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
     public Object visitViewVariable(ModelParser.ViewVariableContext ctx) {
         int internalId = Integer.parseInt(ctx.internalId.getText());
         if(internalId == SYMBOL_PRIVATE_ID) {
-            int objectType = Integer.parseInt(ctx.objectType.getText());
+            int objectType = Integer.parseInt(ctx.bits.getText());
             String token = ctx.name.getText();
             if (isEven(objectType)){
                 actualView.addShadow(token);
