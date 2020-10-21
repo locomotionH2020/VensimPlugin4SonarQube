@@ -9,7 +9,7 @@ import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
 
 @Rule(key = DictionaryTypeMismatchCheck.CHECK_KEY, name = DictionaryTypeMismatchCheck.NAME, description = DictionaryTypeMismatchCheck.HTML_DESCRIPTION)
-public class DictionaryTypeMismatchCheck implements VensimCheck {
+public class DictionaryTypeMismatchCheck extends AbstractVensimCheck {
 
     public static final String CHECK_KEY = "symbol-type-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +
@@ -35,7 +35,7 @@ public class DictionaryTypeMismatchCheck implements VensimCheck {
                 SymbolType expectedType = dbTable.getSymbol(foundSymbol.getToken()).getType();
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has type '"+foundSymbol.getType() + "' but the dictionary has '"+ expectedType + "'." );
-                    context.addIssue(issue);
+                    addIssue(context,issue,foundSymbol);
                 }
             }
         }

@@ -11,7 +11,7 @@ import org.sonar.check.Rule;
 
 
 @Rule(key = SubscriptValueNameCheck.CHECK_KEY, name=SubscriptValueNameCheck.NAME,description = SubscriptValueNameCheck.HTML_DESCRIPTION)
-public class SubscriptValueNameCheck implements VensimCheck {
+public class SubscriptValueNameCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "subscript-value-name-convention" ;
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the subscript values follow the name convention and match the regular expression \"([A-Z0-9]+_)*[A-Z0-9]+\"</p>\n" +

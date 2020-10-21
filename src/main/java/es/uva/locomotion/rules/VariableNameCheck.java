@@ -10,7 +10,7 @@ import org.sonar.check.Rule;
 
 
 @Rule(key = VariableNameCheck.CHECK_KEY,name=VariableNameCheck.NAME, description= VariableNameCheck.HTML_DESCRIPTION)
-public class VariableNameCheck implements VensimCheck{
+public class VariableNameCheck extends AbstractVensimCheck{
     public static final String CHECK_KEY = "variable-name-convention";
     public static final String NAME = "VariableNameCheck" ;
     public static final String HTML_DESCRIPTION = "" +
@@ -43,7 +43,7 @@ public class VariableNameCheck implements VensimCheck{
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The variable '"+ symbol.getToken() + "' doesn't follow the naming convention.");
-                    context.addIssue(issue);
+                    addIssue(context,issue,symbol);
                 }
             }
         }

@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Rule(key= SymbolWithoutUnitsCheck.CHECK_KEY, name = SymbolWithoutUnitsCheck.NAME, description = SymbolWithoutUnitsCheck.HTML_DESCRIPTION)
-public class SymbolWithoutUnitsCheck implements VensimCheck{
+public class SymbolWithoutUnitsCheck extends AbstractVensimCheck{
 
     public static final String CHECK_KEY = "symbol-without-units" ;
     public static final String HTML_DESCRIPTION = "" +

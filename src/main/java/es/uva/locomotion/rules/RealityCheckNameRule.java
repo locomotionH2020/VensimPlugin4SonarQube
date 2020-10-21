@@ -8,7 +8,7 @@ import es.uva.locomotion.parser.SymbolType;
 import org.sonar.check.Rule;
 
 @Rule(key = RealityCheckNameRule.CHECK_KEY,name= RealityCheckNameRule.NAME, description= RealityCheckNameRule.HTML_DESCRIPTION)
-public class RealityCheckNameRule implements VensimCheck {
+public class RealityCheckNameRule extends AbstractVensimCheck {
 
     public static final String CHECK_KEY = "reality-check-name-convention";
     public static final String NAME = "RealityCheckNameRule" ;
@@ -43,7 +43,8 @@ public class RealityCheckNameRule implements VensimCheck {
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The reality check '" + symbol.getToken() + "' doesn't follow the naming convention.");
-                    context.addIssue(issue);
+                    addIssue(context,issue,symbol);
+
                 }
 
             }

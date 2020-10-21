@@ -14,7 +14,7 @@ import org.sonar.check.RuleProperty;
 
 
 @Rule(key = MagicNumberCheck.CHECK_KEY,name=MagicNumberCheck.NAME, description= MagicNumberCheck.HTML_DESCRIPTION)
-public class MagicNumberCheck implements VensimCheck {
+public class MagicNumberCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "magic-number-check";
     public static final String NAME = "MagicNumberCheck" ;
     public static final String HTML_DESCRIPTION = "A magic number is a number that comes out of nowhere, and is directly used in an expression." +
@@ -85,7 +85,8 @@ public class MagicNumberCheck implements VensimCheck {
                         Issue issue = new Issue(this, line, "The number " + symbol.getToken() + " is repeated " +
                                 symbol.getDefinitionLines().size() + " times. Consider replacing it by a constant");
                         issue.setSeverity(issueSeverity);
-                        context.addIssue(issue);
+                        addIssue(context,issue,symbol);
+
                     }
 
                 }

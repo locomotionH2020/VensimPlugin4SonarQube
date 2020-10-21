@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 @Rule(key = DictionaryIndexMismatchCheck.CHECK_KEY, name = DictionaryIndexMismatchCheck.NAME, description = DictionaryIndexMismatchCheck.HTML_DESCRIPTION)
-public class DictionaryIndexMismatchCheck implements VensimCheck{
+public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
     public static final String CHECK_KEY = "symbol-index-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the symbols in the file have at least a subset of the indexes stored in the database.\n " +
@@ -51,7 +51,8 @@ public class DictionaryIndexMismatchCheck implements VensimCheck{
                     Symbol dbSymbol = dbTable.getSymbol(foundSymbol.getToken().trim());
                     List<String> dbTxt = dbSymbol.getIndexes().stream().map(list -> list.get(0).getToken()).collect(Collectors.toList());
                     Issue issue = new Issue(this, line,"The symbol '" +  foundSymbol.getToken() +"' is indexed by values that aren't stored in the database.'\nFound:" + foundTxt + ".\nExpected a subset of:" + dbTxt );
-                    context.addIssue(issue);
+                    addIssue(context,issue,foundSymbol);
+
                 }
             }
         }
