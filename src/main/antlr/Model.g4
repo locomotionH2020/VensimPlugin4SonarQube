@@ -126,7 +126,7 @@ viewSettings have the following syntax:
 6- (zoom) zoom value.
 7- (tf) template flag 0=normal, 1=dont use, 3= template view.
 **/
-viewSettings: '$'  color  ',' integerConst ',' typography ppix=integerConst ','ppiy=integerConst ',' zoom=integerConst ','tf=integerConst;
+viewSettings: '$'  color  ',' integerConst ',' typography ppix=integerConst ','ppiy=integerConst (',' zoom=integerConst ','tf=integerConst)?;
 viewVariables: viewSettings (arrow | viewVariable)*;
 
 /**
