@@ -45,6 +45,15 @@ macroDefinition: ':MACRO:' macroHeader symbolWithDoc+ ':END OF MACRO:';
 
 
 
+// The lexer strips some tokens we are not interested in.
+// The character encoding is given at the start of a Vensim file.
+// The units and documentation sections and group markings are skipped for now.
+// Line continuation characters and the sketch must be stripped by a preprocessor.
+
+CommentOrEncoding: '{' .*? '}' -> skip;
+
+Group : '********************************************************' .*? '|' -> skip ;
+
 
 expr:     expr op=('^'|'*'|'/'|'-'|'+'|Less|Greater|LessEqual|GreaterEqual|Equal|NotEqual| ':AND:' | ':OR:') expr  # exprOperation
     |   constVensim                             # const
@@ -84,6 +93,104 @@ constantLine: ( constVensim ( ',' constVensim)*) ;
 constList : constantLine ((';' constantLine)* ';')?;
 
 numberList: (integerConst | floatingConst) (',' ( integerConst | floatingConst))*;
+
+
+
+Star : '*' ;
+Div : '/' ;
+Less : '<' ;
+LessEqual : '<=' ;
+Greater : '>' ;
+GreaterEqual : '>=' ;
+Equal : '=' ;
+TwoEqual : '==' ;
+NotEqual : '<>' ;
+Exclamation : '!' ;
+DataEquationOp: ':=';
+StringAssignOp: ':IS:';
+
+
+subscriptId : Id  Exclamation?;
+Id: ( ( Nondigit IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) | StringLiteral );
+
+fragment
+IdChar : [a-zA-Z0-9_$'&%\u00A1-\u00ff\u0100-\u017f\u0180-\u024f\u1e02-\u1ef3] ;
+
+
+fragment
+Nondigit : [a-zA-Z_] ;
+
+fragment
+Digit
+    :   [0-9]
+    ;
+constVensim
+    :   integerConst
+    |   floatingConst
+    |   StringConst
+    ;
+
+
+integerConst
+    :  ('+'|'-')* DigitSeq
+    ;
+
+fragment
+NonzeroDigit
+    :   [1-9]
+    ;
+
+
+floatingConst:
+    ('+'|'-')* FloatingConstNumber;
+FloatingConstNumber
+: FractionalConstant ExponentPart?
+| DigitSeq ExponentPart
+;
+
+
+FractionalConstant
+    :   DigitSeq? '.' DigitSeq
+    |   DigitSeq '.'
+    ;
+
+
+ExponentPart
+    :   'e' [+-]? DigitSeq
+    |   'E' [+-]? DigitSeq
+    ;
+
+
+
+DigitSeq
+    :   Digit+
+    ;
+
+StringLiteral
+    :   ["](~["\\]|[\\].)*?["]
+    ;
+
+StringConst
+    :    ['](~['\\]|[\\].)*?[']
+    ;
+
+
+Keyword
+    :   ':'[a-zA-Z ]*':'
+    ;
+
+Whitespace : [ \t\n\r]+ -> skip ;
+// Backslashes are used as line continuators, so they can be ignored.
+Backslash: [\\] -> skip;
+INFO_UNIT: '~' ~('~'|'|')*;
+OtherCaracter: .;
+
+
+
+
+ unitsDoc: units=INFO_UNIT comment=INFO_UNIT supplementary=INFO_UNIT?'|';
+
+SketchesDelimiter: '///---';
 
 graphsGroup: graphs*;
 graphs: graph title xaxis? xlabel? xdiv? yaxis? ylabel? ydiv? xmin? xmax? nolegend? scale graphvar*;
@@ -126,7 +233,7 @@ viewSettings have the following syntax:
 6- (zoom) zoom value.
 7- (tf) template flag 0=normal, 1=dont use, 3= template view.
 **/
-viewSettings: '$'  color  ',' integerConst ',' typography ppix=integerConst ','ppiy=integerConst (',' zoom=integerConst ','tf=integerConst)?;
+viewSettings: '$'  color  ',' integerConst ',' typography '|'? (ppix=integerConst ','ppiy=integerConst)? (',' zoom=integerConst ','tf=integerConst)?;
 viewVariables: viewSettings (arrow | viewVariable)*;
 
 /**
@@ -198,119 +305,10 @@ typography have the following syntax:
 4- (fillColor) color of the filling.
 4- (background Color) color of the background .
 **/
-typography: typographyName?'|' fontSize=integerConst'|' textFormat '|' fontColor=color ('|' shapeColor=color '|' arrowColor=color '|' fillColor=color '|' backgroundColor=color '|')?;
+typography: typographyName?'|' fontSize=integerConst'|' .*? '|' fontColor=color ('|' shapeColor=color '|' arrowColor=color '|' fillColor=color '|' backgroundColor=color)?;
 typographyName: '@'? Id;
-textFormat: 'B'?'I'?'U'?'S'?'V'?'D'?;
 
 color: rgbColor | singleColor;
 rgbColor: integerConst '-' integerConst '-' integerConst;
 singleColor: integerConst;
 
-
-subscriptId : Id  Exclamation?;
-
-constVensim
-    :   integerConst
-    |   floatingConst
-    |   StringConst
-    ;
-
-
-integerConst
-    :  ('+'|'-')* DigitSeq
-    ;
-
-
-floatingConst:
-    ('+'|'-')* FloatingConstNumber;
-
-
-
- unitsDoc: units=INFO_UNIT comment=INFO_UNIT supplementary=INFO_UNIT?'|';
-
-// The lexer strips some tokens we are not interested in.
-// The character encoding is given at the start of a Vensim file.
-// The units and documentation sections and group markings are skipped for now.
-// Line continuation characters and the sketch must be stripped by a preprocessor.
-
-CommentOrEncoding: '{' .*? '}' -> skip;
-
-Group : '********************************************************' .*? '|' -> skip ;
-
-
-Star : '*' ;
-Div : '/' ;
-Less : '<' ;
-LessEqual : '<=' ;
-Greater : '>' ;
-GreaterEqual : '>=' ;
-Equal : '=' ;
-TwoEqual : '==' ;
-NotEqual : '<>' ;
-Exclamation : '!' ;
-DataEquationOp: ':=';
-StringAssignOp: ':IS:';
-
-Id: ( ( Nondigit  IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) |StringLiteral);
-
-fragment
-IdChar : [a-zA-Z0-9_$'"&%\u00A1-\u00ff\u0100-\u017f\u0180-\u024f\u1e02-\u1ef3] ;
-
-fragment
-IdCharWithDash : [a-zA-Z0-9_$'"&%\-\u00A1-\u00ff\u0100-\u017f\u0180-\u024f\u1e02-\u1ef3] ;
-
-fragment
-NonzeroDigit
-    :   [1-9]
-    ;
-
-fragment
-Nondigit : [a-zA-Z_] ;
-
-fragment
-Digit
-    :   [0-9]
-    ;
-
-FloatingConstNumber
-: FractionalConstant ExponentPart?
-| DigitSeq ExponentPart
-;
-
-
-FractionalConstant
-    :   DigitSeq? '.' DigitSeq
-    |   DigitSeq '.'
-    ;
-
-
-ExponentPart
-    :   'e' [+-]? DigitSeq
-    |   'E' [+-]? DigitSeq
-    ;
-
-DigitSeq
-    :   Digit+
-    ;
-
-StringLiteral
-    :   ["](~["\\]|[\\].)*?["\r\n]
-    ;
-
-
-StringConst
-    :    ['](~['\\]|[\\].)*?['\r\n]
-    ;
-
-Keyword
-    :   ':'[a-zA-Z ]*':'
-    ;
-
-Whitespace : [ \t\n\r]+ -> skip ;
-
-// Backslashes are used as line continuators, so they can be ignored.
-Backslash: [\\] -> skip;
-INFO_UNIT: '~' ~('~'|'|')*;
-OtherCaracter: .;
-
-SketchesDelimiter: '///---';
