@@ -24,7 +24,7 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
     }
     @Override
     public Object visitViewName(ModelParser.ViewNameContext ctx) {
-        String viewName = ctx.getText().trim();
+        String viewName = ctx.getText().trim().substring(1);
         actualView = new View(viewName);
         table.addView(actualView);
         return super.visitViewName(ctx);

@@ -60,7 +60,10 @@ public class VensimScanner {
             try {
                 scanFile(vensimFile);
             } catch (Exception e) {
-                LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.getMessage());
+                LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.toString() );
+                for(StackTraceElement ele : e.getStackTrace()){
+                    LOG.error(ele.toString());
+                }
             }
         }
 
@@ -116,8 +119,9 @@ public class VensimScanner {
             if (serviceController.isAuthenticated())
                 dbTable = serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols()));
 
-            ViewTableUtility.filterPrefix(table, viewPrefix);
-
+            if(!viewPrefix.isEmpty()) {
+                ViewTableUtility.filterPrefix(table, viewPrefix);
+            }
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
 
             checkIssues(visitorContext);
