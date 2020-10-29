@@ -43,7 +43,7 @@ public class SymbolWithoutCommentCheck extends AbstractVensimCheck{
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The symbol '"+ symbol.getToken() + "' should have a comment");
-                    context.addIssue(issue);
+                    addIssue(context,issue,symbol);
                 }
             }
         }
