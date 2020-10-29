@@ -16,11 +16,13 @@ import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.measure.NewMeasure;
+import org.sonar.api.config.Configuration;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
 import static org.mockito.Mockito.*;
@@ -104,9 +106,14 @@ public class TestVensimScanner {
         files.add(wrongFile);
         files.add(fileAfter);
 
-
         SensorContext context = Mockito.mock(SensorContext.class);
+        Configuration configuration = Mockito.mock(Configuration.class);
+        Optional<String> optional = Optional.empty();
+
         when(context.isCancelled()).thenReturn(false);
+        when(context.config()).thenReturn(configuration);
+        when(configuration.get(Mockito.anyString())).thenReturn(optional);
+
         NewMeasure measure = Mockito.mock(NewMeasure.class);
         when(measure.forMetric(Mockito.any())).thenReturn(measure);
         when(measure.on(Mockito.any())).thenReturn(measure);

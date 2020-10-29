@@ -93,7 +93,6 @@ public class TestSymbolTable {
         Symbol symbol3 = new Symbol("symbol3");
         symbolTable.addSymbol(symbol3);
 
-        System.out.println(symbolTable);
         symbolTable.removeSymbol(symbol1);
         Symbol[] returnedSymbols = symbolTable.getSymbols().toArray(new Symbol[0]);
         Symbol[] expectedSymbols ={symbol2,symbol3};
