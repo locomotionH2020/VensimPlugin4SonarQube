@@ -75,7 +75,8 @@ public class TestViewTableVisitor {
         assertFalse( intro.getShadow_symbols().contains(VARIABLE_1));
         assertTrue( intro.getShadow_symbols().contains(VARIABLE_2));
 
-        assertEquals(3,intro.getSymbols().size());
+        System.out.println(intro.getSymbols());
+        assertEquals(4,intro.getSymbols().size());
 
     }
 }
