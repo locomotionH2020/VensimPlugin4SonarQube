@@ -37,10 +37,13 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
         if(internalId == SYMBOL_PRIVATE_ID) {
             int objectType = Integer.parseInt(ctx.bits.getText());
             String token = ctx.name.getText();
+            String underScoreToken = token.replace(" ", "_");
             if (isEven(objectType)){
                 actualView.addShadow(token);
+                actualView.addShadow(underScoreToken);
             }else{
                 actualView.addPrimary(token);
+                actualView.addPrimary(underScoreToken);
             }
         }
         return super.visitViewVariable(ctx);
