@@ -119,13 +119,13 @@ public class VensimScanner {
             if (serviceController.isAuthenticated())
                 dbTable = serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols()));
 
+            //mark the symbols tha need to be filtered.
             if(!viewPrefix.isEmpty()) {
                 ViewTableUtility.filterPrefix(table, viewPrefix);
             }
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
 
             checkIssues(visitorContext);
-
             saveIssues(inputFile, visitorContext.getIssues());
 
             int lines = content.split("[\r\n]+").length;

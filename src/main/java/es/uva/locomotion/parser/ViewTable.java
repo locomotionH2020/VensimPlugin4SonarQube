@@ -32,14 +32,23 @@ public class ViewTable {
     }
 
 
-    public View addView(View view) {
+    public void addView(View view) {
         String name = view.getName().trim();
 
         if(hasView(name))
             throw new IllegalArgumentException("The view:  "+ name+ " already exists.");
 
         table.put(name,view);
-        return view;
+    }
+
+    public View createOrSelectView(String viewName){
+        if(hasView(viewName)){
+            return getView(viewName);
+        }else{
+            View newView = new View(viewName);
+            addView(newView);
+            return newView;
+        }
     }
 
     public View removeView(View view) {
