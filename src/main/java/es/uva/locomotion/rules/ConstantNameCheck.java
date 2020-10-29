@@ -9,7 +9,7 @@ import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
 
 @Rule(key = ConstantNameCheck.CHECK_KEY,name=ConstantNameCheck.NAME, description= ConstantNameCheck.HTML_DESCRIPTION)
-public class ConstantNameCheck implements VensimCheck {
+public class ConstantNameCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "constant-name-convention";
     public static final String NAME = "ConstantNameCheck" ;
     public static final String HTML_DESCRIPTION = "" +
@@ -45,7 +45,8 @@ public class ConstantNameCheck implements VensimCheck {
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The constant '"  + symbol.getToken() +"' doesn't follow the naming convention.");
-                    context.addIssue(issue);
+                    addIssue(context,issue,symbol);
+
                 }
 
             }

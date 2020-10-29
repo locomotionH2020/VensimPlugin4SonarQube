@@ -172,6 +172,11 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitSketchesGraphsAndMetadata(ModelParser.SketchesGraphsAndMetadataContext ctx) {
+        return null;
+    }
+
 
     @Override
     public Void visitLookupDefinition(ModelParser.LookupDefinitionContext ctx) {

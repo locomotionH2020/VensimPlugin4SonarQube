@@ -13,6 +13,8 @@ public class View {
 
     public View(String name){
         this.name = name;
+        primary_symbols = new HashSet<>();
+        shadow_symbols = new HashSet<>();
     }
 
     public String getName(){

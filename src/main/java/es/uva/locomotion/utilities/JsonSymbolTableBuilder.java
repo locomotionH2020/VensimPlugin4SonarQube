@@ -16,6 +16,8 @@ public class JsonSymbolTableBuilder {
     public final static String KEY_DEPENDENCIES = "dependencies";
     public static final String KEY_LINES = "lines";
     public static final String KEY_TYPE = "type" ;
+    public static final String KEY_PRIMARY_VIEW = "primary" ;
+    public static final String KEY_SHADOW_VIEWS = "shadows" ;
 
     public JsonSymbolTableBuilder(){
         fileBuilder = Json.createArrayBuilder();
@@ -54,8 +56,14 @@ public class JsonSymbolTableBuilder {
         JsonArrayBuilder dependenciesBuilder = Json.createArrayBuilder();
         for(Symbol dependency:symbol.getDependencies())
             dependenciesBuilder.add(dependency.getToken());
-
         symbolBuilder.add(KEY_DEPENDENCIES,dependenciesBuilder);
+
+        symbolBuilder.add(KEY_PRIMARY_VIEW,symbol.getPrimary_view());
+
+        JsonArrayBuilder shadowBuilder = Json.createArrayBuilder();
+        for(String view:symbol.getShadow_views())
+            shadowBuilder.add(view);
+        symbolBuilder.add(KEY_SHADOW_VIEWS,shadowBuilder);
 
 
         symbolBuilder.add(KEY_UNITS,symbol.getUnits());

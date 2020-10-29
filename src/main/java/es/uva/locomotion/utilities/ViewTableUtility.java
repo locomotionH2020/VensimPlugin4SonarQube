@@ -31,7 +31,7 @@ public class ViewTableUtility {
                     break;
                 }
             }
-           symbol.setFiltered(filtered);
+            symbol.setFiltered(filtered);
         }
     }
 }

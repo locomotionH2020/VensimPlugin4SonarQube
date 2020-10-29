@@ -11,7 +11,7 @@ import org.sonar.check.Rule;
 
 
 @Rule(key = SymbolNotDefinedInDictionaryCheck.CHECK_KEY, name= SymbolNotDefinedInDictionaryCheck.NAME,description = SymbolNotDefinedInDictionaryCheck.HTML_DESCRIPTION)
-public class SymbolNotDefinedInDictionaryCheck implements VensimCheck {
+public class SymbolNotDefinedInDictionaryCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "symbol-not-found-db" ;
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the symbols in the file are defined in the dictionary. " +

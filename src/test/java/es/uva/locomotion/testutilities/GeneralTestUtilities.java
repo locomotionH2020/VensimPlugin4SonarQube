@@ -3,6 +3,7 @@ package es.uva.locomotion.testutilities;
 
 import es.uva.locomotion.parser.*;
 import es.uva.locomotion.parser.visitors.RawSymbolTableVisitor;
+import es.uva.locomotion.parser.visitors.ViewTableVisitor;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.rules.VensimCheck;
@@ -83,6 +84,15 @@ public class GeneralTestUtilities {
         return visitor.getSymbolTable(root);
     }
 
+    public static ViewTable getViewTableFromString(String content){
+
+
+        ModelParser.FileContext root = getParseTreeFromString(content);
+
+
+        ViewTableVisitor visitor = new ViewTableVisitor();
+        return visitor.getViewTable(root);
+    }
 
 
     public static SymbolTable getRAWSymbolTable(String file_path) throws IOException {

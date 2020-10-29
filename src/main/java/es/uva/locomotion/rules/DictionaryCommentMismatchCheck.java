@@ -9,7 +9,7 @@ import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
 
 @Rule(key = DictionaryCommentMismatchCheck.CHECK_KEY, name = DictionaryCommentMismatchCheck.NAME, description = DictionaryCommentMismatchCheck.HTML_DESCRIPTION)
-public class DictionaryCommentMismatchCheck implements VensimCheck {
+public class DictionaryCommentMismatchCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "symbol-comment-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the symbols in the file have the same comment as the symbols stored in the database. " +
@@ -35,7 +35,8 @@ public class DictionaryCommentMismatchCheck implements VensimCheck {
 
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has a comment '"+foundSymbol.getComment().trim() + "' but the dictionary has '"+ expectedComment + "'." );
-                    context.addIssue(issue);
+                    addIssue(context,issue,foundSymbol);
+
                 }
             }
         }

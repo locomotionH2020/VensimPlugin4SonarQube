@@ -9,7 +9,7 @@ import es.uva.locomotion.parser.SymbolType;
 import org.sonar.check.Rule;
 
 @Rule(key = LookupNameCheck.CHECK_KEY,name=LookupNameCheck.NAME,description = LookupNameCheck.HTML_DESCRIPTION)
-public class LookupNameCheck implements VensimCheck{
+public class LookupNameCheck extends AbstractVensimCheck{
     public static final String CHECK_KEY = "lookup-name-convention" ;
 
     public static final String HTML_DESCRIPTION = "" +
@@ -48,7 +48,8 @@ public class LookupNameCheck implements VensimCheck{
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line, "The lookup '" + symbol.getToken() + "' doesn't follow the naming convention");
-                    context.addIssue(issue);
+                    addIssue(context,issue,symbol);
+
                 }
 
             }

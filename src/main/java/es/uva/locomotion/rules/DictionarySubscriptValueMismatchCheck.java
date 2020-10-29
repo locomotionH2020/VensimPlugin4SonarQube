@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Rule(key = DictionarySubscriptValueMismatchCheck.CHECK_KEY, name = DictionarySubscriptValueMismatchCheck.NAME, description = DictionarySubscriptValueMismatchCheck.HTML_DESCRIPTION)
-public class DictionarySubscriptValueMismatchCheck implements VensimCheck{
+public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
 
     public static final String CHECK_KEY = "symbol-subscript-value-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +
@@ -36,7 +36,8 @@ public class DictionarySubscriptValueMismatchCheck implements VensimCheck{
 
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The subscript '"+ foundSymbol.getToken() + "' has values that aren't defined in the database. Unexpected values: '["+ getUnexpectedSymbolsString(foundSymbol,dbTable)+"]'.");
-                    context.addIssue(issue);
+                    addIssue(context,issue,foundSymbol);
+
                 }
             }
         }
