@@ -292,6 +292,36 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNumberList(ModelParser.NumberListContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ModelParser#subscriptId}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSubscriptId(ModelParser.SubscriptIdContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#constVensim}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstVensim(ModelParser.ConstVensimContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#integerConst}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIntegerConst(ModelParser.IntegerConstContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#floatingConst}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloatingConst(ModelParser.FloatingConstContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ModelParser#unitsDoc}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnitsDoc(ModelParser.UnitsDocContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ModelParser#graphsGroup}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -502,12 +532,6 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTypographyName(ModelParser.TypographyNameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ModelParser#textFormat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTextFormat(ModelParser.TextFormatContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ModelParser#color}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -525,34 +549,4 @@ public interface ModelVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSingleColor(ModelParser.SingleColorContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#subscriptId}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSubscriptId(ModelParser.SubscriptIdContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#constVensim}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitConstVensim(ModelParser.ConstVensimContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#integerConst}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIntegerConst(ModelParser.IntegerConstContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#floatingConst}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFloatingConst(ModelParser.FloatingConstContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ModelParser#unitsDoc}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitUnitsDoc(ModelParser.UnitsDocContext ctx);
 }
