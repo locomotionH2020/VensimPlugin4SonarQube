@@ -125,6 +125,7 @@ public class VensimScanner {
             }
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
 
+
             checkIssues(visitorContext);
             saveIssues(inputFile, visitorContext.getIssues());
 
@@ -154,6 +155,7 @@ public class VensimScanner {
 
 
     public void checkIssues(VensimVisitorContext fileContext){
+        //System.out.println("module");
 
         for (VensimCheck check : checks.all()) {
             check.scan(fileContext);
