@@ -53,10 +53,18 @@ test_job:
   script:
     - mvn $MAVEN_CLI_OPTS  test -P Unit
 
-deploy:
+deploy-master:
   stage: deploy
-  script:  ssh -i key.prv  -oStrictHostKeyChecking=no usuario@tfg2020.virtual.lab.inf.uva.es -p 20201 "cd tfg-sonarvensim && git checkout master && git pull origin master&& mvn package -DskipTests
+  script:  ssh -i key.prv  -oStrictHostKeyChecking=no usuario@virtual.lab.inf.uva.es -p 20201 "cd tfg-sonarvensim && git checkout master && git pull origin master&& mvn package -DskipTests
           && cp target/sonar-vensim-1.0-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.0-SNAPSHOT.jar
           && sh ../sonarqube-8.0/bin/linux-x86-64/sonar.sh restart && exit"
   only:
     - master
+
+deploy-develop:
+  stage: deploy
+  script:  ssh -i key.prv  -oStrictHostKeyChecking=no usuario@virtual.lab.inf.uva.es -p 20201 "cd tfg-sonarvensim && git checkout develop && git pull origin develop&& mvn package -DskipTests
+          && cp target/sonar-vensim-1.0-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.0-SNAPSHOT.jar
+          && sh ../sonarqube-8.0/bin/linux-x86-64/sonar.sh restart && exit"
+  only:
+    - develop

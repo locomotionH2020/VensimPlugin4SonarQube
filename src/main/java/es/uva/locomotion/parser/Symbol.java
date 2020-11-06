@@ -10,15 +10,18 @@ public class Symbol {
     private String token;
     private List<Integer> linesDefined;
     private List<List<Symbol>> indexes;
-    private List<String> modules;
     private String units;
     private String comment;
     private Set<Symbol> dependencies;
     private SymbolType type;
     private String category;
-
+    private String primary_view;
+    private List<String> shadow_views;
 
     private boolean isValid;
+
+
+    private boolean isFiltered;
 
 
     public Symbol(String token){
@@ -26,12 +29,13 @@ public class Symbol {
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
         linesDefined = new ArrayList<>();
-        modules = new ArrayList<>();
         units = "";
         comment ="";
         category = "";
         indexes = new ArrayList<>();
         isValid = true;
+        primary_view = "";
+        shadow_views = new ArrayList<>();
     }
 
 
@@ -117,12 +121,13 @@ public class Symbol {
         return getToken().equals(symbol.getToken()) &&
                 linesDefined.equals(symbol.linesDefined) &&
                 getIndexes().equals(symbol.getIndexes()) &&
-                getModules().equals(symbol.getModules()) &&
                 getUnits().equals(symbol.getUnits()) &&
                 getComment().equals(symbol.getComment()) &&
                 getDependencies().equals(symbol.getDependencies()) &&
                 getType() == symbol.getType() &&
-                getCategory().equals(symbol.getCategory());
+                getCategory().equals(symbol.getCategory()) &&
+                getPrimary_view().equals(symbol.getPrimary_view()) &&
+                getShadow_views().equals(symbol.getShadow_views());
     }
 
     @Override
@@ -131,18 +136,19 @@ public class Symbol {
                 "token='" + token + '\'' +
                 ", linesDefined=" + linesDefined +
                 ", indexes=" + indexes+
-                ", modules=" + modules +
                 ", units='" + units + '\'' +
                 ", comment='" + comment + '\'' +
                 ", dependencies=" + dependencies.stream().map(Symbol::getToken).collect(Collectors.toList()) +
                 ", type=" + type +
                 ", category='" + category + '\'' +
+                ", primary module='" + getPrimary_view() + '\'' +
+                ", shadow modules='" + getShadow_views() +
                 '}';
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getToken(), linesDefined, getIndexes(), getModules(), getUnits(), getComment(), getType(), getCategory());
+        return Objects.hash(getToken(), linesDefined, getIndexes(), getUnits(), getComment(), getType(), getCategory(), getPrimary_view(), getShadow_views());
     }
 
     public void setUnits(String units) {
@@ -169,17 +175,9 @@ public class Symbol {
         return category;
     }
 
-    public List<String> getModules() {
-        return modules;
-    }
-
-    public void addModule(String module){
-        modules.add(module.trim());
-    }
-
     /**
      * Overrides the dependencies
-     * @param dependencies
+     * @param dependencies new dependencies
      */
     public void setDependencies(Set<Symbol> dependencies) {
         this.dependencies = dependencies;
@@ -193,4 +191,29 @@ public class Symbol {
         return isValid;
     }
 
+    public String getPrimary_view() { return primary_view; }
+
+    public void setPrimary_view(String primary_view) { this.primary_view = primary_view; }
+
+    public List<String> getShadow_views() {
+        return shadow_views;
+    }
+
+    public void addShadow_view(String module){
+        shadow_views.add(module.trim());
+    }
+
+    public List<String> get_views(){
+        List<String> list = new ArrayList<>(getShadow_views());
+        list.add(getPrimary_view());
+        return list;
+    }
+
+    public boolean isFiltered() {
+        return isFiltered;
+    }
+
+    public void setFiltered(boolean filtered) {
+        isFiltered = filtered;
+    }
 }

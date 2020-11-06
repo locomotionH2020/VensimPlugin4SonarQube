@@ -83,4 +83,41 @@ public class TestSymbolTable {
         assertEquals(expected, table.getUndeterminedSymbols());
     }
 
+    @Test
+    public void testRemoveSymbol() {
+        SymbolTable symbolTable = new SymbolTable();
+        Symbol symbol1 = new Symbol("symbol1");
+        symbolTable.addSymbol(symbol1);
+        Symbol symbol2 = new Symbol("symbol2");
+        symbolTable.addSymbol(symbol2);
+        Symbol symbol3 = new Symbol("symbol3");
+        symbolTable.addSymbol(symbol3);
+
+        symbolTable.removeSymbol(symbol1);
+        Symbol[] returnedSymbols = symbolTable.getSymbols().toArray(new Symbol[0]);
+        Symbol[] expectedSymbols ={symbol2,symbol3};
+        assertArrayEquals(expectedSymbols,returnedSymbols);
+
+        symbolTable.removeSymbol(symbol3);
+        returnedSymbols = symbolTable.getSymbols().toArray(new Symbol[0]);
+        Symbol[] expectedSymbols2 ={symbol2};
+        assertArrayEquals(expectedSymbols2,returnedSymbols);
+
+        symbolTable.removeSymbol(symbol2);
+        returnedSymbols = symbolTable.getSymbols().toArray(new Symbol[0]);
+        Symbol[] expectedSymbols3 ={};
+        assertArrayEquals(expectedSymbols3,returnedSymbols);
+    }
+
+    @Test
+    public void testRemoveSymbolNotFound() {
+        SymbolTable symbolTable = new SymbolTable();
+        Symbol symbol1 = new Symbol("symbol1");
+        symbolTable.addSymbol(symbol1);
+        Symbol symbol2 = new Symbol("symbol2");
+
+
+        assertThrows(IllegalArgumentException.class, () -> symbolTable.removeSymbol(symbol2));
+
+    }
 }

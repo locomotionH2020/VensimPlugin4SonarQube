@@ -16,11 +16,13 @@ import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.measure.NewMeasure;
+import org.sonar.api.config.Configuration;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
 import static org.mockito.Mockito.*;
@@ -42,7 +44,6 @@ public class TestVensimScanner {
         when(inputFile.filename()).thenReturn("notAVensimModel.mdl");
 
 
-
         VensimScanner scanner = RuleTestUtilities.getScanner();
 
 
@@ -58,12 +59,11 @@ public class TestVensimScanner {
     public void testScannerGetsModuleNameCorrectly() throws IOException {
         InputFile file = Mockito.mock(InputFile.class);
         when(file.contents()).thenReturn(""); // Esto se podría mejorar si se inyecta un generador de tabla de símbolos en
-                                              // el escáner en vez de usar un método estático
+        // el escáner en vez de usar un método estático
         when(file.filename()).thenReturn("climate.mdl");
 
 
-
-        SensorContext context = Mockito.mock(SensorContext.class,Mockito.RETURNS_DEEP_STUBS);
+        SensorContext context = Mockito.mock(SensorContext.class, Mockito.RETURNS_DEEP_STUBS);
         Checks<VensimCheck> checks = (Checks<VensimCheck>) Mockito.mock(Checks.class);
         JsonSymbolTableBuilder builder = mock(JsonSymbolTableBuilder.class);
         ServiceController controller = mock(ServiceController.class);
@@ -71,14 +71,14 @@ public class TestVensimScanner {
         when(controller.getSymbolsFromDb(any())).thenReturn(mock(SymbolTable.class));
 
 
-        VensimScanner scanner = spy(new VensimScanner(context,checks,builder,controller));
+        VensimScanner scanner = spy(new VensimScanner(context, checks, builder, controller));
 
         Mockito.doNothing().when(scanner).generateJsonOutput();
         Mockito.doNothing().when(scanner).checkIssues(any());
-        Mockito.doNothing().when(scanner).saveIssues(any(),anyList());
+        Mockito.doNothing().when(scanner).saveIssues(any(), anyList());
         Mockito.doCallRealMethod().when(scanner).scanFile(file);
         scanner.scanFile(file);
-        Mockito.verify(controller).injectNewSymbols(eq("climate"),any(),any());
+        Mockito.verify(controller).injectNewSymbols(eq("climate"), any(), any());
 
 
     }
@@ -106,9 +106,14 @@ public class TestVensimScanner {
         files.add(wrongFile);
         files.add(fileAfter);
 
-
         SensorContext context = Mockito.mock(SensorContext.class);
+        Configuration configuration = Mockito.mock(Configuration.class);
+        Optional<String> optional = Optional.empty();
+
         when(context.isCancelled()).thenReturn(false);
+        when(context.config()).thenReturn(configuration);
+        when(configuration.get(Mockito.anyString())).thenReturn(optional);
+
         NewMeasure measure = Mockito.mock(NewMeasure.class);
         when(measure.forMetric(Mockito.any())).thenReturn(measure);
         when(measure.on(Mockito.any())).thenReturn(measure);
@@ -117,10 +122,10 @@ public class TestVensimScanner {
         when(context.newMeasure()).thenReturn(measure);
 
         CheckFactory factory = new CheckFactory(RuleTestUtilities.getAllActiveRules());
-        Checks<VensimCheck> checks =  factory.<VensimCheck>create(VensimRuleRepository.REPOSITORY_KEY)
+        Checks<VensimCheck> checks = factory.<VensimCheck>create(VensimRuleRepository.REPOSITORY_KEY)
                 .addAnnotatedChecks(VensimRuleRepository.getChecks());
 
-        VensimScanner scanner = spy(new VensimScanner(context,checks,builder,mockServiceController));
+        VensimScanner scanner = spy(new VensimScanner(context, checks, builder, mockServiceController));
         when(mockServiceController.getSymbolsFromDb(anyList())).thenReturn(null);
 
         Mockito.doCallRealMethod().when(scanner).scanFiles(files);
@@ -129,15 +134,15 @@ public class TestVensimScanner {
         Mockito.doCallRealMethod().when(scanner).checkIssues(Mockito.any());
         Mockito.doReturn("").when(scanner).getModuleNameFromFileName(any());
         Mockito.doNothing().when(scanner).generateJsonOutput();
-        Mockito.doNothing().when(scanner).saveIssues(any(),any());
+        Mockito.doNothing().when(scanner).saveIssues(any(), any());
 
 
         scanner.scanFiles(files);
 
 
-        Mockito.verify(scanner,Mockito.times(2)).checkIssues(Mockito.any());
-        Mockito.verify(logger,Mockito.times(1)).error(Mockito.any());
-        Mockito.verify(logger,Mockito.times(0)).info(Mockito.any());
+        Mockito.verify(scanner, Mockito.times(2)).checkIssues(Mockito.any());
+        Mockito.verify(logger, Mockito.times(1)).error(Mockito.any());
+        Mockito.verify(logger, Mockito.times(0)).info(Mockito.any());
 
     }
 

@@ -124,4 +124,6 @@ public class SymbolTableGenerator {
     private static boolean isFunction(Symbol symbol){
         return symbol.getType() == SymbolType.Function || symbol.getType() == SymbolType.UNDETERMINED_FUNCTION;
     }
+
+
 }

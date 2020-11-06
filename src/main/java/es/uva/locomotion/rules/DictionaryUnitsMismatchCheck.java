@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Rule(key = DictionaryUnitsMismatchCheck.CHECK_KEY, name = DictionaryUnitsMismatchCheck.NAME, description = DictionaryUnitsMismatchCheck.HTML_DESCRIPTION)
-public class DictionaryUnitsMismatchCheck implements VensimCheck {
+public class DictionaryUnitsMismatchCheck extends AbstractVensimCheck{
     public static final String CHECK_KEY = "symbol-units-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the symbols in the file have the same units as the symbols stored in the database. " +
@@ -38,7 +38,8 @@ public class DictionaryUnitsMismatchCheck implements VensimCheck {
                 String expectedUnits = dbTable.getSymbol(foundSymbol.getToken()).getUnits().trim();
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has '"+foundSymbol.getUnits().trim() + "' as units but the dictionary has '"+ expectedUnits + "'." );
-                    context.addIssue(issue);
+                    addIssue(context,issue,foundSymbol);
+
                 }
             }
         }

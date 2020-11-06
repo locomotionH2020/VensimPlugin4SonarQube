@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Rule(key= SymbolWithoutCommentCheck.CHECK_KEY, name = SymbolWithoutCommentCheck.NAME, description = SymbolWithoutCommentCheck.HTML_DESCRIPTION)
-public class SymbolWithoutCommentCheck implements VensimCheck{
+public class SymbolWithoutCommentCheck extends AbstractVensimCheck{
 
     public static final String CHECK_KEY = "symbol-without-comment" ;
     public static final String HTML_DESCRIPTION = "" +
@@ -43,7 +43,7 @@ public class SymbolWithoutCommentCheck implements VensimCheck{
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The symbol '"+ symbol.getToken() + "' should have a comment");
-                    context.addIssue(issue);
+                    addIssue(context,issue,symbol);
                 }
             }
         }

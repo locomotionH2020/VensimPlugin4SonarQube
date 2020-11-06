@@ -8,6 +8,7 @@ import es.uva.locomotion.rules.VensimCheck;
 
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import es.uva.locomotion.utilities.SymbolTableGenerator;
+import es.uva.locomotion.utilities.ViewTableUtility;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
@@ -19,8 +20,6 @@ import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.rule.RuleKey;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -42,6 +41,8 @@ public class VensimScanner {
   
     private ServiceController serviceController;
 
+    private static final String VIEW_PREFIX = "vensim.view.prefix";
+
     public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder, ServiceController serviceController) {
         this.context = context;
         this.checks = checks;
@@ -59,7 +60,10 @@ public class VensimScanner {
             try {
                 scanFile(vensimFile);
             } catch (Exception e) {
-                LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.getMessage());
+                LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.toString() );
+                for(StackTraceElement ele : e.getStackTrace()){
+                    LOG.error(ele.toString());
+                }
             }
         }
 
@@ -96,35 +100,45 @@ public class VensimScanner {
 
     public void scanFile(InputFile inputFile) {
 
+        String viewPrefix = context.config().get(VIEW_PREFIX).orElse("");
+
         try {
             String content = inputFile.contents();
             String module = getModuleNameFromFileName(inputFile.filename());
 
             ModelParser.FileContext root = getParseTree(content);
-
-
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
-            jsonBuilder.addSymbolTable(inputFile.filename(),table);
+
+            ViewTable viewTable = ViewTableUtility.getViewTable(root);
+            ViewTableUtility.addViews(table, viewTable);
+
+            jsonBuilder.addSymbolTable(inputFile.filename(), table);
+
 
             SymbolTable dbTable = null;
-            if(serviceController.isAuthenticated())
+            if (serviceController.isAuthenticated())
                 dbTable = serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols()));
 
+            //mark the symbols tha need to be filtered.
+            if(!viewPrefix.isEmpty()) {
+                ViewTableUtility.filterPrefix(table, viewPrefix);
+            }
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
 
+
             checkIssues(visitorContext);
-            saveIssues(inputFile,visitorContext.getIssues());
+            saveIssues(inputFile, visitorContext.getIssues());
 
             int lines = content.split("[\r\n]+").length;
 
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
-            if(serviceController.isAuthenticated() && dbTable != null)
-                serviceController.injectNewSymbols(module,new ArrayList<>(table.getSymbols()),dbTable);
+            if (serviceController.isAuthenticated() && dbTable != null)
+                serviceController.injectNewSymbols(module, new ArrayList<>(table.getSymbols()), dbTable);
         } catch (IOException e) {
-            LOG.error("Unable to analyze file '"+ inputFile.filename() + "'. Error: " + e.getMessage());
-        }catch (ParseCancellationException e){
-            LOG.error("Unable to parse the file '" + inputFile.filename() +  "'. Error: " + e.getLocalizedMessage());
+            LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
+        } catch (ParseCancellationException e) {
+            LOG.error("Unable to parse the file '" + inputFile.filename() + "'. Error: " + e.getLocalizedMessage());
         }
 
     }
@@ -141,6 +155,7 @@ public class VensimScanner {
 
 
     public void checkIssues(VensimVisitorContext fileContext){
+        //System.out.println("module");
 
         for (VensimCheck check : checks.all()) {
             check.scan(fileContext);

@@ -11,7 +11,7 @@ import org.sonar.check.Rule;
 
 
 @Rule(key = SubscriptNameCheck.CHECK_KEY, name = SubscriptNameCheck.NAME, description = SubscriptNameCheck.HTML_DESCRIPTION)
-public class SubscriptNameCheck implements VensimCheck {
+public class SubscriptNameCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "subscript-convention" ;
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all subscript names match the regular expression: \"([A-Z0-9]+_)+I\"</p>\n" +
@@ -46,7 +46,8 @@ public class SubscriptNameCheck implements VensimCheck {
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The subscript '"+ symbol.getToken() + "' doesn't follow the naming convention");
-                    context.addIssue(issue);
+                    addIssue(context,issue,symbol);
+
                 }
             }
 
