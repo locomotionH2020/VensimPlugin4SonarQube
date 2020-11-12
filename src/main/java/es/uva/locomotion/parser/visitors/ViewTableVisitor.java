@@ -12,7 +12,7 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
 
     private static int SYMBOL_PRIVATE_ID = 10;
 
-    public ViewTable getViewTable(ModelParser.FileContext context){
+    public ViewTable getViewTable(Model.FileContext context){
         table = new ViewTable();
         visit(context);
         return table;
@@ -23,7 +23,7 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
 
     }
     @Override
-    public Object visitViewName(ModelParser.ViewNameContext ctx) {
+    public Object visitViewName(Model.ViewNameContext ctx) {
         String viewName = ctx.getText().trim().substring(1);
 
         actualView = table.createOrSelectView(viewName);
@@ -32,7 +32,7 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitViewVariable(ModelParser.ViewVariableContext ctx) {
+    public Object visitViewVariable(Model.ViewVariableContext ctx) {
         int internalId = Integer.parseInt(ctx.internalId.getText());
         if(internalId == SYMBOL_PRIVATE_ID) {
             int objectType = Integer.parseInt(ctx.bits.getText());

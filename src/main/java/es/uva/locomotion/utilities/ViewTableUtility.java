@@ -6,7 +6,7 @@ import es.uva.locomotion.parser.visitors.ViewTableVisitor;
 
 public class ViewTableUtility {
 
-    public static ViewTable getViewTable(ModelParser.FileContext context) {
+    public static ViewTable getViewTable(Model.FileContext context) {
         ViewTableVisitor generator = new ViewTableVisitor();
         ViewTable rawTable = generator.getViewTable(context);
         return rawTable;
