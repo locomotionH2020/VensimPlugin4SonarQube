@@ -180,7 +180,7 @@ public class TestLookupNameCheck {
 
     @Test
     public void testNameEndsWithNumber(){
-        String program = "historical_extraction_lt3(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|\n";
+        String program = "historical_extraction_lt3(GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -194,7 +194,7 @@ public class TestLookupNameCheck {
     @Test
     public void testMultipleDefinitionCreateDifferentIssues(){
         String program = "historical_extraction_lt3[firstSubscript](GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|\n" +
-                "historical_extraction_lt3[firstSubscript](GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|\n";
+                "historical_extraction_lt3[firstSubscript](GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
