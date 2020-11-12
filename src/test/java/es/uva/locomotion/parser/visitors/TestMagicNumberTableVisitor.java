@@ -40,7 +40,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionDirectConstantEquation(){
-        String program = "A = 3 ~~|\n";
+        String program = "A = 3 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -51,7 +51,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionDirectConstantUnchangeableConstant(){
-        String program = "A == 3 ~~|\n";
+        String program = "A == 3 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -61,7 +61,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testExceptionDirectConstantDataEquation(){
-        String program = "A := 3 ~~|\n";
+        String program = "A := 3 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -72,7 +72,7 @@ public class TestMagicNumberTableVisitor {
 
     @Test
     public void testRepeatedNumbersInTheSameLineCount(){
-        String program = "A = 3 * 3 * 3 * 3 ~~|\n";
+        String program = "A = 3 * 3 * 3 * 3 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
@@ -363,7 +363,7 @@ public class TestMagicNumberTableVisitor {
     @Test
     public void testExceptionLookupNNumberListFormat(){
         String program = "accomplishments per hour lookup(0,0.2,0.4,0.6,0.8,1,\n" +
-                "                                         0,0.2,0.4,0.6,0.8,1)~~|\n";
+                "                                         0,0.2,0.4,0.6,0.8,1)~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());

@@ -48,7 +48,7 @@ public class TestRawSymbolTableVisitor {
     public void testSubscriptMappingDoesntOverrideOriginal(){
         String program = "subscriptBefore: ONE, TWO -> mappedSubscript~~|\n" +
                 "mappedSubscript: ONE, TWO~~|\n" +
-                "subscriptAfter: ONE, TWO -> mappedSubscript~~|\n";
+                "subscriptAfter: ONE, TWO -> mappedSubscript~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -63,7 +63,7 @@ public class TestRawSymbolTableVisitor {
     public void testSubscriptNameIsntOverridden() {
         String program = "subscriptBefore[country] = 7 ~~|\n" +
                 "country : MEXICO, USA,CANADA ->  otherCountries~~|\n" +
-                "subscriptAfter[country] = 6 ~~|\n";
+                "subscriptAfter[country] = 6 ~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -78,7 +78,7 @@ public class TestRawSymbolTableVisitor {
         String program =  "subscriptBefore[copy] = 7 ~~|\n" +
                 "original: OPTION1 ~~|\n" +
                 "copy\n <-> original  ~ units ~ comment|\n" +
-                "subscriptAfter[copy] = 6 ~~|\n";
+                "subscriptAfter[copy] = 6 ~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -97,7 +97,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testSubscriptCopyWhenOriginalNotDefinedYet(){
         String program = "copy\n <-> original  ~ units ~ comment|\n" +
-                "original: OPTION1, OPTION2 ~~|\n";
+                "original: OPTION1, OPTION2 ~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -113,7 +113,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testSubscriptSequence(){
-        String program = "age: (AGE_15-AGE_45)~~|\n";
+        String program = "age: (AGE_15-AGE_45)~~|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
 
@@ -130,7 +130,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testSubscriptSequenceWithSpaces(){
-        String program = "age: (     AGE 15-AGE 45      )~~|\n";
+        String program = "age: (     AGE 15-AGE 45      )~~|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         for(int i=15;i<=45;i++){
@@ -140,7 +140,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testSubscriptSequenceWithoutSpacesOrUnderscore(){
-        String program = "age: (AGE15-AGE45)~~|\n";
+        String program = "age: (AGE15-AGE45)~~|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         for(int i=15;i<=45;i++)
@@ -150,7 +150,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testValuesAndSequencesInTheSameSubscript(){
-        String program = "age: ONE_VALUE, (AGE15-AGE45), ANOTHER_VALUE ~~|\n";
+        String program = "age: ONE_VALUE, (AGE15-AGE45), ANOTHER_VALUE ~~|";
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol subscript = table.getSymbol("age");
@@ -186,7 +186,7 @@ public class TestRawSymbolTableVisitor {
     public void testLookup(){
         String program = "test lookup call before = myLookup(3)~~|\n" +
                 "myLookup([(0,0)-(10,10)],(0,0),(1,1),(2,0.5),(3,1),(4,0))~units~ comment|\n" +
-                "test lookup call after = myLookup(5)~~|\n";
+                "test lookup call after = myLookup(5)~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -211,7 +211,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testDirectAndXLSLookup(){
         String program = "testXLSLookup[City]( GET XLS LOOKUPS('subscriptedInputs.xlsx', 'ssData' , 'a', 'b3' ))~~|\n" +
-                "testDirectLookup[City]( GET DIRECT LOOKUPS('subscriptedInputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|\n";
+                "testDirectLookup[City]( GET DIRECT LOOKUPS('subscriptedInputs.xlsx', 'ssData' , 'a', 'b3' )) ~~|";
 
 
         SymbolTable table = getRAWSymbolTableFromString(program);
@@ -246,7 +246,7 @@ public class TestRawSymbolTableVisitor {
                 ":MACRO: myMacro(testArgumentBefore,testArgumentAfter)\n" +
                 "myMacro = INTEG((testArgumentBefore - 3)/testArgumentAfter, testArgumentBefore) ~~|\n" +
                 ":END OF MACRO:\n"+
-                "testArgumentAfter= 10~~|\n";
+                "testArgumentAfter= 10~~|";
 
 
         SymbolTable table = getRAWSymbolTableFromString(program);
@@ -401,7 +401,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testExprCall(){
-        String program = "result = MADE UP CALL(arg1,arg2,arg3) ~~|\n";
+        String program = "result = MADE UP CALL(arg1,arg2,arg3) ~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -470,7 +470,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testSubscriptsArentConsideredDependencies(){
         String program = "constant[country] = otherConstant[constant] ~~|\n" +
-                "mySubscript : MEXICO, USA,CANADA~~|\n";
+                "mySubscript : MEXICO, USA,CANADA~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
 
@@ -632,7 +632,7 @@ public class TestRawSymbolTableVisitor {
     public void testUnitsAndCommentNotInTheFirstDefinition(){
         String program = "var = 5 ~     ~   |\n" +
                 "var = 5 ~     ~    |\n"+
-                "var = 5 ~ units    ~  comment   |\n";
+                "var = 5 ~ units    ~  comment   |";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
         Symbol var = table.getSymbol("var");
@@ -645,7 +645,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testMultipleUnitsAndCommentInDifferentDefinitions(){
         String program = "var = 5 ~ units first definition   ~  comment first definition   |\n" +
-                "var = 5 ~ units second definition    ~ comment second definition    |\n";
+                "var = 5 ~ units second definition    ~ comment second definition    |";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
         Symbol var = table.getSymbol("var");
@@ -656,7 +656,7 @@ public class TestRawSymbolTableVisitor {
 
     @Test
     public void testDetectSubscriptsOneDefinition(){
-        String program = "var[firstSubscript,secondSubscript] = 5 ~     ~   |\n";
+        String program = "var[firstSubscript,secondSubscript] = 5 ~     ~   |";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
         Symbol var = table.getSymbol("var");
@@ -677,7 +677,7 @@ public class TestRawSymbolTableVisitor {
     public void testDetectSubscriptMultipleDefinition(){
         String program = "var[v11,v21] = 5 ~     ~   |\n"+
                 "var[v12,v22] = 5 ~     ~   |\n"+
-                "var[v13,v23] = 5 ~     ~   |\n";
+                "var[v13,v23] = 5 ~     ~   |";
 
 
 
@@ -699,7 +699,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testInconsistentNumberOfIndexes(){
         String program = "var[SCENARIO_1] = 5 ~     ~   |\n"+
-                "var[SCENARIO_2,ANOTHER_VALUE] = 3 ~     ~   |\n";
+                "var[SCENARIO_2,ANOTHER_VALUE] = 3 ~     ~   |";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
         Symbol var = table.getSymbol("var");
@@ -718,7 +718,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testIndexesInEquation(){
         String program = "withIndexes[FIRST_INDEX,SECOND_INDEX] = 5 ~     ~   |\n"+
-                "withoutIndex = 3 ~     ~   |\n";
+                "withoutIndex = 3 ~     ~   |";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
         Symbol withIndexes = table.getSymbol("withIndexes");
@@ -735,7 +735,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testIndexesInDataEquation(){
         String program = "withIndexes[FIRST_INDEX,SECOND_INDEX] := 5 ~     ~   |\n"+
-                "withoutIndex = 3 ~     ~   |\n";
+                "withoutIndex = 3 ~     ~   |";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
         Symbol withIndexes = table.getSymbol("withIndexes");
@@ -753,7 +753,7 @@ public class TestRawSymbolTableVisitor {
     public void testIndexesInLookups(){
         String program = "withIndexes[FIRST_INDEX,SECOND_INDEX](\n" +
                 "GET XLS LOOKUPS('subscriptedInputs.xlsx', 'ssData' , 'a', 'b3' ))~     ~   | \n"+
-                "withoutIndex([(0,0)-(10,10)],(0,0),(1,1),(2,0.5),(3,1),(4,0))~units~ comment|\n";
+                "withoutIndex([(0,0)-(10,10)],(0,0),(1,1),(2,0.5),(3,1),(4,0))~units~ comment|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
         Symbol withIndexes = table.getSymbol("withIndexes");
@@ -790,7 +790,7 @@ public class TestRawSymbolTableVisitor {
     @Test
     public void testIndexesInUnchangeableConstant(){
         String program = "withIndexes[FIRST_INDEX,SECOND_INDEX] == 5 ~     ~   |\n"+
-                "withoutIndex == 3 ~     ~   |\n";
+                "withoutIndex == 3 ~     ~   |";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
         Symbol withIndexes = table.getSymbol("withIndexes");
