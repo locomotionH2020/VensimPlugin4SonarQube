@@ -1,5 +1,6 @@
 package es.uva.locomotion.plugin;
 
+import es.uva.locomotion.parser.MultiChannelTokenStream;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.parser.*;
@@ -87,11 +88,12 @@ public class VensimScanner {
 
     }
 
-    protected ModelParser.FileContext getParseTree(String file_content){
-        ModelLexer lexer = new ModelLexer(CharStreams.fromString(file_content));
+    protected Model.FileContext getParseTree(String file_content){
+        Tokens lexer = new Tokens(CharStreams.fromString(file_content));
+        MultiChannelTokenStream tokens = new MultiChannelTokenStream(lexer);
 
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        ModelParser parser = new ModelParser(tokens);
+        //CommonTokenStream tokens = new CommonTokenStream(lexer);
+        Model parser = new Model(tokens);
         parser.removeErrorListeners();
         parser.addErrorListener(new VensimErrorListener());
 
@@ -106,7 +108,7 @@ public class VensimScanner {
             String content = inputFile.contents();
             String module = getModuleNameFromFileName(inputFile.filename());
 
-            ModelParser.FileContext root = getParseTree(content);
+            Model.FileContext root = getParseTree(content);
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
 
             ViewTable viewTable = ViewTableUtility.getViewTable(root);

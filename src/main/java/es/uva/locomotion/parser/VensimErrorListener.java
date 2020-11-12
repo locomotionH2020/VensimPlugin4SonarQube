@@ -8,7 +8,7 @@ public class VensimErrorListener extends BaseErrorListener {
 
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-        throw new ParseCancellationException(msg);
+        throw new ParseCancellationException("l:"+ line + " c:" + charPositionInLine + " " +msg);
     }
 
 
