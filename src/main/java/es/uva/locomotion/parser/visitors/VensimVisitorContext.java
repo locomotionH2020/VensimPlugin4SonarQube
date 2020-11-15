@@ -1,7 +1,7 @@
 package es.uva.locomotion.parser.visitors;
 
 
-import es.uva.locomotion.parser.ModelParser;
+import es.uva.locomotion.parser.Model;
 import es.uva.locomotion.parser.SymbolTable;
 import es.uva.locomotion.plugin.Issue;
 
@@ -10,12 +10,12 @@ import java.util.List;
 
 public class VensimVisitorContext {
 
-    private ModelParser.FileContext rootNode;
+    private Model.FileContext rootNode;
     private List<Issue> issues;
     private SymbolTable parsedTable;
     private SymbolTable dbTable;
 
-    public ModelParser.FileContext getRootNode() {
+    public Model.FileContext getRootNode() {
         return rootNode;
     }
 
@@ -23,7 +23,7 @@ public class VensimVisitorContext {
         return issues;
     }
 
-    public VensimVisitorContext(ModelParser.FileContext rootNode, SymbolTable parsedTable, SymbolTable dbTable){
+    public VensimVisitorContext(Model.FileContext rootNode, SymbolTable parsedTable, SymbolTable dbTable){
         this.rootNode = rootNode;
         issues = new ArrayList<>();
         this.parsedTable = parsedTable;

@@ -36,7 +36,7 @@ public class TestViewTableUtility {
                         "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
                         "10,2," + VARIABLE_1_VIEW + ",1586,885,40,20,3,3,0,0,0,0,0,0\n" +
                         "10,2," + VARIABLE_2_VIEW + ",1586,885,40,20,3,2,0,0,0,0,0,0\n" +
-                        "///---\\\\\\";
+                        "///---\\\\\\\n";
 
         SymbolTable symbolTable = getSymbolTableFromString(program);
         ViewTable viewTable = getViewTableFromString(program);
@@ -85,7 +85,7 @@ public class TestViewTableUtility {
                         "V300  Do not put anything below this section - it will be ignored\n" +
                         "*" + VIEW_NAME_4 + "\n" +
                         "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
-                        "///---\\\\\\";
+                        "///---\\\\\\\n";
         //Filter first view
         SymbolTable symbolTable = getSymbolTableFromString(program);
         ViewTable viewTable = getViewTableFromString(program);

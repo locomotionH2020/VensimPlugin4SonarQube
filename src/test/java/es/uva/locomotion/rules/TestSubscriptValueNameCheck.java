@@ -136,7 +136,7 @@ public class TestSubscriptValueNameCheck {
     public void testMultipleDefinitionCreateDifferentIssues() {
 
         String program = "MY_COUNTRIES_I: a_country, COUNTRY2~~|\n"+
-                "OTHER_COUNTRIES_I: a_country, COUNTRY2~~|\n";
+                "OTHER_COUNTRIES_I: a_country, COUNTRY2~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();

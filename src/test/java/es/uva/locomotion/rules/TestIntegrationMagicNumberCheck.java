@@ -20,7 +20,7 @@ public class TestIntegrationMagicNumberCheck {
     @Test
     public void testIssueWorks() {
 
-        String program = "a = 3 * Time ~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "a = 3 * Time ~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS).stripTrailing();
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -45,7 +45,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testNumberRepeatsMinimumMinusOne(){
-        String program = "A = 3 * 4 ~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS -1);
+        String program = "A = 3 * 4 ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS -1);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -83,7 +83,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testConstantDirectAssignsDoesntCountEquation(){
-        String program = "A = 3 ~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "A = 3 ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -96,7 +96,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testConstantDirectAssignsDoesntCountDataEquation(){
-        String program = "A := 3 ~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "A := 3 ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -109,7 +109,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testConstantDirectAssignsDoesntCountUnchangeableConstant(){
-        String program = "A == 3 ~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "A == 3 ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -201,7 +201,7 @@ public class TestIntegrationMagicNumberCheck {
     @Test
     public void testWithLookupFirstArgument(){
         String program = "var =WITH LOOKUP(14,((0,1),(1,1),(2,2)))\n~~|" +
-                "A = 14 * 0~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS -1);
+                "A = 14 * 0~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS -1).stripTrailing();
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -215,7 +215,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testRealityChecksDontCount(){
-        String program = "big_growth_check :TEST INPUT: divisions = 1e+022~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS);
+        String program = "big_growth_check :TEST INPUT: divisions = 1e+022~~|\n".repeat(DEFAULT_MINIMUM_REPETITIONS).stripTrailing();
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
 

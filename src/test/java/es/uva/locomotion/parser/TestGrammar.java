@@ -3,6 +3,7 @@ package es.uva.locomotion.parser;
 
 import static org.junit.Assert.*;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.junit.Test;
@@ -57,7 +58,7 @@ public class TestGrammar {
                 "(1.25382,3.55263),(3.42508,3.64035),(3.85321,4.5614),(4.8318,7.80702),(6.36086,4.91228 ),(7.15596,7.67544)," +
                 "(7.18654,5.92105),(8.74618,9.21053))~~|";
 
-        ModelParser.FileContext tree = getParseTreeFromString(program);
+        Model.FileContext tree = getParseTreeFromString(program);
 
         String reference_line = tree.model().symbolWithDoc(0).symbolWithDocDefinition().lookupDefinition().lookup().lookupRange().referenceLine().getText();
 
@@ -70,17 +71,17 @@ public class TestGrammar {
     public void testNegativeIsReadCorrectly(){
         String program = "var = -foo - otherVar~~|";
 
-        ModelParser.FileContext tree = getParseTreeFromString(program);
+        Model.FileContext tree = getParseTreeFromString(program);
 
-        ModelParser.ExprOperationContext parentExpr = (ModelParser.ExprOperationContext) tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr();
+        Model.ExprOperationContext parentExpr = (Model.ExprOperationContext) tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr();
 
-        ModelParser.SignExprContext firstChild = (ModelParser.SignExprContext) parentExpr.getChild(0);
+        Model.SignExprContext firstChild = (Model.SignExprContext) parentExpr.getChild(0);
         assertEquals("-",firstChild.start.getText());
 
         TerminalNode secondChild = (TerminalNode) parentExpr.getChild(1);
         assertEquals("-",secondChild.getSymbol().getText());
 
-        ModelParser.ExprContext thirdChild = (ModelParser.ExprContext) parentExpr.getChild(2);
+        Model.ExprContext thirdChild = (Model.ExprContext) parentExpr.getChild(2);
         assertEquals("otherVar", thirdChild.getText());
 
     }
@@ -116,6 +117,13 @@ public class TestGrammar {
     }
 
     @Test
+    public void testSmooth_ok() throws IOException{
+        getSymbolTable("smooth_ok.mdl");
+
+    }
+
+
+    @Test
     public void testMedeasEU() throws IOException{
         getSymbolTable("medeasEU.mdl");
     }
@@ -128,7 +136,7 @@ public class TestGrammar {
                 "]=5~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
-        ModelParser.FileContext file = getParseTreeFromString(program);
+        Model.FileContext file = getParseTreeFromString(program);
 
         assertEquals("\"Electric/electronic components\"",file.model().symbolWithDoc(0).symbolWithDocDefinition().equation().lhs().subscript(0).indexList().subscriptId(0).getText());
     }
@@ -137,19 +145,19 @@ public class TestGrammar {
     public void testNumberInParenthesisIsNotConsideredLookup(){
         String program = "A = (3)~~|";
 
-        ModelParser.FileContext tree = getParseTreeFromString(program);
+        Model.FileContext tree = getParseTreeFromString(program);
 
-        ModelParser.SignExprContext parenthesis = (ModelParser.SignExprContext)  tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr();
-        assertEquals(ModelParser.ParensContext.class, parenthesis.exprAllowSign().getClass());
+        Model.SignExprContext parenthesis = (Model.SignExprContext)  tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr();
+        assertEquals(Model.ParensContext.class, parenthesis.exprAllowSign().getClass());
 
     }
 
     @Test
     public void testOnedimensionalArrayCanContainFinalSemicolon(){
         String program = "A = 3,4,5,6; ~~|";
-        ModelParser.FileContext tree= getParseTreeFromString(program);
+        Model.FileContext tree= getParseTreeFromString(program);
 
-        ModelParser.ConstListContext array = tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().constList();
+        Model.ConstListContext array = tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().constList();
         assertNotNull(array);
         assertEquals("3,4,5,6;",array.getText());
     }
@@ -157,9 +165,9 @@ public class TestGrammar {
     @Test
     public void testOnedimensionalArraysDontRequireSemicolon(){
         String program = "A = 3,4,5,6 ~~|";
-        ModelParser.FileContext tree = getParseTreeFromString(program);
+        Model.FileContext tree = getParseTreeFromString(program);
 
-        ModelParser.ConstListContext array = tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().constList();
+        Model.ConstListContext array = tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().constList();
         assertNotNull(array);
         assertEquals("3,4,5,6",array.getText());
     }
@@ -246,6 +254,25 @@ public class TestGrammar {
         String program = "A ~ \" ~ comment |  ";
         getParseTreeFromString(program);
     }
-    
 
+    @Test
+    public void getViewTable() {
+        String program = "\\\\\\---/// Sketch information - do not modify anything except names\n" +
+                "V300  Do not put anything below this section - it will be ignored\n" +
+                "*Intro\n" +
+                "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
+                "12,1,0,722,147,182,44,3,135,0,8,-1,0,0,0,-1--1--1,0-0-0,|20||0-0-0\n" +
+                "GRAPH\n" +
+                "10,2,VARIABLE_1,1586,885,40,20,3,3,0,0,0,0,0,0\n" +
+                "10,2,VARIABLE_2,1586,885,40,20,3,2,0,0,0,0,0,0\n" +
+                "\\\\\\---/// Sketch information - do not modify anything except names\n" +
+                "V300  Do not put anything below this section - it will be ignored\n" +
+                "*Intro2\n" +
+                "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
+                "10,2,VARIABLE_2,1586,885,40,20,3,3,0,0,0,0,0,0\n" +
+                "10,2,Demand by sector FD,1586,885,40,20,3,3,0,0,0,0,0,0\n" +
+                "///---\\\\\\\n";
+
+        getViewTableFromString(program);
+    }
 }

@@ -1,10 +1,15 @@
-grammar Model;
+parser grammar Model;
+
+options {
+  superClass=MultiChannelBaseParser;
+  tokenVocab = Tokens;
+}
 
 // A Vensim model is a sequence of equations and subscript ranges.
 
-file: model EOF;
-model: ( symbolWithDoc | macroDefinition)* sketchesGraphsAndMetadata?;
-sketchesGraphsAndMetadata: sketches? graphsGroup metadataDivisor; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
+file: {disable(Tokens.VIEWS);} model EOF;
+model: ( symbolWithDoc | macroDefinition)* sketchesGraphsAndMetadata;
+sketchesGraphsAndMetadata: {enable(Tokens.VIEWS);}sketches?  {disable(Tokens.VIEWS);}graphsGroup? metadataDivisor?; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
                                                                       //For example, a problematic equation.
 symbolWithDoc: symbolWithDocDefinition unitsDoc;
 
@@ -13,117 +18,83 @@ symbolWithDocDefinition: ( lookupDefinition | subscriptRange | equation |constra
 
 
 // A subscript range definition names subscripts in a dimension.
-subscriptRange : Id ':' (  subscriptSequence| subscriptValueList |call) subscriptMappingList? ;
-subscriptSequence : '(' start=Id '-' end=Id ')' ;
-subscriptMappingList : '->' subscriptMapping ( ',' subscriptMapping )* ;
-subscriptMapping : Id | '(' Id ':' indexList ')' ;
+subscriptRange : Id TwoDots (  subscriptSequence| subscriptValueList |call) subscriptMappingList? ;
+subscriptSequence : OpenBracket start=Id  Minus end=Id  CloseBracket ;
+subscriptMappingList : RightArrow subscriptMapping (  Comma subscriptMapping )* ;
+subscriptMapping : Id | OpenBracket Id TwoDots indexList  CloseBracket ;
 
 // An equation has a left-hand side and a right-hand side.
 // The RHS is a formula expression, a constant list, or a Vensim lookup.
 // The RHS is empty for data equations.
-equation : lhs  Equal (expr|constList)  (':IGNORE:' exprList)? ;
-lhs : Id ( indexes=subscript )? Keyword? ( ':EXCEPT:' subscript ( ',' subscript )* )? ;
+equation : lhs  Equal (expr|constList)  (Ignore exprList)? ;
+lhs : Id ( indexes=subscript )? Keyword? ( Except subscript (  Comma subscript )* )? ;
 
 
 // https://www.vensim.com/documentation/ref_subscript_mapping.htm
-subscriptCopy: copy=Id '<->' original=Id ;
+subscriptCopy: copy=Id TwoSidesArrow original=Id ;
 unchangeableConstant: lhs TwoEqual (constList|call|Keyword) ;
-dataEquation: lhs ( DataEquationOp ( expr | constList ) )? (':IGNORE:' exprList)? ;
+dataEquation: lhs ( DataEquationOp ( expr | constList ) )? (Ignore exprList)? ;
 
-lookupDefinition: lhs (lookup|('('(call|numberList)')')) ;
+lookupDefinition: lhs (lookup|(OpenBracket(call|numberList) CloseBracket)) ;
 // lookup numberlist format: accomplishments per hour lookup(0,0.2,0.4,0.6,0.8,1,
 //                                                          0,0.2,0.4,0.6,0.8,1)
 // The call is needed for direct and xls lookups. For example: historic_demand_lt( GET XLS LOOKUPS('inputs.xlsx', 'ssData' , 'a', 'b3' ))~~|
 
 
-constraint: lhs ':THE CONDITION:' expr? ':IMPLIES:' expr ;
-realityCheck: lhs ':TEST INPUT:' expr ;
+constraint: lhs Condition expr? Implies expr ;
+realityCheck: lhs Test_input expr ;
 
 
-stringAssign: lhs StringAssignOp StringConst  (':IGNORE:' exprList)? ;
-macroDefinition: ':MACRO:' macroHeader symbolWithDoc+ ':END OF MACRO:';
+stringAssign: lhs StringAssignOp StringConst  (Ignore exprList)? ;
+macroDefinition: Macro macroHeader symbolWithDoc+ EndMacro;
 
 
 
-// The lexer strips some tokens we are not interested in.
-// The character encoding is given at the start of a Vensim file.
-// The units and documentation sections and group markings are skipped for now.
-// Line continuation characters and the sketch must be stripped by a preprocessor.
-
-CommentOrEncoding: '{' .*? '}' -> skip;
-
-Group : '********************************************************' .*? '|' -> skip ;
-
-
-expr:     expr op=('^'|'*'|'/'|'-'|'+'|Less|Greater|LessEqual|GreaterEqual|Equal|NotEqual| ':AND:' | ':OR:') expr  # exprOperation
+expr:     expr op=(And|Pow|Star|Div| Minus| Plus|Less|Greater|LessEqual|GreaterEqual|Equal|NotEqual| Or) expr  # exprOperation
     |   constVensim                             # const
     |   Keyword expr?                        # Keyword
     |   lookup                            # LookupArg
     |    Star                             # WildCard
-    |   ('-'|'+')* exprAllowSign      # signExpr
+    |   ( Minus| Plus)* exprAllowSign      # signExpr
     ;
 
 exprAllowSign:
      call             # CallExpr
-     |'DELAYP(' expr  ',' expr ':' Id ')'                     # DelayPArg
+     |Delayp expr   Comma expr TwoDots Id  CloseBracket                     # DelayPArg
      | Id (subscript)?                   # Var
-     |  'TABBED ARRAY(' constVensim* ')'   # tabbedArray
-     |     '(' expr ')'                      # Parens
+     |  Tabbed_array constVensim*  CloseBracket   # tabbedArray
+     |     OpenBracket expr  CloseBracket                      # Parens
      ;
 
 
-call:  Id (subscript)? '(' exprList? ')';
+call:  Id (subscript)? OpenBracket exprList?  CloseBracket;
 
 
-macroHeader: Id '(' macroArguments? ')';
-macroArguments: exprList (':' exprList)?;
-exprList : expr (',' expr)* ;
-subscriptValueList : (subscriptId|subscriptSequence) (',' (subscriptId|subscriptSequence))* ;
-indexList: subscriptId (',' subscriptId)*;
-subscript: '[' indexList ']';
-lookup : '(' (lookupRange? lookupPointList) ')' ;
+macroHeader: Id OpenBracket macroArguments?  CloseBracket;
+macroArguments: exprList (TwoDots exprList)?;
+exprList : expr ( Comma expr)* ;
+subscriptValueList : (subscriptId|subscriptSequence) ( Comma (subscriptId|subscriptSequence))* ;
+indexList: subscriptId ( Comma subscriptId)*;
+subscript: OpenSquareBracket indexList CloseSquareBracket;
+lookup : OpenBracket (lookupRange? lookupPointList)  CloseBracket ;
 
 
-lookupRange : '[' lookupPoint '-' lookupPoint referenceLine? ']' ',' ;
-lookupPointList : lookupPoint (',' lookupPoint)* ;
-referenceLine: ',' lookupPointList;
-lookupPoint : '(' constVensim ',' constVensim ')' ;
-constantLine: ( constVensim ( ',' constVensim)*) ;
+lookupRange : OpenSquareBracket lookupPoint  Minus lookupPoint referenceLine? CloseSquareBracket  Comma ;
+lookupPointList : lookupPoint ( Comma lookupPoint)* ;
+referenceLine:  Comma lookupPointList;
+lookupPoint : OpenBracket constVensim  Comma constVensim  CloseBracket ;
+constantLine: ( constVensim (  Comma constVensim)*) ;
 // Optional semi colon is required for two dimensional arrays https://www.vensim.com/documentation/22070.htm
-constList : constantLine ((';' constantLine)* ';')?;
+constList : constantLine ((Semicolon constantLine)* Semicolon)?;
 
-numberList: (integerConst | floatingConst) (',' ( integerConst | floatingConst))*;
+numberList: (integerConst | floatingConst) ( Comma ( integerConst | floatingConst))*;
 
 
 
-Star : '*' ;
-Div : '/' ;
-Less : '<' ;
-LessEqual : '<=' ;
-Greater : '>' ;
-GreaterEqual : '>=' ;
-Equal : '=' ;
-TwoEqual : '==' ;
-NotEqual : '<>' ;
-Exclamation : '!' ;
-DataEquationOp: ':=';
-StringAssignOp: ':IS:';
 
 
 subscriptId : Id  Exclamation?;
-Id: ( ( Nondigit IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) | StringLiteral );
 
-fragment
-IdChar : [a-zA-Z0-9_$'&%\u00A1-\u00ff\u0100-\u017f\u0180-\u024f\u1e02-\u1ef3] ;
-
-
-fragment
-Nondigit : [a-zA-Z_] ;
-
-fragment
-Digit
-    :   [0-9]
-    ;
 constVensim
     :   integerConst
     |   floatingConst
@@ -132,67 +103,18 @@ constVensim
 
 
 integerConst
-    :  ('+'|'-')* DigitSeq
-    ;
-
-fragment
-NonzeroDigit
-    :   [1-9]
+    :  ( Plus| Minus)* DigitSeq
     ;
 
 
 floatingConst:
-    ('+'|'-')* FloatingConstNumber;
-FloatingConstNumber
-: FractionalConstant ExponentPart?
-| DigitSeq ExponentPart
-;
+    ( Plus| Minus)* FloatingConstNumber;
 
 
-FractionalConstant
-    :   DigitSeq? '.' DigitSeq
-    |   DigitSeq '.'
-    ;
+ unitsDoc: units=INFO_UNIT comment=INFO_UNIT supplementary=INFO_UNIT? VerticalBar;
 
 
-ExponentPart
-    :   'e' [+-]? DigitSeq
-    |   'E' [+-]? DigitSeq
-    ;
-
-
-
-DigitSeq
-    :   Digit+
-    ;
-
-StringLiteral
-    :   ["](~["\\]|[\\].)*?["]
-    ;
-
-StringConst
-    :    ['](~['\\]|[\\].)*?[']
-    ;
-
-
-Keyword
-    :   ':'[a-zA-Z ]*':'
-    ;
-
-Whitespace : [ \t\n\r]+ -> skip ;
-// Backslashes are used as line continuators, so they can be ignored.
-Backslash: [\\] -> skip;
-INFO_UNIT: '~' ~('~'|'|')*;
-OtherCaracter: .;
-
-
-
-
- unitsDoc: units=INFO_UNIT comment=INFO_UNIT supplementary=INFO_UNIT?'|';
-
-SketchesDelimiter: '///---';
-
-graphsGroup: graphs*;
+graphsGroup: graphs+;
 graphs: graph title xaxis? xlabel? xdiv? yaxis? ylabel? ydiv? xmin? xmax? nolegend? scale graphvar*;
 graph: ':GRAPH' .*?;
 title: ':TITLE' .*?;
@@ -212,16 +134,17 @@ ymin: ':Y-MIN' .*?;
 ymax: ':Y-MAX' .*?;
 linewidthgraph: ':LINE-WIDTH' .*?;
 metadataDivisor: ':L<%^E!@' metadataLine+;
-metadataLine:DigitSeq':'.*?;
+metadataLine:DigitSeq TwoDots.*?;
 
 // Backslash tokens are ignored, so this rule doesn't take them into account.
 sketches: viewInfo* sketchesDelimiter;
-sketchesDelimiter: SketchesDelimiter;
+sketchesDelimiter: SketchesDelimiter NewLine;
 viewInfo:   sketchInfo versionCode viewName viewVariables;
-sketchInfo: '---///' 'Sketch information - do not modify anything except names' ;
-versionCode: 'V300  Do not put anything below this section - it will be ignored';
+sketchInfo:  NewLine* ViewDelimier Sketch_phrase NewLine ;
+versionCode: Sketch_version NewLine;
 //Vensim versions 5,4 and 3 all use the same version code (300).
-viewName: '*' .*?; //All view names are preceeded by an '*'
+viewName: Star .*? NewLine; //All view names are preceeded by an '*'
+
 /**
 All the information is at https://www.vensim.com/documentation/_mdl_model_files.htm
 viewSettings have the following syntax:
@@ -233,7 +156,7 @@ viewSettings have the following syntax:
 6- (zoom) zoom value.
 7- (tf) template flag 0=normal, 1=dont use, 3= template view.
 **/
-viewSettings: '$'  color  ',' integerConst ',' typography '|'? (ppix=integerConst ','ppiy=integerConst)? (',' zoom=integerConst ','tf=integerConst)?;
+viewSettings: Dolar  color Comma integerConst  Comma typography  VerticalBar? (ppix=integerConst  Comma ppiy=integerConst)? ( Comma zoom=integerConst  Comma tf=integerConst)? NewLine;
 viewVariables: viewSettings (arrow | viewVariable)*;
 
 /**
@@ -254,8 +177,8 @@ arrow have the following syntax:
 14- (numberOfPoints) number of intermediate points in the arrow, minimun is 1.
 15- (arrowCoordinates) for eech intermediate point, its coordinates.
 **/
-arrow: internalId=integerConst ',' idInView=integerConst ','fromVariable=integerConst ','toVariable=integerConst ','arrowShape=integerConst ','hidden=integerConst ','polarityChar=integerConst ','thickness=integerConst ','hasFont=integerConst ','delayType=integerConst ','integerConst ','color ','typography? ',' numberOfPoints=integerConst '|' (arrowCoordinates '|')+;
-arrowCoordinates: '('integerConst','integerConst')';
+arrow: internalId=integerConst  Comma idInView=integerConst  Comma fromVariable=integerConst  Comma toVariable=integerConst  Comma arrowShape=integerConst  Comma hidden=integerConst  Comma  polarityChar=integerConst  Comma thickness=integerConst  Comma hasFont=integerConst  Comma delayType=integerConst  Comma  integerConst  Comma  color  Comma typography?  Comma numberOfPoints=integerConst  VerticalBar (arrowCoordinates  VerticalBar)+ NewLine;
+arrowCoordinates: OpenBracket integerConst Comma integerConst CloseBracket;
 
 /**
 viewVariable have the following syntax:
@@ -290,7 +213,7 @@ viewVariable have the following syntax:
 19/24- (integerConst) unknown.
 25- (visualInfo) extra info written in the next line for example in comments or IoObjects.
 **/
-viewVariable:  internalId=integerConst ',' idInView=integerConst ',' (name=Id | integerConst)  ',' x=integerConst ',' y=integerConst ',' width=integerConst ',' height=integerConst ',' shape=integerConst ',' bits=integerConst ',' hidden=integerConst ',' hasFont=integerConst ',' textPos=integerConst ',' boxWidth=integerConst ',' nav1=integerConst ',' nav2=integerConst (','boxColor=color ',' fillColor=color ',' typography)? (',' integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst ',' integerConst)? visualInfo;
+viewVariable:  internalId=integerConst  Comma idInView=integerConst  Comma (name=Id | integerConst)   Comma x=integerConst  Comma y=integerConst  Comma width=integerConst  Comma height=integerConst  Comma shape=integerConst  Comma bits=integerConst  Comma hidden=integerConst  Comma hasFont=integerConst  Comma textPos=integerConst  Comma boxWidth=integerConst  Comma nav1=integerConst  Comma nav2=integerConst ( Comma boxColor=color  Comma fillColor=color  Comma typography)? ( Comma integerConst  Comma integerConst  Comma integerConst  Comma integerConst  Comma integerConst  Comma integerConst)?  visualInfo NewLine;
 
 visualInfo:  .*?;
 
@@ -305,10 +228,12 @@ typography have the following syntax:
 4- (fillColor) color of the filling.
 4- (background Color) color of the background .
 **/
-typography: typographyName?'|' fontSize=integerConst'|' textFormat=Id? '|' fontColor=color ('|' shapeColor=color '|' arrowColor=color '|' fillColor=color '|' backgroundColor=color)?;
-typographyName: '@'? Id;
+typography: typographyName? VerticalBar fontSize=integerConst VerticalBar textFormat=Id?  VerticalBar fontColor=color ( VerticalBar shapeColor=color  VerticalBar arrowColor=color  VerticalBar fillColor=color  VerticalBar backgroundColor=color)?;
+typographyName: At? Id;
 
 color: rgbColor | singleColor;
-rgbColor: integerConst '-' integerConst '-' integerConst;
+rgbColor: integerConst  Minus integerConst  Minus integerConst;
 singleColor: integerConst;
+
+
 

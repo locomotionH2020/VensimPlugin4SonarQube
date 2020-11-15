@@ -49,17 +49,17 @@ public class GeneralTestUtilities {
 
     }
 
-    public static ModelParser.FileContext getParseTree(String file_path) throws IOException {
+    public static Model.FileContext getParseTree(String file_path) throws IOException {
 
 
         return getParseTreeFromString(loadFile(file_path));
     }
 
-    public static ModelParser.FileContext getParseTreeFromString(String fileContent) {
-        ModelLexer lexer = new ModelLexer(CharStreams.fromString(fileContent));
+    public static Model.FileContext getParseTreeFromString(String fileContent) {
+        Tokens lexer = new Tokens(CharStreams.fromString(fileContent));
 
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        ModelParser parser = new ModelParser(tokens);
+        MultiChannelTokenStream tokens = new MultiChannelTokenStream(lexer);
+        Model parser = new Model(tokens);
         parser.removeErrorListeners();
         parser.addErrorListener(new VensimErrorListener());
         return parser.file();
@@ -77,7 +77,7 @@ public class GeneralTestUtilities {
     public static SymbolTable getRAWSymbolTableFromString(String content){
 
 
-        ModelParser.FileContext root = getParseTreeFromString(content);
+        Model.FileContext root = getParseTreeFromString(content);
 
 
         RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
@@ -87,7 +87,7 @@ public class GeneralTestUtilities {
     public static ViewTable getViewTableFromString(String content){
 
 
-        ModelParser.FileContext root = getParseTreeFromString(content);
+        Model.FileContext root = getParseTreeFromString(content);
 
 
         ViewTableVisitor visitor = new ViewTableVisitor();
@@ -96,14 +96,14 @@ public class GeneralTestUtilities {
 
 
     public static SymbolTable getRAWSymbolTable(String file_path) throws IOException {
-        ModelParser.FileContext tree = getParseTree(file_path);
+        Model.FileContext tree = getParseTree(file_path);
 
         RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
         return visitor.getSymbolTable(tree);
     }
 
     public static SymbolTable getSymbolTable(String file_path) throws IOException {
-        ModelParser.FileContext tree = getParseTree(file_path);
+        Model.FileContext tree = getParseTree(file_path);
         return SymbolTableGenerator.getSymbolTable(tree);
     }
 

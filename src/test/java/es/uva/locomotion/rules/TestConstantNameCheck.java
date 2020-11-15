@@ -109,7 +109,7 @@ public class TestConstantNameCheck {
     @Test
     public void testNameBeginsWithNumber(){
         String program = "\"2020_EXPECTED_PRODUCT\" = 5 ~~|\n"+
-                "\"2020EXPECTED_PRODUCT\" = 5 ~~|\n";
+                "\"2020EXPECTED_PRODUCT\" = 5 ~~|";
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -150,7 +150,7 @@ public class TestConstantNameCheck {
         String program = "FINAL TIME  = 100 ~ ~|\n"+
                 "INITIAL TIME  = 0  ~ ~|\n"+
                 "SAVEPER =  TIME STEP ~ ~|\n"+
-                "TIME STEP  = 1 ~ ~|\n";
+                "TIME STEP  = 1 ~ ~|";
 
 
 
