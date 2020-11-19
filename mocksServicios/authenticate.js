@@ -8,7 +8,12 @@ module.exports = [
   template: "authToken"
 
 },
+  {
+    path: '/mocksBackend/authenticate',
+    method: 'POST',
+    template: "authToken"
 
+  }
 ]
 
 
