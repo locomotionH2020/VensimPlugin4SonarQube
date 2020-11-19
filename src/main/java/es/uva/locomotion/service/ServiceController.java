@@ -1,9 +1,9 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.VensimPlugin;
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
-import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.model.AcronymsList;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.exceptions.*;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
@@ -87,6 +87,33 @@ public class ServiceController {
         }
     }
 
+    public AcronymsList getAcronymsFromDb() {
+        if(!isAuthenticated())
+            throw new NotAuthenticatedException();
+
+        String logMessage="";
+        try {
+            return  DBFacade.getExistingAcronymsFromDB(dictionaryService, token);
+        }catch (InvalidServiceUrlException ex){
+            LOG.unique(INVALID_URL_MESSAGE, LoggingLevel.ERROR);
+            return null;
+        }catch (EmptyServiceException ex){
+            LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE, LoggingLevel.INFO);
+            return null;
+        }catch (ConnectionFailedException ex){
+            LOG.unique(SERVICE_UNREACHABLE_MESSAGE, LoggingLevel.ERROR);
+            return null;
+        }catch (ServiceResponseFormatNotValid ex){
+            logMessage = "The response of the dictionary service wasn't valid. "+ ex.getMessage() + "\n"+
+                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
+                    RULES_DISABLED_MESSAGE;
+
+            LOG.error(logMessage);
+            return null;
+        }
+
+    }
+
     public void injectNewSymbols( String module, List<Symbol> foundSymbols, SymbolTable dbSymbolTable){
         if(dbSymbolTable==null)
             return;
@@ -128,4 +155,6 @@ public class ServiceController {
                 !symbol.getDefinitionLines().isEmpty();
 
     }
+
+
 }

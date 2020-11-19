@@ -1,6 +1,10 @@
 package es.uva.locomotion.testutilities;
 
 
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.*;
 import es.uva.locomotion.parser.visitors.RawSymbolTableVisitor;
 import es.uva.locomotion.parser.visitors.ViewTableVisitor;
@@ -10,13 +14,11 @@ import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.SymbolTableGenerator;
 import es.uva.locomotion.utilities.UtilityFunctions;
 import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 
 import javax.json.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;

@@ -52,7 +52,7 @@ public class TestDbServiceHandler {
 
             return mockResponse;
         }).when(mockClient).send(any(), any());
-        String actualValue = handler.sendRequestToDictionaryService(serviceUrl, getJsonObjectFromList("var", "foo", "duck"),"token");
+        String actualValue = handler.sendSymbolTableRequestToDictionaryService(serviceUrl, getJsonObjectFromList("var", "foo", "duck"),"token");
 
 
         verify(mockClient, times(1)).send(eq(request), any());
@@ -80,7 +80,7 @@ public class TestDbServiceHandler {
                 .header("Content-Type", "application/json").build();
 
         doReturn(mockResponse).when(mockClient).send(any(), any());
-        String actualValue = handler.sendRequestToDictionaryService(serviceUrl, getJsonObjectFromList("var", "foo", "duck"),"token");
+        String actualValue = handler.sendSymbolTableRequestToDictionaryService(serviceUrl, getJsonObjectFromList("var", "foo", "duck"),"token");
 
 
         verify(mockClient, times(1)).send(eq(request), any());
@@ -108,7 +108,7 @@ public class TestDbServiceHandler {
 
             return mockResponse;
         }).when(mockClient).send(any(), any());
-        handler.sendRequestToDictionaryService("https://randomUrl", mock(JsonObject.class), "token");
+        handler.sendSymbolTableRequestToDictionaryService("https://randomUrl", mock(JsonObject.class), "token");
 
 
         verify(mockClient, times(1)).send(any(), any());
@@ -117,27 +117,27 @@ public class TestDbServiceHandler {
 
     @Test(expected = EmptyServiceException.class)
     public void testGetSymbolsEmptyServiceRaisesException() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService("", getJsonObjectFromList("foo", "var"), "token");
+        new ServiceConnectionHandler().sendSymbolTableRequestToDictionaryService("", getJsonObjectFromList("foo", "var"), "token");
     }
 
     @Test(expected = EmptyServiceException.class)
     public void testGetSymbolsNullServiceRaisesException() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService(null, getJsonObjectFromList("foo", "var"), "token");
+        new ServiceConnectionHandler().sendSymbolTableRequestToDictionaryService(null, getJsonObjectFromList("foo", "var"), "token");
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testGetSymbolsServiceWithAnotherProtocol() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService("ftp://somedomain/folder/file.txt", getJsonObjectFromList("foo", "var"), "token");
+        new ServiceConnectionHandler().sendSymbolTableRequestToDictionaryService("ftp://somedomain/folder/file.txt", getJsonObjectFromList("foo", "var"), "token");
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testGetSymbolsServiceWithInvalidProtocol() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService("\\some$randomtext", getJsonObjectFromList("foo", "var"), "token");
+        new ServiceConnectionHandler().sendSymbolTableRequestToDictionaryService("\\some$randomtext", getJsonObjectFromList("foo", "var"), "token");
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testGetSymbolsDomainWithoutProtocol() {
-        new ServiceConnectionHandler().sendRequestToDictionaryService("www.google.com", getJsonObjectFromList("foo", "var"), "token");
+        new ServiceConnectionHandler().sendSymbolTableRequestToDictionaryService("www.google.com", getJsonObjectFromList("foo", "var"), "token");
     }
 
 
@@ -153,7 +153,7 @@ public class TestDbServiceHandler {
 
         handler.client = mockClient;
 
-        String actualValue = handler.sendRequestToDictionaryService("http://google.com", getJsonObjectFromList("foo", "var"), "token");
+        String actualValue = handler.sendSymbolTableRequestToDictionaryService("http://google.com", getJsonObjectFromList("foo", "var"), "token");
 
         assertEquals("honk", actualValue);
     }
@@ -287,6 +287,78 @@ public class TestDbServiceHandler {
         assertEquals("honk", actualValue);
 
     }
+
+
+    @Test
+    public void testGetAcronymsUrlWithoutSlash() throws IOException, InterruptedException {
+        final String serviceUrl = "http://www.google.com";
+
+        ServiceConnectionHandler handler = new ServiceConnectionHandler();
+        HttpClient mockClient = mock(HttpClient.class);
+        HttpResponse<String> mockResponse = mock(HttpResponse.class);
+        when(mockResponse.body()).thenReturn("[]");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+        handler.client = mockClient;
+
+
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
+        URI url = URI.create(serviceUrl + "/qaGetAcronyms");
+        requestBuilder.uri(url);
+        requestBuilder.setHeader("Authorization","Bearer "+ "token");
+        HttpRequest request = requestBuilder.GET().build();
+
+        doReturn(mockResponse).when(mockClient).send(any(), any());
+        String actualValue = handler.sendAcronymsRequestToDictionaryService(serviceUrl,"token");
+
+
+        verify(mockClient, times(1)).send(eq(request), any());
+        assertEquals(actualValue, "[]");
+    }
+
+
+    @Test(expected = EmptyServiceException.class)
+    public void testGetAcronymsEmptyServiceRaisesException() {
+        new ServiceConnectionHandler().sendAcronymsRequestToDictionaryService("", "token");
+    }
+
+    @Test(expected = EmptyServiceException.class)
+    public void testGetAcronymsNullServiceRaisesException() {
+        new ServiceConnectionHandler().sendAcronymsRequestToDictionaryService(null, "token");
+    }
+
+    @Test(expected = InvalidServiceUrlException.class)
+    public void testGetAcronymsServiceWithAnotherProtocol() {
+        new ServiceConnectionHandler().sendAcronymsRequestToDictionaryService("ftp://somedomain/folder/file.txt", "token");
+    }
+
+    @Test(expected = InvalidServiceUrlException.class)
+    public void testGetAcronymsServiceWithInvalidProtocol() {
+        new ServiceConnectionHandler().sendAcronymsRequestToDictionaryService("\\some$randomtext", "token");
+    }
+
+    @Test(expected = InvalidServiceUrlException.class)
+    public void testGetAcronymsDomainWithoutProtocol() {
+        new ServiceConnectionHandler().sendAcronymsRequestToDictionaryService("www.google.com", "token");
+    }
+
+
+
+    @Test
+    public void testGetAcronymsDomainWithoutWWW() throws IOException, InterruptedException {
+        ServiceConnectionHandler handler = new ServiceConnectionHandler();
+        HttpClient mockClient = mock(HttpClient.class);
+        HttpResponse<String> mockResponse = mock(HttpResponse.class);
+        doReturn(mockResponse).when(mockClient).send(any(), any());
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+        when(mockResponse.body()).thenReturn("honk");
+
+        handler.client = mockClient;
+
+        String actualValue = handler.sendAcronymsRequestToDictionaryService("http://google.com", "token");
+
+        assertEquals("honk", actualValue);
+    }
+
 }
 
 

@@ -1,5 +1,8 @@
 package es.uva.locomotion.parser.visitors;
 
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.parser.*;
 
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -28,7 +31,7 @@ public class RawSymbolTableVisitor extends ModelBaseVisitor<Object> {
         return context.start.getLine();
     }
 
-    private Symbol getSymbolOrCreate(SymbolTable table,String token){
+    private Symbol getSymbolOrCreate(SymbolTable table, String token){
         if(table.hasSymbol(token))
             return table.getSymbol(token);
 

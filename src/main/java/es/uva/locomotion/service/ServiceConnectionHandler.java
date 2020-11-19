@@ -12,7 +12,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
 
 public class ServiceConnectionHandler {
 
@@ -33,7 +32,7 @@ public class ServiceConnectionHandler {
      * @throws EmptyServiceException If {@code serviceUrl} is empty if null
      * @throws IllegalArgumentException If {@code symbols} is null
      */
-    public String sendRequestToDictionaryService(String serviceUrl, JsonObject jsonSymbols, String token){
+    public String sendSymbolTableRequestToDictionaryService(String serviceUrl, JsonObject jsonSymbols, String token){
         if(serviceUrl==null || "".equals(serviceUrl.trim()))
             throw new EmptyServiceException("Service Url is null or an empty string");
         if(jsonSymbols==null)
@@ -74,6 +73,42 @@ public class ServiceConnectionHandler {
         }
     }
 
+    public String sendAcronymsRequestToDictionaryService(String serviceUrl, String token){
+        if(serviceUrl==null || "".equals(serviceUrl.trim()))
+            throw new EmptyServiceException("Service Url is null or an empty string");
+
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
+        requestBuilder.setHeader("Authorization","Bearer "+ token);
+
+        if(serviceUrl.charAt(serviceUrl.length()-1)!='/')
+            serviceUrl = serviceUrl + "/";
+
+        URI url;
+        try{
+            url = URI.create(serviceUrl);
+            url = url.resolve("qaGetAcronyms");
+            LOG.server("Sending POST request to: " + url.toString());
+            requestBuilder.uri(url);
+        }catch (IllegalArgumentException ex){
+            throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
+        }
+        HttpRequest request  =requestBuilder.GET().build();
+
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            String responseBody = response.body();
+            LOG.server("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() +": \n" + responseBody);
+            if (response.statusCode() == HttpURLConnection.HTTP_OK)
+                return responseBody;
+            else
+                throw new ConnectionFailedException(new IllegalArgumentException("The status code of the response to qaGetAcronyms was: " + response.statusCode()));
+
+        } catch (InterruptedException | IOException e) {
+            LOG.server("The connection failed: " + e.getMessage());
+            throw new ConnectionFailedException(e);
+        }
+    }
     /**
      *
      * @param serviceUrl
