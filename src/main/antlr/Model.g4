@@ -7,9 +7,9 @@ options {
 
 // A Vensim model is a sequence of equations and subscript ranges.
 
-file: {disable(Tokens.VIEWS);} model EOF;
-model: ( symbolWithDoc | macroDefinition)* sketchesGraphsAndMetadata;
-sketchesGraphsAndMetadata: {enable(Tokens.VIEWS);}sketches?  {disable(Tokens.VIEWS);}graphsGroup? metadataDivisor?; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
+file: model EOF;
+model: {disable(Tokens.VIEWS);}( symbolWithDoc | macroDefinition)* sketchesGraphsAndMetadata;
+sketchesGraphsAndMetadata: sketches graphsGroup? metadataDivisor?; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
                                                                       //For example, a problematic equation.
 symbolWithDoc: symbolWithDocDefinition unitsDoc;
 
@@ -137,13 +137,13 @@ metadataDivisor: ':L<%^E!@' metadataLine+;
 metadataLine:DigitSeq TwoDots.*?;
 
 // Backslash tokens are ignored, so this rule doesn't take them into account.
-sketches: viewInfo* sketchesDelimiter;
+sketches: {enable(Tokens.VIEWS);} viewInfo* sketchesDelimiter?  {disable(Tokens.VIEWS);};
 sketchesDelimiter: SketchesDelimiter NewLine;
 viewInfo:   sketchInfo versionCode viewName viewVariables;
 sketchInfo:  NewLine* ViewDelimier Sketch_phrase NewLine ;
 versionCode: Sketch_version NewLine;
 //Vensim versions 5,4 and 3 all use the same version code (300).
-viewName: Star .*? NewLine; //All view names are preceeded by an '*'
+viewName: Star Id NewLine; //All view names are preceeded by an '*'
 
 /**
 All the information is at https://www.vensim.com/documentation/_mdl_model_files.htm
