@@ -1,9 +1,8 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.VensimPlugin;
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
@@ -15,7 +14,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.sonar.api.batch.rule.Severity;
-import org.sonar.api.utils.log.Logger;
 
 import java.util.List;
 import java.util.stream.Collectors;

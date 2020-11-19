@@ -1,5 +1,9 @@
 package es.uva.locomotion.utilities;
 
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.View;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.*;
 import es.uva.locomotion.parser.visitors.ViewTableVisitor;
 
@@ -8,8 +12,7 @@ public class ViewTableUtility {
 
     public static ViewTable getViewTable(Model.FileContext context) {
         ViewTableVisitor generator = new ViewTableVisitor();
-        ViewTable rawTable = generator.getViewTable(context);
-        return rawTable;
+        return generator.getViewTable(context);
     }
 
     public static void addViews(SymbolTable table, ViewTable viewTable) {

@@ -3,7 +3,7 @@ package es.uva.locomotion.parser;
 
 import static org.junit.Assert.*;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import es.uva.locomotion.model.SymbolTable;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.junit.Test;

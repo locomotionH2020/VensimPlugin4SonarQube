@@ -1,9 +1,10 @@
 package es.uva.locomotion.parser;
 
+import es.uva.locomotion.model.View;
+import es.uva.locomotion.model.ViewTable;
 import org.junit.Test;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package es.uva.locomotion.parser;
+package es.uva.locomotion.model;
 
 public enum SymbolType {
     UNDETERMINED,

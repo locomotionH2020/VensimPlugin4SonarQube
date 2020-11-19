@@ -1,7 +1,7 @@
 package es.uva.locomotion.parser.visitors;
 
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
 
 import static org.junit.Assert.*;
 

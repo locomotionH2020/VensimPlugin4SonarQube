@@ -1,8 +1,9 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
-import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
@@ -20,8 +21,8 @@ import static org.junit.Assert.*;
 public class TestDictionaryUnitsMismatchCheck {
     @Test
     public void testIssue(){
-        SymbolTable dbTable = new SymbolTable();
-        SymbolTable parsedTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();        SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
         parsedVar.setUnits("kg");
@@ -33,7 +34,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbVar.setUnits("meters");
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -50,7 +51,8 @@ public class TestDictionaryUnitsMismatchCheck {
 
     @Test
     public void testBothUnitsAreTrimmed(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -62,7 +64,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbVar.setUnits("    kg   ");
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
@@ -74,7 +76,8 @@ public class TestDictionaryUnitsMismatchCheck {
 
     @Test
     public void testParsedSymbolDoesntHaveUnits(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -86,7 +89,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbVar.setUnits("l");
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -97,7 +100,8 @@ public class TestDictionaryUnitsMismatchCheck {
 
     @Test
     public void testIssueInDifferentSymbols(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol var = GeneralTestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.Variable,1);
@@ -124,7 +128,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbValid.setUnits("Same units");
         dbValid2.setUnits("Same units");
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
@@ -147,7 +151,7 @@ public class TestDictionaryUnitsMismatchCheck {
         var.setUnits("kg");
         parsedTable.addSymbol(var);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new SymbolTable());
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new DataBaseRepresentation());
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -158,14 +162,15 @@ public class TestDictionaryUnitsMismatchCheck {
 
     @Test
     public void testSymbolInDbButNotInFile(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
 
 
         Symbol dbVar = new Symbol("var");
         dbVar.setUnits("kg");
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,new SymbolTable(),dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,new SymbolTable(),dbData);
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -177,7 +182,8 @@ public class TestDictionaryUnitsMismatchCheck {
 
     @Test
     public void testDoesntRaiseIssueIfThereIsntDefinitionLines(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -188,7 +194,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbVar.setUnits("l");
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -217,7 +223,8 @@ public class TestDictionaryUnitsMismatchCheck {
 
     @Test
     public void testIgnoresDefaultSymbols(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
 
@@ -233,7 +240,7 @@ public class TestDictionaryUnitsMismatchCheck {
             dbTable.addSymbol(symbol);
         });
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
@@ -254,7 +261,8 @@ public class TestDictionaryUnitsMismatchCheck {
         for(Symbol s:parsedTable.getSymbols())
             s.setUnits("Parsed units");
 
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
 
         addSymbolInLines(dbTable,"function",SymbolType.Variable);
         addSymbolInLines(dbTable,"constant",SymbolType.Variable);
@@ -268,7 +276,7 @@ public class TestDictionaryUnitsMismatchCheck {
             s.setUnits("Db units");
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
         

@@ -1,7 +1,6 @@
-package es.uva.locomotion.parser;
+package es.uva.locomotion.model;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ViewTable {
     private Map<String, View> table;

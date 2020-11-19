@@ -1,5 +1,8 @@
 package es.uva.locomotion.plugin;
 
+import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.MultiChannelTokenStream;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.service.ServiceController;
@@ -117,15 +120,16 @@ public class VensimScanner {
             jsonBuilder.addSymbolTable(inputFile.filename(), table);
 
 
-            SymbolTable dbTable = null;
-            if (serviceController.isAuthenticated())
-                dbTable = serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols()));
-
+            DataBaseRepresentation dbData = new DataBaseRepresentation();
+            if (serviceController.isAuthenticated()) {
+                dbData.setDataBaseSymbols(serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols())));
+                dbData.setAcronyms(serviceController.getAcronymsFromDb());
+            }
             //mark the symbols tha need to be filtered.
             if(!viewPrefix.isEmpty()) {
                 ViewTableUtility.filterPrefix(table, viewPrefix);
             }
-            VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbTable);
+            VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbData);
 
 
             checkIssues(visitorContext);
@@ -135,8 +139,8 @@ public class VensimScanner {
 
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
-            if (serviceController.isAuthenticated() && dbTable != null)
-                serviceController.injectNewSymbols(module, new ArrayList<>(table.getSymbols()), dbTable);
+            if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
+                serviceController.injectNewSymbols(module, new ArrayList<>(table.getSymbols()), dbData.getDataBaseSymbols());
         } catch (IOException e) {
             LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
         } catch (ParseCancellationException e) {

@@ -1,7 +1,7 @@
 package es.uva.locomotion.parser.visitors;
 
-import es.uva.locomotion.parser.View;
-import es.uva.locomotion.parser.ViewTable;
+import es.uva.locomotion.model.View;
+import es.uva.locomotion.model.ViewTable;
 import org.junit.Test;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getViewTableFromString;

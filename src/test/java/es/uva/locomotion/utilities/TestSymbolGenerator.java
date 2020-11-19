@@ -1,6 +1,8 @@
 package es.uva.locomotion.utilities;
 
-import es.uva.locomotion.parser.*;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
 import org.junit.Test;
 
 
@@ -20,7 +22,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
 
         Symbol myLookup = table.getSymbol("myLookup");
-        assertSymbolType(myLookup,SymbolType.Lookup_Table);
+        assertSymbolType(myLookup, SymbolType.Lookup_Table);
     }
 
     @Test

@@ -1,8 +1,9 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
-import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import org.junit.Test;
@@ -13,7 +14,8 @@ import static org.junit.Assert.*;
 public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testOneUnexpectedValue(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
@@ -28,7 +30,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbVar.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -45,7 +47,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
     @Test
     public void testTwoUnexpectedValues(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
@@ -60,7 +63,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -77,7 +80,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
     @Test
     public void testIssueDoesntDestroyTheDependencies(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
@@ -91,7 +95,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -103,7 +107,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
     @Test
     public void testSubsetsAreAllowed(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
@@ -116,7 +121,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -128,7 +133,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
     @Test
     public void testSameValuesExactly(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
@@ -142,7 +148,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -153,7 +159,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
     @Test
     public void testParsedSymbolIsNotASubscript(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Variable);
@@ -167,7 +174,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -178,7 +185,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
     @Test
     public void testDictionarySymbolIsNotASubscript(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
@@ -192,7 +200,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -203,7 +211,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
     @Test
     public void testFoundSubscriptDoesntHaveValues(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
@@ -215,7 +224,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -226,7 +235,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
     @Test
     public void testDictionarySubscriptDoesntHaveValues(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
@@ -238,7 +248,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Constant);
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -250,7 +260,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
     @Test
     public void testDictonaryDoesntContainSubscript(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
@@ -259,7 +270,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         parsedSubscript.addDefinitionLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -270,7 +281,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
     @Test
     public void testParsedTableDoesntContainSubscript(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
@@ -278,7 +290,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();

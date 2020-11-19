@@ -1,8 +1,7 @@
 package es.uva.locomotion.utilities;
 
-import es.uva.locomotion.VensimPlugin;
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
 import org.apache.commons.lang.StringUtils;
 
 public class UtilityFunctions {

@@ -1,8 +1,9 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
-import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
@@ -21,7 +22,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testBacktrackingFirstOrder(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbFirstYearSubscript = GeneralTestUtilities.createSubscript(dbTable,"YEARS_1_I","YEAR 2016","YEAR 2017");
@@ -41,7 +43,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(year2017,year2016));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
 
 
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
@@ -55,7 +57,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testBacktrackingSecondOrder(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbFirstYearSubscript = GeneralTestUtilities.createSubscript(dbTable,"YEARS_1_I","YEAR 2016","YEAR 2017");
@@ -73,7 +76,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(year2017,year2016));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -83,7 +86,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testMatchSubscripts(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbScenario = GeneralTestUtilities.createSubscript(dbTable,"SCENARIO","SCENARIO_1","SCENARIO_2");
@@ -100,7 +104,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(scenario,typeOfEnergy));
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -112,7 +116,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testMatchMixOfSubscriptAndValues(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbScenario = GeneralTestUtilities.createSubscript(dbTable,"SCENARIO","SCENARIO_1","SCENARIO_2");
@@ -132,7 +137,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(scenario,parsedTable.getSymbol("CARBON")));
         parsedVar.addIndexLine(List.of(scenario,parsedTable.getSymbol("SUN")));
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -142,7 +147,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testMatchesValuesAndNotTheSubscriptName_DifferentName(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbScenario = GeneralTestUtilities.createSubscript(dbTable,"SCENARIO","SCENARIO_1","SCENARIO_2");
@@ -158,7 +164,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(scenarioCopy));
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -167,7 +173,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testMatchesValuesAndNotTheSubscriptName_DifferentValuesSameName(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbScenario = GeneralTestUtilities.createSubscript(dbTable,"SCENARIO","SCENARIO_1","SCENARIO_2");
@@ -183,7 +190,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(scenario));
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -193,7 +200,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testMatchesValuesAndNotTheSubscriptName_DifferentNameSubsetOfValues(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbScenario = GeneralTestUtilities.createSubscript(dbTable,"SCENARIO","SCENARIO_1","SCENARIO_2");
@@ -209,7 +217,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(scenario));
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -220,7 +228,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testIssue(){
 
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbScenario = GeneralTestUtilities.createSubscript(dbTable,"SCENARIO","SCENARIO_1","SCENARIO_2");
@@ -237,7 +246,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(fooSubscript));
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -258,7 +267,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testNoIndexesInDictionary(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbVar = new Symbol("var",SymbolType.Variable);
@@ -270,7 +280,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(fooSubscript));
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -279,7 +289,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testNoIndexesInFile(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbVar = new Symbol("var",SymbolType.Variable);
@@ -291,7 +302,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         GeneralTestUtilities.addSymbolInLines(parsedTable,"var",SymbolType.Variable,1,2);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -300,7 +311,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testNoIndexesInBothFileAndDictionary(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbVar = new Symbol("var",SymbolType.Variable);
@@ -309,7 +321,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         GeneralTestUtilities.addSymbolInLines(parsedTable,"var",SymbolType.Variable,1,2);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -318,7 +330,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testAllowsASubsetOfIndexes(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbScenario = GeneralTestUtilities.createSubscript(dbTable,"SCENARIO","SCENARIO_1","SCENARIO_2");
@@ -337,7 +350,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(fileScenario,fileEnergyType));
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -346,7 +359,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testSubscriptWithoutValuesInDictionary(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbVar = new Symbol("var",SymbolType.Variable);
@@ -359,7 +373,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(parsedSubscript));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -368,7 +382,8 @@ public class TestDictionaryIndexMismatchCheck {
 
     @Test
     public void testSubscriptWithoutValuesInFile(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbVar = new Symbol("var",SymbolType.Variable);
@@ -381,7 +396,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(new Symbol("EMPTY_SUBSCRIPT",SymbolType.Subscript)));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -392,7 +407,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testSubscriptNamesAndValuesAreTrimmed(){
 
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbScenario = GeneralTestUtilities.createSubscript(dbTable,"    SCENARIO    ","    SCENARIO_1    ","    SCENARIO_2    ");
@@ -407,7 +423,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(fileScenario));
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -445,7 +461,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(fileSubscript));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new SymbolTable());
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new DataBaseRepresentation());
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -455,7 +471,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testIndexIsBothSubscriptAndValue(){
         SymbolTable parsedTable = new SymbolTable();
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
 
         VensimLogger logger = mock(VensimLogger.class);
         DictionaryIndexMismatchCheck.LOG = logger;
@@ -490,7 +507,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(dbVarAfter);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -503,7 +520,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testDictionaryIndexesAreConsumed(){
         SymbolTable parsedTable = new SymbolTable();
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
 
         Symbol subscript = GeneralTestUtilities.createSubscript(parsedTable,"SUBSCRIPT","S1");
 
@@ -518,7 +536,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(dbVar);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -529,7 +547,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testSameIndexTwiceInRow(){
         SymbolTable parsedTable = new SymbolTable();
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
 
         Symbol subscript = GeneralTestUtilities.createSubscript(parsedTable,"SUBSCRIPT","S1");
 
@@ -544,7 +563,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(dbVar);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -554,7 +573,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testSameIndexTwiceInColumn_Subscript(){
         SymbolTable parsedTable = new SymbolTable();
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
 
         Symbol subscript = GeneralTestUtilities.createSubscript(parsedTable,"SUBSCRIPT","S1");
 
@@ -570,7 +590,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(dbVar);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -581,7 +601,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testSameIndexTwiceInColumn_Value(){
         SymbolTable parsedTable = new SymbolTable();
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
 
         GeneralTestUtilities.createSubscript(parsedTable,"SUBSCRIPT","S1");
 
@@ -597,7 +618,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(dbVar);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -608,7 +629,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testIssuesInMultipleSymbols(){
         SymbolTable parsedTable = new SymbolTable();
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
 
         Symbol subscript = GeneralTestUtilities.createSubscript(parsedTable,"SUBSCRIPT","S1");
 
@@ -623,7 +645,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(new Symbol("varTwo"));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 

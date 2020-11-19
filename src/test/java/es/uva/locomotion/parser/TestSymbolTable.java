@@ -2,6 +2,9 @@ package es.uva.locomotion.parser;
 
 import  static org.junit.Assert.*;
 
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
 import org.junit.Before;
 import org.junit.Test;
 

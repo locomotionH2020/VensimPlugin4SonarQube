@@ -1,5 +1,7 @@
 package es.uva.locomotion.parser.visitors;
 
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.parser.*;
 
 
@@ -50,7 +52,7 @@ public class MagicNumberTableVisitor  extends ModelBaseVisitor<Void> {
         return exprIsAConstant(ctx) || exprIsACompoundNumber(ctx);
     }
 
-    private Symbol getSymbolOrCreate(SymbolTable table,String token){
+    private Symbol getSymbolOrCreate(SymbolTable table, String token){
         if(table.hasSymbol(token))
             return table.getSymbol(token);
 

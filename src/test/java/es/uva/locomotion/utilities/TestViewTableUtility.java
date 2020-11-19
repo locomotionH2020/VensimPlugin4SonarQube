@@ -1,13 +1,12 @@
 package es.uva.locomotion.utilities;
 
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
-import es.uva.locomotion.parser.ViewTable;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.ViewTable;
 import org.junit.Test;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getSymbolTableFromString;
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getViewTableFromString;
-import static es.uva.locomotion.utilities.UtilityFunctions.stringToInt;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.*;
 

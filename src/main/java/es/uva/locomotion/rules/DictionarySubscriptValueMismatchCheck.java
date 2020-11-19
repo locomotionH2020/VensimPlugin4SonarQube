@@ -1,13 +1,12 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
-import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import org.sonar.check.Rule;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 

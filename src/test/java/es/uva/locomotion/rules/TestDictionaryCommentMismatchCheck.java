@@ -1,8 +1,9 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
-import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
@@ -20,7 +21,7 @@ import static org.junit.Assert.*;
 public class TestDictionaryCommentMismatchCheck {
     @Test
     public void testIssue(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbTable = new DataBaseRepresentation();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -31,7 +32,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("Doesn't match");
-        dbTable.addSymbol(dbVar);
+        dbTable.getDataBaseSymbols().addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
@@ -50,7 +51,7 @@ public class TestDictionaryCommentMismatchCheck {
 
     @Test
     public void testParsedSymbolDoesntHaveComment(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbTable = new DataBaseRepresentation();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -60,7 +61,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("comment");
-        dbTable.addSymbol(dbVar);
+        dbTable.getDataBaseSymbols().addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
@@ -74,7 +75,7 @@ public class TestDictionaryCommentMismatchCheck {
 
     @Test
     public void testBothCommentsAreTrimmed(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbTable = new DataBaseRepresentation();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -84,7 +85,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("    Some comment    ");
-        dbTable.addSymbol(dbVar);
+        dbTable.getDataBaseSymbols().addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
@@ -99,7 +100,7 @@ public class TestDictionaryCommentMismatchCheck {
 
     @Test
     public void testIssueInDifferentSymbols(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbTable = new DataBaseRepresentation();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol var = GeneralTestUtilities.addSymbolInLines(parsedTable,"var", SymbolType.Variable,1);
@@ -114,11 +115,11 @@ public class TestDictionaryCommentMismatchCheck {
         valid1.setComment("Same comment");
         valid2.setComment("Same comment");
 
-        Symbol dbVar = GeneralTestUtilities.addSymbolInLines(dbTable,"var", SymbolType.Variable);
-        Symbol dbValid = GeneralTestUtilities.addSymbolInLines(dbTable, "valid1", SymbolType.Variable);
-        Symbol dbVar2 = GeneralTestUtilities.addSymbolInLines(dbTable, "var2", SymbolType.Variable, 3);
-        Symbol dbValid2 = GeneralTestUtilities.addSymbolInLines(dbTable, "valid2", SymbolType.Variable);
-        Symbol dbVar3 = GeneralTestUtilities.addSymbolInLines(dbTable, "var3", SymbolType.Variable);
+        Symbol dbVar = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbols(),"var", SymbolType.Variable);
+        Symbol dbValid = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbols(), "valid1", SymbolType.Variable);
+        Symbol dbVar2 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbols(), "var2", SymbolType.Variable, 3);
+        Symbol dbValid2 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbols(), "valid2", SymbolType.Variable);
+        Symbol dbVar3 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbols(), "var3", SymbolType.Variable);
 
         dbVar.setComment("mismatch");
         dbVar2.setComment("mismatch");
@@ -149,7 +150,7 @@ public class TestDictionaryCommentMismatchCheck {
         var.setComment("Some comment");
         parsedTable.addSymbol(var);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new SymbolTable());
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,new DataBaseRepresentation());
 
 
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
@@ -160,12 +161,12 @@ public class TestDictionaryCommentMismatchCheck {
 
     @Test
     public void testSymbolInDbButNotInFile(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbTable = new DataBaseRepresentation();
 
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("Some comment");
-        dbTable.addSymbol(dbVar);
+        dbTable.getDataBaseSymbols().addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,new SymbolTable(),dbTable);
 
@@ -179,7 +180,7 @@ public class TestDictionaryCommentMismatchCheck {
 
     @Test
     public void testDoesntRaiseIssueIfThereIsntDefinitionLines(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbTable = new DataBaseRepresentation();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -188,7 +189,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("Doesn't match");
-        dbTable.addSymbol(dbVar);
+        dbTable.getDataBaseSymbols().addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
 
@@ -219,7 +220,7 @@ public class TestDictionaryCommentMismatchCheck {
 
     @Test
     public void testIgnoresDefaultSymbols(){
-        SymbolTable dbTable = new SymbolTable();
+        DataBaseRepresentation dbTable = new DataBaseRepresentation();
         SymbolTable parsedTable = new SymbolTable();
 
 
@@ -232,7 +233,7 @@ public class TestDictionaryCommentMismatchCheck {
         List<Symbol> dbSymbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         dbSymbols.forEach(symbol -> {
             symbol.setComment("DB comment");
-            dbTable.addSymbol(symbol);
+            dbTable.getDataBaseSymbols().addSymbol(symbol);
         });
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
@@ -256,8 +257,8 @@ public class TestDictionaryCommentMismatchCheck {
         for(Symbol s:parsedTable.getSymbols())
             s.setComment("Parsed Comment");
 
-        SymbolTable dbTable = new SymbolTable();
-
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        SymbolTable dbTable = dbData.getDataBaseSymbols();
         addSymbolInLines(dbTable,"function",SymbolType.Variable);
         addSymbolInLines(dbTable,"constant",SymbolType.Variable);
         addSymbolInLines(dbTable,"var",SymbolType.Variable);
@@ -270,7 +271,7 @@ public class TestDictionaryCommentMismatchCheck {
             s.setComment("Db Comment");
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
         check.scan(context);
         

@@ -1,7 +1,7 @@
 package es.uva.locomotion.plugin;
 
 
-import es.uva.locomotion.parser.SymbolTable;
+import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.testutilities.RuleTestUtilities;
 import es.uva.locomotion.rules.VensimCheck;

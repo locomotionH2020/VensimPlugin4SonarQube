@@ -1,12 +1,11 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
-import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import org.junit.Test;
 
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
 import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -152,4 +151,113 @@ public class TestVariableNameCheck {
         assertFalse(invalid.isValid());
     }
 
+    @Test
+    public void testAcronymInVariableStart(){
+        SymbolTable parsedTable = new SymbolTable();
+        addSymbolInLines(parsedTable,"ACR_var",SymbolType.Variable,1);
+
+        for(Symbol s:parsedTable.getSymbols())
+            s.setComment("Parsed Comment");
+
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        AcronymsList dbDataAcronyms = dbData.getAcronyms();
+        dbDataAcronyms.addAcronym("ACR");
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VariableNameCheck check = new VariableNameCheck();
+        check.scan(context);
+        assertDoesntHaveIssueInLines(context,VariableNameCheck.class,1);
+    }
+
+    @Test
+    public void testAcronymInVariableMiddle(){
+        SymbolTable parsedTable = new SymbolTable();
+        addSymbolInLines(parsedTable,"var_ACR_var",SymbolType.Variable,1);
+
+        for(Symbol s:parsedTable.getSymbols())
+            s.setComment("Parsed Comment");
+
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        AcronymsList dbDataAcronyms = dbData.getAcronyms();
+        dbDataAcronyms.addAcronym("ACR");
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VariableNameCheck check = new VariableNameCheck();
+        check.scan(context);
+        assertDoesntHaveIssueInLines(context,VariableNameCheck.class,1);
+    }
+    @Test
+    public void testAcronymInVariableEnd(){
+        SymbolTable parsedTable = new SymbolTable();
+        addSymbolInLines(parsedTable,"var_ACR",SymbolType.Variable,1);
+
+        for(Symbol s:parsedTable.getSymbols())
+            s.setComment("Parsed Comment");
+
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        AcronymsList dbDataAcronyms = dbData.getAcronyms();
+        dbDataAcronyms.addAcronym("ACR");
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VariableNameCheck check = new VariableNameCheck();
+        check.scan(context);
+        assertDoesntHaveIssueInLines(context,VariableNameCheck.class,1);
+    }
+
+    @Test
+    public void testAcronymInVariableOnly(){
+        SymbolTable parsedTable = new SymbolTable();
+        addSymbolInLines(parsedTable,"ACR",SymbolType.Variable,1);
+
+        for(Symbol s:parsedTable.getSymbols())
+            s.setComment("Parsed Comment");
+
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        AcronymsList dbDataAcronyms = dbData.getAcronyms();
+        dbDataAcronyms.addAcronym("ACR");
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VariableNameCheck check = new VariableNameCheck();
+        check.scan(context);
+        assertDoesntHaveIssueInLines(context,VariableNameCheck.class,1);
+    }
+
+    @Test
+    public void testAcronymInVariableMultiple(){
+        SymbolTable parsedTable = new SymbolTable();
+        addSymbolInLines(parsedTable,"ACR_H2O_var_CO2",SymbolType.Variable,1);
+
+        for(Symbol s:parsedTable.getSymbols())
+            s.setComment("Parsed Comment");
+
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        AcronymsList dbDataAcronyms = dbData.getAcronyms();
+        dbDataAcronyms.addAcronym("ACR");
+        dbDataAcronyms.addAcronym("H2O");
+        dbDataAcronyms.addAcronym("CO2");
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VariableNameCheck check = new VariableNameCheck();
+        check.scan(context);
+        assertDoesntHaveIssueInLines(context,VariableNameCheck.class,1);
+    }
+
+    @Test
+    public void testAcronymInVariableWithBadName(){
+        SymbolTable parsedTable = new SymbolTable();
+        addSymbolInLines(parsedTable,"ACRT_var",SymbolType.Variable,1);
+        addSymbolInLines(parsedTable,"TACR_var",SymbolType.Variable,2);
+
+        for(Symbol s:parsedTable.getSymbols())
+            s.setComment("Parsed Comment");
+
+        DataBaseRepresentation dbData = new DataBaseRepresentation();
+        AcronymsList dbDataAcronyms = dbData.getAcronyms();
+        dbDataAcronyms.addAcronym("ACR");
+
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VariableNameCheck check = new VariableNameCheck();
+        check.scan(context);
+        assertHasIssueInLines(context,VariableNameCheck.class,1,2);
+    }
 }

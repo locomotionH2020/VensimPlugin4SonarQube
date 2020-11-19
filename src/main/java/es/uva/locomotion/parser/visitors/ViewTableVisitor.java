@@ -1,5 +1,7 @@
 package es.uva.locomotion.parser.visitors;
 
+import es.uva.locomotion.model.View;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.*;
 
 import es.uva.locomotion.utilities.logs.VensimLogger;

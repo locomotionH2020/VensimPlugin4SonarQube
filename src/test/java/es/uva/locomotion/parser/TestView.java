@@ -1,5 +1,6 @@
 package es.uva.locomotion.parser;
 
+import es.uva.locomotion.model.View;
 import org.junit.Test;
 
 import java.util.Collection;
