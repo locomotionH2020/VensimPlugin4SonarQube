@@ -1,11 +1,13 @@
 package es.uva.locomotion.rules;
 
 
+import es.uva.locomotion.model.AcronymsList;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import es.uva.locomotion.parser.Symbol;
-import es.uva.locomotion.parser.SymbolTable;
-import es.uva.locomotion.parser.SymbolType;
+import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
 
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Rule(key = VariableNameCheck.CHECK_KEY, name = VariableNameCheck.NAME, description = VariableNameCheck.HTML_DESCRIPTION)
 public class VariableNameCheck extends AbstractVensimCheck {
+    protected static VensimLogger LOG = VensimLogger.getInstance();
+
     public static final String CHECK_KEY = "variable-name-convention";
     public static final String NAME = "VariableNameCheck";
     public static final String HTML_DESCRIPTION = "" +
@@ -40,12 +44,13 @@ public class VariableNameCheck extends AbstractVensimCheck {
     public void scan(VensimVisitorContext context) {
         SymbolTable table = context.getParsedSymbolTable();
         SymbolTable dbTable = context.getDbSymbolTable();
+        AcronymsList acronymsList = context.getDbAcronyms();
         for (Symbol symbol : table.getSymbols()) {
             if (symbol.getType() == SymbolType.Variable && !"Time".equals(symbol.getToken()) && !checkVariableFollowsConvention(symbol.getToken())) {
 
                 boolean isOnlyAnAcronym = false;
-                if (dbTable != null) {
-                    isOnlyAnAcronym = checkIfVariableHaveAnAcronym(symbol.getToken(), new ArrayList<>()); //TODO see real way of exporting acronyms
+                if (acronymsList != null) {
+                    isOnlyAnAcronym = checkIfVariableHaveAnAcronym(symbol.getToken(), acronymsList.getAcronyms());
                 }
 
                 if (!isOnlyAnAcronym) {
@@ -68,9 +73,8 @@ public class VariableNameCheck extends AbstractVensimCheck {
         String trimmed_name = name;
         for(String acr : acronyms){
             if(trimmed_name.contains(acr))
-                trimmed_name = trimmed_name.replace(acr, "");
+                trimmed_name = trimmed_name.replace(acr, acr.toLowerCase());
         }
-
         return  checkVariableFollowsConvention(trimmed_name);
     }
 }
