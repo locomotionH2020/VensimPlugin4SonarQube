@@ -40,9 +40,9 @@ public class SubscriptValueNameCheck extends AbstractVensimCheck {
     protected static VensimLogger LOG = VensimLogger.getInstance();
     public static final String DEFAULT_REGEXP = "([A-Z0-9]+_)*[A-Z0-9]+";
     @RuleProperty(
-            key = "minimum-repetitions",
+            key = "subscript-value-name-regexp",
             defaultValue = DEFAULT_REGEXP,
-            description = "Minimum times a number must appear to be considered a magic number. Must be greater than 0.")
+            description = "The regexp definition of a subscript value name.")
     public String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {

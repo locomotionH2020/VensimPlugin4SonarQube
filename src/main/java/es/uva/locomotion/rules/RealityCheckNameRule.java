@@ -41,9 +41,9 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
     protected static VensimLogger LOG = VensimLogger.getInstance();
     public static final String DEFAULT_REGEXP = "([a-z0-9]+_)*[a-z0-9]+_check";
     @RuleProperty(
-            key = "minimum-repetitions",
+            key = "reality-check-name-regexp",
             defaultValue = DEFAULT_REGEXP,
-            description = "Minimum times a number must appear to be considered a magic number. Must be greater than 0.")
+            description = "The regexp definition of a reality check name.")
     public String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {

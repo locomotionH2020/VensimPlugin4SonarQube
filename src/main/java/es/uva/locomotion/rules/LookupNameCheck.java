@@ -46,9 +46,9 @@ public class LookupNameCheck extends AbstractVensimCheck{
     protected static VensimLogger LOG = VensimLogger.getInstance();
     public static final String DEFAULT_REGEXP = "([a-z0-9]+_)*[a-z0-9]+_lt";
     @RuleProperty(
-            key = "minimum-repetitions",
+            key = "lookup-name-regexp",
             defaultValue = DEFAULT_REGEXP,
-            description = "Minimum times a number must appear to be considered a magic number. Must be greater than 0.")
+            description = "The regexp definition of a lookup name.")
     public String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {

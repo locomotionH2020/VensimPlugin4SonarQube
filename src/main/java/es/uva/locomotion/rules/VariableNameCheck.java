@@ -45,9 +45,9 @@ public class VariableNameCheck extends AbstractVensimCheck {
 
     public static final String DEFAULT_REGEXP = "([a-z0-9]+_)*[a-z0-9]+";
     @RuleProperty(
-            key = "minimum-repetitions",
+            key = "variable-name-regexp",
             defaultValue = DEFAULT_REGEXP,
-            description = "Minimum times a number must appear to be considered a magic number. Must be greater than 0.")
+            description = "The regexp definition of a variable symbol name.")
     public String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {
