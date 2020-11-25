@@ -6,8 +6,13 @@ import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.utilities.logs.LoggingLevel;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
+import org.sonar.check.RuleProperty;
 
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 
 @Rule(key = SubscriptValueNameCheck.CHECK_KEY, name=SubscriptValueNameCheck.NAME,description = SubscriptValueNameCheck.HTML_DESCRIPTION)
@@ -32,6 +37,24 @@ public class SubscriptValueNameCheck extends AbstractVensimCheck {
             "</pre>\n";
     public static final String NAME = "SubscriptValueNameCheck" ;
 
+    protected static VensimLogger LOG = VensimLogger.getInstance();
+    public static final String DEFAULT_REGEXP = "([A-Z0-9]+_)*[A-Z0-9]+";
+    @RuleProperty(
+            key = "minimum-repetitions",
+            defaultValue = DEFAULT_REGEXP,
+            description = "Minimum times a number must appear to be considered a magic number. Must be greater than 0.")
+    public String regexp = DEFAULT_REGEXP;
+
+    private String getRegexp() {
+        try {
+            Pattern.compile(regexp);
+            return regexp;
+        } catch (PatternSyntaxException exception) {
+            LOG.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
+                    LoggingLevel.ERROR);
+            return DEFAULT_REGEXP;
+        }
+    }
 
 
     @Override
@@ -51,7 +74,7 @@ public class SubscriptValueNameCheck extends AbstractVensimCheck {
     }
 
     private boolean checkSubscriptValueFollowsConvention(String name) {
-        return name.matches("([A-Z0-9]+_)*[A-Z0-9]+");
+        return name.matches(getRegexp());
     }
 
 

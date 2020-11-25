@@ -5,7 +5,13 @@ import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.utilities.logs.LoggingLevel;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
+import org.sonar.check.RuleProperty;
+
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 @Rule(key = RealityCheckNameRule.CHECK_KEY,name= RealityCheckNameRule.NAME, description= RealityCheckNameRule.HTML_DESCRIPTION)
 public class RealityCheckNameRule extends AbstractVensimCheck {
@@ -32,6 +38,25 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
             "temperature_not_negative_check\n"+
             "</pre>\n";
 
+    protected static VensimLogger LOG = VensimLogger.getInstance();
+    public static final String DEFAULT_REGEXP = "([a-z0-9]+_)*[a-z0-9]+_check";
+    @RuleProperty(
+            key = "minimum-repetitions",
+            defaultValue = DEFAULT_REGEXP,
+            description = "Minimum times a number must appear to be considered a magic number. Must be greater than 0.")
+    public String regexp = DEFAULT_REGEXP;
+
+    private String getRegexp() {
+        try {
+            Pattern.compile(regexp);
+            return regexp;
+        } catch (PatternSyntaxException exception) {
+            LOG.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
+                    LoggingLevel.ERROR);
+            return DEFAULT_REGEXP;
+        }
+    }
+
     @Override
     public void scan(VensimVisitorContext context) {
         SymbolTable table = context.getParsedSymbolTable();
@@ -53,7 +78,7 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
 
 
     private boolean checkRealityCheckFollowsConvention(String name) {
-        return name.matches("([a-z0-9]+_)*[a-z0-9]+_check");
+        return name.matches(getRegexp());
     }
 
 
