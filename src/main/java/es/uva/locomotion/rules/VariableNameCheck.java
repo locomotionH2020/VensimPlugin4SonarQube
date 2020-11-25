@@ -49,15 +49,18 @@ public class VariableNameCheck extends AbstractVensimCheck {
             if (symbol.getType() == SymbolType.Variable && !"Time".equals(symbol.getToken()) && !checkVariableFollowsConvention(symbol.getToken())) {
 
                 boolean isOnlyAnAcronym = false;
+                String aronymsListMisingWarning = "";
                 if (acronymsList != null) {
                     isOnlyAnAcronym = checkIfVariableHaveAnAcronym(symbol.getToken(), acronymsList.getAcronyms());
+                }else{
+                    aronymsListMisingWarning = "WARNING: Could not connect with the acronyms database. This variable could be well written.";
                 }
 
                 if (!isOnlyAnAcronym) {
                     symbol.setAsInvalid();
 
                     for (int line : symbol.getDefinitionLines()) {
-                        Issue issue = new Issue(this, line, "The variable '" + symbol.getToken() + "' doesn't follow the naming convention.");
+                        Issue issue = new Issue(this, line, "The variable '" + symbol.getToken() + "' doesn't follow the naming convention." + aronymsListMisingWarning);
                         addIssue(context, issue, symbol);
                     }
                 }
