@@ -6,14 +6,21 @@ import es.uva.locomotion.model.SymbolTable;
 import static org.junit.Assert.*;
 
 
+import es.uva.locomotion.service.DBFacade;
+import es.uva.locomotion.testutilities.ServiceTestUtilities;
+import es.uva.locomotion.utilities.logs.LoggingLevel;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.internal.apachecommons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.getVisitorContextFromString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class TestMagicNumberTableVisitor {
 
@@ -1550,5 +1557,113 @@ public class TestMagicNumberTableVisitor {
 
     }
 
+    @Test
+    public void testMagicNumberFilter(){
+        String program = "A = 3*3*3*3*3~~|\n B = 4*4*4*4*4~~|";
+
+        SymbolTable symbolTable = new SymbolTable();
+        Symbol symbol1 = new Symbol("A");
+        symbol1.setFiltered(true);
+        symbolTable.addSymbol(symbol1);
+        Symbol symbol2 = new Symbol("B");
+        symbol2.setFiltered(false);
+        symbolTable.addSymbol(symbol2);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        visitor.setSymbols(symbolTable);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertFalse(table.hasSymbol("3"));
+        assertTrue(table.hasSymbol("4"));
+        assertEquals(1,table.getSymbols().size());
+
+    }
+
+    @Test
+    public void testMagicNumberFilterAllFiltered(){
+        String program = "A = 3*3*3*3*3~~|\n B = 4*4*4*4*4~~|";
+
+        SymbolTable symbolTable = new SymbolTable();
+        Symbol symbol1 = new Symbol("A");
+        symbol1.setFiltered(true);
+        symbolTable.addSymbol(symbol1);
+        Symbol symbol2 = new Symbol("B");
+        symbol2.setFiltered(true);
+        symbolTable.addSymbol(symbol2);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        visitor.setSymbols(symbolTable);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertFalse(table.hasSymbol("3"));
+        assertFalse(table.hasSymbol("4"));
+        assertEquals(0,table.getSymbols().size());
+
+    }
+
+    @Test
+    public void testMagicNumberFilterSameNumber(){
+        String program = "A = 3*3*3*3*3~~|\n B = 3*3*3*5~~| \n C=3*4~~|";
+
+        SymbolTable symbolTable = new SymbolTable();
+        Symbol symbol1 = new Symbol("A");
+        symbol1.setFiltered(false);
+        symbolTable.addSymbol(symbol1);
+        Symbol symbol2 = new Symbol("B");
+        symbol2.setFiltered(true);
+        symbolTable.addSymbol(symbol2);
+        Symbol symbol3 = new Symbol("C");
+        symbol3.setFiltered(false);
+        symbolTable.addSymbol(symbol3);
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        visitor.setSymbols(symbolTable);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        assertTrue(table.hasSymbol("3"));
+        assertEquals(6, table.getSymbol("3").getDefinitionLines().size());
+        assertEquals(2,table.getSymbols().size());
+
+    }
+
+    @Test
+    public void testMagicNumberFilterSymbolNotInSymbolTable(){
+        String program = "A = 3*3*3*3*3~~|\n B = 3*3*3~~|";
+
+        SymbolTable symbolTable = new SymbolTable();
+        Symbol symbol1 = new Symbol("A");
+        symbol1.setFiltered(false);
+        symbolTable.addSymbol(symbol1);
+
+        VensimLogger logger = mock(VensimLogger.class);
+        MagicNumberTableVisitor.LOG = logger;
+
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        visitor.setSymbols(symbolTable);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        verify(logger).error("Found symbol \"B\" that is not in the symbol table");
+
+
+    }
+
+    @Test
+    public void testMagicNumberFilterSymbolTableUnasigned(){
+        String program = "A = 3*3*3*3*3~~|";
+
+
+
+        VensimLogger logger = mock(VensimLogger.class);
+        MagicNumberTableVisitor.LOG = logger;
+
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        verify(logger).unique("Symbol table unasigned in MagicNumberVisitor", LoggingLevel.INFO);
+
+
+    }
 
 }

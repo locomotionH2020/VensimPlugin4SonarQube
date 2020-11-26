@@ -62,11 +62,13 @@ public class MagicNumberCheck extends AbstractVensimCheck {
     @Override
     public void scan(VensimVisitorContext context) {
 
-        SymbolTable numberTable = getVisitor().getSymbolTable(context.getRootNode());
+        MagicNumberTableVisitor visitor = getVisitor();
+        SymbolTable symbolTable = context.getParsedSymbolTable();
+        visitor.setSymbols(symbolTable);
+
+        SymbolTable numberTable = visitor.getSymbolTable(context.getRootNode());
 
         int minimumRepetitions = getMinimumRepetitions();
-
-
 
         for(Symbol symbol: numberTable.getSymbols()){
             if(!numberIsIgnored(symbol.getToken())) {
@@ -82,6 +84,7 @@ public class MagicNumberCheck extends AbstractVensimCheck {
 
 
                     for (int line : symbol.getDefinitionLines()) {
+
                         Issue issue = new Issue(this, line, "The number " + symbol.getToken() + " is repeated " +
                                 symbol.getDefinitionLines().size() + " times. Consider replacing it by a constant");
                         issue.setSeverity(issueSeverity);
