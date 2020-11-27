@@ -6,9 +6,12 @@ import es.uva.locomotion.model.View;
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.*;
 import es.uva.locomotion.parser.visitors.ViewTableVisitor;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 
 
 public class ViewTableUtility {
+
+    protected static VensimLogger LOG = VensimLogger.getInstance();
 
     public static ViewTable getViewTable(Model.FileContext context) {
         ViewTableVisitor generator = new ViewTableVisitor();
@@ -28,7 +31,7 @@ public class ViewTableUtility {
     public static void filterPrefix(SymbolTable table, String viewPrefix) {
         for (Symbol symbol : table.getSymbols()) {
             boolean filtered = true;
-            for(String viewName : symbol.get_views()){
+            for (String viewName : symbol.get_views()) {
                 if (viewName.startsWith(viewPrefix)) {
                     filtered = false;
                     break;

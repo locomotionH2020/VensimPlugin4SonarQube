@@ -27,13 +27,12 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
     public void setSymbols(SymbolTable symbols) {
         this.symbols = symbols;
     }
-    //getSymbolOrCreate(table,ctx.Id().getText())
 
     @Override
     public Void visitLhs(Model.LhsContext ctx) {
 
         if (symbols == null) {
-            LOG.unique("Symbol table unasigned in MagicNumberVisitor", LoggingLevel.INFO);
+            LOG.unique("Symbol table unassigned in MagicNumberVisitor", LoggingLevel.INFO);
             return null;
         }
 

@@ -2,6 +2,7 @@ package es.uva.locomotion.plugin;
 
 import es.uva.locomotion.model.DataBaseRepresentation;
 import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.View;
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.MultiChannelTokenStream;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
@@ -115,6 +116,9 @@ public class VensimScanner {
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
 
             ViewTable viewTable = ViewTableUtility.getViewTable(root);
+            for( View v : viewTable.getViews()){
+                LOG.info(v.getName());
+            }
             ViewTableUtility.addViews(table, viewTable);
 
             jsonBuilder.addSymbolTable(inputFile.filename(), table);

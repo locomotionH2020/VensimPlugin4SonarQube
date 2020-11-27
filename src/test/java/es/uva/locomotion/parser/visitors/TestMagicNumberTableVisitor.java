@@ -1649,7 +1649,7 @@ public class TestMagicNumberTableVisitor {
     }
 
     @Test
-    public void testMagicNumberFilterSymbolTableUnasigned(){
+    public void testMagicNumberFilterSymbolTableUnassigned(){
         String program = "A = 3*3*3*3*3~~|";
 
 
@@ -1661,9 +1661,22 @@ public class TestMagicNumberTableVisitor {
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
 
-        verify(logger).unique("Symbol table unasigned in MagicNumberVisitor", LoggingLevel.INFO);
-
+        verify(logger).unique("Symbol table unassigned in MagicNumberVisitor", LoggingLevel.INFO);
 
     }
 
+    @Test
+    public void testMagicNumberFilterSymbolTableIsNull(){
+        String program = "A = 3*3*3*3*3~~|";
+
+        VensimLogger logger = mock(VensimLogger.class);
+        MagicNumberTableVisitor.LOG = logger;
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        visitor.setSymbols(null);
+        SymbolTable table = visitor.getSymbolTable(visitorContext.getRootNode());
+
+        verify(logger).unique("Symbol table unassigned in MagicNumberVisitor", LoggingLevel.INFO);
+
+    }
 }

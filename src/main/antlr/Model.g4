@@ -143,7 +143,7 @@ viewInfo:   sketchInfo versionCode viewName viewVariables;
 sketchInfo:  NewLine* ViewDelimier Sketch_phrase NewLine ;
 versionCode: Sketch_version NewLine;
 //Vensim versions 5,4 and 3 all use the same version code (300).
-viewName: Star Id NewLine; //All view names are preceeded by an '*'
+viewName: Star .*? NewLine; //All view names are preceeded by an '*'
 
 /**
 All the information is at https://www.vensim.com/documentation/_mdl_model_files.htm

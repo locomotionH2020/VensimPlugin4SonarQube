@@ -19,7 +19,7 @@ public class ViewTable {
 
 
 
-    public Collection<View> getViews(){
+    public List<View> getViews(){
         List<View> view =  new ArrayList<>(table.values());
         view.sort(Comparator.comparing(View::getName));
         return view;
