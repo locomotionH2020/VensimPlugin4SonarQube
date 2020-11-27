@@ -116,9 +116,6 @@ public class VensimScanner {
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
 
             ViewTable viewTable = ViewTableUtility.getViewTable(root);
-            for( View v : viewTable.getViews()){
-                LOG.info(v.getName());
-            }
             ViewTableUtility.addViews(table, viewTable);
 
             jsonBuilder.addSymbolTable(inputFile.filename(), table);
