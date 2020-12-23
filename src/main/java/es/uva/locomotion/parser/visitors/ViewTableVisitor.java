@@ -56,10 +56,12 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
         String category = null;
         String subcategory = null;
         if(moduleSeparator != null){
-            module = viewName.split(moduleSeparator)[0];
-            category =  viewName.split(moduleSeparator)[1];
+            String[] aux = viewName.split("[" + moduleSeparator + "]");
+            module = aux[0];
+            category =  aux[1];
+
             if(categorySeparator != null){
-                String[] aux = category.split(categorySeparator);
+                aux = category.split(categorySeparator);
                 subcategory = aux.length > 1 ? aux[1] : null;
                 category = aux[0];
             }

@@ -75,7 +75,6 @@ public class TestViewTableVisitor {
         assertFalse( intro.getShadow_symbols().contains(VARIABLE_1));
         assertTrue( intro.getShadow_symbols().contains(VARIABLE_2));
 
-        System.out.println(intro.getSymbols());
         assertEquals(4,intro.getSymbols().size());
 
     }
@@ -83,10 +82,55 @@ public class TestViewTableVisitor {
     public void getViewNameWithAllASCII() {
         String program = "\\\\\\---/// Sketch information - do not modify anything except names\n" +
                 "V300  Do not put anything below this section - it will be ignored\n" +
-                "* !\"#$%&\\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}\n" +
+                "* View1\n" +
                 "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
                 "///---\\\\\\\n";
         ViewTable table = getViewTableFromString(program);
+    }
+    @Test
+    public void getViewNameModuleAndCategoryOutput() {
+        String program = "\\\\\\---/// Sketch information - do not modify anything except names\n" +
+                "V300  Do not put anything below this section - it will be ignored\n" +
+                "* ModuleName.CategoryName\n" +
+                "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n"
+                +"\\\\\\---/// Sketch information - do not modify anything except names\n" +
+                "V300  Do not put anything below this section - it will be ignored\n" +
+                "* ModuleName2.CategoryName2-SubCategoryName\n" +
+                "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
 
+                "///---\\\\\\\n";
+        ViewTable table = getViewTableFromString(program, ".","-");
+
+        assertTrue(table.hasModule("ModuleName"));
+        assertTrue(table.hasModule("ModuleName2"));
+
+        assertTrue(table.hasCategory("CategoryName"));
+        assertTrue(table.hasCategory("CategoryName2"));
+
+        assertTrue(table.hasSubcategory("CategoryName2", "SubCategoryName"));
+        assertFalse(table.hasSubcategory("CategoryName", "SubCategoryName"));
+    }
+    @Test
+    public void getViewNameModulOutput() {
+        String program = "\\\\\\---/// Sketch information - do not modify anything except names\n" +
+                "V300  Do not put anything below this section - it will be ignored\n" +
+                "* ModuleName.CategoryName\n" +
+                "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n"
+                +"\\\\\\---/// Sketch information - do not modify anything except names\n" +
+                "V300  Do not put anything below this section - it will be ignored\n" +
+                "* ModuleName2.CategoryName2-SubCategoryName\n" +
+                "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
+
+                "///---\\\\\\\n";
+        ViewTable table = getViewTableFromString(program, ".");
+
+        assertTrue(table.hasModule("ModuleName"));
+        assertTrue(table.hasModule("ModuleName2"));
+
+        assertTrue(table.hasCategory("CategoryName"));
+        assertTrue(table.hasCategory("CategoryName2-SubCategoryName"));
+
+        assertFalse(table.hasSubcategory("CategoryName2-SubCategoryName", "SubCategoryName"));
+        assertFalse(table.hasSubcategory("CategoryName", "SubCategoryName"));
     }
 }

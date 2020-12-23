@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class TestView {
 
     @Test
-    public void getName() {
+    public void getModule() {
         View v = new View("name");
         assertEquals("name", v.getModule());
     }
@@ -48,14 +48,78 @@ public class TestView {
     }
 
     @Test
-    public void hasSymbol() {
+    public void getIdentifier() {
+        View v = new View("moduleName", "categoryName", "subcategoryName");
+        assertEquals("moduleNamecategoryNamesubcategoryName", v.getIdentifier());
     }
 
     @Test
-    public void hasPrimary() {
+    public void getCategory() {
+        View v = new View("moduleName", "categoryName");
+        assertEquals("categoryName", v.getCategory());
+    }
+    @Test
+    public void getCategoryIsNull() {
+        View v = new View("moduleName");
+        assertNull(v.getCategory());
+    }
+    @Test
+    public void getSubcategory() {
+        View v = new View("moduleName", "categoryName", "subcategoryName");
+        assertEquals("subcategoryName", v.getSubcategory());
+    }
+    @Test
+    public void getSubcategoryIsNull() {
+        View v = new View("moduleName", "categoryName");
+        assertNull( v.getSubcategory());
+    }
+    @Test
+    public void getSubcategoryAndCategoryIsNull() {
+        View v = new View("moduleName");
+        assertNull( v.getSubcategory());
     }
 
     @Test
-    public void hasShadow() {
+    public void getCategoryOrSubcategory() {
+        View v = new View("moduleName", "categoryName", "subcategoryName");
+        View v2 = new View("moduleName", "categoryName");
+        View v3 = new View("moduleName");
+        assertEquals("subcategoryName", v.getCategoryOrSubcategory());
+        assertEquals("categoryName", v2.getCategoryOrSubcategory());
+        assertNull( v3.getCategoryOrSubcategory());
     }
+
+        @Test
+        public void testEquals(){
+            View v = new View("moduleName", "categoryName", "subcategoryName");
+            View vSubDiff = new View("moduleName", "categoryName", "different");
+            View vCatDiff = new View("moduleName", "different", "subcategoryName");
+            View vModDiff = new View("diffenert", "categoryName", "subcategoryName");
+            View vSame = new View("moduleName", "categoryName", "subcategoryName");
+
+            View v2 = new View("moduleName", "categoryName");
+            View v2CatDiff = new View("moduleName", "different");
+            View v2ModDiff = new View("different", "categoryName");
+            View v2Same = new View("moduleName", "categoryName");
+
+            View v3 = new View("moduleName");
+            View v3ModDiff = new View("different");
+            View v3Same = new View("moduleName");
+
+            assertNotEquals(v,vSubDiff);
+            assertNotEquals(v,vCatDiff);
+            assertNotEquals(v,vModDiff);
+            assertEquals(v,vSame);
+
+            assertNotEquals(v2,v2CatDiff);
+            assertNotEquals(v2,v2ModDiff);
+            assertEquals(v2,v2Same);
+
+            assertNotEquals(v3,v3ModDiff);
+            assertEquals(v3,v3Same);
+
+            assertNotEquals(v,v2);
+            assertNotEquals(v2,v3);
+            assertNotEquals(v,v3);
+        }
 }

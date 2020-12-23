@@ -45,21 +45,29 @@ public class ViewTable {
     }
 
     public View createOrSelectView(String module, String category, String subcategory) {
-        String identifier = View.generateIdentifier(module,category,subcategory);
+        String identifier = View.generateIdentifier(module, category, subcategory);
         if (hasView(identifier)) {
             return getView(identifier);
         } else {
             View newView = new View(module, category, subcategory);
+            addModule(module);
+            if (category != null) {
+                addCategory(category);
+                if(subcategory != null){
+                    addSubcategory(category, subcategory);
+                }
+            }
             addView(newView);
             return newView;
         }
     }
+
     public View createOrSelectView(String module, String category) {
-        return createOrSelectView(module,category, null);
+        return createOrSelectView(module, category, null);
     }
 
     public View createOrSelectView(String module) {
-        return createOrSelectView(module,null, null);
+        return createOrSelectView(module, null, null);
     }
 
     public View removeView(View view) {

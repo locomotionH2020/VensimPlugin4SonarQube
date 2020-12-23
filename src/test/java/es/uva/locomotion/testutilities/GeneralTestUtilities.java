@@ -87,15 +87,20 @@ public class GeneralTestUtilities {
     }
 
     public static ViewTable getViewTableFromString(String content){
-
-
         Model.FileContext root = getParseTreeFromString(content);
-
-
         ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor();
         return visitor.getViewTable(root);
     }
-
+    public static ViewTable getViewTableFromString(String content, String moduleSeparator, String categorySeparator){
+        Model.FileContext root = getParseTreeFromString(content);
+        ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator,categorySeparator);
+        return visitor.getViewTable(root);
+    }
+    public static ViewTable getViewTableFromString(String content, String moduleSeparator){
+        Model.FileContext root = getParseTreeFromString(content);
+        ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator);
+        return visitor.getViewTable(root);
+    }
 
     public static SymbolTable getRAWSymbolTable(String file_path) throws IOException {
         Model.FileContext tree = getParseTree(file_path);

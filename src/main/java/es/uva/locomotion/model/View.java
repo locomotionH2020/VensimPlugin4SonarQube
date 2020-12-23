@@ -21,13 +21,15 @@ public class View {
         primary_symbols = new HashSet<>();
         shadow_symbols = new HashSet<>();
     }
+
     public View(String module, String category) {
-        this(module,category,null);
+        this(module, category, null);
     }
 
     public View(String module) {
-        this(module,null,null);
+        this(module, null, null);
     }
+
     public String getModule() {
         return module;
     }
@@ -76,8 +78,8 @@ public class View {
     }
 
     public String getCategoryOrSubcategory() {
-        if(getSubcategory() != null) return  getSubcategory();
-        if(getCategory() != null) return getCategory();
+        if (getSubcategory() != null) return getSubcategory();
+        if (getCategory() != null) return getCategory();
         return null;
     }
 
@@ -86,14 +88,12 @@ public class View {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         View view = (View) o;
-        return Objects.equals(module, view.module) &&
-                Objects.equals(primary_symbols, view.primary_symbols) &&
-                Objects.equals(shadow_symbols, view.shadow_symbols);
+        return Objects.equals(module, view.module) && Objects.equals(category, view.category) && Objects.equals(subcategory, view.subcategory) && Objects.equals(primary_symbols, view.primary_symbols) && Objects.equals(shadow_symbols, view.shadow_symbols);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(module, primary_symbols, shadow_symbols);
+        return Objects.hash(module, category, subcategory, primary_symbols, shadow_symbols);
     }
 
     @Override
@@ -105,12 +105,12 @@ public class View {
                 '}';
     }
 
-    public String getIdentifier(){
-        return  generateIdentifier(getModule(), getCategory(), getSubcategory());
+    public String getIdentifier() {
+        return generateIdentifier(getModule(), getCategory(), getSubcategory());
     }
 
-    public static String generateIdentifier( String module, String category, String subcategory) {
-        return module + (category !=  null ? category: "") + (subcategory !=  null ? subcategory: "");
+    public static String generateIdentifier(String module, String category, String subcategory) {
+        return module + (category != null ? category : "") + (subcategory != null ? subcategory : "");
     }
 
 
