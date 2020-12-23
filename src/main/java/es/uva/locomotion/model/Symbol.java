@@ -15,8 +15,8 @@ public class Symbol {
     private Set<Symbol> dependencies;
     private SymbolType type;
     private String category;
-    private String primary_view;
-    private List<String> shadow_views;
+    private String primary_module;
+    private List<String> shadow_module;
 
     private boolean isValid;
 
@@ -34,8 +34,8 @@ public class Symbol {
         category = "";
         indexes = new ArrayList<>();
         isValid = true;
-        primary_view = "";
-        shadow_views = new ArrayList<>();
+        primary_module = "";
+        shadow_module = new ArrayList<>();
     }
 
 
@@ -126,8 +126,8 @@ public class Symbol {
                 getDependencies().equals(symbol.getDependencies()) &&
                 getType() == symbol.getType() &&
                 getCategory().equals(symbol.getCategory()) &&
-                getPrimary_view().equals(symbol.getPrimary_view()) &&
-                getShadow_views().equals(symbol.getShadow_views());
+                getPrimary_module().equals(symbol.getPrimary_module()) &&
+                getShadow_module().equals(symbol.getShadow_module());
     }
 
     @Override
@@ -141,14 +141,14 @@ public class Symbol {
                 ", dependencies=" + dependencies.stream().map(Symbol::getToken).collect(Collectors.toList()) +
                 ", type=" + type +
                 ", category='" + category + '\'' +
-                ", primary module='" + getPrimary_view() + '\'' +
-                ", shadow modules='" + getShadow_views() +
+                ", primary module='" + getPrimary_module() + '\'' +
+                ", shadow modules='" + getShadow_module() +
                 '}';
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getToken(), linesDefined, getIndexes(), getUnits(), getComment(), getType(), getCategory(), getPrimary_view(), getShadow_views());
+        return Objects.hash(getToken(), linesDefined, getIndexes(), getUnits(), getComment(), getType(), getCategory(), getPrimary_module(), getShadow_module());
     }
 
     public void setUnits(String units) {
@@ -191,21 +191,21 @@ public class Symbol {
         return isValid;
     }
 
-    public String getPrimary_view() { return primary_view; }
+    public String getPrimary_module() { return primary_module; }
 
-    public void setPrimary_view(String primary_view) { this.primary_view = primary_view; }
+    public void setPrimary_module(String primary_module) { this.primary_module = primary_module; }
 
-    public List<String> getShadow_views() {
-        return shadow_views;
+    public List<String> getShadow_module() {
+        return shadow_module;
     }
 
     public void addShadow_view(String module){
-        shadow_views.add(module.trim());
+        shadow_module.add(module.trim());
     }
 
     public List<String> get_views(){
-        List<String> list = new ArrayList<>(getShadow_views());
-        list.add(getPrimary_view());
+        List<String> list = new ArrayList<>(getShadow_module());
+        list.add(getPrimary_module());
         return list;
     }
 

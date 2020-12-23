@@ -206,7 +206,7 @@ public class DBFacade {
             symbol.addIndexLine(indexes);
 
             JsonObject modules = jsonSymbol.getJsonObject(FIELD_SYMBOL_MODULES);
-            symbol.setPrimary_view(modules.getString(FIELD_SYMBOL_MODULES_MAIN));
+            symbol.setPrimary_module(modules.getString(FIELD_SYMBOL_MODULES_MAIN));
 
             JsonArray secondaryModules = modules.getJsonArray(FIELD_SYMBOL_MODULES_SECONDARY);
             for (int i = 0; i < secondaryModules.size(); i++) {

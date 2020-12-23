@@ -42,18 +42,18 @@ public class TestViewTableUtility {
         ViewTableUtility.addViews(symbolTable, viewTable);
 
         Symbol s = symbolTable.getSymbol(VARIABLE_1_EQ);
-        assertEquals(VIEW_NAME, s.getPrimary_view());
-        assertEquals(0, s.getShadow_views().size());
+        assertEquals(VIEW_NAME, s.getPrimary_module());
+        assertEquals(0, s.getShadow_module().size());
 
         s = symbolTable.getSymbol(VARIABLE_2_EQ);
-        assertTrue(s.getPrimary_view().isBlank());
-        assertEquals(VIEW_NAME, s.getShadow_views().get(0));
-        assertEquals(1, s.getShadow_views().size());
+        assertTrue(s.getPrimary_module().isBlank());
+        assertEquals(VIEW_NAME, s.getShadow_module().get(0));
+        assertEquals(1, s.getShadow_module().size());
 
         s = symbolTable.getSymbol(VARIABLE_3_EQ);
 
-        assertTrue(s.getPrimary_view().isBlank());
-        assertEquals(0, s.getShadow_views().size());
+        assertTrue(s.getPrimary_module().isBlank());
+        assertEquals(0, s.getShadow_module().size());
     }
 
     @Test

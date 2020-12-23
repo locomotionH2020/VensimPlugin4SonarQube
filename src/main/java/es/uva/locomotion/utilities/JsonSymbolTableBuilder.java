@@ -58,10 +58,10 @@ public class JsonSymbolTableBuilder {
             dependenciesBuilder.add(dependency.getToken());
         symbolBuilder.add(KEY_DEPENDENCIES,dependenciesBuilder);
 
-        symbolBuilder.add(KEY_PRIMARY_VIEW,symbol.getPrimary_view());
+        symbolBuilder.add(KEY_PRIMARY_VIEW,symbol.getPrimary_module());
 
         JsonArrayBuilder shadowBuilder = Json.createArrayBuilder();
-        for(String view:symbol.getShadow_views())
+        for(String view:symbol.getShadow_module())
             shadowBuilder.add(view);
         symbolBuilder.add(KEY_SHADOW_VIEWS,shadowBuilder);
 
