@@ -1,9 +1,6 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.model.AcronymsList;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.utilities.UtilityFunctions;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
@@ -38,6 +35,8 @@ public class DBFacade {
     public static final List<String> REQUIRED_FIELDS_IN_INDEXES = List.of(FIELD_INDEX_NAME, FIELD_INDEX_VALUES, FIELD_SYMBOL_COMMENT);
     private static final String FIELD_SYMBOL_MODULES_MAIN = "main";
     private static final String FIELD_SYMBOL_MODULES_SECONDARY = "secondary";
+    private static final String FIELD_CATEGORY_LEVEL = "level";
+    private static final String FIELD_CATEGORY_SUPER_CATEGORY = "super_category";
     protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
@@ -318,5 +317,127 @@ public class DBFacade {
 
         }
         return list;
+    }
+
+    public static ModulesList getExistingModulesFromDB(String serviceUrl, String token) {
+        String serviceResponse = handler.sendModuleRequestToDictionaryService(serviceUrl, token);
+
+        if (serviceResponse == null)
+            return null;
+
+        try (JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse))) {
+
+            JsonArray acronymsFound = jsonReader.readArray();
+            return createModulesListFromJson(acronymsFound);
+        } catch (JsonException ex) {
+            throw new ServiceResponseFormatNotValid("Expected an array.", serviceResponse);
+        } catch (ServiceResponseFormatNotValid ex) {
+            ex.setServiceResponse(serviceResponse);
+            throw ex;
+        }
+
+    }
+
+    private static ModulesList createModulesListFromJson(JsonArray modulesFound) {
+        ModulesList list = new ModulesList();
+        JsonObject acronym;
+        for (JsonValue jsonValue : modulesFound) {
+            list.add(jsonValue.toString());
+        }
+        return list;
+    }
+
+    public static CategoryList getExistingCategoriesFromDB(String serviceUrl, String token) {
+
+        String serviceResponse = handler.sendCategoriesTableRequestToDictionaryService(serviceUrl, token);
+        if (serviceResponse == null)
+            return null;
+
+        try (JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse))) {
+            JsonArray categories = jsonReader.readArray();
+
+            return createCategoryListFromJson(categories);
+        } catch (JsonException ex) {
+            throw new ServiceResponseFormatNotValid("Expected an object.", serviceResponse);
+        } catch (ServiceResponseFormatNotValid ex) {
+            ex.setServiceResponse(serviceResponse);
+            throw ex;
+        }
+    }
+
+    protected static CategoryList createCategoryListFromJson(JsonArray symbolsFound) {
+        CategoryList categoryList = new CategoryList();
+
+        for (int s = 0; s < symbolsFound.size(); s++) {
+
+            JsonObject jsonCategory = symbolsFound.getJsonObject(s);
+            validateJsonSymbol(jsonCategory);
+
+            String name = jsonCategory.getString(FIELD_NAME);
+            int level = jsonCategory.getInt(FIELD_CATEGORY_LEVEL);
+
+            if (categoryList.containsCategory(name)) {
+                LOG.info("Received duplicated category '" + name + "' from the dictionary service.");
+                continue;
+            }
+
+            if(level==1){ //Subcategory
+                String super_categoryName = jsonCategory.getString(FIELD_CATEGORY_SUPER_CATEGORY);
+                Category super_category = categoryList.getCategory(super_categoryName);
+                Category category = new Category(super_category, name);
+                super_category.addSubcategory(category);
+            }else{ //Category
+                Category category = new Category(name);
+                categoryList.add(category);
+            }
+
+
+
+        }
+        return categoryList;
+    }
+
+    public static void injectModules(String serviceUrl, List<String> newModules, String token) {
+
+        newModules.sort(Comparator.comparing(String::toString));
+        JsonArrayBuilder jsonModulesBuilder = Json.createArrayBuilder();
+
+        for(String st : newModules){
+
+            jsonModulesBuilder.add(st);
+        }
+
+        handler.injectModules(serviceUrl, jsonModulesBuilder.build(), token);
+    }
+
+    public static void injectCategories(String serviceUrl, List<Category> newCategories, String token) {
+
+        JsonArrayBuilder jsonCategoriesBuilder = Json.createArrayBuilder();
+
+        for(Category category : newCategories){
+            JsonObjectBuilder jsonCategory = Json.createObjectBuilder();
+            jsonCategory.add(FIELD_NAME, category.getName());
+            if(category.getSuperCategory() == null){ //Category
+
+                jsonCategory.add(FIELD_CATEGORY_LEVEL, 0);
+                jsonCategory.add(FIELD_CATEGORY_SUPER_CATEGORY, "null");
+                jsonCategoriesBuilder.add(jsonCategory);
+                for(Category subcategory : category.getSubcategories()){
+                    JsonObjectBuilder jsonSubcategory = Json.createObjectBuilder();
+                    jsonSubcategory.add(FIELD_NAME, subcategory.getName());
+                    jsonSubcategory.add(FIELD_CATEGORY_LEVEL, 1);
+                    jsonSubcategory.add(FIELD_CATEGORY_SUPER_CATEGORY, category.getName());
+                    jsonCategoriesBuilder.add(jsonSubcategory);
+                }
+            }else{//Subcategory
+                jsonCategory.add(FIELD_NAME, category.getName());
+                jsonCategory.add(FIELD_CATEGORY_LEVEL, 1);
+                jsonCategory.add(FIELD_CATEGORY_SUPER_CATEGORY, category.getSuperCategory().getName());
+                jsonCategoriesBuilder.add(jsonCategory);
+            }
+        }
+
+        handler.injectCategories(serviceUrl, jsonCategoriesBuilder.build(), token);
+
     }
 }

@@ -7,6 +7,8 @@ public class DataBaseRepresentation {
 
     private SymbolTable dataBaseSymbols;
     private AcronymsList acronyms;
+    private ModulesList modules;
+    private CategoryList categories;
 
     public DataBaseRepresentation() {
     dataBaseSymbols = new SymbolTable();
@@ -30,5 +32,19 @@ public class DataBaseRepresentation {
         this.acronyms = acronyms;
     }
 
+    public CategoryList getCategories() {
+        return categories;
+    }
 
+    public void setCategories(CategoryList categories) {
+        this.categories = categories;
+    }
+
+    public ModulesList getModules() {
+        return modules;
+    }
+
+    public void setModules(ModulesList modules) {
+        this.modules = modules;
+    }
 }

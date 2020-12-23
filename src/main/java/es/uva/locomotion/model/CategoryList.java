@@ -41,8 +41,8 @@ public class CategoryList {
         return cat;
     }
 
-    public Map<String, Category> getCategoriesList() {
-        return new HashMap<>(categoryMap);
+    public List<Category> getCategoriesList() {
+        return new ArrayList<>(categoryMap.values());
     }
 
     public boolean containsCategory(String category){

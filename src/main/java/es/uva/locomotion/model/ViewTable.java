@@ -2,6 +2,7 @@ package es.uva.locomotion.model;
 
 import java.util.*;
 
+//TODO refactor to unbind from ModuleList and CategoryList
 public class ViewTable {
     private Map<String, View> table;
     private ModulesList modulesList;
@@ -12,6 +13,13 @@ public class ViewTable {
         this.table = new HashMap<>();
         this.modulesList = new ModulesList();
         this.categoriesList = new CategoryList();
+    }
+
+    public ModulesList getModules(){
+        return modulesList;
+    }
+    public CategoryList getCategories(){
+        return categoriesList;
     }
 
 
@@ -98,7 +106,7 @@ public class ViewTable {
         return categoriesList.getCategoriesName();
     }
 
-    public Map<String, Category> getCategoriesList() {
+    public List<Category> getCategoriesList() {
         return categoriesList.getCategoriesList();
     }
 

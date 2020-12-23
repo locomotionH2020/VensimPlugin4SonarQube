@@ -1,15 +1,13 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.model.AcronymsList;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.exceptions.*;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -157,4 +155,122 @@ public class ServiceController {
     }
 
 
+    public ModulesList getModulesFromDb() {
+        if(!isAuthenticated())
+            throw new NotAuthenticatedException();
+
+        String logMessage="";
+        try {
+            return  DBFacade.getExistingModulesFromDB(dictionaryService, token);
+        }catch (InvalidServiceUrlException ex){
+            LOG.unique(INVALID_URL_MESSAGE, LoggingLevel.ERROR);
+            return null;
+        }catch (EmptyServiceException ex){
+            LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE, LoggingLevel.INFO);
+            return null;
+        }catch (ConnectionFailedException ex){
+            LOG.unique(SERVICE_UNREACHABLE_MESSAGE, LoggingLevel.ERROR);
+            return null;
+        }catch (ServiceResponseFormatNotValid ex){
+            logMessage = "The response of the dictionary service wasn't valid. "+ ex.getMessage() + "\n"+
+                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
+                    RULES_DISABLED_MESSAGE;
+
+            LOG.error(logMessage);
+            return null;
+        }
+
+    }
+
+    public CategoryList getCategoriesFromDb() {
+        if(!isAuthenticated())
+            throw new NotAuthenticatedException();
+
+        String logMessage="";
+        try {
+            return  DBFacade.getExistingCategoriesFromDB(dictionaryService, token);
+        }catch (InvalidServiceUrlException ex){
+            LOG.unique(INVALID_URL_MESSAGE, LoggingLevel.ERROR);
+            return null;
+        }catch (EmptyServiceException ex){
+            LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE, LoggingLevel.INFO);
+            return null;
+        }catch (ConnectionFailedException ex){
+            LOG.unique(SERVICE_UNREACHABLE_MESSAGE, LoggingLevel.ERROR);
+            return null;
+        }catch (ServiceResponseFormatNotValid ex){
+            logMessage = "The response of the dictionary service wasn't valid. "+ ex.getMessage() + "\n"+
+                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
+                    RULES_DISABLED_MESSAGE;
+
+            LOG.error(logMessage);
+            return null;
+        }
+    }
+
+    public void injectNewCategories(CategoryList categoriesFound, CategoryList dbCategories) {
+        if(dbCategories==null)
+            return;
+
+        if(!isAuthenticated())
+            throw new NotAuthenticatedException();
+
+        List<Category> categories = new ArrayList<>(categoriesFound.getCategoriesList());
+
+        List<Category> newCategories = categories.stream().filter(category -> !dbCategories.containsCategory(category.getName()))
+                .collect(Collectors.toList());
+
+        categories.removeAll(newCategories);
+
+        for(Category cat : categories){ //TODO rethink to remove 3rd for
+            if(cat.getSubcategories() != null){
+                for(Category subcat : cat.getSubcategories()){
+                    for(Category dbcat : dbCategories.getCategoriesList()){
+                        if(!dbcat.getSubcategories().contains(subcat)){
+                            newCategories.add(subcat);
+                        }
+                    }
+                }
+            }
+        }
+        if(newCategories.size()>=1){
+            try {
+                DBFacade.injectCategories(dictionaryService, newCategories, token);
+            }catch (InvalidServiceUrlException ex){
+                LOG.unique(INVALID_URL_MESSAGE, LoggingLevel.ERROR);
+            }catch (EmptyServiceException ex){
+                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE, LoggingLevel.INFO);
+            }catch (ConnectionFailedException ex){
+                LOG.unique(SERVICE_UNREACHABLE_MESSAGE, LoggingLevel.ERROR);
+            }
+
+        }
+
+
+    }
+
+    public void injectNewModules(List<String> modulesList, ModulesList dbModules) {
+        if(dbModules==null)
+            return;
+
+        if(!isAuthenticated())
+            throw new NotAuthenticatedException();
+
+        List<String> newModules = modulesList.stream().filter(module -> !dbModules.contains(module))
+                .collect(Collectors.toList());
+
+        if(newModules.size()>=1){
+            try {
+                DBFacade.injectModules(dictionaryService, newModules, token);
+            }catch (InvalidServiceUrlException ex){
+                LOG.unique(INVALID_URL_MESSAGE, LoggingLevel.ERROR);
+            }catch (EmptyServiceException ex){
+                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE, LoggingLevel.INFO);
+            }catch (ConnectionFailedException ex){
+                LOG.unique(SERVICE_UNREACHABLE_MESSAGE, LoggingLevel.ERROR);
+            }
+
+        }
+
+    }
 }

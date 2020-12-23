@@ -146,6 +146,8 @@ public class VensimScanner {
             if (serviceController.isAuthenticated()) {
                 dbData.setDataBaseSymbols(serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols())));
                 dbData.setAcronyms(serviceController.getAcronymsFromDb());
+                dbData.setModules(serviceController.getModulesFromDb());
+                dbData.setCategories(serviceController.getCategoriesFromDb());
             }
             //mark the symbols tha need to be filtered.
 
@@ -163,6 +165,8 @@ public class VensimScanner {
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
             if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
+                serviceController.injectNewModules(viewTable.getModulesList(), dbData.getModules());
+                serviceController.injectNewCategories(viewTable.getCategories(), dbData.getCategories());
                 serviceController.injectNewSymbols(module, new ArrayList<>(table.getSymbols()), dbData.getDataBaseSymbols());
         } catch (IOException e) {
             LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
