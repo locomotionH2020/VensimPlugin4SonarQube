@@ -4,14 +4,14 @@ import java.util.*;
 
 public class ViewTable {
     private Map<String, View> table;
-    private Set<String> modules;
-    private SortedMap<String, Set<String>> categories;
+    private ModulesList modulesList;
+    private CategoryList categoriesList;
 
 
     public ViewTable() {
         this.table = new HashMap<>();
-        this.modules = new HashSet<>();
-        this.categories = new TreeMap<>();
+        this.modulesList = new ModulesList();
+        this.categoriesList = new CategoryList();
     }
 
 
@@ -81,60 +81,59 @@ public class ViewTable {
     }
 
 
-    public List<String> getModules() {
-        List<String> mod = new ArrayList<>(modules);
-        mod.sort(Comparator.comparing(String::toString));
-        return mod;
+    public List<String> getModulesList() {
+        return modulesList.getModules();
     }
 
 
     public boolean hasModule(String name) {
-        return modules.contains(name);
+        return modulesList.contains(name);
     }
 
     public void addModule(String module) {
-        modules.add(module);
+        modulesList.add(module);
     }
 
     public List<String> getCategoriesName() {
-        List<String> cat = new ArrayList<>(categories.keySet());
-        cat.sort(Comparator.comparing(String::toString));
-        return cat;
+        return categoriesList.getCategoriesName();
     }
 
-    public SortedMap<String, Set<String>> getCategories() {
-        return new TreeMap<>(categories);
+    public Map<String, Category> getCategoriesList() {
+        return categoriesList.getCategoriesList();
     }
 
-    public List<String> getSubcategoriesFromCategory(String categoryName) {
-        if (table.containsKey(categoryName)) {
-            return new ArrayList<>(categories.get(categoryName));
-        } else
-            throw new IllegalArgumentException("Category " + categoryName + " not found");
-    }
 
     public boolean hasCategory(String name) {
-        return categories.containsKey(name);
+        return categoriesList.containsCategory(name);
     }
 
 
     public void addCategory(String category) {
 
-        if (hasView(category))
+        if (hasCategory(category))
             return;
-        categories.put(category, new HashSet<>());
+        Category c = new Category(category);
+        categoriesList.add(c);
     }
 
+    public Set<Category> getSubcategories(String categoryName) {
+        Category category = categoriesList.getCategory(categoryName);
+        return category.getSubcategories();
+    }
 
-    public boolean hasSubcategory(String category, String subcategory) {
-        Set<String> subcategories = categories.get(category);
-        if (subcategories == null)
-            throw new IllegalArgumentException("The category:  " + category + " does not exists.");
+    public boolean hasSubcategory(String categoryName, String subcategory) {
+        Category category = categoriesList.getCategory(categoryName);
+
+        Set<String> subcategories = category.getSubcategoriesNames();
+
         return subcategories.contains(subcategory);
     }
 
-    public void addSubcategory(String category, String subcategory) {
-        categories.get(category).add(subcategory);
+    public void addSubcategory(String categoryName, String subcategory) {
+        Category category = categoriesList.getCategory(categoryName);
+
+        Category sub = new Category(category,subcategory);
+        category.addSubcategory(sub);
     }
 
 
