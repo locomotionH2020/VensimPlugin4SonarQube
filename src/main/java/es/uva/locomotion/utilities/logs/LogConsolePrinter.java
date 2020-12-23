@@ -12,6 +12,9 @@ public class LogConsolePrinter implements LogOutputMethod {
             case INFO:
                 LOG.info(message);
                 break;
+            case WARNING:
+                LOG.warn(message);
+                break;
             case ERROR:
                 LOG.error(message);
                 break;

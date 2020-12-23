@@ -32,6 +32,16 @@ public class VensimLogger {
 
     }
 
+    public void warn(String message){
+        warn(message,"");
+    }
+
+    public void warn(String message, String file){
+        outputMethod.log(LoggingLevel.WARNING, formatMessage(message,file));
+
+    }
+
+
     public void error(String message) {
         error(message,"");
     }
