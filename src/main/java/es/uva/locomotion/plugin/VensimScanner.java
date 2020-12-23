@@ -47,6 +47,9 @@ public class VensimScanner {
     private ServiceController serviceController;
 
     private static final String VIEW_PREFIX = "vensim.view.prefix";
+    private static final String MODULE_NAME = "vensim.view.module.name";
+    private static final String MODULE_SEPARATOR = "vensim.view.module.separator";
+    private static final String CATEGORY_SEPARATOR = "vensim.view.category.separator";
 
     public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder, ServiceController serviceController) {
         this.context = context;
@@ -107,6 +110,9 @@ public class VensimScanner {
     public void scanFile(InputFile inputFile) {
 
         String viewPrefix = context.config().get(VIEW_PREFIX).orElse("");
+        String moduleName = context.config().get(MODULE_NAME).orElse("");
+        String moduleSeparator = context.config().get(MODULE_SEPARATOR).orElse("");
+        String categorySeparator = context.config().get(CATEGORY_SEPARATOR).orElse("");
 
         try {
             String content = inputFile.contents();
@@ -115,7 +121,22 @@ public class VensimScanner {
             Model.FileContext root = getParseTree(content);
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
 
-            ViewTable viewTable = ViewTableUtility.getViewTable(root);
+            ViewTable viewTable;
+            if(!viewPrefix.isEmpty()) { //Support for viewPrefix
+                viewTable = ViewTableUtility.getViewTable(root);
+                LOG.warn("vensim.view.prefix is deprecated, please use: vensim.view.module.name and vensim.view.module.separator");
+            }else if(!moduleSeparator.isEmpty()){
+                if(!categorySeparator.isEmpty()){
+                    viewTable = ViewTableUtility.getViewTable(root,moduleSeparator,categorySeparator);
+                }else{
+                    viewTable = ViewTableUtility.getViewTable(root,moduleSeparator);
+                }
+            }else{
+                if(!categorySeparator.isEmpty()){
+                    LOG.warn("vensim.view.category.separator is set, but not vensim.view.module.separator, ignoring category separator");
+                }
+                viewTable = ViewTableUtility.getViewTable(root);
+            }
             ViewTableUtility.addViews(table, viewTable);
 
             jsonBuilder.addSymbolTable(inputFile.filename(), table);
@@ -127,6 +148,7 @@ public class VensimScanner {
                 dbData.setAcronyms(serviceController.getAcronymsFromDb());
             }
             //mark the symbols tha need to be filtered.
+
             if(!viewPrefix.isEmpty()) {
                 ViewTableUtility.filterPrefix(table, viewPrefix);
             }

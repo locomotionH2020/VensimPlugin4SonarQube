@@ -13,8 +13,18 @@ public class ViewTableUtility {
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
+    public static ViewTable getViewTable(Model.FileContext context, String moduleSeparator, String categorySeparator) {
+        ViewTableVisitor generator = ViewTableVisitor.createViewTableVisitor(moduleSeparator, categorySeparator);
+        return generator.getViewTable(context);
+    }
+
+    public static ViewTable getViewTable(Model.FileContext context, String moduleSeparator) {
+        ViewTableVisitor generator = ViewTableVisitor.createViewTableVisitor(moduleSeparator);
+        return generator.getViewTable(context);
+    }
+
     public static ViewTable getViewTable(Model.FileContext context) {
-        ViewTableVisitor generator = new ViewTableVisitor();
+        ViewTableVisitor generator = ViewTableVisitor.createViewTableVisitor();
         return generator.getViewTable(context);
     }
 
@@ -22,8 +32,11 @@ public class ViewTableUtility {
         for (Symbol symbol : table.getSymbols()) {
             String token = symbol.getToken();
             for (View view : viewTable.getViews()) {
-                if (view.hasPrimary(token)) symbol.setPrimary_view(view.getName());
-                if (view.hasShadow(token)) symbol.addShadow_view(view.getName());
+                if (view.hasPrimary(token)) {
+                    symbol.setPrimary_module(view.getModule());
+                    symbol.setCategory(view.getCategoryOrSubcategory());
+                }
+                if (view.hasShadow(token)) symbol.addShadow_view(view.getModule());
             }
         }
     }

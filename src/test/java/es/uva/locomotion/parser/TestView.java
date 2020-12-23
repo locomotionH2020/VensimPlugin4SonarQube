@@ -12,7 +12,7 @@ public class TestView {
     @Test
     public void getName() {
         View v = new View("name");
-        assertEquals("name", v.getName());
+        assertEquals("name", v.getModule());
     }
 
     @Test

@@ -10,9 +10,34 @@ import es.uva.locomotion.utilities.logs.VensimLogger;
 public class ViewTableVisitor extends ModelBaseVisitor<Object> {
     private ViewTable table;
     private View actualView;
+
+    private String moduleSeparator;
+    private String categorySeparator;
+
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
     private static int SYMBOL_PRIVATE_ID = 10;
+
+    private ViewTableVisitor() {
+    }
+
+    public static ViewTableVisitor createViewTableVisitor(String moduleSeparator, String categorySeparator) {
+        ViewTableVisitor vtv = new ViewTableVisitor();
+        vtv.moduleSeparator = moduleSeparator;
+        vtv.categorySeparator = categorySeparator;
+        return vtv;
+    }
+    public static ViewTableVisitor createViewTableVisitor(String moduleSeparator) {
+        ViewTableVisitor vtv = new ViewTableVisitor();
+        vtv.moduleSeparator = moduleSeparator;
+        vtv.categorySeparator = null;
+        return vtv;
+    }
+    public static ViewTableVisitor createViewTableVisitor() {
+        ViewTableVisitor vtv = new ViewTableVisitor();
+        vtv.moduleSeparator = null;
+        vtv.categorySeparator = null;
+        return vtv;    }
 
     public ViewTable getViewTable(Model.FileContext context){
         table = new ViewTable();
@@ -27,8 +52,19 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
     @Override
     public Object visitViewName(Model.ViewNameContext ctx) {
         String viewName = ctx.getText().trim().substring(1);
-
-        actualView = table.createOrSelectView(viewName);
+        String module = viewName;
+        String category = null;
+        String subcategory = null;
+        if(moduleSeparator != null){
+            module = viewName.split(moduleSeparator)[0];
+            category =  viewName.split(moduleSeparator)[1];
+            if(categorySeparator != null){
+                String[] aux = category.split(categorySeparator);
+                subcategory = aux.length > 1 ? aux[1] : null;
+                category = aux[0];
+            }
+        }
+        actualView = table.createOrSelectView(module,category,subcategory);
 
         return super.visitViewName(ctx);
     }

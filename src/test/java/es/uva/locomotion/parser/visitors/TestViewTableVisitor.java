@@ -79,4 +79,14 @@ public class TestViewTableVisitor {
         assertEquals(4,intro.getSymbols().size());
 
     }
+    @Test
+    public void getViewNameWithAllASCII() {
+        String program = "\\\\\\---/// Sketch information - do not modify anything except names\n" +
+                "V300  Do not put anything below this section - it will be ignored\n" +
+                "* !\"#$%&\\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}\n" +
+                "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
+                "///---\\\\\\\n";
+        ViewTable table = getViewTableFromString(program);
+
+    }
 }

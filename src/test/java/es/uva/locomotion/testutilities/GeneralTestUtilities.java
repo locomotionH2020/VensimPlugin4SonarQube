@@ -92,7 +92,7 @@ public class GeneralTestUtilities {
         Model.FileContext root = getParseTreeFromString(content);
 
 
-        ViewTableVisitor visitor = new ViewTableVisitor();
+        ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor();
         return visitor.getViewTable(root);
     }
 
