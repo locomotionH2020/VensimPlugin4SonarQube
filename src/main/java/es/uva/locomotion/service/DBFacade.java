@@ -28,7 +28,6 @@ public class DBFacade {
     public static final String FIELD_SYMBOL_MODULES = "modules";
     public static final String FIELD_INDEX_VALUES = "values";
     public static final String FIELD_INJECTION_IS_INDEXED = "isIndexed";
-    public static final String FIELD_INJECTION_MODULE = "module";
     public static final String FIELD_SYMBOL_UNITS = "unit";
 
     public static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_NAME, FIELD_SYMBOL_TYPE, FIELD_SYMBOL_COMMENT, FIELD_SYMBOL_CATEGORY, FIELD_SYMBOL_INDEXES, FIELD_SYMBOL_MODULES, FIELD_SYMBOL_UNITS);
@@ -218,7 +217,7 @@ public class DBFacade {
     }
 
 
-    public static void injectSymbols(String serviceUrl, String module, List<Symbol> symbols, String token) {
+    public static void injectSymbols(String serviceUrl, List<Symbol> symbols, String token) {
         List<Symbol> rawSymbols = symbols.stream().filter(symbol -> !List.of(SymbolType.Subscript_Value, SymbolType.Subscript,
                 SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION, SymbolType.Function).contains(symbol.getType())).collect(Collectors.toList());
 
@@ -234,8 +233,6 @@ public class DBFacade {
 
         requestBuilder.add(FIELD_SYMBOLS, jsonSymbols);
         requestBuilder.add(FIELD_INDEXES, jsonIndexes);
-        requestBuilder.add(FIELD_INJECTION_MODULE, module.trim());
-
         handler.injectSymbols(serviceUrl, requestBuilder.build(), token);
     }
 
@@ -327,7 +324,9 @@ public class DBFacade {
 
         try (JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse))) {
 
+
             JsonArray acronymsFound = jsonReader.readArray();
+
             return createModulesListFromJson(acronymsFound);
         } catch (JsonException ex) {
             throw new ServiceResponseFormatNotValid("Expected an array.", serviceResponse);
@@ -342,14 +341,19 @@ public class DBFacade {
         ModulesList list = new ModulesList();
         JsonObject acronym;
         for (JsonValue jsonValue : modulesFound) {
+
+            if (jsonValue.getValueType() != JsonValue.ValueType.STRING) {
+                throw new ServiceResponseFormatNotValid("Format error '" + jsonValue.toString() + "' is not a module name.");
+            }
             list.add(jsonValue.toString());
+
         }
         return list;
     }
 
-    public static CategoryList getExistingCategoriesFromDB(String serviceUrl, String token) {
+    public static CategoryMap getExistingCategoriesFromDB(String serviceUrl, String token) {
 
-        String serviceResponse = handler.sendCategoriesTableRequestToDictionaryService(serviceUrl, token);
+        String serviceResponse = handler.sendCategoriesRequestToDictionaryService(serviceUrl, token);
         if (serviceResponse == null)
             return null;
 
@@ -358,51 +362,76 @@ public class DBFacade {
 
             return createCategoryListFromJson(categories);
         } catch (JsonException ex) {
-            throw new ServiceResponseFormatNotValid("Expected an object.", serviceResponse);
+            throw new ServiceResponseFormatNotValid("Expected an array.", serviceResponse);
         } catch (ServiceResponseFormatNotValid ex) {
             ex.setServiceResponse(serviceResponse);
             throw ex;
         }
     }
 
-    protected static CategoryList createCategoryListFromJson(JsonArray symbolsFound) {
-        CategoryList categoryList = new CategoryList();
+    protected static CategoryMap createCategoryListFromJson(JsonArray symbolsFound) {
+        CategoryMap categoryMap = new CategoryMap();
 
         for (int s = 0; s < symbolsFound.size(); s++) {
 
             JsonObject jsonCategory = symbolsFound.getJsonObject(s);
-            validateJsonSymbol(jsonCategory);
+            validateJsonCategories(jsonCategory);
+            String name = null;
+            int level = 0;
+            name = jsonCategory.getString(FIELD_NAME);
 
-            String name = jsonCategory.getString(FIELD_NAME);
-            int level = jsonCategory.getInt(FIELD_CATEGORY_LEVEL);
 
-            if (categoryList.containsCategory(name)) {
+            level = jsonCategory.getInt(FIELD_CATEGORY_LEVEL);
+
+            if (categoryMap.contains(name)) {
                 LOG.info("Received duplicated category '" + name + "' from the dictionary service.");
                 continue;
             }
 
-            if(level==1){ //Subcategory
-                String super_categoryName = jsonCategory.getString(FIELD_CATEGORY_SUPER_CATEGORY);
-                Category super_category = categoryList.getCategory(super_categoryName);
-                Category category = new Category(super_category, name);
-                super_category.addSubcategory(category);
-            }else{ //Category
+            if (level == 1) { //Subcategory
+                String super_categoryName = null;
+
+                    super_categoryName = jsonCategory.getString(FIELD_CATEGORY_SUPER_CATEGORY);
+
+                Category super_category = categoryMap.createOrSelectCategory(super_categoryName);
                 Category category = new Category(name);
-                categoryList.add(category);
+                super_category.addSubcategory(category);
+            } else { //Category
+                Category category = new Category(name);
+                categoryMap.add(category);
             }
 
 
-
         }
-        return categoryList;
+        return categoryMap;
     }
+
+    private static void validateJsonCategories(JsonObject jsonSymbol) {
+        if (!jsonSymbol.containsKey(FIELD_NAME)) {
+            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_NAME + "' field from a category.");
+        }
+
+        String name = jsonSymbol.getString(FIELD_NAME);
+        if (!jsonSymbol.containsKey(FIELD_CATEGORY_LEVEL)) {
+            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_CATEGORY_LEVEL + "' field in category '" + name + "'.");
+        }
+        int level = jsonSymbol.getInt(FIELD_CATEGORY_LEVEL);
+
+        if(level == 1) {
+            if (!jsonSymbol.containsKey(FIELD_CATEGORY_SUPER_CATEGORY)) {
+                throw new ServiceResponseFormatNotValid("Missing '" + FIELD_CATEGORY_SUPER_CATEGORY + "' field in subcategory '" + name + "'.");
+            }
+        }
+    }
+
+
 
     public static void injectModules(String serviceUrl, List<String> newModules, String token) {
 
         newModules.sort(Comparator.comparing(String::toString));
         JsonArrayBuilder jsonModulesBuilder = Json.createArrayBuilder();
 
-        for(String st : newModules){
+        for (String st : newModules) {
 
             jsonModulesBuilder.add(st);
         }
@@ -414,22 +443,22 @@ public class DBFacade {
 
         JsonArrayBuilder jsonCategoriesBuilder = Json.createArrayBuilder();
 
-        for(Category category : newCategories){
+        for (Category category : newCategories) {
             JsonObjectBuilder jsonCategory = Json.createObjectBuilder();
             jsonCategory.add(FIELD_NAME, category.getName());
-            if(category.getSuperCategory() == null){ //Category
+            if (category.getSuperCategory() == null) { //Category
 
                 jsonCategory.add(FIELD_CATEGORY_LEVEL, 0);
                 jsonCategory.add(FIELD_CATEGORY_SUPER_CATEGORY, "null");
                 jsonCategoriesBuilder.add(jsonCategory);
-                for(Category subcategory : category.getSubcategories()){
+                for (Category subcategory : category.getSubcategories()) {
                     JsonObjectBuilder jsonSubcategory = Json.createObjectBuilder();
                     jsonSubcategory.add(FIELD_NAME, subcategory.getName());
                     jsonSubcategory.add(FIELD_CATEGORY_LEVEL, 1);
                     jsonSubcategory.add(FIELD_CATEGORY_SUPER_CATEGORY, category.getName());
                     jsonCategoriesBuilder.add(jsonSubcategory);
                 }
-            }else{//Subcategory
+            } else {//Subcategory
                 jsonCategory.add(FIELD_NAME, category.getName());
                 jsonCategory.add(FIELD_CATEGORY_LEVEL, 1);
                 jsonCategory.add(FIELD_CATEGORY_SUPER_CATEGORY, category.getSuperCategory().getName());

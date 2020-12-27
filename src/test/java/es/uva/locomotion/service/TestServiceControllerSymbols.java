@@ -25,7 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class TestServiceController {
+public class TestServiceControllerSymbols {
 
     @After
     public void resetDbFacade() {
@@ -257,7 +257,7 @@ public class TestServiceController {
 
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewSymbols("module", new ArrayList<>(table.getSymbols()), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), new SymbolTable());
 
 
         verify(logger, never()).info(anyString());
@@ -275,7 +275,7 @@ public class TestServiceController {
         GeneralTestUtilities.addSymbolInLines(table, "  constant  ", SymbolType.Constant, 1);
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewSymbols("module", new ArrayList<>(table.getSymbols()), null);
+        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), null);
 
 
         verify(logger, never()).info(anyString());
@@ -297,7 +297,7 @@ public class TestServiceController {
         }
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewSymbols("module", new ArrayList<>(table.getSymbols()), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), new SymbolTable());
 
 
         verify(logger, never()).info(anyString());
@@ -330,10 +330,10 @@ public class TestServiceController {
         dbTable.addSymbol(new Symbol("            Symbol found in db     ", SymbolType.Constant));
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewSymbols("module", new ArrayList<>(foundTable.getSymbols()), dbTable);
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), dbTable);
 
 
-        verify(logger, times(1)).info("Injected symbols in module 'module': [constant, lookup table, reality check, subscript, swtich, variable]");
+        verify(logger, times(1)).info("Injected symbols: [constant, lookup table, reality check, subscript, swtich, variable]");
     }
 
     @Test
@@ -346,7 +346,7 @@ public class TestServiceController {
         SymbolTable foundTable = new SymbolTable();
         GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, 1);
 
-        controller.injectNewSymbols("module", new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
 
         verify(logger, times(1)).unique("Missing dictionary service parameter.\nThe rules that require the data from the dictionary service will be skipped."
@@ -363,7 +363,7 @@ public class TestServiceController {
         SymbolTable foundTable = new SymbolTable();
         GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, 1);
 
-        controller.injectNewSymbols("module", new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
 
         verify(logger, times(1)).unique("Missing dictionary service parameter.\nThe rules that require the data from the dictionary service will be skipped."
@@ -383,7 +383,7 @@ public class TestServiceController {
         SymbolTable foundTable = new SymbolTable();
         GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, 1);
 
-        controller.injectNewSymbols("module", new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
 
         verify(logger, times(1)).unique("The dictionary service was unreachable.\nThe rules that require the data from the dictionary service will be skipped.", LoggingLevel.ERROR);
@@ -400,7 +400,7 @@ public class TestServiceController {
         SymbolTable foundTable = new SymbolTable();
         GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, 1);
 
-        controller.injectNewSymbols("module", new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
 
         verify(logger, times(1))
@@ -420,183 +420,11 @@ public class TestServiceController {
         SymbolTable foundTable = new SymbolTable();
         foundTable.addSymbol(new Symbol("constant", SymbolType.Constant));
 
-        controller.injectNewSymbols("module", new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), new SymbolTable());
 
 
         verify(logger, never()).info(anyString());
         verify(DBFacade.handler, never()).injectSymbols(any(), any(), any());
     }
-
-
-    @Test
-    public void testGetAcronymsController() {
-        ServiceConnectionHandler mockHandler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[]");
-        DBFacade.handler = mockHandler;
-
-        ServiceController controller = getAuthenticatedServiceController("https://localhost");
-
-        controller.getAcronymsFromDb();
-
-        verify(mockHandler, Mockito.times(1)).sendAcronymsRequestToDictionaryService(any(), any());
-    }
-
-
-    @Test
-    public void testGetAcronymsDictionaryInvalidServiceUrlMissingProtocol() {
-        ServiceController controller = getAuthenticatedServiceController("www.myextremelyepicservice.com");
-        VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
-
-        AcronymsList actualValue = controller.getAcronymsFromDb();
-
-        Assert.assertNull(actualValue);
-        verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
-                "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.ERROR);
-    }
-
-    @Test
-    public void testGetAcronymsDictionaryInvalidServiceUrlInvalidFormat() {
-        ServiceController controller = getAuthenticatedServiceController("http://\\$*^");
-        VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
-
-        AcronymsList actualValue = controller.getAcronymsFromDb();
-
-
-        Assert.assertNull(actualValue);
-        verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
-                "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.ERROR);
-    }
-
-    @Test
-    public void testGetAcronymsDictionaryInvalidServiceUrlInvalidProtocol() {
-        ServiceController controller = getAuthenticatedServiceController("smtp://address:password@coolmail.com");
-        VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
-
-        AcronymsList actualValue = controller.getAcronymsFromDb();
-
-        Assert.assertNull(actualValue);
-        verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
-                "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.ERROR);
-    }
-
-    @Test
-    public void testGetAcronymsDictionaryMissingServiceEmptyUrl() {
-        ServiceController controller = getAuthenticatedServiceController("");
-        VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
-
-        AcronymsList actualValue = controller.getAcronymsFromDb();
-
-        Assert.assertNull(actualValue);
-        verify(logger).unique("Missing dictionary service parameter.\n" +
-                "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.INFO);
-    }
-
-    @Test
-    public void testGetAcronymsDictionaryMissingServiceNullUrl() {
-        ServiceController controller = getAuthenticatedServiceController(null);
-        VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
-
-        AcronymsList actualValue = controller.getAcronymsFromDb();
-
-        Assert.assertNull(actualValue);
-        verify(logger).unique("Missing dictionary service parameter.\n" +
-                "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.INFO);
-    }
-
-    @Test
-    public void testGetAcronymsDictionaryConnectionFailed() {
-        ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
-        when(handler.sendAcronymsRequestToDictionaryService(any(), any())).thenThrow(new ConnectionFailedException(null));
-        DBFacade.handler = handler;
-
-        ServiceController controller = getAuthenticatedServiceController("http://localhost");
-        VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
-
-        AcronymsList actualValue = controller.getAcronymsFromDb();
-
-        Assert.assertNull(actualValue);
-        verify(logger).unique("The dictionary service was unreachable.\n" +
-                "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.ERROR);
-
-    }
-
-    @Test
-    public void testGetAcronymsDictionaryInvalidFormatLiteralList() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[1,2,3]");
-        ServiceController controller = getAuthenticatedServiceController("http://localhost");
-        VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
-
-        AcronymsList actualValue = controller.getAcronymsFromDb();
-        Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't valid. Expected object inside array.\n" +
-                "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \nThe rules that require the data from the dictionary service will be skipped.");
-
-    }
-
-
-    @Test
-    public void testGetAcronymsDictionaryInvalidFormatNotAnArray() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"symbol\":\"foo\"}");
-
-        ServiceController controller = getAuthenticatedServiceController("http://localhost");
-        VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
-
-        AcronymsList actualValue = controller.getAcronymsFromDb();
-
-        Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't valid. Expected an array.\n" +
-                "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
-                "The rules that require the data from the dictionary service will be skipped.");
-    }
-
-
-    @Test
-    public void testGetAcronymsDictionaryInvalidFormatMissingName() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[{\"id\":\"1\", \"definition\": \"this is a definition\"}]");
-
-        ServiceController controller = getAuthenticatedServiceController("http://localhost");
-        VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
-
-        AcronymsList actualValue = controller.getAcronymsFromDb();
-
-        Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't valid. Missing 'name' field.\n" +
-                "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
-                "The rules that require the data from the dictionary service will be skipped.");
-    }
-
-
-    @Test
-    public void testGetAcronymsConsecutiveDifferentErrorsAreLogged() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}");
-
-        ServiceController controller = getAuthenticatedServiceController("http://localhost");
-        VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
-
-        controller.getAcronymsFromDb();
-        controller.getAcronymsFromDb();
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[{\"id\":\"1\", \"definition\": \"this is a definition\"}]");
-        controller.getAcronymsFromDb();
-        controller.getAcronymsFromDb();
-
-
-        verify(logger, atLeastOnce()).error("The response of the dictionary service wasn't valid. Missing 'name' field.\n" +
-                "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
-                "The rules that require the data from the dictionary service will be skipped.");
-        verify(logger, atLeastOnce()).error("The response of the dictionary service wasn't valid. Expected an array.\n" +
-                "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
-                "The rules that require the data from the dictionary service will be skipped.");
-    }
-
-
 }
 

@@ -232,7 +232,7 @@ public class ServiceConnectionHandler {
         }
     }
 
-    public String sendCategoriesTableRequestToDictionaryService(String serviceUrl, String token) {
+    public String sendCategoriesRequestToDictionaryService(String serviceUrl, String token) {
         if (serviceUrl == null || "".equals(serviceUrl.trim()))
             throw new EmptyServiceException("Service Url is null or an empty string");
 

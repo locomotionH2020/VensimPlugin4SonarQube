@@ -11,6 +11,8 @@ public class ServiceTestUtilities {
         ServiceConnectionHandler handler = mock(ServiceConnectionHandler.class);
         doReturn(returnValue).when(handler).sendSymbolTableRequestToDictionaryService(any(),any(),any());
         doReturn(returnValue).when(handler).sendAcronymsRequestToDictionaryService(any(),any());
+        doReturn(returnValue).when(handler).sendModuleRequestToDictionaryService(any(),any());
+        doReturn(returnValue).when(handler).sendCategoriesRequestToDictionaryService(any(),any());
 
         doReturn("").when(handler).authenticate(any(),any(),any());
 

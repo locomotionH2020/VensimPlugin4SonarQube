@@ -1,4 +1,4 @@
-package es.uva.locomotion.parser;
+package es.uva.locomotion.model;
 
 import  static org.junit.Assert.*;
 

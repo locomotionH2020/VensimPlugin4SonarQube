@@ -4,22 +4,18 @@ package es.uva.locomotion.model;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Category {
+public class Category implements Comparable<Category>{
 
 
     private Category superCategory;
     private String name;
     private Set<Category> subcategories;
 
-    public Category(Category superCategory, String name){
-        this.superCategory = superCategory;
-        this.name = name;
-        this.subcategories = null;
-    }
-    public Category(String name){
+
+    public Category(String name) {
         this.superCategory = null;
         this.name = name;
-        this.subcategories = new HashSet<>();
+        this.subcategories = null;
     }
 
 
@@ -30,9 +26,15 @@ public class Category {
     public Category getSuperCategory() {
         return superCategory;
     }
+
+    private void setSuperCategory(Category superCategory) {
+        this.superCategory = superCategory;
+    }
+
     public Set<String> getSubcategoriesNames() {
         return subcategories.stream().map(Category::getName).collect(Collectors.toSet());
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -42,10 +44,57 @@ public class Category {
     }
 
     public void addSubcategory(Category subcategory) {
+        if (this.getSuperCategory() != null) {
+            throw new IllegalStateException("Subcategories can't have new subcategories");
+        }
+
+        if (subcategory.getSubcategories() != null) {
+            throw new IllegalStateException("Supercategories can't be added as subcategories");
+        }
+        if (subcategory.equals(this)) {
+            throw new IllegalArgumentException("Category can have himself as subcategory.");
+        }
+
+        if (subcategory.getSuperCategory() != null && !subcategory.getSuperCategory().equals(this)) {
+            throw new IllegalStateException("Category " + subcategory.getName() + " already have a supercategory: " + subcategory.getSuperCategory().getName());
+        }
+        subcategory.setSuperCategory(this);
+        if(subcategories == null){
+            subcategories = new HashSet<>();
+        }
         this.subcategories.add(subcategory);
     }
-    public void setSubcategories(Set<Category> subcategories) {
-        this.subcategories = subcategories;
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "superCategory=" + (superCategory == null ? "null" : superCategory.getName()) +
+                ", name='" + name + '\'' +
+                ", subcategories=" + subcategories +
+                '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        if(superCategory != null && category.getSuperCategory() != null){
+            return Objects.equals(superCategory.getName(), category.superCategory.getName()) && name.equals(category.name) && Objects.equals(subcategories, category.subcategories);
+        }else{
+            return name.equals(category.name) && Objects.equals(subcategories, category.subcategories);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+
+        if(superCategory != null) return Objects.hash(superCategory.getName(), name, subcategories);
+        else  return Objects.hash(name, subcategories);
+    }
+
+    @Override
+    public int compareTo(Category o) {
+       return name.compareTo(o.getName());
+    }
 }

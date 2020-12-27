@@ -166,8 +166,8 @@ public class VensimScanner {
 
             if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
                 serviceController.injectNewModules(viewTable.getModulesList(), dbData.getModules());
-                serviceController.injectNewCategories(viewTable.getCategories(), dbData.getCategories());
-                serviceController.injectNewSymbols(module, new ArrayList<>(table.getSymbols()), dbData.getDataBaseSymbols());
+                serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
+                serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), dbData.getDataBaseSymbols());
         } catch (IOException e) {
             LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
         } catch (ParseCancellationException e) {

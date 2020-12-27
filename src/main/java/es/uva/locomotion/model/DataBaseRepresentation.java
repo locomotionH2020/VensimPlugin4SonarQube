@@ -1,14 +1,11 @@
 package es.uva.locomotion.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DataBaseRepresentation {
 
     private SymbolTable dataBaseSymbols;
     private AcronymsList acronyms;
     private ModulesList modules;
-    private CategoryList categories;
+    private CategoryMap categories;
 
     public DataBaseRepresentation() {
     dataBaseSymbols = new SymbolTable();
@@ -32,11 +29,11 @@ public class DataBaseRepresentation {
         this.acronyms = acronyms;
     }
 
-    public CategoryList getCategories() {
+    public CategoryMap getCategories() {
         return categories;
     }
 
-    public void setCategories(CategoryList categories) {
+    public void setCategories(CategoryMap categories) {
         this.categories = categories;
     }
 

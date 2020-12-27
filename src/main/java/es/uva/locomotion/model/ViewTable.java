@@ -6,19 +6,19 @@ import java.util.*;
 public class ViewTable {
     private Map<String, View> table;
     private ModulesList modulesList;
-    private CategoryList categoriesList;
+    private CategoryMap categoriesList;
 
 
     public ViewTable() {
         this.table = new HashMap<>();
         this.modulesList = new ModulesList();
-        this.categoriesList = new CategoryList();
+        this.categoriesList = new CategoryMap();
     }
 
     public ModulesList getModules(){
         return modulesList;
     }
-    public CategoryList getCategories(){
+    public CategoryMap getCategories(){
         return categoriesList;
     }
 
@@ -112,7 +112,7 @@ public class ViewTable {
 
 
     public boolean hasCategory(String name) {
-        return categoriesList.containsCategory(name);
+        return categoriesList.contains(name);
     }
 
 
@@ -125,12 +125,12 @@ public class ViewTable {
     }
 
     public Set<Category> getSubcategories(String categoryName) {
-        Category category = categoriesList.getCategory(categoryName);
+        Category category = categoriesList.createOrSelectCategory(categoryName);
         return category.getSubcategories();
     }
 
     public boolean hasSubcategory(String categoryName, String subcategory) {
-        Category category = categoriesList.getCategory(categoryName);
+        Category category = categoriesList.createOrSelectCategory(categoryName);
 
         Set<String> subcategories = category.getSubcategoriesNames();
 
@@ -138,9 +138,9 @@ public class ViewTable {
     }
 
     public void addSubcategory(String categoryName, String subcategory) {
-        Category category = categoriesList.getCategory(categoryName);
+        Category category = categoriesList.createOrSelectCategory(categoryName);
 
-        Category sub = new Category(category,subcategory);
+        Category sub = new Category(subcategory);
         category.addSubcategory(sub);
     }
 

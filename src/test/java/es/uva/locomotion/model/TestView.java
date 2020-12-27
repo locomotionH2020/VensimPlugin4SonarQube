@@ -1,4 +1,4 @@
-package es.uva.locomotion.parser;
+package es.uva.locomotion.model;
 
 import es.uva.locomotion.model.View;
 import org.junit.Test;
