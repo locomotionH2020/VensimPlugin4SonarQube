@@ -156,7 +156,7 @@ public class ServiceController {
     }
 
 
-    public ModulesList getModulesFromDb() {
+    public List<String> getModulesFromDb() {
         if (!isAuthenticated())
             throw new NotAuthenticatedException();
 
@@ -217,16 +217,17 @@ public class ServiceController {
             throw new NotAuthenticatedException();
 
         List<Category> categories = new ArrayList<>(categoriesFound);
-        System.out.println(categories);
 
-        categories = categories.stream().filter(category -> moduleNameIsValid(category.getName()))
+        categories = categories.stream().filter(category -> {
+            if(category.getSuperCategory() != null){
+                return moduleNameIsValid(category.getName()) && moduleNameIsValid(category.getSuperCategory().getName());
+            }
+            return moduleNameIsValid(category.getName());
+        })
                 .collect(Collectors.toList());
 
-        System.out.println(categories);
         List<Category> newCategories = categories.stream().filter(category -> !dbCategories.contains(category))
                 .collect(Collectors.toList());
-
-        System.out.println(newCategories);
 
 
         categories.removeAll(newCategories);
@@ -243,7 +244,6 @@ public class ServiceController {
                 DBFacade.injectCategories(dictionaryService, newCategories, token);
                 List<String> tokensInjected = newCategories.stream().map(Category::getName).sorted(String::compareTo).collect(Collectors.toList());
                 LOG.info("Injected categories: " + tokensInjected);
-
             } catch (InvalidServiceUrlException ex) {
                 LOG.unique(INVALID_URL_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             } catch (EmptyServiceException ex) {
@@ -257,7 +257,7 @@ public class ServiceController {
 
     }
 
-    public void injectNewModules(List<String> modulesList, ModulesList dbModules) {
+    public void injectNewModules(List<String> modulesList, List<String> dbModules) {
         if (dbModules == null)
             return;
 

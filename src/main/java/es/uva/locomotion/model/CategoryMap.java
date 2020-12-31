@@ -57,5 +57,23 @@ public class CategoryMap {
         return toReturn;
     }
 
+    @Override
+    public String toString() {
+        return "CategoryMap{" +
+                "categoryMap=" + categoryMap +
+                '}';
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CategoryMap that = (CategoryMap) o;
+        return categoryMap.equals(that.categoryMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(categoryMap);
+    }
 }

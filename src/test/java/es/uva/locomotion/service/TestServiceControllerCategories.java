@@ -224,7 +224,7 @@ public class TestServiceControllerCategories {
         foundList.add(c2);
 
         Category c3 = new Category("Category_with_bad_name 3");
-        Category sc3 = new Category("Subcategory_3");
+        Category sc3 = new Category("Subcategory_3_super_with_bad_name");
         c3.addSubcategory(sc3);
         foundList.add(c3);
         Category c4 = new Category("Category_4");
@@ -248,7 +248,7 @@ public class TestServiceControllerCategories {
         controller.injectNewCategories(foundList.getCategoriesAndSubcategories(), dbList.getCategoriesAndSubcategories());
 
 
-        verify(logger, times(1)).info("Injected categories: [Category4, Category_1, Subcategory_1]");
+        verify(logger, times(1)).info("Injected categories: [Category_1, Category_4, Category_empty_2, Subcategory_1, Subcategory_4, Subcategory_6]");
     }
     @Test
     public void testInjectNewCategoriesNoneInjected() {
@@ -268,10 +268,12 @@ public class TestServiceControllerCategories {
 
         CategoryMap dbList = new CategoryMap();
 
+        Category dbc1 = new Category("Category_1");
         Category dbsc1 = new Category("Subcategory_1");
-        dbList.add(dbsc1);
+        dbc1.addSubcategory(dbsc1);
+        dbList.add(dbc1);
 
-        ServiceController controller = getAuthenticatedServiceController("https://something");
+        ServiceController controller = getAuthenticatedServiceController("https://localhost");
         controller.injectNewCategories(foundList.getCategoriesAndSubcategories(), dbList.getCategoriesAndSubcategories());
 
         verify(logger, never()).info(any());

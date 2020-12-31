@@ -1,6 +1,5 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.model.ModulesList;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.utilities.Constants;
@@ -56,7 +55,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList actualValue = controller.getModulesFromDb();
+        List<String> actualValue = controller.getModulesFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
@@ -69,7 +68,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList actualValue = controller.getModulesFromDb();
+        List<String> actualValue = controller.getModulesFromDb();
 
 
         Assert.assertNull(actualValue);
@@ -83,7 +82,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList actualValue = controller.getModulesFromDb();
+        List<String> actualValue = controller.getModulesFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
@@ -96,7 +95,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList actualValue = controller.getModulesFromDb();
+        List<String> actualValue = controller.getModulesFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
@@ -109,7 +108,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList actualValue = controller.getModulesFromDb();
+        List<String> actualValue = controller.getModulesFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
@@ -126,7 +125,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList actualValue = controller.getModulesFromDb();
+        List<String> actualValue = controller.getModulesFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).unique("The dictionary service was unreachable.\n" +
@@ -141,7 +140,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList actualValue = controller.getModulesFromDb();
+        List<String> actualValue = controller.getModulesFromDb();
         Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected an array.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
@@ -158,7 +157,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList actualValue = controller.getModulesFromDb();
+        List<String> actualValue = controller.getModulesFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Format error '{\"module\":\"foo\"}' is not a module name.\n" +
@@ -169,7 +168,7 @@ public class TestServiceControllerModules {
 
     @Test
     public void testGetModulesConsecutiveDifferentErrorsAreLogged() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{'name':'Juan'}");
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"name\":\"Juan\"}");
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
@@ -199,10 +198,10 @@ public class TestServiceControllerModules {
         ServiceController.LOG = logger;
 
 
-        ModulesList list = new ModulesList();
+        List<String> list = new ArrayList<>();
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewModules(list.getModules(), null);
+        controller.injectNewModules(list, null);
 
 
         verify(logger, never()).info(anyString());
@@ -216,7 +215,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList foundList = new ModulesList();
+        List<String> foundList = new ArrayList<String>();
         foundList.add("module_correct_1");
         foundList.add("module_not_correct 2");
         foundList.add("module_not_correct_3$");
@@ -226,11 +225,11 @@ public class TestServiceControllerModules {
 
 
 
-        ModulesList dbList = new ModulesList();
+        List<String> dbList = new ArrayList<>();
         dbList.add("module5_in_db");
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewModules(new ArrayList<>(foundList.getModules()), dbList);
+        controller.injectNewModules(new ArrayList<>(foundList), dbList);
 
 
         verify(logger, times(1)).info("Injected modules: [module4, module_correct_1]");
@@ -241,7 +240,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList foundList = new ModulesList();
+        List<String> foundList = new ArrayList<>();
         foundList.add("module_not_correct 2");
         foundList.add("module_not_correct_3$");
         foundList.add("module5_in_db");
@@ -249,11 +248,11 @@ public class TestServiceControllerModules {
 
 
 
-        ModulesList dbList = new ModulesList();
+        List<String> dbList = new ArrayList<String>();
         dbList.add("module5_in_db");
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewModules(new ArrayList<>(foundList.getModules()), dbList);
+        controller.injectNewModules(new ArrayList<>(foundList), dbList);
 
 
         verify(logger, never()).info(any());
@@ -265,10 +264,10 @@ public class TestServiceControllerModules {
 
         ServiceController controller = getAuthenticatedServiceController("");
 
-        ModulesList foundList = new ModulesList();
+        List<String> foundList = new ArrayList<>();
         foundList.add("module_correct_1");
 
-        controller.injectNewModules(new ArrayList<>(foundList.getModules()), new ModulesList());
+        controller.injectNewModules(new ArrayList<>(foundList), new ArrayList<>());
 
 
         verify(logger, times(1)).unique("Missing dictionary service parameter.\nInjection of new modules can't be done without the modules from the dictionary."
@@ -282,10 +281,10 @@ public class TestServiceControllerModules {
 
         ServiceController controller = getAuthenticatedServiceController(null);
 
-        ModulesList foundList = new ModulesList();
+        List<String> foundList = new ArrayList<>();
         foundList.add("module_correct_1");
 
-        controller.injectNewModules(new ArrayList<>(foundList.getModules()), new ModulesList());
+        controller.injectNewModules(new ArrayList<>(foundList), new ArrayList<>());
 
 
         verify(logger, times(1)).unique("Missing dictionary service parameter.\nInjection of new modules can't be done without the modules from the dictionary."
@@ -302,10 +301,10 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        ModulesList foundList = new ModulesList();
+        List<String> foundList = new ArrayList<>();
         foundList.add("module_correct_1");
 
-        controller.injectNewModules(new ArrayList<>(foundList.getModules()), new ModulesList());
+        controller.injectNewModules(new ArrayList<>(foundList), new ArrayList<>());
 
 
         verify(logger, times(1)).unique("The dictionary service was unreachable.\nInjection of new modules can't be done without the modules from the dictionary.", LoggingLevel.ERROR);
@@ -319,10 +318,10 @@ public class TestServiceControllerModules {
 
         ServiceController controller = getAuthenticatedServiceController("www.google.com");
 
-        ModulesList foundList = new ModulesList();
+        List<String> foundList = new ArrayList<>();
         foundList.add("module_correct_1");
 
-        controller.injectNewModules(new ArrayList<>(foundList.getModules()), new ModulesList());
+        controller.injectNewModules(new ArrayList<>(foundList), new ArrayList<>());
 
 
         verify(logger, times(1))

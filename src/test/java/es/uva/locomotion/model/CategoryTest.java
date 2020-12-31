@@ -148,7 +148,7 @@ public class CategoryTest {
 
         assertEquals(c,cSame);
         assertNotEquals(c,categoryNameDifferent);
-        assertNotEquals(c,categorySubcatDifferent);
+        assertEquals(c,categorySubcatDifferent);
 
         assertEquals(subc,subcSame);
         assertNotEquals(subc,subcNameDifferent);

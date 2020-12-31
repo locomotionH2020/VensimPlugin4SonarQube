@@ -2,20 +2,20 @@ package es.uva.locomotion.model;
 
 import java.util.*;
 
-//TODO refactor to unbind from ModuleList and CategoryList
+//TODO refactor to unbind from CategoryMap
 public class ViewTable {
     private Map<String, View> table;
-    private ModulesList modulesList;
+    private List<String> modulesList;
     private CategoryMap categoriesList;
 
 
     public ViewTable() {
         this.table = new HashMap<>();
-        this.modulesList = new ModulesList();
+        this.modulesList = new ArrayList<String>();
         this.categoriesList = new CategoryMap();
     }
 
-    public ModulesList getModules(){
+    public List<String> getModules(){
         return modulesList;
     }
     public CategoryMap getCategories(){
@@ -90,7 +90,7 @@ public class ViewTable {
 
 
     public List<String> getModulesList() {
-        return modulesList.getModules();
+        return modulesList;
     }
 
 
@@ -125,19 +125,30 @@ public class ViewTable {
     }
 
     public Set<Category> getSubcategories(String categoryName) {
+        if(!categoriesList.contains(categoryName)){
+            throw new IllegalArgumentException(categoryName + " is not a category name in the map.");
+        }
         Category category = categoriesList.createOrSelectCategory(categoryName);
         return category.getSubcategories();
     }
 
     public boolean hasSubcategory(String categoryName, String subcategory) {
+        if(!categoriesList.contains(categoryName)){
+            throw new IllegalArgumentException(categoryName + " is not a category name in the map.");
+        }
         Category category = categoriesList.createOrSelectCategory(categoryName);
 
         Set<String> subcategories = category.getSubcategoriesNames();
-
+        if(subcategories == null){
+            return false;
+        }
         return subcategories.contains(subcategory);
     }
 
     public void addSubcategory(String categoryName, String subcategory) {
+        if(!categoriesList.contains(categoryName)){
+            throw new IllegalArgumentException(categoryName + " is not a category name in the map.");
+        }
         Category category = categoriesList.createOrSelectCategory(categoryName);
 
         Category sub = new Category(subcategory);

@@ -1,10 +1,12 @@
 package es.uva.locomotion.model;
 
+import java.util.List;
+
 public class DataBaseRepresentation {
 
     private SymbolTable dataBaseSymbols;
     private AcronymsList acronyms;
-    private ModulesList modules;
+    private List<String> modules;
     private CategoryMap categories;
 
     public DataBaseRepresentation() {
@@ -37,11 +39,11 @@ public class DataBaseRepresentation {
         this.categories = categories;
     }
 
-    public ModulesList getModules() {
+    public List<String> getModules() {
         return modules;
     }
 
-    public void setModules(ModulesList modules) {
+    public void setModules(List<String> modules) {
         this.modules = modules;
     }
 }

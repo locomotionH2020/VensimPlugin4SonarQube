@@ -98,7 +98,7 @@ public class TestViewTable {
         assertTrue(vt.hasSubcategory("category", "subcategory"));
         assertFalse(vt.hasSubcategory("category", "not this subtategory"));
         assertThrows(IllegalArgumentException.class, () -> {
-            assertFalse(vt.hasSubcategory("not this category", "subtategory"));
+            vt.hasSubcategory("not this category", "subtategory");
 
         });
         assertEquals(1, vt.getSubcategories("category").size());

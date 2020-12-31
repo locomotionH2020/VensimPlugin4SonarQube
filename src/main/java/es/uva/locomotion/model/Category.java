@@ -4,7 +4,7 @@ package es.uva.locomotion.model;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Category implements Comparable<Category>{
+public class Category implements Comparable<Category> {
 
 
     private Category superCategory;
@@ -32,6 +32,9 @@ public class Category implements Comparable<Category>{
     }
 
     public Set<String> getSubcategoriesNames() {
+        if(subcategories == null){
+            return null;
+        }
         return subcategories.stream().map(Category::getName).collect(Collectors.toSet());
     }
 
@@ -59,7 +62,7 @@ public class Category implements Comparable<Category>{
             throw new IllegalStateException("Category " + subcategory.getName() + " already have a supercategory: " + subcategory.getSuperCategory().getName());
         }
         subcategory.setSuperCategory(this);
-        if(subcategories == null){
+        if (subcategories == null) {
             subcategories = new HashSet<>();
         }
         this.subcategories.add(subcategory);
@@ -79,22 +82,24 @@ public class Category implements Comparable<Category>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        if(superCategory != null && category.getSuperCategory() != null){
-            return Objects.equals(superCategory.getName(), category.superCategory.getName()) && name.equals(category.name) && Objects.equals(subcategories, category.subcategories);
-        }else{
-            return name.equals(category.name) && Objects.equals(subcategories, category.subcategories);
+        if (superCategory != null && category.getSuperCategory() != null) {
+            return superCategory.getName().equals(category.superCategory.getName()) && name.equals(category.name);
+        } else if (superCategory != null ^ category.getSuperCategory() != null) {
+            return false; // ^ is XOR operand
+        } else {
+            return name.equals(category.name);
         }
     }
 
     @Override
     public int hashCode() {
 
-        if(superCategory != null) return Objects.hash(superCategory.getName(), name, subcategories);
-        else  return Objects.hash(name, subcategories);
+        if (superCategory != null) return Objects.hash(superCategory.getName(), name);
+        else return Objects.hash(name);
     }
 
     @Override
     public int compareTo(Category o) {
-       return name.compareTo(o.getName());
+        return name.compareTo(o.getName());
     }
 }

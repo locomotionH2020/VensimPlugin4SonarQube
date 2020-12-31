@@ -42,8 +42,8 @@ public class VensimScanner {
 
     private final SensorContext context;
     private final Checks<VensimCheck> checks;
-    private  final JsonSymbolTableBuilder jsonBuilder;
-  
+    private final JsonSymbolTableBuilder jsonBuilder;
+
     private ServiceController serviceController;
 
     private static final String VIEW_PREFIX = "vensim.view.prefix";
@@ -68,20 +68,20 @@ public class VensimScanner {
             try {
                 scanFile(vensimFile);
             } catch (Exception e) {
-                LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.toString() );
-                for(StackTraceElement ele : e.getStackTrace()){
+                LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.toString());
+                for (StackTraceElement ele : e.getStackTrace()) {
                     LOG.error(ele.toString());
                 }
             }
         }
 
-       
+
         generateJsonOutput();
 
     }
 
     protected void generateJsonOutput() {
-       JsonArray symbolTable =  jsonBuilder.build();
+        JsonArray symbolTable = jsonBuilder.build();
 
         try {
 
@@ -90,12 +90,12 @@ public class VensimScanner {
             writer.writeArray(symbolTable);
             writer.close();
         } catch (FileNotFoundException e) {
-            LOG.error("Unable to create symbolTable.json. Error:" + e.getMessage() );
+            LOG.error("Unable to create symbolTable.json. Error:" + e.getMessage());
         }
 
     }
 
-    protected Model.FileContext getParseTree(String file_content){
+    protected Model.FileContext getParseTree(String file_content) {
         Tokens lexer = new Tokens(CharStreams.fromString(file_content));
         MultiChannelTokenStream tokens = new MultiChannelTokenStream(lexer);
 
@@ -122,17 +122,17 @@ public class VensimScanner {
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
 
             ViewTable viewTable;
-            if(!viewPrefix.isEmpty()) { //Support for viewPrefix
+            if (!viewPrefix.isEmpty()) { //Support for viewPrefix
                 viewTable = ViewTableUtility.getViewTable(root);
                 LOG.warn("vensim.view.prefix is deprecated, please use: vensim.view.module.name and vensim.view.module.separator");
-            }else if(!moduleSeparator.isEmpty()){
-                if(!categorySeparator.isEmpty()){
-                    viewTable = ViewTableUtility.getViewTable(root,moduleSeparator,categorySeparator);
-                }else{
-                    viewTable = ViewTableUtility.getViewTable(root,moduleSeparator);
+            } else if (!moduleSeparator.isEmpty()) {
+                if (!categorySeparator.isEmpty()) {
+                    viewTable = ViewTableUtility.getViewTable(root, moduleSeparator, categorySeparator);
+                } else {
+                    viewTable = ViewTableUtility.getViewTable(root, moduleSeparator);
                 }
-            }else{
-                if(!categorySeparator.isEmpty()){
+            } else {
+                if (!categorySeparator.isEmpty()) {
                     LOG.warn("vensim.view.category.separator is set, but not vensim.view.module.separator, ignoring category separator");
                 }
                 viewTable = ViewTableUtility.getViewTable(root);
@@ -151,7 +151,7 @@ public class VensimScanner {
             }
             //mark the symbols tha need to be filtered.
 
-            if(!viewPrefix.isEmpty()) {
+            if (!viewPrefix.isEmpty()) {
                 ViewTableUtility.filterPrefix(table, viewPrefix);
             }
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbData);
@@ -164,10 +164,11 @@ public class VensimScanner {
 
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
-            if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
+            if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null) {
                 serviceController.injectNewModules(viewTable.getModulesList(), dbData.getModules());
                 serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
                 serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), dbData.getDataBaseSymbols());
+            }
         } catch (IOException e) {
             LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
         } catch (ParseCancellationException e) {
@@ -176,10 +177,10 @@ public class VensimScanner {
 
     }
 
-    protected String getModuleNameFromFileName(String fileName){
+    protected String getModuleNameFromFileName(String fileName) {
         String suffix = VensimLanguage.VENSIM_PLAIN_TEXT_SUFIX;
-        if(fileName.endsWith(suffix))
-            return fileName.substring(0,fileName.length()-suffix.length());
+        if (fileName.endsWith(suffix))
+            return fileName.substring(0, fileName.length() - suffix.length());
         else
             return fileName;
 
@@ -187,7 +188,7 @@ public class VensimScanner {
     }
 
 
-    public void checkIssues(VensimVisitorContext fileContext){
+    public void checkIssues(VensimVisitorContext fileContext) {
         //System.out.println("module");
 
         for (VensimCheck check : checks.all()) {
@@ -196,10 +197,10 @@ public class VensimScanner {
     }
 
 
-    protected void saveIssues(InputFile file, List<Issue> issues){
+    protected void saveIssues(InputFile file, List<Issue> issues) {
         for (Issue preciseIssue : issues) {
             RuleKey ruleKey = checks.ruleKey(preciseIssue.getCheck());
- 
+
             NewIssue newIssue = context
                     .newIssue()
                     .forRule(ruleKey);

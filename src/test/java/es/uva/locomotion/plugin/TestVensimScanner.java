@@ -90,6 +90,7 @@ public class TestVensimScanner {
         VensimLogger logger = mock(VensimLogger.class);
 
 
+
         JsonSymbolTableBuilder builder = Mockito.mock(JsonSymbolTableBuilder.class);
         VensimScanner.LOG = logger;
         InputFile fileBefore = Mockito.mock(InputFile.class);
