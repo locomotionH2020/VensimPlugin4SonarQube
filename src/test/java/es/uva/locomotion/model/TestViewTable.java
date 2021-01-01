@@ -97,15 +97,9 @@ public class TestViewTable {
 
         assertTrue(vt.hasSubcategory("category", "subcategory"));
         assertFalse(vt.hasSubcategory("category", "not this subtategory"));
-        assertThrows(IllegalArgumentException.class, () -> {
-            vt.hasSubcategory("not this category", "subtategory");
-
-        });
+        assertThrows(IllegalArgumentException.class, () -> vt.hasSubcategory("not this category", "subtategory"));
         assertEquals(1, vt.getSubcategories("category").size());
-        assertThrows(IllegalArgumentException.class, () -> {
-            assertEquals(1, vt.getSubcategories("not this category").size());
-
-        });
+        assertThrows(IllegalArgumentException.class, () -> assertEquals(1, vt.getSubcategories("not this category").size()));
 
         View vIgual = vt.createOrSelectView("module", "category", "subcategory");
         assertEquals(vIgual, v);

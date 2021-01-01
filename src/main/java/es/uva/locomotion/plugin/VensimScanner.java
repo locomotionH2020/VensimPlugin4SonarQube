@@ -1,7 +1,6 @@
 package es.uva.locomotion.plugin;
 
 import es.uva.locomotion.model.*;
-import es.uva.locomotion.parser.MultiChannelTokenStream;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.parser.*;
@@ -31,7 +30,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class VensimScanner {
@@ -42,7 +40,7 @@ public class VensimScanner {
     private final Checks<VensimCheck> checks;
     private final JsonSymbolTableBuilder jsonBuilder;
 
-    private ServiceController serviceController;
+    private final ServiceController serviceController;
 
     private static final String VIEW_PREFIX = "vensim.view.prefix";
     private static final String MODULE_NAME = "vensim.view.module.name";

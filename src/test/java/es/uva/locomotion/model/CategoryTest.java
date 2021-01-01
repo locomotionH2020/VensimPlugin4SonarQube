@@ -1,11 +1,8 @@
 package es.uva.locomotion.model;
 
-import es.uva.locomotion.service.DBFacade;
-import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
 import org.junit.Test;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -66,8 +63,8 @@ public class CategoryTest {
         Category subc1 = new Category("subcategoryName1");
         Category subc2 = new Category("subcategoryName2");
 
-        Set<Category> expected = null;
-        assertEquals(expected, c.getSubcategories());
+        Set<Category> expected;
+        assertNull(c.getSubcategories());
 
         c.addSubcategory(subc1);
 

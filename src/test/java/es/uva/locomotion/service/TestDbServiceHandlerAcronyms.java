@@ -2,23 +2,16 @@ package es.uva.locomotion.service;
 
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import static es.uva.locomotion.testutilities.GeneralTestUtilities.getJsonObjectFromList;
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class TestDbServiceHandlerAcronyms {

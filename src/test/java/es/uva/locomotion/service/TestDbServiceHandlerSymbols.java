@@ -19,7 +19,6 @@ import java.net.http.HttpResponse;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getJsonObjectFromList;
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class TestDbServiceHandlerSymbols {
@@ -229,7 +228,7 @@ public class TestDbServiceHandlerSymbols {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInjectSymbolsEmptyRequest() throws IOException, InterruptedException {
+    public void testInjectSymbolsEmptyRequest() {
         ServiceConnectionHandler handler = new ServiceConnectionHandler();
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
@@ -240,7 +239,7 @@ public class TestDbServiceHandlerSymbols {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInjectSymbolsNullSymbols() throws IOException, InterruptedException {
+    public void testInjectSymbolsNullSymbols() {
         ServiceConnectionHandler handler = new ServiceConnectionHandler();
         handler.injectSymbols("https://randomUrl", null, "token");
     }

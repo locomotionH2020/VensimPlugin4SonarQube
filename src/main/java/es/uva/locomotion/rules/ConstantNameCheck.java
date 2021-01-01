@@ -38,13 +38,13 @@ public class ConstantNameCheck extends AbstractVensimCheck {
             "STARTING_PRODUCT\n" +
             "</pre>\n";
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger LOG = VensimLogger.getInstance();
     public static final String DEFAULT_REGEXP = "([A-Z0-9]+_)*[A-Z0-9]+";
     @RuleProperty(
             key = "constant-name-regexp",
             defaultValue = DEFAULT_REGEXP,
             description = "The regexp definition of a constant name.")
-    public String regexp = DEFAULT_REGEXP;
+    public final String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {
         try {

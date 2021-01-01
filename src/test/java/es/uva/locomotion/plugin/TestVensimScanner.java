@@ -54,7 +54,7 @@ public class TestVensimScanner {
         Mockito.verify(logger).error("Unable to parse the file 'notAVensimModel.mdl'. Error: l:1 c:25 mismatched input '<EOF>' expecting {':=', '[', ':IGNORE:', ':EXCEPT:', INFO_UNIT, Keyword}");
 
     }
-/*
+
     @Test
     public void testScannerGetsModuleNameCorrectly() throws IOException {
         InputFile file = Mockito.mock(InputFile.class);
@@ -78,11 +78,11 @@ public class TestVensimScanner {
         Mockito.doNothing().when(scanner).saveIssues(any(), anyList());
         Mockito.doCallRealMethod().when(scanner).scanFile(file);
         scanner.scanFile(file);
-        Mockito.verify(controller).injectNewSymbols(eq("climate"), any(), any());
+        Mockito.verify(controller).injectNewSymbols(any(), any());
 
 
     }
-*/
+
     @Test
     public void testIfAfileFailsTheRestExecutes() throws IOException, NoSuchFieldException, IllegalAccessException {
 

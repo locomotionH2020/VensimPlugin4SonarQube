@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class LogFileWriter implements LogOutputMethod {
 
-    private FileWriter writer;
+    private final FileWriter writer;
 
     public LogFileWriter(String fileName) throws IOException {
         writer = new FileWriter(fileName);

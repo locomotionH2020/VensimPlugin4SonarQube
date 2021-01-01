@@ -11,7 +11,6 @@ import org.junit.Test;
 import static es.uva.locomotion.testutilities.RuleTestUtilities.assertHasIssueInLines;
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
 import static junit.framework.TestCase.assertTrue;
-import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertFalse;
 
 public class TestSymbolWithoutCommentCheck {

@@ -11,7 +11,7 @@ public class VensimLanguage extends AbstractLanguage {
     public static final String VENSIM_PLAIN_TEXT_SUFIX = ".mdl";
     private static final String[] DEFAULT_FILE_SUFFIXES = { VENSIM_PLAIN_TEXT_SUFIX };
 
-    private Configuration configuration;
+    private final Configuration configuration;
 
     public VensimLanguage(Configuration configuration) {
         super(KEY, NAME);

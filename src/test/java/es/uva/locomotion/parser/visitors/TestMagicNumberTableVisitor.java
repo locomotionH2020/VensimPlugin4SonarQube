@@ -6,8 +6,6 @@ import es.uva.locomotion.model.SymbolTable;
 import static org.junit.Assert.*;
 
 
-import es.uva.locomotion.service.DBFacade;
-import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.Before;
@@ -16,7 +14,6 @@ import org.sonar.api.internal.apachecommons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.getVisitorContextFromString;
 import static org.mockito.Mockito.mock;

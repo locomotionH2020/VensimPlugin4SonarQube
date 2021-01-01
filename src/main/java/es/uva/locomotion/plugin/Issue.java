@@ -8,7 +8,7 @@ public class Issue {
 
     private final VensimCheck check;
     private final int line;
-    private String message;
+    private final String message;
     private Severity severity;
 
 

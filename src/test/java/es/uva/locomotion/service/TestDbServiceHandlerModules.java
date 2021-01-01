@@ -2,12 +2,10 @@ package es.uva.locomotion.service;
 
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.json.Json;
 import javax.json.JsonArray;
-import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -17,9 +15,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import static es.uva.locomotion.testutilities.GeneralTestUtilities.getJsonObjectFromList;
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class TestDbServiceHandlerModules {
@@ -165,7 +161,7 @@ public class TestDbServiceHandlerModules {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInjectModulesEmptyRequest() throws IOException, InterruptedException {
+    public void testInjectModulesEmptyRequest() {
         ServiceConnectionHandler handler = new ServiceConnectionHandler();
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
@@ -176,7 +172,7 @@ public class TestDbServiceHandlerModules {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInjectModulesNullModules() throws IOException, InterruptedException {
+    public void testInjectModulesNullModules() {
         ServiceConnectionHandler handler = new ServiceConnectionHandler();
         handler.injectModules("https://randomUrl", null, "token");
     }

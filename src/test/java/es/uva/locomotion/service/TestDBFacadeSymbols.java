@@ -1,6 +1,5 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.model.AcronymsList;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
@@ -10,7 +9,6 @@ import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -27,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertThrows;
 

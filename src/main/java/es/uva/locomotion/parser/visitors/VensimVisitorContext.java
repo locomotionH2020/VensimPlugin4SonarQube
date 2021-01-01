@@ -12,13 +12,13 @@ import java.util.List;
 
 public class VensimVisitorContext {
 
-    private Model.FileContext rootNode;
-    private List<Issue> issues;
-    private SymbolTable parsedTable;
+    private final Model.FileContext rootNode;
+    private final List<Issue> issues;
+    private final SymbolTable parsedTable;
 
 
 
-    private DataBaseRepresentation dbData;
+    private final DataBaseRepresentation dbData;
 
     public Model.FileContext getRootNode() {
         return rootNode;

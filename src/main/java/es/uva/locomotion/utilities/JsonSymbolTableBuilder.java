@@ -4,12 +4,11 @@ import es.uva.locomotion.model.*;
 
 import javax.json.*;
 import java.util.List;
-import java.util.Set;
 
 public class JsonSymbolTableBuilder {
 
 
-    private JsonArrayBuilder fileBuilder;
+    private final JsonArrayBuilder fileBuilder;
 
     public final static String KEY_COMMENT = "comment";
     public final static String KEY_UNITS = "units";

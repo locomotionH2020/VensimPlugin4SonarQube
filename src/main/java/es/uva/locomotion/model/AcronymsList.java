@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class AcronymsList {
 
-    private List<String> acronyms;
+    private final List<String> acronyms;
 
     public AcronymsList() {
         acronyms = new ArrayList<>();

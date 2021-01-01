@@ -12,7 +12,6 @@ import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -20,7 +19,7 @@ import java.util.regex.PatternSyntaxException;
 
 @Rule(key = VariableNameCheck.CHECK_KEY, name = VariableNameCheck.NAME, description = VariableNameCheck.HTML_DESCRIPTION)
 public class VariableNameCheck extends AbstractVensimCheck {
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger LOG = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "variable-name-convention";
     public static final String NAME = "VariableNameCheck";
@@ -48,7 +47,7 @@ public class VariableNameCheck extends AbstractVensimCheck {
             key = "variable-name-regexp",
             defaultValue = DEFAULT_REGEXP,
             description = "The regexp definition of a variable symbol name.")
-    public String regexp = DEFAULT_REGEXP;
+    public final String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {
         try {
