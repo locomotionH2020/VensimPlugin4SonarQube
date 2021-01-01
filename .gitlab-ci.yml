@@ -56,7 +56,7 @@ test_job:
 deploy-master:
   stage: deploy
   script:  ssh -i key.prv  -oStrictHostKeyChecking=no usuario@virtual.lab.inf.uva.es -p 20201 "cd tfg-sonarvensim && git reset --hard && git checkout master && git pull origin master&& mvn package -DskipTests
-          && cp target/sonar-vensim-1.0-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.0-SNAPSHOT.jar
+          && cp target/sonar-vensim-1.1-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.1-SNAPSHOT.jar
           && sh ../sonarqube-8.0/bin/linux-x86-64/sonar.sh restart && exit"
   only:
     - master
@@ -64,7 +64,7 @@ deploy-master:
 deploy-develop:
   stage: deploy
   script:  ssh -i key.prv  -oStrictHostKeyChecking=no usuario@virtual.lab.inf.uva.es -p 20201 "cd tfg-sonarvensim && git reset --hard && git checkout develop && git pull origin develop&& mvn package -DskipTests
-          && cp target/sonar-vensim-1.0-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.0-SNAPSHOT.jar
+          && cp target/sonar-vensim-1.1-SNAPSHOT.jar  ../sonarqube-8.0/extensions/plugins/sonar-vensim-1.1-SNAPSHOT.jar
           && sh ../sonarqube-8.0/bin/linux-x86-64/sonar.sh restart && exit"
   only:
     - develop
