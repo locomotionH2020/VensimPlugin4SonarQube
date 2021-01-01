@@ -1,9 +1,6 @@
 package es.uva.locomotion.plugin;
 
-import es.uva.locomotion.model.DataBaseRepresentation;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.View;
-import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.parser.MultiChannelTokenStream;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.service.ServiceController;
@@ -34,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class VensimScanner {
@@ -82,7 +80,6 @@ public class VensimScanner {
 
     protected void generateJsonOutput() {
         JsonArray symbolTable = jsonBuilder.build();
-
         try {
 
             File file = new File("symbolTable.json");
@@ -139,7 +136,7 @@ public class VensimScanner {
             }
             ViewTableUtility.addViews(table, viewTable);
 
-            jsonBuilder.addSymbolTable(inputFile.filename(), table);
+            jsonBuilder.addTables(inputFile.filename(), table, viewTable);
 
 
             DataBaseRepresentation dbData = new DataBaseRepresentation();
@@ -164,10 +161,12 @@ public class VensimScanner {
 
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
-            if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null) {
-                serviceController.injectNewModules(viewTable.getModulesList(), dbData.getModules());
-                serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
+            if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
                 serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), dbData.getDataBaseSymbols());
+            if (!moduleSeparator.isEmpty() && dbData.getModules() != null) {
+                serviceController.injectNewModules(viewTable.getModulesList(), dbData.getModules());
+                if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
+                    serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
             }
         } catch (IOException e) {
             LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());

@@ -15,10 +15,11 @@ public class ViewTable {
         this.categoriesList = new CategoryMap();
     }
 
-    public List<String> getModules(){
+    public List<String> getModules() {
         return modulesList;
     }
-    public CategoryMap getCategories(){
+
+    public CategoryMap getCategories() {
         return categoriesList;
     }
 
@@ -58,11 +59,11 @@ public class ViewTable {
             return getView(identifier);
         } else {
             View newView = new View(module, category, subcategory);
-            addModule(module);
+            if (!hasModule(module)) addModule(module);
             if (category != null) {
-                addCategory(category);
-                if(subcategory != null){
-                    addSubcategory(category, subcategory);
+                if (!hasCategory(category)) addCategory(category);
+                if (subcategory != null) {
+                    if (!hasSubcategory(category, subcategory)) addSubcategory(category, subcategory);
                 }
             }
             addView(newView);
@@ -125,7 +126,7 @@ public class ViewTable {
     }
 
     public Set<Category> getSubcategories(String categoryName) {
-        if(!categoriesList.contains(categoryName)){
+        if (!categoriesList.contains(categoryName)) {
             throw new IllegalArgumentException(categoryName + " is not a category name in the map.");
         }
         Category category = categoriesList.createOrSelectCategory(categoryName);
@@ -133,20 +134,20 @@ public class ViewTable {
     }
 
     public boolean hasSubcategory(String categoryName, String subcategory) {
-        if(!categoriesList.contains(categoryName)){
+        if (!categoriesList.contains(categoryName)) {
             throw new IllegalArgumentException(categoryName + " is not a category name in the map.");
         }
         Category category = categoriesList.createOrSelectCategory(categoryName);
 
         Set<String> subcategories = category.getSubcategoriesNames();
-        if(subcategories == null){
+        if (subcategories == null) {
             return false;
         }
         return subcategories.contains(subcategory);
     }
 
     public void addSubcategory(String categoryName, String subcategory) {
-        if(!categoriesList.contains(categoryName)){
+        if (!categoriesList.contains(categoryName)) {
             throw new IllegalArgumentException(categoryName + " is not a category name in the map.");
         }
         Category category = categoriesList.createOrSelectCategory(categoryName);

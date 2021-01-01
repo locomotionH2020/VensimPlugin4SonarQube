@@ -3,6 +3,7 @@ package es.uva.locomotion.utilities;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.ViewTable;
 import org.junit.Test;
 
 import javax.json.JsonArray;
@@ -31,7 +32,7 @@ public class TestJsonSymbolTableBuilder {
     public void testEmptySymbolTable(){
         JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
 
-        builder.addSymbolTable("file",new SymbolTable());
+        builder.addTables("file",new SymbolTable(), new ViewTable());
 
         JsonArray array = builder.build();
         JsonObject emptyJson = array.getJsonObject(0);
@@ -46,7 +47,7 @@ public class TestJsonSymbolTableBuilder {
         JsonArray array = builder.build();
         assertTrue(array.isEmpty());
 
-        builder.addSymbolTable("file",new SymbolTable());
+        builder.addTables("file",new SymbolTable(), new ViewTable());
         array = builder.build();
 
         JsonObject emptyJson = array.getJsonObject(0);
@@ -62,9 +63,9 @@ public class TestJsonSymbolTableBuilder {
         SymbolTable firstSymbolTable = new SymbolTable();
         firstSymbolTable.addSymbol(new Symbol("var"));
 
-        builder.addSymbolTable("firstFile",firstSymbolTable);
-        builder.addSymbolTable("secondFile",new SymbolTable());
-        builder.addSymbolTable("thirdFile",new SymbolTable());
+        builder.addTables("firstFile",firstSymbolTable, new ViewTable());
+        builder.addTables("secondFile",new SymbolTable(), new ViewTable());
+        builder.addTables("thirdFile",new SymbolTable(), new ViewTable());
 
         JsonArray array = builder.build();
 
@@ -90,7 +91,7 @@ public class TestJsonSymbolTableBuilder {
         Symbol symbol = table.addSymbol(new Symbol("var"));
         symbol.addDefinitionLine(line);
 
-        builder.addSymbolTable("file",table);
+        builder.addTables("file",table, new ViewTable());
         JsonArray output = builder.build();
         JsonObject file = output.getJsonObject(0);
 
@@ -104,7 +105,7 @@ public class TestJsonSymbolTableBuilder {
         SymbolTable table = new SymbolTable();
         Symbol symbol = table.addSymbol(new Symbol("scenario1",SymbolType.Subscript_Value));
 
-        builder.addSymbolTable("file",table);
+        builder.addTables("file",table, new ViewTable());
         JsonObject file = builder.build().getJsonObject(0);
 
         String type = file.getJsonObject("symbols").getJsonObject("scenario1").getString(JsonSymbolTableBuilder.KEY_TYPE);
@@ -126,7 +127,7 @@ public class TestJsonSymbolTableBuilder {
         var.addDependencies(Arrays.asList(constant,notFoo));
         notFoo.addDependency(anotherOne);
 
-        builder.addSymbolTable("file",table);
+        builder.addTables("file",table, new ViewTable());
         JsonArray output = builder.build();
         JsonObject file = output.getJsonObject(0);
 
@@ -153,7 +154,7 @@ public class TestJsonSymbolTableBuilder {
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("constant"));
 
-        builder.addSymbolTable("file",table);
+        builder.addTables("file",table, new ViewTable());
         JsonObject file = builder.build().getJsonObject(0);
 
         JsonArray dependencies = file.getJsonObject("symbols").getJsonObject("constant").getJsonArray(JsonSymbolTableBuilder.KEY_DEPENDENCIES);
@@ -169,7 +170,7 @@ public class TestJsonSymbolTableBuilder {
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("constant"));
 
-        builder.addSymbolTable("file",table);
+        builder.addTables("file",table, new ViewTable());
         JsonObject file = builder.build().getJsonObject(0);
 
         JsonArray actualLines = file.getJsonObject("symbols").getJsonObject("constant").getJsonArray(JsonSymbolTableBuilder.KEY_LINES);
@@ -185,7 +186,7 @@ public class TestJsonSymbolTableBuilder {
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("constant"));
 
-        builder.addSymbolTable("file",table);
+        builder.addTables("file",table, new ViewTable());
         JsonObject file = builder.build().getJsonObject(0);
 
         String comment = file.getJsonObject("symbols").getJsonObject("constant").getString(JsonSymbolTableBuilder.KEY_COMMENT);
@@ -202,7 +203,7 @@ public class TestJsonSymbolTableBuilder {
         constant.setComment("extremely important comment");
         table.addSymbol(constant);
 
-        builder.addSymbolTable("file",table);
+        builder.addTables("file",table, new ViewTable());
         JsonObject file = builder.build().getJsonObject(0);
 
         String comment = file.getJsonObject("symbols").getJsonObject("constant").getString(JsonSymbolTableBuilder.KEY_COMMENT);
@@ -217,7 +218,7 @@ public class TestJsonSymbolTableBuilder {
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("constant"));
 
-        builder.addSymbolTable("file",table);
+        builder.addTables("file",table, new ViewTable());
         JsonObject file = builder.build().getJsonObject(0);
 
         String units = file.getJsonObject("symbols").getJsonObject("constant").getString(JsonSymbolTableBuilder.KEY_UNITS);
@@ -234,7 +235,7 @@ public class TestJsonSymbolTableBuilder {
         constant.setUnits("kg");
         table.addSymbol(constant);
 
-        builder.addSymbolTable("file",table);
+        builder.addTables("file",table, new ViewTable());
         JsonObject file = builder.build().getJsonObject(0);
 
         String units = file.getJsonObject("symbols").getJsonObject("constant").getString(JsonSymbolTableBuilder.KEY_UNITS);

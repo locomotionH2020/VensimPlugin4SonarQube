@@ -57,14 +57,20 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
         String subcategory = null;
         if(moduleSeparator != null){
             String[] aux = viewName.split("[" + moduleSeparator + "]");
-            module = aux[0];
-            category =  aux[1];
 
-            if(categorySeparator != null){
-                aux = category.split(categorySeparator);
-                subcategory = aux.length > 1 ? aux[1] : null;
-                category = aux[0];
+            if( aux.length != 2){
+                module = viewName;
+            }else{
+                module = aux[0];
+                category =  aux[1];
+
+                if(categorySeparator != null){
+                    aux = category.split(categorySeparator);
+                    subcategory = aux.length > 1 ? aux[1] : null;
+                    category = aux[0];
+                }
             }
+
         }
         actualView = table.createOrSelectView(module,category,subcategory);
 
