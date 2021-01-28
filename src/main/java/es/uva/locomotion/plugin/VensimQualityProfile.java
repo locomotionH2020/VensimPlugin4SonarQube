@@ -20,6 +20,7 @@ public final class VensimQualityProfile implements BuiltInQualityProfilesDefinit
         profile.activateRule(REPO_KEY, SubscriptValueNameCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY, LookupNameCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY, VariableNameCheck.CHECK_KEY);
+        profile.activateRule(REPO_KEY, EmbeddedLookupCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY, ConstantNameCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY,RealityCheckNameRule.CHECK_KEY);
         profile.activateRule(REPO_KEY,MagicNumberCheck.CHECK_KEY);

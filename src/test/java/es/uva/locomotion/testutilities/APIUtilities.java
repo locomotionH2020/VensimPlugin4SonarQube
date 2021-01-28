@@ -24,7 +24,8 @@ import static org.junit.Assert.assertTrue;
 public class APIUtilities {
 
     public static void runSonarScanner(File folder,String token) throws IOException {
-        Process process2=Runtime.getRuntime().exec("sonar-scanner -Dsonar.login="+token,
+
+        Process process2=Runtime.getRuntime().exec("sonar-scanner.bat",
                 null, folder);
 
         BufferedReader stdInput = new BufferedReader(new
