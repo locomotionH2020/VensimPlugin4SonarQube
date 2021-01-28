@@ -9,7 +9,7 @@ options {
 
 file: model EOF;
 model: {disable(Tokens.VIEWS);}( symbolWithDoc | macroDefinition)* sketchesGraphsAndMetadata;
-sketchesGraphsAndMetadata: sketches graphsGroup? metadataDivisor?; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
+sketchesGraphsAndMetadata: sketches? graphsGroup? metadataDivisor?; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
                                                                       //For example, a problematic equation.
 symbolWithDoc: symbolWithDocDefinition unitsDoc;
 
@@ -137,7 +137,7 @@ metadataDivisor: ':L<%^E!@' metadataLine+;
 metadataLine:DigitSeq TwoDots.*?;
 
 // Backslash tokens are ignored, so this rule doesn't take them into account.
-sketches: {enable(Tokens.VIEWS);} viewInfo* sketchesDelimiter?  {disable(Tokens.VIEWS);};
+sketches: {enable(Tokens.VIEWS);} viewInfo* sketchesDelimiter  {disable(Tokens.VIEWS);};
 sketchesDelimiter: SketchesDelimiter NewLine;
 viewInfo:   sketchInfo versionCode viewName viewVariables;
 sketchInfo:  NewLine* ViewDelimier Sketch_phrase NewLine ;

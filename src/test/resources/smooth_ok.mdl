@@ -38,8 +38,6 @@ dEdt=
 	E*S
 	~
 	~		|
-
-
 \\\---/// Sketch information - do not modify anything except names
 V300  Do not put anything below this section - it will be ignored
 *TRANSP
@@ -88,6 +86,11 @@ Final_energy_demand_by_h
 10,38,Transport households final energy demand,620,472,73,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128
 1,39,38,10,0,0,0,0,0,64,0,-1--1--1,,1|(728,462)|
 ///---\\\
+:GRAPH Population
+:TITLE Population
+:SCALE
+:VAR Population[scenarios]
+:Y-MAX 1.2e+010
 :L<%^E!@
 9:Current
 23:0
