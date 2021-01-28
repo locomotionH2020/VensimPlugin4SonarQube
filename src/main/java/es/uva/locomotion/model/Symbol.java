@@ -7,16 +7,16 @@ import java.util.stream.Collectors;
 public class Symbol {
 
 
-    private String token;
-    private List<Integer> linesDefined;
-    private List<List<Symbol>> indexes;
+    private final String token;
+    private final List<Integer> linesDefined;
+    private final List<List<Symbol>> indexes;
     private String units;
     private String comment;
     private Set<Symbol> dependencies;
     private SymbolType type;
     private String category;
     private String primary_module;
-    private List<String> shadow_module;
+    private final List<String> shadow_module;
 
     private boolean isValid;
 

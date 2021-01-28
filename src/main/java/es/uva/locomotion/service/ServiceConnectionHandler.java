@@ -15,7 +15,7 @@ import java.net.http.HttpResponse;
 
 public class ServiceConnectionHandler {
 
-    protected VensimLogger LOG = VensimLogger.getInstance();
+    protected final VensimLogger LOG = VensimLogger.getInstance();
     protected HttpClient client;
 
     public ServiceConnectionHandler(){

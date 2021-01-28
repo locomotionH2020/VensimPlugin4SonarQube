@@ -1,6 +1,5 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.model.AcronymsList;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
@@ -14,8 +13,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static junit.framework.TestCase.fail;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.mockito.Mockito;
@@ -23,6 +20,7 @@ import org.mockito.Mockito;
 import javax.json.JsonObject;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class TestServiceControllerSymbols {
@@ -79,14 +77,12 @@ public class TestServiceControllerSymbols {
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
 
-        List<Symbol> symbols = Arrays.asList("FINAL TIME", "INITIAL TIME", "SAVEPER", "TIME STEP").stream().map(Symbol::new).collect(Collectors.toList());
+        List<Symbol> symbols = Stream.of("FINAL TIME", "INITIAL TIME", "SAVEPER", "TIME STEP").map(Symbol::new).collect(Collectors.toList());
 
 
         controller.getSymbolsFromDb(symbols);
 
-        verify(mockHandler, Mockito.times(1)).sendSymbolTableRequestToDictionaryService(any(), argThat(jsonObject -> {
-            return jsonObject.toString().equals("{\"symbols\":[]}");
-        }), any());
+        verify(mockHandler, Mockito.times(1)).sendSymbolTableRequestToDictionaryService(any(), argThat(jsonObject -> jsonObject.toString().equals("{\"symbols\":[]}")), any());
 
     }
 

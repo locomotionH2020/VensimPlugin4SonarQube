@@ -4,14 +4,14 @@ import java.util.*;
 
 //TODO refactor to unbind from CategoryMap
 public class ViewTable {
-    private Map<String, View> table;
-    private List<String> modulesList;
-    private CategoryMap categoriesList;
+    private final Map<String, View> table;
+    private final List<String> modulesList;
+    private final CategoryMap categoriesList;
 
 
     public ViewTable() {
         this.table = new HashMap<>();
-        this.modulesList = new ArrayList<String>();
+        this.modulesList = new ArrayList<>();
         this.categoriesList = new CategoryMap();
     }
 

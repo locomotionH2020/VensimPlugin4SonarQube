@@ -1,8 +1,6 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import es.uva.locomotion.testutilities.ServiceTestUtilities;
-import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -11,13 +9,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import javax.json.JsonObject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 
@@ -215,7 +209,7 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        List<String> foundList = new ArrayList<String>();
+        List<String> foundList = new ArrayList<>();
         foundList.add("module_correct_1");
         foundList.add("module_not_correct 2");
         foundList.add("module_not_correct_3$");
@@ -248,7 +242,7 @@ public class TestServiceControllerModules {
 
 
 
-        List<String> dbList = new ArrayList<String>();
+        List<String> dbList = new ArrayList<>();
         dbList.add("module5_in_db");
 
         ServiceController controller = getAuthenticatedServiceController("https://something");

@@ -4,14 +4,14 @@ import java.util.*;
 
 public class View {
 
-    private String module;
-    private String category;
-    private String subcategory;
+    private final String module;
+    private final String category;
+    private final String subcategory;
 
-    private Collection<String> primary_symbols;
+    private final Collection<String> primary_symbols;
 
 
-    private Collection<String> shadow_symbols;
+    private final Collection<String> shadow_symbols;
 
     public View(String module, String category, String subcategory) {
         this.module = module;

@@ -37,13 +37,13 @@ public class SubscriptValueNameCheck extends AbstractVensimCheck {
             "</pre>\n";
     public static final String NAME = "SubscriptValueNameCheck" ;
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger LOG = VensimLogger.getInstance();
     public static final String DEFAULT_REGEXP = "([A-Z0-9]+_)*[A-Z0-9]+";
     @RuleProperty(
             key = "subscript-value-name-regexp",
             defaultValue = DEFAULT_REGEXP,
             description = "The regexp definition of a subscript value name.")
-    public String regexp = DEFAULT_REGEXP;
+    public final String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {
         try {

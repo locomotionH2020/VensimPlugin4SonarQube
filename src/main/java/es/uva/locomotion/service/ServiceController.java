@@ -20,7 +20,7 @@ public class ServiceController {
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
     private String token;
-    private String dictionaryService;
+    private final String dictionaryService;
 
     // I used to put this message in a separate log call, but there were another logs in between the two. So I decided to join them.
     private final String RULES_DISABLED_MESSAGE = "The rules that require the data from the dictionary service will be skipped.";
@@ -65,7 +65,7 @@ public class ServiceController {
             throw new NotAuthenticatedException();
 
         List<String> symbolsFound = symbols.stream().filter(this::hasToFetchSymbolFromDB).map(Symbol::getToken).collect(Collectors.toList());
-        String logMessage = "";
+        String logMessage;
         try {
             return DBFacade.getExistingSymbolsFromDB(dictionaryService, symbolsFound, token);
         } catch (InvalidServiceUrlException ex) {
@@ -91,7 +91,7 @@ public class ServiceController {
         if (!isAuthenticated())
             throw new NotAuthenticatedException();
 
-        String logMessage = "";
+        String logMessage;
         try {
             return DBFacade.getExistingAcronymsFromDB(dictionaryService, token);
         } catch (InvalidServiceUrlException ex) {
@@ -160,7 +160,7 @@ public class ServiceController {
         if (!isAuthenticated())
             throw new NotAuthenticatedException();
 
-        String logMessage = "";
+        String logMessage;
         try {
             return DBFacade.getExistingModulesFromDB(dictionaryService, token);
         } catch (InvalidServiceUrlException ex) {
@@ -187,7 +187,7 @@ public class ServiceController {
         if (!isAuthenticated())
             throw new NotAuthenticatedException();
 
-        String logMessage = "";
+        String logMessage;
         try {
             return DBFacade.getExistingCategoriesFromDB(dictionaryService, token);
         } catch (InvalidServiceUrlException ex) {
@@ -232,12 +232,6 @@ public class ServiceController {
 
         categories.removeAll(newCategories);
         //TODO try
-       /* List<Category> newSubcategories = categories.stream()
-                .map(Category::getSubcategories)
-                .map(Set::iterator)
-                .map(Iterator::next)
-                .filter(subcategory -> (dbCategories.getCategory(subcategory.getSuperCategory().getName()).getSubcategories().contains(subcategory)))
-                .collect(Collectors.toList());*/
 
         if (newCategories.size() >= 1) {
             try {

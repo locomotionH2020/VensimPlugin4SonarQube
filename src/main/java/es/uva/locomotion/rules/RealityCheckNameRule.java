@@ -38,13 +38,13 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
             "temperature_not_negative_check\n"+
             "</pre>\n";
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger LOG = VensimLogger.getInstance();
     public static final String DEFAULT_REGEXP = "([a-z0-9]+_)*[a-z0-9]+_check";
     @RuleProperty(
             key = "reality-check-name-regexp",
             defaultValue = DEFAULT_REGEXP,
             description = "The regexp definition of a reality check name.")
-    public String regexp = DEFAULT_REGEXP;
+    public final String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {
         try {

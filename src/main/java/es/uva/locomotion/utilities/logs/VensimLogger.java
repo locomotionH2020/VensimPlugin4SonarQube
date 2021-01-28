@@ -10,7 +10,7 @@ public class VensimLogger {
     private static VensimLogger instance;
     private static LogOutputMethod outputMethod = new LogConsolePrinter();
     private static boolean logServerCommunication = false;
-    private Set<String> uniqueLoggedMessages;
+    private final Set<String> uniqueLoggedMessages;
 
     private VensimLogger(){
         uniqueLoggedMessages = new HashSet<>();

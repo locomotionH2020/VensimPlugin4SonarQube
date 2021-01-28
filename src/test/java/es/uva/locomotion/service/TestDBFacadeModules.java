@@ -4,7 +4,6 @@ import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
-import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.After;
 import org.junit.Test;
@@ -12,7 +11,6 @@ import org.mockito.Mockito;
 
 import javax.json.Json;
 import javax.json.JsonArray;
-import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -24,7 +22,6 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class TestDBFacadeModules {
@@ -37,7 +34,7 @@ public class TestDBFacadeModules {
     @Test
     public void testGetModulesParsedJson() {
 
-        List<String> expected = new ArrayList<String>();
+        List<String> expected = new ArrayList<>();
 
         expected.add("AnotherModule");
         expected.add("Module1");

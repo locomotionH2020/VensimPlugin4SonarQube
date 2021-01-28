@@ -16,7 +16,7 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
-    private static int SYMBOL_PRIVATE_ID = 10;
+    private static final int SYMBOL_PRIVATE_ID = 10;
 
     private ViewTableVisitor() {
     }

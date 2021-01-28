@@ -384,8 +384,8 @@ public class DBFacade {
             }
             JsonObject jsonCategory = symbolsFound.getJsonObject(s);
             validateJsonCategories(jsonCategory);
-            String name = null;
-            int level = 0;
+            String name;
+            int level;
 
             name = jsonCategory.getString(FIELD_NAME);
             if (categoryMap.contains(name)) {
@@ -396,7 +396,7 @@ public class DBFacade {
 
 
             if (level == 1) { //Subcategory
-                String super_categoryName = null;
+                String super_categoryName;
                 super_categoryName = jsonCategory.getString(FIELD_CATEGORY_SUPER_CATEGORY);
 
                 if (!categoryMap.contains(super_categoryName)) {

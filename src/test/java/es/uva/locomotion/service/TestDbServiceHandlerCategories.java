@@ -16,7 +16,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class TestDbServiceHandlerCategories {
@@ -162,7 +161,7 @@ public class TestDbServiceHandlerCategories {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInjectCategoriesEmptyRequest() throws IOException, InterruptedException {
+    public void testInjectCategoriesEmptyRequest() {
         ServiceConnectionHandler handler = new ServiceConnectionHandler();
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
@@ -173,7 +172,7 @@ public class TestDbServiceHandlerCategories {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInjectCategoriesNullCategories() throws IOException, InterruptedException {
+    public void testInjectCategoriesNullCategories() {
         ServiceConnectionHandler handler = new ServiceConnectionHandler();
         handler.injectCategories("https://randomUrl", null, "token");
     }

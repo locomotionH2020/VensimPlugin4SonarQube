@@ -52,7 +52,7 @@ public class RuleTestUtilities {
 
 
     public static VensimScanner getScanner(){
-        ActiveRules rules = null;
+        ActiveRules rules;
         try {
             rules = getAllActiveRules();
         } catch (Exception e) {

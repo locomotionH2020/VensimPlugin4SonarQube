@@ -1,33 +1,20 @@
 package es.uva.locomotion.service;
 
 import es.uva.locomotion.model.AcronymsList;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
-import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class TestDBFacadeAcronyms {

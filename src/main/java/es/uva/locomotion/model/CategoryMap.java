@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class CategoryMap {
 
-    private Map<String, Category> categoryMap;
+    private final Map<String, Category> categoryMap;
 
     public CategoryMap() {
         categoryMap = new HashMap<>();

@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 public class RawSymbolTableVisitor extends ModelBaseVisitor<Object> {
 
     private SymbolTable table;
-    protected static VensimLogger LOG = VensimLogger.getInstance();
-    private static Pattern sequencePattern = Pattern.compile("(.*?)(\\d+)");
+    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    private static final Pattern sequencePattern = Pattern.compile("(.*?)(\\d+)");
 
     public SymbolTable getSymbolTable(Model.FileContext context){
         table = new SymbolTable();

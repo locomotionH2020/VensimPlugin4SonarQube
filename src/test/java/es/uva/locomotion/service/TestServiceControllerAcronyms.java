@@ -1,12 +1,7 @@
 package es.uva.locomotion.service;
 
 import es.uva.locomotion.model.AcronymsList;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
-import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import es.uva.locomotion.testutilities.ServiceTestUtilities;
-import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -15,13 +10,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import javax.json.JsonObject;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 

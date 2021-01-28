@@ -7,6 +7,7 @@ import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.parser.visitors.RawSymbolTableVisitor;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ import static es.uva.locomotion.utilities.Constants.IMPURE_FUNCTIONS;
 
 public class SymbolTableGenerator {
 
-    private static  final List<String> symbolVariables = Arrays.asList("Time");
+    private static  final List<String> symbolVariables = Collections.singletonList("Time");
     private static final List<String> lookupGeneratorFunctions  = Arrays.asList("GET DIRECT LOOKUPS", "GET XLS LOOKUPS");
 
 

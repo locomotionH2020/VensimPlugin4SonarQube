@@ -59,9 +59,9 @@ public class TestAPI {
       List<JsonObject> issueList =  filterIssuesOfType(issues, SubscriptNameCheck.CHECK_KEY);
 
       assertEquals(1,issueList.size());
-      JsonObject issue = issueList.get(0);;
+      JsonObject issue = issueList.get(0);
 
-      assertIssueLine(issue,3);
+        assertIssueLine(issue,3);
       assertIssueType(issue,SubscriptNameCheck.CHECK_KEY);
 
 
@@ -133,7 +133,7 @@ public class TestAPI {
         JsonArray issues =  getIssues("testMagicNumber.mdl",SONAR_TOKEN);
         List<JsonObject> issueList =  filterIssuesOfType(issues, MagicNumberCheck.CHECK_KEY);
 
-        Map<Boolean, List<JsonObject>> partitionedIssues = issueList.stream().collect(Collectors.partitioningBy(issue-> getIssueSeverity((JsonObject) issue)==Severity.MAJOR));
+        Map<Boolean, List<JsonObject>> partitionedIssues = issueList.stream().collect(Collectors.partitioningBy(issue-> getIssueSeverity(issue)==Severity.MAJOR));
         List<JsonObject> majorIssues = partitionedIssues.get(true);
         List<JsonObject> otherIsues = partitionedIssues.get(false);
 
@@ -249,7 +249,7 @@ public class TestAPI {
     public void testJsonOutputNoCommentsAndNoUnits() throws IOException{
         Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
 
-        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+        assertTrue(filesAnalyzed.containsKey("testJsonOutput.mdl"));
 
         JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
         JsonObject symbol = symbols.getJsonObject("SYMBOL_WITHOUT_COMMENTS_OR_UNITS");
@@ -264,7 +264,7 @@ public class TestAPI {
     public void testJsonOutputWithCommentsAndUnits() throws IOException{
         Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
 
-        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+        assertTrue(filesAnalyzed.containsKey("testJsonOutput.mdl"));
 
         JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
         JsonObject symbol = symbols.getJsonObject("SYMBOL_WITH_COMMENTS_AND_UNITS");
@@ -279,7 +279,7 @@ public class TestAPI {
     public void testJsonOutputSymbolWithoutDependencies() throws IOException{
         Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
 
-        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+        assertTrue(filesAnalyzed.containsKey("testJsonOutput.mdl"));
 
         JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
         JsonObject symbol = symbols.getJsonObject("SYMBOL_WITHOUT_DEPENDENCIES");
@@ -293,7 +293,7 @@ public class TestAPI {
     public void testJsonOutputSymbolWithOneDependency() throws IOException{
         Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
 
-        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+        assertTrue(filesAnalyzed.containsKey("testJsonOutput.mdl"));
 
         JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
         JsonObject symbol = symbols.getJsonObject("SYMBOL_WITH_ONE_DEPENDENCY");
@@ -309,7 +309,7 @@ public class TestAPI {
     public void testJsonOutputSymbolWithMultipleDependencies() throws IOException{
         Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
 
-        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+        assertTrue(filesAnalyzed.containsKey("testJsonOutput.mdl"));
 
         JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
         JsonObject symbol = symbols.getJsonObject("SYMBOL_WITH_MULTIPLE_DEPENDENCIES");
@@ -331,7 +331,7 @@ public class TestAPI {
     public void testJsonOutputWithoutDefinedLine() throws IOException{
         Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
 
-        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+        assertTrue(filesAnalyzed.containsKey("testJsonOutput.mdl"));
 
         JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
         JsonObject symbol = symbols.getJsonObject("Time");
@@ -346,7 +346,7 @@ public class TestAPI {
     public void testJsonOutputSymbolDefinedOnce() throws IOException{
         Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
 
-        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+        assertTrue(filesAnalyzed.containsKey("testJsonOutput.mdl"));
 
         JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
         JsonObject symbol = symbols.getJsonObject("SYMBOL_WITHOUT_COMMENTS_OR_UNITS");
@@ -361,7 +361,7 @@ public class TestAPI {
     public void testJsonOutputSymbolDefinedMultipleTimes() throws IOException{
         Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
 
-        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+        assertTrue(filesAnalyzed.containsKey("testJsonOutput.mdl"));
 
         JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
         JsonObject symbol = symbols.getJsonObject("SYMBOL_DEFINED_MULTIPLE_TIMES");
@@ -379,7 +379,7 @@ public class TestAPI {
     public void testJsonOutputSymbolType() throws IOException{
         Map<String, JsonObject> filesAnalyzed = getFilesAnalyzedJsonOutput();
 
-        assertTrue(filesAnalyzed.keySet().contains("testJsonOutput.mdl"));
+        assertTrue(filesAnalyzed.containsKey("testJsonOutput.mdl"));
 
         JsonObject symbols = filesAnalyzed.get("testJsonOutput.mdl").getJsonObject("symbols");
         JsonObject symbol = symbols.getJsonObject("SYMBOL_WITH_MULTIPLE_DEPENDENCIES");
