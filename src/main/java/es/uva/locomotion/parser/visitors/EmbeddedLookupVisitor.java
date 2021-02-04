@@ -3,17 +3,14 @@ package es.uva.locomotion.parser.visitors;
 import com.ibm.icu.impl.Pair;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.parser.Model;
-import es.uva.locomotion.parser.ModelBaseVisitor;
-import es.uva.locomotion.rules.EmbeddedLookupCheck;
+import es.uva.locomotion.parser.ModelParser;
+import es.uva.locomotion.parser.ModelParserBaseVisitor;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-public class EmbeddedLookupVisitor extends ModelBaseVisitor<Void> {
+public class EmbeddedLookupVisitor extends ModelParserBaseVisitor<Void> {
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
@@ -33,7 +30,7 @@ public class EmbeddedLookupVisitor extends ModelBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitLhs(Model.LhsContext ctx) {
+    public Void visitLhs(ModelParser.LhsContext ctx) {
 
         if (symbols == null) {
             LOG.unique("Symbol table unassigned in EmbeddedLookupVisitor", LoggingLevel.INFO);
@@ -50,7 +47,7 @@ public class EmbeddedLookupVisitor extends ModelBaseVisitor<Void> {
 
     }
 
-    public List<Pair<Symbol, Integer>> getSymbolTable(Model.FileContext context) {
+    public List<Pair<Symbol, Integer>> getSymbolTable(ModelParser.FileContext context) {
         lookupsTable = new ArrayList<>();
         visit(context);
         return lookupsTable;
@@ -58,15 +55,10 @@ public class EmbeddedLookupVisitor extends ModelBaseVisitor<Void> {
 
 
     @Override
-    public Void visitLookupPointList(Model.LookupPointListContext ctx) {
+    public Void visitLookupPointList(ModelParser.LookupPointListContext ctx) {
         int size = ctx.lookupPoint().size();
         Symbol lookup = new Symbol("not used");
-
-        List<Integer> range = IntStream.rangeClosed(ctx.start.getLine(), ctx.stop.getLine())
-                .boxed().collect(Collectors.toList());
-        for (int definitionLine : range) {
-            lookup.addDefinitionLine(definitionLine);
-        }
+        lookup.addDefinitionLine(ctx.start.getLine());
         lookup.setFiltered(isSymbolFiltered);
         lookupsTable.add(Pair.of(lookup, size));
 
@@ -74,16 +66,11 @@ public class EmbeddedLookupVisitor extends ModelBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitNumberList(Model.NumberListContext ctx) {
+    public Void visitNumberList(ModelParser.NumberListContext ctx) {
 
         int size = ctx.integerConst().size() + ctx.floatingConst().size();
         Symbol lookup = new Symbol("not used");
-
-        List<Integer> range = IntStream.rangeClosed(ctx.start.getLine(), ctx.stop.getLine())
-                .boxed().collect(Collectors.toList());
-        for (int definitionLine : range) {
-            lookup.addDefinitionLine(definitionLine);
-        }
+        lookup.addDefinitionLine(ctx.start.getLine());
         lookup.setFiltered(isSymbolFiltered);
         lookupsTable.add(Pair.of(lookup, size));
 

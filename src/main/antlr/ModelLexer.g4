@@ -1,4 +1,4 @@
-lexer grammar Tokens;
+lexer grammar ModelLexer;
 
 channels{
     VIEWS
@@ -13,8 +13,8 @@ NewLine: [\n\r]+ -> channel(VIEWS);
 
 CommentOrEncoding: '{' .*? '}' -> skip;
 
-Group : '********************************************************' .*? '|' -> skip ;
-
+GroupDelimiter : '***' Star+;
+GroupEndDelimiter : GroupDelimiter '~';
 
 Star : '*' ;
 Div : '/' ;

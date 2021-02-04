@@ -10,7 +10,7 @@ import es.uva.locomotion.utilities.logs.VensimLogger;
 import static es.uva.locomotion.utilities.UtilityFunctions.stringToFloat;
 import static es.uva.locomotion.utilities.UtilityFunctions.stringToInt;
 
-public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
+public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
@@ -29,7 +29,7 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitLhs(Model.LhsContext ctx) {
+    public Void visitLhs(ModelParser.LhsContext ctx) {
 
         if (symbols == null) {
             LOG.unique("Symbol table unassigned in MagicNumberVisitor", LoggingLevel.INFO);
@@ -47,33 +47,33 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
 
     }
 
-    public SymbolTable getSymbolTable(Model.FileContext context) {
+    public SymbolTable getSymbolTable(ModelParser.FileContext context) {
         numberTable = new SymbolTable();
         visit(context);
         return numberTable;
     }
 
 
-    private boolean exprIsAConstant(Model.ExprContext ctx) {
-        return ctx.getClass() == Model.ConstContext.class;
+    private boolean exprIsAConstant(ModelParser.ExprContext ctx) {
+        return ctx.getClass() == ModelParser.ConstContext.class;
     }
 
-    private boolean exprIsACompoundNumber(Model.ExprContext ctx) {
-        if (ctx.getClass() != Model.SignExprContext.class)
+    private boolean exprIsACompoundNumber(ModelParser.ExprContext ctx) {
+        if (ctx.getClass() != ModelParser.SignExprContext.class)
             return false;
 
 
-        Model.SignExprContext node = (Model.SignExprContext) ctx;
-        if (node.exprAllowSign().getClass() != Model.CallExprContext.class)
+        ModelParser.SignExprContext node = (ModelParser.SignExprContext) ctx;
+        if (node.exprAllowSign().getClass() != ModelParser.CallExprContext.class)
             return false;
 
 
-        Model.CallExprContext callNode = (Model.CallExprContext) node.exprAllowSign();
+        ModelParser.CallExprContext callNode = (ModelParser.CallExprContext) node.exprAllowSign();
 
         return isCompoundNumber(callNode.call());
     }
 
-    private boolean exprIsANumber(Model.ExprContext ctx) {
+    private boolean exprIsANumber(ModelParser.ExprContext ctx) {
         return exprIsAConstant(ctx) || exprIsACompoundNumber(ctx);
     }
 
@@ -87,7 +87,7 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitEquation(Model.EquationContext ctx) {
+    public Void visitEquation(ModelParser.EquationContext ctx) {
         if (ctx.expr() == null || exprIsANumber(ctx.expr()))
             return null;
 
@@ -97,7 +97,7 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitDataEquation(Model.DataEquationContext ctx) {
+    public Void visitDataEquation(ModelParser.DataEquationContext ctx) {
 
         if (ctx.expr() == null || exprIsANumber(ctx.expr()))
             return null;
@@ -108,18 +108,18 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitUnchangeableConstant(Model.UnchangeableConstantContext ctx) {
+    public Void visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
         return null;
     }
 
     @Override
-    public Void visitLookup(Model.LookupContext ctx) {
+    public Void visitLookup(ModelParser.LookupContext ctx) {
         return null;
     }
 
 
     @Override
-    public Void visitIntegerConst(Model.IntegerConstContext ctx) {
+    public Void visitIntegerConst(ModelParser.IntegerConstContext ctx) {
 
         if (!isSymbolFiltered) {
             String value = String.valueOf(stringToInt(ctx.getText()));
@@ -131,7 +131,7 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
 
 
     @Override
-    public Void visitFloatingConst(Model.FloatingConstContext ctx) {
+    public Void visitFloatingConst(ModelParser.FloatingConstContext ctx) {
         float value = stringToFloat(ctx.getText());
         String strValue;
         if (isInteger(value)) {
@@ -152,17 +152,17 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitTabbedArray(Model.TabbedArrayContext ctx) {
+    public Void visitTabbedArray(ModelParser.TabbedArrayContext ctx) {
         return null;
     }
 
 
-    private String getFunctionName(Model.CallContext ctx) {
+    private String getFunctionName(ModelParser.CallContext ctx) {
         return ctx.Id().getText();
     }
 
 
-    private boolean isCompoundNumber(Model.CallContext ctx) {
+    private boolean isCompoundNumber(ModelParser.CallContext ctx) {
         CompoundMagicNumberVisitor visitor = new CompoundMagicNumberVisitor();
         return visitor.visitCall(ctx);
 
@@ -171,7 +171,7 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
 
 
     @Override
-    public Void visitCall(Model.CallContext ctx) {
+    public Void visitCall(ModelParser.CallContext ctx) {
         String functionName = getFunctionName(ctx);
 
         if ("WITH LOOKUP".equals(functionName)) {
@@ -190,30 +190,30 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitRealityCheck(Model.RealityCheckContext ctx) {
+    public Void visitRealityCheck(ModelParser.RealityCheckContext ctx) {
         return null;
     }
 
     @Override
-    public Void visitConstraint(Model.ConstraintContext ctx) {
+    public Void visitConstraint(ModelParser.ConstraintContext ctx) {
         return null;
     }
 
     @Override
-    public Void visitSketchesGraphsAndMetadata(Model.SketchesGraphsAndMetadataContext ctx) {
+    public Void visitSketchesGraphsAndMetadata(ModelParser.SketchesGraphsAndMetadataContext ctx) {
         return null;
     }
 
 
     @Override
-    public Void visitLookupDefinition(Model.LookupDefinitionContext ctx) {
+    public Void visitLookupDefinition(ModelParser.LookupDefinitionContext ctx) {
         if (ctx.call() != null)
             super.visitChildren(ctx);
         return null;
     }
 
     @Override
-    public Void visitConstList(Model.ConstListContext ctx) {
+    public Void visitConstList(ModelParser.ConstListContext ctx) {
         return null;
     }
 
@@ -223,8 +223,8 @@ public class MagicNumberTableVisitor extends ModelBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitExprOperation(Model.ExprOperationContext ctx) {
-        if (ctx.op.getType() == Tokens.Equal)
+    public Void visitExprOperation(ModelParser.ExprOperationContext ctx) {
+        if (ctx.op.getType() == ModelLexer.Equal)
             if (isASwitch(ctx.expr(0).getText()) || isASwitch(ctx.expr(1).getText()))
                 return null;
 

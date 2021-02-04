@@ -50,17 +50,17 @@ public class GeneralTestUtilities {
 
     }
 
-    public static Model.FileContext getParseTree(String file_path) throws IOException {
+    public static ModelParser.FileContext getParseTree(String file_path) throws IOException {
 
 
         return getParseTreeFromString(loadFile(file_path));
     }
 
-    public static Model.FileContext getParseTreeFromString(String fileContent) {
-        Tokens lexer = new Tokens(CharStreams.fromString(fileContent));
+    public static ModelParser.FileContext getParseTreeFromString(String fileContent) {
+        ModelLexer lexer = new ModelLexer(CharStreams.fromString(fileContent));
 
         MultiChannelTokenStream tokens = new MultiChannelTokenStream(lexer);
-        Model parser = new Model(tokens);
+        ModelParser parser = new ModelParser(tokens);
         parser.removeErrorListeners();
         parser.addErrorListener(new VensimErrorListener());
         return parser.file();
@@ -78,7 +78,7 @@ public class GeneralTestUtilities {
     public static SymbolTable getRAWSymbolTableFromString(String content){
 
 
-        Model.FileContext root = getParseTreeFromString(content);
+        ModelParser.FileContext root = getParseTreeFromString(content);
 
 
         RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
@@ -86,30 +86,30 @@ public class GeneralTestUtilities {
     }
 
     public static ViewTable getViewTableFromString(String content){
-        Model.FileContext root = getParseTreeFromString(content);
+        ModelParser.FileContext root = getParseTreeFromString(content);
         ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor();
         return visitor.getViewTable(root);
     }
     public static ViewTable getViewTableFromString(String content, String moduleSeparator, String categorySeparator){
-        Model.FileContext root = getParseTreeFromString(content);
+        ModelParser.FileContext root = getParseTreeFromString(content);
         ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator,categorySeparator);
         return visitor.getViewTable(root);
     }
     public static ViewTable getViewTableFromString(String content, String moduleSeparator){
-        Model.FileContext root = getParseTreeFromString(content);
+        ModelParser.FileContext root = getParseTreeFromString(content);
         ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator);
         return visitor.getViewTable(root);
     }
 
     public static SymbolTable getRAWSymbolTable(String file_path) throws IOException {
-        Model.FileContext tree = getParseTree(file_path);
+        ModelParser.FileContext tree = getParseTree(file_path);
 
         RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
         return visitor.getSymbolTable(tree);
     }
 
     public static SymbolTable getSymbolTable(String file_path) throws IOException {
-        Model.FileContext tree = getParseTree(file_path);
+        ModelParser.FileContext tree = getParseTree(file_path);
         return SymbolTableGenerator.getSymbolTable(tree);
     }
 

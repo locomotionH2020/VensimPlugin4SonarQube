@@ -7,7 +7,7 @@ import es.uva.locomotion.parser.*;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
 
-public class ViewTableVisitor extends ModelBaseVisitor<Object> {
+public class ViewTableVisitor extends ModelParserBaseVisitor<Object> {
     private ViewTable table;
     private View actualView;
 
@@ -39,7 +39,7 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
         vtv.categorySeparator = null;
         return vtv;    }
 
-    public ViewTable getViewTable(Model.FileContext context){
+    public ViewTable getViewTable(ModelParser.FileContext context){
         table = new ViewTable();
         visit(context);
         return table;
@@ -50,7 +50,7 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
 
     }
     @Override
-    public Object visitViewName(Model.ViewNameContext ctx) {
+    public Object visitViewName(ModelParser.ViewNameContext ctx) {
         String viewName = ctx.getText().trim().substring(1);
         String module = viewName;
         String category = null;
@@ -78,7 +78,7 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitViewVariable(Model.ViewVariableContext ctx) {
+    public Object visitViewVariable(ModelParser.ViewVariableContext ctx) {
         int internalId = Integer.parseInt(ctx.internalId.getText());
         if(internalId == SYMBOL_PRIVATE_ID) {
             int objectType = Integer.parseInt(ctx.bits.getText());

@@ -58,7 +58,7 @@ public class TestGrammar {
                 "(1.25382,3.55263),(3.42508,3.64035),(3.85321,4.5614),(4.8318,7.80702),(6.36086,4.91228 ),(7.15596,7.67544)," +
                 "(7.18654,5.92105),(8.74618,9.21053))~~|";
 
-        Model.FileContext tree = getParseTreeFromString(program);
+        ModelParser.FileContext tree = getParseTreeFromString(program);
 
         String reference_line = tree.model().symbolWithDoc(0).symbolWithDocDefinition().lookupDefinition().lookup().lookupRange().referenceLine().getText();
 
@@ -71,17 +71,17 @@ public class TestGrammar {
     public void testNegativeIsReadCorrectly(){
         String program = "var = -foo - otherVar~~|";
 
-        Model.FileContext tree = getParseTreeFromString(program);
+        ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        Model.ExprOperationContext parentExpr = (Model.ExprOperationContext) tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr();
+        ModelParser.ExprOperationContext parentExpr = (ModelParser.ExprOperationContext) tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr();
 
-        Model.SignExprContext firstChild = (Model.SignExprContext) parentExpr.getChild(0);
+        ModelParser.SignExprContext firstChild = (ModelParser.SignExprContext) parentExpr.getChild(0);
         assertEquals("-",firstChild.start.getText());
 
         TerminalNode secondChild = (TerminalNode) parentExpr.getChild(1);
         assertEquals("-",secondChild.getSymbol().getText());
 
-        Model.ExprContext thirdChild = (Model.ExprContext) parentExpr.getChild(2);
+        ModelParser.ExprContext thirdChild = (ModelParser.ExprContext) parentExpr.getChild(2);
         assertEquals("otherVar", thirdChild.getText());
 
     }
@@ -136,7 +136,7 @@ public class TestGrammar {
                 "]=5~~|";
 
         SymbolTable table = getRAWSymbolTableFromString(program);
-        Model.FileContext file = getParseTreeFromString(program);
+        ModelParser.FileContext file = getParseTreeFromString(program);
 
         assertEquals("\"Electric/electronic components\"",file.model().symbolWithDoc(0).symbolWithDocDefinition().equation().lhs().subscript(0).indexList().subscriptId(0).getText());
     }
@@ -145,19 +145,19 @@ public class TestGrammar {
     public void testNumberInParenthesisIsNotConsideredLookup(){
         String program = "A = (3)~~|";
 
-        Model.FileContext tree = getParseTreeFromString(program);
+        ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        Model.SignExprContext parenthesis = (Model.SignExprContext)  tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr();
-        assertEquals(Model.ParensContext.class, parenthesis.exprAllowSign().getClass());
+        ModelParser.SignExprContext parenthesis = (ModelParser.SignExprContext)  tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().expr();
+        assertEquals(ModelParser.ParensContext.class, parenthesis.exprAllowSign().getClass());
 
     }
 
     @Test
     public void testOnedimensionalArrayCanContainFinalSemicolon(){
         String program = "A = 3,4,5,6; ~~|";
-        Model.FileContext tree= getParseTreeFromString(program);
+        ModelParser.FileContext tree= getParseTreeFromString(program);
 
-        Model.ConstListContext array = tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().constList();
+        ModelParser.ConstListContext array = tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().constList();
         assertNotNull(array);
         assertEquals("3,4,5,6;",array.getText());
     }
@@ -165,9 +165,9 @@ public class TestGrammar {
     @Test
     public void testOnedimensionalArraysDontRequireSemicolon(){
         String program = "A = 3,4,5,6 ~~|";
-        Model.FileContext tree = getParseTreeFromString(program);
+        ModelParser.FileContext tree = getParseTreeFromString(program);
 
-        Model.ConstListContext array = tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().constList();
+        ModelParser.ConstListContext array = tree.model().symbolWithDoc(0).symbolWithDocDefinition().equation().constList();
         assertNotNull(array);
         assertEquals("3,4,5,6",array.getText());
     }

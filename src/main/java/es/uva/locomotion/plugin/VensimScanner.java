@@ -90,12 +90,12 @@ public class VensimScanner {
 
     }
 
-    protected Model.FileContext getParseTree(String file_content) {
-        Tokens lexer = new Tokens(CharStreams.fromString(file_content));
+    protected ModelParser.FileContext getParseTree(String file_content) {
+        ModelLexer lexer = new ModelLexer(CharStreams.fromString(file_content));
         MultiChannelTokenStream tokens = new MultiChannelTokenStream(lexer);
 
         //CommonTokenStream tokens = new CommonTokenStream(lexer);
-        Model parser = new Model(tokens);
+        ModelParser parser = new ModelParser(tokens);
         parser.removeErrorListeners();
         parser.addErrorListener(new VensimErrorListener());
 
@@ -113,7 +113,7 @@ public class VensimScanner {
             String content = inputFile.contents();
             String module = getModuleNameFromFileName(inputFile.filename());
 
-            Model.FileContext root = getParseTree(content);
+            ModelParser.FileContext root = getParseTree(content);
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
 
             ViewTable viewTable;

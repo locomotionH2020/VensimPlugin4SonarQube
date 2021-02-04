@@ -41,7 +41,7 @@ public class TestVensimScanner {
         VensimScanner.LOG = logger;
         InputFile inputFile = Mockito.mock(InputFile.class);
         when(inputFile.contents()).thenReturn("This isn't a vensim model");
-        when(inputFile.filename()).thenReturn("notAVensimModel.mdl");
+        when(inputFile.filename()).thenReturn("notAVensimModelParser.mdl");
 
 
         VensimScanner scanner = RuleTestUtilities.getScanner();
@@ -51,7 +51,7 @@ public class TestVensimScanner {
         files.add(inputFile);
         scanner.scanFiles(files);
 
-        Mockito.verify(logger).error("Unable to parse the file 'notAVensimModel.mdl'. Error: l:1 c:25 mismatched input '<EOF>' expecting {':=', '[', ':IGNORE:', ':EXCEPT:', INFO_UNIT, Keyword}");
+        Mockito.verify(logger).error("Unable to parse the file 'notAVensimModelParser.mdl'. Error: l:1 c:25 mismatched input '<EOF>' expecting {':=', '[', ':IGNORE:', ':EXCEPT:', INFO_UNIT, Keyword}");
 
     }
 
