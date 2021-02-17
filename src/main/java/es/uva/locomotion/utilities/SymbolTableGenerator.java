@@ -1,9 +1,9 @@
 package es.uva.locomotion.utilities;
 
-import es.uva.locomotion.parser.Model;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.parser.visitors.RawSymbolTableVisitor;
 
 import java.util.Arrays;
@@ -20,7 +20,7 @@ public class SymbolTableGenerator {
     private static final List<String> lookupGeneratorFunctions  = Arrays.asList("GET DIRECT LOOKUPS", "GET XLS LOOKUPS");
 
 
-    public static SymbolTable getSymbolTable(Model.FileContext context){
+    public static SymbolTable getSymbolTable(ModelParser.FileContext context){
         RawSymbolTableVisitor generator = new RawSymbolTableVisitor();
         SymbolTable rawTable = generator.getSymbolTable(context);
 

@@ -25,6 +25,7 @@ public class JsonSymbolTableBuilder {
     public static final String KEY_NAME = "name";
     public static final String KEY_LEVEL = "level";
     public static final String KEY_SUPER = "super";
+    public static final String KEY_GROUP = "group";
 
     public JsonSymbolTableBuilder() {
         fileBuilder = Json.createArrayBuilder();
@@ -80,6 +81,7 @@ public class JsonSymbolTableBuilder {
 
         symbolBuilder.add(KEY_UNITS, symbol.getUnits());
         symbolBuilder.add(KEY_COMMENT, symbol.getComment());
+        symbolBuilder.add(KEY_GROUP, symbol.getGroup() == null ?  "null" : symbol.getGroup());
 
 
         return symbolBuilder.build();

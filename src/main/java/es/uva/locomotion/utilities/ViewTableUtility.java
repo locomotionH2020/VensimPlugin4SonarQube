@@ -13,17 +13,17 @@ public class ViewTableUtility {
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
-    public static ViewTable getViewTable(Model.FileContext context, String moduleSeparator, String categorySeparator) {
+    public static ViewTable getViewTable(ModelParser.FileContext context, String moduleSeparator, String categorySeparator) {
         ViewTableVisitor generator = ViewTableVisitor.createViewTableVisitor(moduleSeparator, categorySeparator);
         return generator.getViewTable(context);
     }
 
-    public static ViewTable getViewTable(Model.FileContext context, String moduleSeparator) {
+    public static ViewTable getViewTable(ModelParser.FileContext context, String moduleSeparator) {
         ViewTableVisitor generator = ViewTableVisitor.createViewTableVisitor(moduleSeparator);
         return generator.getViewTable(context);
     }
 
-    public static ViewTable getViewTable(Model.FileContext context) {
+    public static ViewTable getViewTable(ModelParser.FileContext context) {
         ViewTableVisitor generator = ViewTableVisitor.createViewTableVisitor();
         return generator.getViewTable(context);
     }

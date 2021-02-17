@@ -76,7 +76,7 @@ public class TestEmbeddedLookupVisitor {
         assertEquals(2, (int)list.get(0).second);
 
 
-        assertEquals(List.of(1,2), list.get(0).first.getDefinitionLines());
+        assertEquals(List.of(1), list.get(0).first.getDefinitionLines());
     }
     @Test
     public void testValidSingle() {
@@ -148,7 +148,7 @@ public class TestEmbeddedLookupVisitor {
 
         assertEquals(10, (int)list.get(0).second);
 
-        assertEquals(List.of(1,2,3,4,5,6,7,8,9,10), list.get(0).first.getDefinitionLines());
+        assertEquals(List.of(1), list.get(0).first.getDefinitionLines());
     }
 
     @Test

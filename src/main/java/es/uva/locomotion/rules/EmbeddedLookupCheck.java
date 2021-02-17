@@ -26,7 +26,7 @@ public class EmbeddedLookupCheck extends AbstractVensimCheck {
 
     public static final String CHECK_KEY = "lookup-embedded";
     public static final String NAME = "EmbeddedLookupCheck";
-    public static final String HTML_DESCRIPTION = "" +
+    public static final String HTML_DESCRIPTION = "" + //TODO
             "<p>This rule checks that variables follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+\"</p>\n" +
             "<ul>" +
             "   <li>The name must be in lower case.</li>\n" +
@@ -45,7 +45,7 @@ public class EmbeddedLookupCheck extends AbstractVensimCheck {
             "fuel_emissions_2019\n" +
             "</pre>\n";
 
-    public static final String DEFAULT_SIZE = "3";
+    public static final String DEFAULT_SIZE = "5";
 
     @RuleProperty(
             key = "minimum-size",

@@ -17,6 +17,7 @@ public class Symbol {
     private String category;
     private String primary_module;
     private final List<String> shadow_module;
+    private String group;
 
     private boolean isValid;
 
@@ -36,6 +37,8 @@ public class Symbol {
         isValid = true;
         primary_module = "";
         shadow_module = new ArrayList<>();
+        group = "";
+
     }
 
 
@@ -173,6 +176,14 @@ public class Symbol {
 
     public String getCategory(){
         return category;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public String getGroup(){
+        return group;
     }
 
     /**

@@ -1,14 +1,14 @@
-parser grammar Model;
+parser grammar ModelParser;
 
 options {
   superClass=MultiChannelBaseParser;
-  tokenVocab = Tokens;
+  tokenVocab = ModelLexer;
 }
 
 // A Vensim model is a sequence of equations and subscript ranges.
 
 file: model EOF;
-model: {disable(Tokens.VIEWS);}( symbolWithDoc | macroDefinition)* sketchesGraphsAndMetadata;
+model: {disable(ModelLexer.VIEWS);}( symbolWithDoc | macroDefinition | group)* sketchesGraphsAndMetadata;
 sketchesGraphsAndMetadata: sketches? graphsGroup? metadataDivisor?; //Separating equations and sketches&graphs allows to test sample files with just a few lines.
                                                                       //For example, a problematic equation.
 symbolWithDoc: symbolWithDocDefinition unitsDoc;
@@ -113,6 +113,9 @@ floatingConst:
 
  unitsDoc: units=INFO_UNIT comment=INFO_UNIT supplementary=INFO_UNIT? VerticalBar;
 
+//Grammar for groups.
+group: GroupDelimiter . name=Id GroupEndDelimiter Id* VerticalBar;
+
 
 graphsGroup: graphs+;
 graphs: graph title xaxis? xlabel? xdiv? yaxis? ylabel? ydiv? xmin? xmax? nolegend? scale graphvar*;
@@ -133,12 +136,11 @@ gvar: ':VAR' .*?;
 ymin: ':Y-MIN' .*?;
 ymax: ':Y-MAX' .*?;
 linewidthgraph: ':LINE-WIDTH' .*?;
-metadataDivisor: ':L<%^E!@' metadataLine+;
-metadataLine:DigitSeq TwoDots.*?;
+metadataDivisor: ':L<%^E!@' .*?;
 
 // Backslash tokens are ignored, so this rule doesn't take them into account.
-sketches: {enable(Tokens.VIEWS);} viewInfo* sketchesDelimiter  {disable(Tokens.VIEWS);};
-sketchesDelimiter: SketchesDelimiter NewLine;
+sketches: {enable(ModelLexer.VIEWS);} viewInfo* sketchesDelimiter  {disable(ModelLexer.VIEWS);};
+sketchesDelimiter: SketchesDelimiter NewLine?;
 viewInfo:   sketchInfo versionCode viewName viewVariables;
 sketchInfo:  NewLine* ViewDelimier Sketch_phrase NewLine ;
 versionCode: Sketch_version NewLine;

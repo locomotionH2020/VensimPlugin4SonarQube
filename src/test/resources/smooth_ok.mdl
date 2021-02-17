@@ -28,7 +28,11 @@ Mal escrita=
 	1
 	~
 	~		|
-
+********************************************************
+	.Control
+********************************************************~
+		Simulation Control Parameters
+	|
 muy MAL escrita=
 	1
 	~
@@ -38,6 +42,8 @@ dEdt=
 	E*S
 	~
 	~		|
+
+
 \\\---/// Sketch information - do not modify anything except names
 V300  Do not put anything below this section - it will be ignored
 *TRANSP

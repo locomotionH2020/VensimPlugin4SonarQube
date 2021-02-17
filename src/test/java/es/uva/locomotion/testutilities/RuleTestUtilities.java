@@ -1,7 +1,7 @@
 package es.uva.locomotion.testutilities;
 
+import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.service.ServiceController;
-import es.uva.locomotion.parser.Model;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.plugin.VensimRuleRepository;
 import es.uva.locomotion.plugin.VensimScanner;
@@ -116,7 +116,7 @@ public class RuleTestUtilities {
 
 
     public static VensimVisitorContext getVisitorContextFromString(String program){
-        Model.FileContext root =  getParseTreeFromString(program);
+        ModelParser.FileContext root =  getParseTreeFromString(program);
         return new VensimVisitorContext(root,getSymbolTableFromString(program),null);
     }
 
