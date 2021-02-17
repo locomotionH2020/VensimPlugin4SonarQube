@@ -53,17 +53,17 @@ public class ViewTable {
         table.put(name, view);
     }
 
-    public View createOrSelectView(String module, String category, String subcategory) {
+    public View createOrSelectView(String module, String category, String subcategory, boolean isValid) {
         String identifier = View.generateIdentifier(module, category, subcategory);
         if (hasView(identifier)) {
             return getView(identifier);
         } else {
-            View newView = new View(module, category, subcategory);
-            if (!hasModule(module)) addModule(module);
+            View newView = new View(module, category, subcategory, isValid);
+            if (!hasModule(module) && isValid) addModule(module);
             if (category != null) {
-                if (!hasCategory(category)) addCategory(category);
+                if (!hasCategory(category) && isValid) addCategory(category);
                 if (subcategory != null) {
-                    if (!hasSubcategory(category, subcategory)) addSubcategory(category, subcategory);
+                    if (!hasSubcategory(category, subcategory) && isValid) addSubcategory(category, subcategory);
                 }
             }
             addView(newView);
@@ -72,11 +72,11 @@ public class ViewTable {
     }
 
     public View createOrSelectView(String module, String category) {
-        return createOrSelectView(module, category, null);
+        return createOrSelectView(module, category, null, false);
     }
 
     public View createOrSelectView(String module) {
-        return createOrSelectView(module, null, null);
+        return createOrSelectView(module, null, null, false);
     }
 
     public View removeView(View view) {
@@ -90,9 +90,6 @@ public class ViewTable {
     }
 
 
-    public List<String> getModulesList() {
-        return modulesList;
-    }
 
 
     public boolean hasModule(String name) {

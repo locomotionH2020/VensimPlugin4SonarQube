@@ -5,6 +5,7 @@ import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.exceptions.*;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
+import org.stringtemplate.v4.ST;
 
 
 import java.util.*;
@@ -114,7 +115,7 @@ public class ServiceController {
 
     }
 
-    public void injectNewSymbols(List<Symbol> foundSymbols, SymbolTable dbSymbolTable) {
+    public void injectNewSymbols(List<Symbol> foundSymbols, List<String> validModules, SymbolTable dbSymbolTable) {
         if (dbSymbolTable == null)
             return;
 
@@ -126,11 +127,13 @@ public class ServiceController {
 
         List<Symbol> validSymbols = newSymbols.stream().filter(Symbol::isValid).collect(Collectors.toList());
 
+
+
         if (validSymbols.size() >= 1) {
             try {
-                DBFacade.injectSymbols(dictionaryService, validSymbols, token);
-                List<String> tokensInjected = validSymbols.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
-                LOG.info("Injected symbols: " + tokensInjected);
+                for (String module : validModules) {
+                    DBFacade.injectSymbols(dictionaryService, validSymbols.stream().filter(symbol -> symbol.getPrimary_module().equals(module)).collect(Collectors.toList()), module, token);
+                }
             } catch (InvalidServiceUrlException ex) {
                 LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             } catch (EmptyServiceException ex) {
@@ -173,7 +176,7 @@ public class ServiceController {
             LOG.unique(SERVICE_UNREACHABLE_MESSAGE + MODULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
         } catch (ServiceResponseFormatNotValid ex) {
-            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + "\n" +
+            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + ": " + ex.getServiceResponse() + "\n" +
                     "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                     MODULES_DISABLED_MESSAGE;
 
@@ -219,7 +222,7 @@ public class ServiceController {
         List<Category> categories = new ArrayList<>(categoriesFound);
 
         categories = categories.stream().filter(category -> {
-            if(category.getSuperCategory() != null){
+            if (category.getSuperCategory() != null) {
                 return moduleNameIsValid(category.getName()) && moduleNameIsValid(category.getSuperCategory().getName());
             }
             return moduleNameIsValid(category.getName());
@@ -231,13 +234,11 @@ public class ServiceController {
 
 
         categories.removeAll(newCategories);
-        //TODO try
 
         if (newCategories.size() >= 1) {
             try {
                 DBFacade.injectCategories(dictionaryService, newCategories, token);
                 List<String> tokensInjected = newCategories.stream().map(Category::getName).sorted(String::compareTo).collect(Collectors.toList());
-                LOG.info("Injected categories: " + tokensInjected);
             } catch (InvalidServiceUrlException ex) {
                 LOG.unique(INVALID_URL_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             } catch (EmptyServiceException ex) {
@@ -265,14 +266,13 @@ public class ServiceController {
             try {
                 DBFacade.injectModules(dictionaryService, newModules, token);
                 List<String> tokensInjected = newModules.stream().sorted(String::compareTo).collect(Collectors.toList());
-                LOG.info("Injected modules: " + tokensInjected);
 
             } catch (InvalidServiceUrlException ex) {
-                LOG.unique(INVALID_URL_MESSAGE + MODULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+                LOG.unique(INVALID_URL_MESSAGE + "injection was not succesful", LoggingLevel.ERROR);
             } catch (EmptyServiceException ex) {
-                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + MODULES_DISABLED_MESSAGE, LoggingLevel.INFO);
+                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + "injection was not succesful", LoggingLevel.INFO);
             } catch (ConnectionFailedException ex) {
-                LOG.unique(SERVICE_UNREACHABLE_MESSAGE + MODULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+                LOG.unique(SERVICE_UNREACHABLE_MESSAGE + "injection was not succesful", LoggingLevel.ERROR);
             }
 
         }

@@ -148,6 +148,9 @@ public class VensimScanner {
 
             if (!viewPrefix.isEmpty()) {
                 ViewTableUtility.filterPrefix(table, viewPrefix);
+            } else if (!moduleName.isEmpty()) {
+                ViewTableUtility.filterPrefix(table, moduleName);
+
             }
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbData);
 
@@ -159,13 +162,14 @@ public class VensimScanner {
 
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
-            if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
-                serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), dbData.getDataBaseSymbols());
             if (!moduleSeparator.isEmpty() && dbData.getModules() != null) {
-                serviceController.injectNewModules(viewTable.getModulesList(), dbData.getModules());
+                serviceController.injectNewModules(viewTable.getModules(), dbData.getModules());
                 if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
                     serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
             }
+            if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
+                serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), viewTable.getModules(), dbData.getDataBaseSymbols());
+
         } catch (IOException e) {
             LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
         } catch (ParseCancellationException e) {

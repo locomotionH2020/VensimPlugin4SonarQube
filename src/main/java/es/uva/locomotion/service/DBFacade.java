@@ -36,6 +36,7 @@ public class DBFacade {
     private static final String FIELD_SYMBOL_MODULES_SECONDARY = "secondary";
     private static final String FIELD_CATEGORY_LEVEL = "level";
     private static final String FIELD_CATEGORY_SUPER_CATEGORY = "super_category";
+    private static final String FIELD_MODULE = "module";
     protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
@@ -217,9 +218,9 @@ public class DBFacade {
     }
 
 
-    public static void injectSymbols(String serviceUrl, List<Symbol> symbols, String token) {
+    public static void injectSymbols(String serviceUrl, List<Symbol> symbols,String module, String token) {
         List<Symbol> rawSymbols = symbols.stream().filter(symbol -> !List.of(SymbolType.Subscript_Value, SymbolType.Subscript,
-                SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION, SymbolType.Function).contains(symbol.getType())).collect(Collectors.toList());
+                SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION, SymbolType.Function).contains(symbol.getType())).filter(symbol -> symbol.getCategory() != null).collect(Collectors.toList());
 
         List<Symbol> indexes = symbols.stream().filter(symbol -> symbol.getType() == SymbolType.Subscript).collect(Collectors.toList());
 
@@ -233,6 +234,7 @@ public class DBFacade {
 
         requestBuilder.add(FIELD_SYMBOLS, jsonSymbols);
         requestBuilder.add(FIELD_INDEXES, jsonIndexes);
+        requestBuilder.add(FIELD_MODULE, module);
         handler.injectSymbols(serviceUrl, requestBuilder.build(), token);
     }
 
@@ -325,9 +327,9 @@ public class DBFacade {
         try (JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse))) {
 
 
-            JsonArray acronymsFound = jsonReader.readArray();
+            JsonArray modulesFound = jsonReader.readObject().getJsonArray(FIELD_SYMBOL_MODULES);
 
-            return createModulesListFromJson(acronymsFound);
+            return createModulesListFromJson(modulesFound);
         } catch (JsonException ex) {
             throw new ServiceResponseFormatNotValid("Expected an array.", serviceResponse);
         } catch (ServiceResponseFormatNotValid ex) {
@@ -468,16 +470,21 @@ public class DBFacade {
             JsonObjectBuilder jsonCategory = Json.createObjectBuilder();
             jsonCategory.add(FIELD_NAME, category.getName());
             if (category.getSuperCategory() == null) { //Category
-                jsonCategory.add(FIELD_CATEGORY_LEVEL, 0);
-                jsonCategory.add(FIELD_CATEGORY_SUPER_CATEGORY, JsonValue.NULL);
-            } else {//Subcategory
-                jsonCategory.add(FIELD_NAME, category.getName());
                 jsonCategory.add(FIELD_CATEGORY_LEVEL, 1);
+                jsonCategory.add(FIELD_CATEGORY_SUPER_CATEGORY, "null");
+            }
+            jsonCategoriesBuilder.add(jsonCategory);
+        }
+        for (Category category : newCategories) {
+            JsonObjectBuilder jsonCategory = Json.createObjectBuilder();
+            jsonCategory.add(FIELD_NAME, category.getName());
+            if (category.getSuperCategory() != null) { //Category
+                jsonCategory.add(FIELD_NAME, category.getName());
+                jsonCategory.add(FIELD_CATEGORY_LEVEL, 2);
                 jsonCategory.add(FIELD_CATEGORY_SUPER_CATEGORY, category.getSuperCategory().getName());
             }
             jsonCategoriesBuilder.add(jsonCategory);
         }
-
         handler.injectCategories(serviceUrl, jsonCategoriesBuilder.build(), token);
 
     }

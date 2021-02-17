@@ -10,24 +10,26 @@ public class View {
 
     private final Collection<String> primary_symbols;
 
+    private final boolean isValid;
 
     private final Collection<String> shadow_symbols;
 
-    public View(String module, String category, String subcategory) {
+    public View(String module, String category, String subcategory, boolean isValid) {
         this.module = module;
         this.category = category;
         this.subcategory = subcategory;
+        this.isValid = isValid;
 
         primary_symbols = new HashSet<>();
         shadow_symbols = new HashSet<>();
     }
 
     public View(String module, String category) {
-        this(module, category, null);
+        this(module, category, null, false);
     }
 
     public View(String module) {
-        this(module, null, null);
+        this(module, null, null, false);
     }
 
     public String getModule() {
