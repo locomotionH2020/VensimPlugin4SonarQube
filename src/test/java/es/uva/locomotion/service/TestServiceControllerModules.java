@@ -128,15 +128,15 @@ public class TestServiceControllerModules {
     }
 
     @Test
-    public void testGetModulesDictionaryInvalidFormatNotAList() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{'name':'Juan'}");
+    public void testGetModulesDictionaryInvalidFormatNotAnObject() {
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[{\"name\":\"Juan\"}]");
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
         List<String> actualValue = controller.getModulesFromDb();
         Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't valid. Expected an array.\n" +
+        verify(logger).error("The response of the dictionary service wasn't valid. Expected an object. Dictionary response: [{\"name\":\"Juan\"}].\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new modules can't be done without the modules from the dictionary.");
 
@@ -144,8 +144,8 @@ public class TestServiceControllerModules {
 
 
     @Test
-    public void testGetModulesDictionaryInvalidFormatNotAnCorrectList() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[{\"module\":\"foo\"}]");
+    public void testGetModulesDictionaryInvalidFormatMissingModuleKey() {
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"notTheKey\":\"foo\"}");
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
@@ -154,7 +154,7 @@ public class TestServiceControllerModules {
         List<String> actualValue = controller.getModulesFromDb();
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't valid. Format error '{\"module\":\"foo\"}' is not a module name.\n" +
+        verify(logger).error("The response of the dictionary service wasn't valid. \"modules\" key not found in object. Dictionary response: {\"notTheKey\":\"foo\"}.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new modules can't be done without the modules from the dictionary.");
     }
@@ -170,15 +170,15 @@ public class TestServiceControllerModules {
 
         controller.getModulesFromDb();
         controller.getModulesFromDb();
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[{\"module\":\"foo\"}]");
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[{\"notTheKey\":\"foo\"}]");
         controller.getModulesFromDb();
         controller.getModulesFromDb();
 
 
-        verify(logger,atLeastOnce()).error("The response of the dictionary service wasn't valid. Format error '{\"module\":\"foo\"}' is not a module name.\n" +
+        verify(logger,atLeastOnce()).error("The response of the dictionary service wasn't valid. \"modules\" key not found in object. Dictionary response: {\"name\":\"Juan\"}.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new modules can't be done without the modules from the dictionary.");
-        verify(logger,atLeastOnce()).error("The response of the dictionary service wasn't valid. Expected an array.\n" +
+        verify(logger,atLeastOnce()).error("The response of the dictionary service wasn't valid. Expected an object. Dictionary response: [{\"notTheKey\":\"foo\"}].\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new modules can't be done without the modules from the dictionary.");
 
@@ -264,7 +264,7 @@ public class TestServiceControllerModules {
         controller.injectNewModules(new ArrayList<>(foundList), new ArrayList<>());
 
 
-        verify(logger, times(1)).unique("Missing dictionary service parameter.\nInjection of new modules can't be done without the modules from the dictionary."
+        verify(logger, times(1)).unique("Missing dictionary service parameter.\nInjection was not succesful."
                 , LoggingLevel.INFO);
     }
 
@@ -281,7 +281,7 @@ public class TestServiceControllerModules {
         controller.injectNewModules(new ArrayList<>(foundList), new ArrayList<>());
 
 
-        verify(logger, times(1)).unique("Missing dictionary service parameter.\nInjection of new modules can't be done without the modules from the dictionary."
+        verify(logger, times(1)).unique("Missing dictionary service parameter.\nInjection was not succesful."
                 , LoggingLevel.INFO);
     }
 
@@ -301,7 +301,7 @@ public class TestServiceControllerModules {
         controller.injectNewModules(new ArrayList<>(foundList), new ArrayList<>());
 
 
-        verify(logger, times(1)).unique("The dictionary service was unreachable.\nInjection of new modules can't be done without the modules from the dictionary.", LoggingLevel.ERROR);
+        verify(logger, times(1)).unique("The dictionary service was unreachable.\nInjection was not succesful.", LoggingLevel.ERROR);
     }
 
 
@@ -319,7 +319,7 @@ public class TestServiceControllerModules {
 
 
         verify(logger, times(1))
-                .unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\nInjection of new modules can't be done without the modules from the dictionary.", LoggingLevel.ERROR);
+                .unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\nInjection was not succesful.", LoggingLevel.ERROR);
     }
 
 

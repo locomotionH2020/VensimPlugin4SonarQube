@@ -23,6 +23,10 @@ public class View {
         primary_symbols = new HashSet<>();
         shadow_symbols = new HashSet<>();
     }
+    public View(String module, String category, String subcategory) {
+        this(module, category, subcategory, true);
+
+    }
 
     public View(String module, String category) {
         this(module, category, null, false);

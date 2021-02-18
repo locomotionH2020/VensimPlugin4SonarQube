@@ -457,7 +457,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
 
         Symbol symbol = (Symbol) symbolObj;
 
-        String comment = ctx.unitsDoc().comment.getText().substring(1);
+        String comment = ctx.unitsDoc().comment.getText().substring(1).replace("\\", "").replace("\n", "").replace("\t", "");
         String units = ctx.unitsDoc().units.getText().substring(1);
 
         if (!comment.isBlank())

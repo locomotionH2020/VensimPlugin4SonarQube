@@ -50,10 +50,11 @@ public class CategoryMap {
         List<Category> toReturn = new ArrayList<>();
 
         for(Category c : getCategoriesList()){
+
             toReturn.add(c);
+
             if(c.getSubcategories() != null) toReturn.addAll(c.getSubcategories());
         }
-
         return toReturn;
     }
 

@@ -56,7 +56,7 @@ public class TestViewTable {
     @Test
     public void viewCreateOrSelectViewWithCategory() {
         ViewTable vt = new ViewTable();
-        View v = vt.createOrSelectView("module", "category");
+        View v = vt.createOrSelectView("module", "category", true);
 
         assertEquals(v, vt.getView(v.getIdentifier()));
         assertTrue(vt.hasView(v.getIdentifier()));
@@ -64,16 +64,16 @@ public class TestViewTable {
 
         assertTrue(vt.hasModule("module"));
         assertFalse(vt.hasModule("not this module"));
-        assertEquals(1, vt.getModulesList().size());
+        assertEquals(1, vt.getModules().size());
 
         assertTrue(vt.hasCategory("category"));
         assertFalse(vt.hasCategory("not this category"));
         assertEquals(1, vt.getCategoriesList().size());
 
-        View vIgual = vt.createOrSelectView("module", "category");
+        View vIgual = vt.createOrSelectView("module", "category", true);
         assertEquals(vIgual, v);
 
-        View vDistnta = vt.createOrSelectView("module", "category2");
+        View vDistnta = vt.createOrSelectView("module", "category2", true);
         assertNotEquals(vDistnta, v);
 
     }
@@ -89,7 +89,7 @@ public class TestViewTable {
 
         assertTrue(vt.hasModule("module"));
         assertFalse(vt.hasModule("not this module"));
-        assertEquals(1, vt.getModulesList().size());
+        assertEquals(1, vt.getModules().size());
 
         assertTrue(vt.hasCategory("category"));
         assertFalse(vt.hasCategory("not this category"));

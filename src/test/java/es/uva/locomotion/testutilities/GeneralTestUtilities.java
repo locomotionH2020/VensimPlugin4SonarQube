@@ -162,18 +162,20 @@ public class GeneralTestUtilities {
         return  symbolSet;
     }
 
-    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, int... lines){
+    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, String group, int... lines){
         Symbol symbol = new Symbol(token);
         if(type!=null)
             symbol.setType(type);
 
         for(int line: lines)
             symbol.addDefinitionLine(line);
-
+        symbol.setGroup(group);
         table.addSymbol(symbol);
         return symbol;
     }
-
+    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, int... lines) {
+        return addSymbolInLines(table,token,type,null,lines);
+    }
 
 
     public static List<Issue> getIssuesFromType(VensimVisitorContext context, Class type){

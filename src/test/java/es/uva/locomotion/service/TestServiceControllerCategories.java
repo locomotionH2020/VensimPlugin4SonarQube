@@ -138,7 +138,7 @@ public class TestServiceControllerCategories {
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
         Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't valid. Expected an array.\n" +
+        verify(logger).error("The response of the dictionary service wasn't valid. Expected an array. Dictionary response: {'name':'Juan'}.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new categories can't be done without the categories from the dictionary.");
 
@@ -156,7 +156,7 @@ public class TestServiceControllerCategories {
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
         Assert.assertNull(actualValue);
-        verify(logger).error("The response of the dictionary service wasn't valid. Missing 'name' field from a category.\n" +
+        verify(logger).error("The response of the dictionary service wasn't valid. Missing 'name' field from a category. Dictionary response: [{\"category\":\"foo\"}].\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new categories can't be done without the categories from the dictionary.");
     }
@@ -177,11 +177,11 @@ public class TestServiceControllerCategories {
         controller.getCategoriesFromDb();
 
 
-        verify(logger,atLeastOnce()).error("The response of the dictionary service wasn't valid. Expected an array.\n" +
+        verify(logger,atLeastOnce()).error("The response of the dictionary service wasn't valid. Expected an array. Dictionary response: {'name':'Juan'}.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new categories can't be done without the categories from the dictionary.");
 
-        verify(logger,atLeastOnce()).error("The response of the dictionary service wasn't valid. Missing 'name' field from a category.\n" +
+        verify(logger,atLeastOnce()).error("The response of the dictionary service wasn't valid. Missing 'name' field from a category. Dictionary response: [{\"category\":\"foo\"}].\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new categories can't be done without the categories from the dictionary.");
     }

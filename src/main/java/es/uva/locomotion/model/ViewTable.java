@@ -70,9 +70,12 @@ public class ViewTable {
             return newView;
         }
     }
+    public View createOrSelectView(String module, String category, String subcategory) {
+        return createOrSelectView(module, category, subcategory, true);
 
-    public View createOrSelectView(String module, String category) {
-        return createOrSelectView(module, category, null, false);
+    }
+    public View createOrSelectView(String module, String category, boolean isValid) {
+        return createOrSelectView(module, category, null, isValid);
     }
 
     public View createOrSelectView(String module) {

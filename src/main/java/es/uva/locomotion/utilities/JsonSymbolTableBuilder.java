@@ -122,10 +122,10 @@ public class JsonSymbolTableBuilder {
 
             viewBuilder.add(KEY_NAME, category.getName());
             if (category.getSuperCategory() != null) {
-                viewBuilder.add(KEY_LEVEL, 1);
+                viewBuilder.add(KEY_LEVEL, 2);
                 viewBuilder.add(KEY_SUPER, category.getSuperCategory().getName());
             } else {
-                viewBuilder.add(KEY_LEVEL, 0);
+                viewBuilder.add(KEY_LEVEL, 1);
                 viewBuilder.add(KEY_SUPER, JsonValue.NULL);
             }
 

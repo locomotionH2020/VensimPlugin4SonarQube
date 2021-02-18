@@ -15,6 +15,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testOneUnexpectedValue(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setDataBaseSymbols(new SymbolTable());
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
@@ -48,6 +49,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testTwoUnexpectedValues(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setDataBaseSymbols(new SymbolTable());
+
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
@@ -81,6 +84,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testIssueDoesntDestroyTheDependencies(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setDataBaseSymbols(new SymbolTable());
+
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
@@ -108,6 +113,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testSubsetsAreAllowed(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setDataBaseSymbols(new SymbolTable());
+
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
@@ -134,6 +141,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testSameValuesExactly(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setDataBaseSymbols(new SymbolTable());
+
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
@@ -160,6 +169,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testParsedSymbolIsNotASubscript(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setDataBaseSymbols(new SymbolTable());
+
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
@@ -186,6 +197,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testDictionarySymbolIsNotASubscript(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setDataBaseSymbols(new SymbolTable());
+
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
@@ -212,6 +225,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testFoundSubscriptDoesntHaveValues(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setDataBaseSymbols(new SymbolTable());
+
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
@@ -236,6 +251,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testDictionarySubscriptDoesntHaveValues(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setDataBaseSymbols(new SymbolTable());
+
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
@@ -282,6 +299,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testParsedTableDoesntContainSubscript(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setDataBaseSymbols(new SymbolTable());
+
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 

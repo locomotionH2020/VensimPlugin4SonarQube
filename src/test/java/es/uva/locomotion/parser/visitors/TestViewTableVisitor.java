@@ -111,7 +111,7 @@ public class TestViewTableVisitor {
         assertFalse(table.hasSubcategory("CategoryName", "SubCategoryName"));
     }
     @Test
-    public void getViewNameModulOutput() {
+    public void getViewNameModulOutputWithoutSubSeparator() {
         String program = "\\\\\\---/// Sketch information - do not modify anything except names\n" +
                 "V300  Do not put anything below this section - it will be ignored\n" +
                 "* ModuleName.CategoryName\n" +
@@ -124,13 +124,11 @@ public class TestViewTableVisitor {
                 "///---\\\\\\\n";
         ViewTable table = getViewTableFromString(program, ".");
 
-        assertTrue(table.hasModule("ModuleName"));
-        assertTrue(table.hasModule("ModuleName2"));
+        assertFalse(table.hasModule("ModuleName"));
+        assertFalse(table.hasModule("ModuleName2"));
 
-        assertTrue(table.hasCategory("CategoryName"));
-        assertTrue(table.hasCategory("CategoryName2-SubCategoryName"));
+        assertFalse(table.hasCategory("CategoryName"));
+        assertFalse(table.hasCategory("CategoryName2-SubCategoryName"));
 
-        assertFalse(table.hasSubcategory("CategoryName2-SubCategoryName", "SubCategoryName"));
-        assertFalse(table.hasSubcategory("CategoryName", "SubCategoryName"));
     }
 }

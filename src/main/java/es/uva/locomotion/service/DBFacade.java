@@ -326,12 +326,14 @@ public class DBFacade {
 
         try (JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse))) {
 
-
             JsonArray modulesFound = jsonReader.readObject().getJsonArray(FIELD_SYMBOL_MODULES);
 
+            if(modulesFound == null){
+                throw new ServiceResponseFormatNotValid("\"" + FIELD_SYMBOL_MODULES + "\" key not found in object.", serviceResponse);
+            }
             return createModulesListFromJson(modulesFound);
         } catch (JsonException ex) {
-            throw new ServiceResponseFormatNotValid("Expected an array.", serviceResponse);
+            throw new ServiceResponseFormatNotValid("Expected an object.", serviceResponse);
         } catch (ServiceResponseFormatNotValid ex) {
             ex.setServiceResponse(serviceResponse);
             throw ex;
@@ -397,7 +399,7 @@ public class DBFacade {
             level = jsonCategory.getInt(FIELD_CATEGORY_LEVEL);
 
 
-            if (level == 1) { //Subcategory
+            if (level == 2) { //Subcategory
                 String super_categoryName;
                 super_categoryName = jsonCategory.getString(FIELD_CATEGORY_SUPER_CATEGORY);
 
@@ -428,12 +430,12 @@ public class DBFacade {
         }
         int level = jsonSymbol.getInt(FIELD_CATEGORY_LEVEL);
 
-        if (level == 1) {
-            if (!jsonSymbol.containsKey(FIELD_CATEGORY_SUPER_CATEGORY)  || jsonSymbol.get(FIELD_CATEGORY_SUPER_CATEGORY) == JsonValue.NULL) {
+        if (level == 2) {
+            if (!jsonSymbol.containsKey(FIELD_CATEGORY_SUPER_CATEGORY)  || jsonSymbol.get(FIELD_CATEGORY_SUPER_CATEGORY).toString().equals("\"null\"")) {
                 throw new ServiceResponseFormatNotValid("Missing '" + FIELD_CATEGORY_SUPER_CATEGORY + "' field in subcategory '" + name + "'.");
             }
         }else{
-            if (jsonSymbol.containsKey(FIELD_CATEGORY_SUPER_CATEGORY)  && jsonSymbol.get(FIELD_CATEGORY_SUPER_CATEGORY) != JsonValue.NULL) {
+            if (jsonSymbol.containsKey(FIELD_CATEGORY_SUPER_CATEGORY)  && !jsonSymbol.get(FIELD_CATEGORY_SUPER_CATEGORY).toString().equals("\"null\"")) {
                 throw new ServiceResponseFormatNotValid("'"+name+"' can not have a super category.");
             }
         }
@@ -472,8 +474,9 @@ public class DBFacade {
             if (category.getSuperCategory() == null) { //Category
                 jsonCategory.add(FIELD_CATEGORY_LEVEL, 1);
                 jsonCategory.add(FIELD_CATEGORY_SUPER_CATEGORY, "null");
+                jsonCategoriesBuilder.add(jsonCategory);
+
             }
-            jsonCategoriesBuilder.add(jsonCategory);
         }
         for (Category category : newCategories) {
             JsonObjectBuilder jsonCategory = Json.createObjectBuilder();
@@ -482,8 +485,8 @@ public class DBFacade {
                 jsonCategory.add(FIELD_NAME, category.getName());
                 jsonCategory.add(FIELD_CATEGORY_LEVEL, 2);
                 jsonCategory.add(FIELD_CATEGORY_SUPER_CATEGORY, category.getSuperCategory().getName());
+                jsonCategoriesBuilder.add(jsonCategory);
             }
-            jsonCategoriesBuilder.add(jsonCategory);
         }
         handler.injectCategories(serviceUrl, jsonCategoriesBuilder.build(), token);
 

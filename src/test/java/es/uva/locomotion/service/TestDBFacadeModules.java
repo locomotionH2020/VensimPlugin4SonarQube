@@ -40,7 +40,7 @@ public class TestDBFacadeModules {
         expected.add("Module1");
         expected.add("Module2");
 
-        String jsonDbList = "[\"Module1\",\"AnotherModule\",\"Module2\"]";
+        String jsonDbList = "{ \"modules\" :[\"Module1\",\"AnotherModule\",\"Module2\"]}";
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
@@ -53,7 +53,7 @@ public class TestDBFacadeModules {
 
     @Test
     public void testGetModulesEmptyResponse() {
-        String jsonDbList = "[]";
+        String jsonDbList = "{\"modules\" : []}";
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
@@ -64,18 +64,26 @@ public class TestDBFacadeModules {
 
 
     @Test
-    public void testGetModulesUnexpectedObject() {
+    public void testGetModulesUnexpectedList() {
+        String jsonDbList = "[{\"foo\":\"bar\"}]";
+
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
+        ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingModulesFromDB("http://localhost", "token"));
+        assertEquals("Expected an object.", ex.getMessage());
+        assertEquals(jsonDbList, ex.getServiceResponse());
+    }
+    @Test
+    public void testGetModulesUnexpectedKeyMissing() {
         String jsonDbList = "{\"foo\":\"bar\"}";
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingModulesFromDB("http://localhost", "token"));
-        assertEquals("Expected an array.", ex.getMessage());
+        assertEquals("\"modules\" key not found in object.", ex.getMessage());
         assertEquals(jsonDbList, ex.getServiceResponse());
     }
-
     @Test
     public void testGetModulesUnexpectedObjectInArray() {
-        String jsonDbList = "[{\"foo\":\"bar\"}]";
+        String jsonDbList = "{\"modules\" :[{\"foo\":\"bar\"}]}";
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingModulesFromDB("http://localhost", "token"));
@@ -87,7 +95,7 @@ public class TestDBFacadeModules {
     @Test
     public void testGetModulesResponseJsonContainsDuplicatedModules() {
 
-        String jsonDbList = "[\"Module\",\"Another\",\"Module\"]";
+        String jsonDbList = "{\"modules\":[\"Module\",\"Another\",\"Module\"]}";
         VensimLogger logger = mock(VensimLogger.class);
         DBFacade.LOG = logger;
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
@@ -140,7 +148,7 @@ public class TestDBFacadeModules {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         doReturn(mockResponse).when(mockClient).send(any(), any());
         when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
-        when(mockResponse.body()).thenReturn("[]]");
+        when(mockResponse.body()).thenReturn("{\"modules\": []}");
 
         handler.client = mockClient;
         DBFacade.handler = handler;

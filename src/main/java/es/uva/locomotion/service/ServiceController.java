@@ -133,6 +133,9 @@ public class ServiceController {
             try {
                 for (String module : validModules) {
                     DBFacade.injectSymbols(dictionaryService, validSymbols.stream().filter(symbol -> symbol.getPrimary_module().equals(module)).collect(Collectors.toList()), module, token);
+                    List<String> tokensInjected = validSymbols.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
+                    LOG.info("Injected symbols: " + tokensInjected);
+
                 }
             } catch (InvalidServiceUrlException ex) {
                 LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
@@ -176,7 +179,7 @@ public class ServiceController {
             LOG.unique(SERVICE_UNREACHABLE_MESSAGE + MODULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
         } catch (ServiceResponseFormatNotValid ex) {
-            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + ": " + ex.getServiceResponse() + "\n" +
+            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + " Dictionary response: " + ex.getServiceResponse() + ".\n" +
                     "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                     MODULES_DISABLED_MESSAGE;
 
@@ -203,7 +206,7 @@ public class ServiceController {
             LOG.unique(SERVICE_UNREACHABLE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
         } catch (ServiceResponseFormatNotValid ex) {
-            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + "\n" +
+            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + " Dictionary response: " + ex.getServiceResponse() + ".\n" +
                     "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                     CATEGORIES_DISABLED_MESSAGE;
 
@@ -239,6 +242,8 @@ public class ServiceController {
             try {
                 DBFacade.injectCategories(dictionaryService, newCategories, token);
                 List<String> tokensInjected = newCategories.stream().map(Category::getName).sorted(String::compareTo).collect(Collectors.toList());
+                LOG.info("Injected categories: " + tokensInjected);
+
             } catch (InvalidServiceUrlException ex) {
                 LOG.unique(INVALID_URL_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             } catch (EmptyServiceException ex) {
@@ -266,13 +271,14 @@ public class ServiceController {
             try {
                 DBFacade.injectModules(dictionaryService, newModules, token);
                 List<String> tokensInjected = newModules.stream().sorted(String::compareTo).collect(Collectors.toList());
+                LOG.info("Injected modules: " + tokensInjected);
 
             } catch (InvalidServiceUrlException ex) {
-                LOG.unique(INVALID_URL_MESSAGE + "injection was not succesful", LoggingLevel.ERROR);
+                LOG.unique(INVALID_URL_MESSAGE + "Injection was not succesful.", LoggingLevel.ERROR);
             } catch (EmptyServiceException ex) {
-                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + "injection was not succesful", LoggingLevel.INFO);
+                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + "Injection was not succesful.", LoggingLevel.INFO);
             } catch (ConnectionFailedException ex) {
-                LOG.unique(SERVICE_UNREACHABLE_MESSAGE + "injection was not succesful", LoggingLevel.ERROR);
+                LOG.unique(SERVICE_UNREACHABLE_MESSAGE + "Injection was not succesful.", LoggingLevel.ERROR);
             }
 
         }

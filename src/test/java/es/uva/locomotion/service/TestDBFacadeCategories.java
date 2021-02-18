@@ -44,10 +44,10 @@ public class TestDBFacadeCategories {
         dbTable.add(category1);
         dbTable.add(category2);
 
-        String jsonDbTable = "[{\"name\":\"category1\",\"level\":0,\"super_category\":null}," +
-                "{\"name\":\"category2\",\"level\":0,\"super_category\":null}," +
-                "{\"name\":\"subcategory1\",\"level\":1,\"super_category\":\"category2\"}," +
-                "{\"name\":\"subcategory2\",\"level\":1,\"super_category\":\"category2\"}]";
+        String jsonDbTable = "[{\"name\":\"category1\",\"level\":1,\"super_category\":\"null\"}," +
+                "{\"name\":\"category2\",\"level\":1,\"super_category\":\"null\"}," +
+                "{\"name\":\"subcategory1\",\"level\":2,\"super_category\":\"category2\"}," +
+                "{\"name\":\"subcategory2\",\"level\":2,\"super_category\":\"category2\"}]";
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
@@ -71,7 +71,7 @@ public class TestDBFacadeCategories {
     @Test
     public void testGetCategoriesNotAnArray() {
 
-        String jsonDbTable = "{\"name\":\"category2\",\"level\":0,\"super_category\":null}";
+        String jsonDbTable = "{\"name\":\"category2\",\"level\":1,\"super_category\":\"null\"}";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingCategoriesFromDB("", "token"));
@@ -93,7 +93,7 @@ public class TestDBFacadeCategories {
     @Test
     public void testGetCategoriesNameMissing() {
 
-        String jsonDbTable = "[{\"level\":0,\"super_category\":null}]";
+        String jsonDbTable = "[{\"level\":1,\"super_category\":\"null\"}]";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingCategoriesFromDB("", "token"));
@@ -104,7 +104,7 @@ public class TestDBFacadeCategories {
     @Test
     public void testGetCategoriesLevelMissing() {
 
-        String jsonDbTable = "[{\"name\":\"category\",\"super_category\":null}]";
+        String jsonDbTable = "[{\"name\":\"category\",\"super_category\":\"null\"}]";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingCategoriesFromDB("", "token"));
@@ -115,7 +115,7 @@ public class TestDBFacadeCategories {
     @Test
     public void testGetCategoriesSubcategorySuperCategoryMissing() {
 
-        String jsonDbTable = "[{\"name\":\"category\",\"level\":1}]";
+        String jsonDbTable = "[{\"name\":\"category\",\"level\":2}]";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingCategoriesFromDB("", "token"));
@@ -126,7 +126,7 @@ public class TestDBFacadeCategories {
     @Test
     public void testGetCategoriesNameNull() {
 
-        String jsonDbTable = "[{\"name\":null,\"level\":0,\"super_category\":null}]";
+        String jsonDbTable = "[{\"name\":null,\"level\":1,\"super_category\":\"null\"}]";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingCategoriesFromDB("", "token"));
@@ -137,7 +137,7 @@ public class TestDBFacadeCategories {
     @Test
     public void testGetCategoriesLevelNull() {
 
-        String jsonDbTable = "[{\"name\":\"category\",\"level\":null,\"super_category\":null}]";
+        String jsonDbTable = "[{\"name\":\"category\",\"level\":null,\"super_category\":\"null\"}]";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingCategoriesFromDB("", "token"));
@@ -148,8 +148,8 @@ public class TestDBFacadeCategories {
     @Test
     public void testGetCategoriesSuperCategoryWithFather() {
 
-        String jsonDbTable = "[{\"name\":\"category\",\"level\":0,\"super_category\":null}," +
-                "{\"name\":\"category2\",\"level\":0,\"super_category\":\"category\"}]";
+        String jsonDbTable = "[{\"name\":\"category\",\"level\":1,\"super_category\":\"null\"}," +
+                "{\"name\":\"category2\",\"level\":1,\"super_category\":\"category\"}]";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingCategoriesFromDB("", "token"));
@@ -160,7 +160,7 @@ public class TestDBFacadeCategories {
     @Test
     public void testGetCategoriesSubCategoryWithoutFather() {
 
-        String jsonDbTable = "[{\"name\":\"subcategory\",\"level\":1,\"super_category\":null}]";
+        String jsonDbTable = "[{\"name\":\"subcategory\",\"level\":2,\"super_category\":\"null\"}]";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingCategoriesFromDB("", "token"));
@@ -171,7 +171,7 @@ public class TestDBFacadeCategories {
     @Test
     public void testGetCategoriesSubCategoryWithMissingFather() {
 
-        String jsonDbTable = "[{\"name\":\"subcategory\",\"level\":1,\"super_category\":\"random_category\"}]";
+        String jsonDbTable = "[{\"name\":\"subcategory\",\"level\":2,\"super_category\":\"random_category\"}]";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingCategoriesFromDB("", "token"));
@@ -182,9 +182,9 @@ public class TestDBFacadeCategories {
     @Test
     public void testGetCategoriesSubCategoryWithSubcategoryAsSuper() {
 
-        String jsonDbTable = "[{\"name\":\"category\",\"level\":0,\"super_category\":null}," +
-                "{\"name\":\"subcategory\",\"level\":1,\"super_category\":\"category\"}," +
-                "{\"name\":\"subsubcategory\",\"level\":1,\"super_category\":\"subcategory\"}]";
+        String jsonDbTable = "[{\"name\":\"category\",\"level\":1,\"super_category\":\"null\"}," +
+                "{\"name\":\"subcategory\",\"level\":2,\"super_category\":\"category\"}," +
+                "{\"name\":\"subsubcategory\",\"level\":2,\"super_category\":\"subcategory\"}]";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
         ServiceResponseFormatNotValid ex = assertThrows(ServiceResponseFormatNotValid.class, () -> DBFacade.getExistingCategoriesFromDB("", "token"));
@@ -250,7 +250,7 @@ public class TestDBFacadeCategories {
 
         Category category = new Category("category1");
         catmap.add(category);
-        JsonReader jsonReader = Json.createReader(new StringReader("[{\"name\":\"category1\",\"level\":0,\"super_category\":null}]"));
+        JsonReader jsonReader = Json.createReader(new StringReader("[{\"name\":\"category1\",\"level\":1,\"super_category\":\"null\"}]"));
         JsonArray object = jsonReader.readArray();
         jsonReader.close();
 
@@ -269,8 +269,8 @@ public class TestDBFacadeCategories {
         Category subcategory = new Category("subcategory1");
         category.addSubcategory(subcategory);
         catmap.add(category);
-        JsonReader jsonReader = Json.createReader(new StringReader("[{\"name\":\"category1\",\"level\":0,\"super_category\":null}," +
-                                        "{\"name\":\"subcategory1\",\"level\":1,\"super_category\":\"category1\"}]"));
+        JsonReader jsonReader = Json.createReader(new StringReader("[{\"name\":\"category1\",\"level\":1,\"super_category\":\"null\"}," +
+                                        "{\"name\":\"subcategory1\",\"level\":2,\"super_category\":\"category1\"}]"));
         JsonArray object = jsonReader.readArray();
         jsonReader.close();
         DBFacade.injectCategories("http://www.gaagle.com", catmap.getCategoriesAndSubcategories(), "token");

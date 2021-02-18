@@ -148,7 +148,7 @@ public class ServiceConnectionHandler {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            LOG.error("The response of the server to the request to " + url.toString() + " was HTTP " +response.statusCode() +": \n" + responseBody);
+            LOG.server("The response of the server to the request to " + url.toString() + " was HTTP " +response.statusCode() +": \n" + responseBody);
             return responseBody;
         } catch (InterruptedException | IOException e) {
             LOG.server("The connection failed: " + e.getMessage());
@@ -335,7 +335,7 @@ public class ServiceConnectionHandler {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            LOG.error("Inject categories: The response of the server to the request to " + url.toString() + " was HTTP " +response.statusCode() +": \n" + responseBody);
+            LOG.server("Inject categories: The response of the server to the request to " + url.toString() + " was HTTP " +response.statusCode() +": \n" + responseBody);
             return responseBody;
         } catch (InterruptedException | IOException e) {
             LOG.server("The connection failed: " + e.getMessage());

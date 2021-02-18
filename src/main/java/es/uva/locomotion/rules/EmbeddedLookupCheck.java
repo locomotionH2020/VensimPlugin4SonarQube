@@ -26,23 +26,15 @@ public class EmbeddedLookupCheck extends AbstractVensimCheck {
 
     public static final String CHECK_KEY = "lookup-embedded";
     public static final String NAME = "EmbeddedLookupCheck";
-    public static final String HTML_DESCRIPTION = "" + //TODO
-            "<p>This rule checks that variables follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+\"</p>\n" +
-            "<ul>" +
-            "   <li>The name must be in lower case.</li>\n" +
-            "   <li>Each word must be separated by ONE underscore.</li>\n" +
-            "   <li>The name shouldn't contain non-english characters.</li>\n" +
-            "   <li>The name shouldn't start with a number</li>" +
-            "</ul>" +
+    public static final String HTML_DESCRIPTION = "" +
+            "<p>This rule checks that lookups are not embedded in the model</p>\n" +
             "<h2>Noncompliant Code Examples</h2>\n" +
             "<pre>\n" +
-            "ENERGY_REQUIRED\n" +
-            "2019fuel_emissions\n" +
+            "\"name_lt\"([(0,0)-(10,10)],(1985,1378.15),(1986,1422.43),(1987,1422.43),(1988,1422.43),(1989,1422.43))\n" +
             "</pre>\n" +
             "<h2>Compliant Solution</h2>\n" +
             "<pre>\n" +
-            "energy_required\n" +
-            "fuel_emissions_2019\n" +
+            "name_lt(GET_DIRECT_LOOKUPS('file.xlsx', 'World', 'index', 'name'))\n" +
             "</pre>\n";
 
     public static final String DEFAULT_SIZE = "5";

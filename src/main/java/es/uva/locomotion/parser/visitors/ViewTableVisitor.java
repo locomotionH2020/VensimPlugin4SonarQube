@@ -73,7 +73,7 @@ public class ViewTableVisitor extends ModelParserBaseVisitor<Object> {
                     aux = category.split(Pattern.quote(categorySeparator));
                     subcategory = aux.length  == 2 ? aux[1] : null;
                     category = aux[0];
-                    if(aux.length == 2){
+                    if(aux.length <= 2){
                         isValid = true;
                     }
                 }

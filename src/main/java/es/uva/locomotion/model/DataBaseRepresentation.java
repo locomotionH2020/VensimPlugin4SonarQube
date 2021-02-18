@@ -10,8 +10,8 @@ public class DataBaseRepresentation {
     private CategoryMap categories;
 
     public DataBaseRepresentation() {
-    dataBaseSymbols = new SymbolTable();
-    acronyms = new AcronymsList();
+    dataBaseSymbols = null;
+    acronyms = null;
     }
 
     public SymbolTable getDataBaseSymbols() {

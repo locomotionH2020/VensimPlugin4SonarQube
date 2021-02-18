@@ -78,7 +78,7 @@ public class TestVensimScanner {
         Mockito.doNothing().when(scanner).saveIssues(any(), anyList());
         Mockito.doCallRealMethod().when(scanner).scanFile(file);
         scanner.scanFile(file);
-        Mockito.verify(controller).injectNewSymbols(any(), any());
+        Mockito.verify(controller).injectNewSymbols(any(), any(), any());
 
 
     }
