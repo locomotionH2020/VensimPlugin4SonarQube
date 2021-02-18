@@ -24,39 +24,49 @@ import java.util.regex.PatternSyntaxException;
 public class SymbolGroupCheck extends AbstractVensimCheck {
     protected static final VensimLogger LOG = VensimLogger.getInstance();
 
+    public static final String DEFAULT_CONTROL_SYMBOLS = "TIME;TIME STEP;INITIAL TIME;FINAL TIME;SAVEPER";
+
+
     public static final String CHECK_KEY = "symbol-control-group";
     public static final String NAME = "SymbolGroupCheck";
-    public static final String HTML_DESCRIPTION = "" + //TODO
-            "<p>This rule checks that variables follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+\"</p>\n" +
-            "<ul>" +
-            "   <li>The name must be in lower case.</li>\n" +
-            "   <li>Each word must be separated by ONE underscore.</li>\n" +
-            "   <li>The name shouldn't contain non-english characters.</li>\n" +
-            "   <li>The name shouldn't start with a number</li>" +
-            "</ul>" +
+    public static final String HTML_DESCRIPTION = "" +
+            "<p>This rule checks that variables are declared in the correct group. Only:\n" +
+            DEFAULT_CONTROL_SYMBOLS + " can be declared in .Control group\n" +
             "<h2>Noncompliant Code Examples</h2>\n" +
             "<pre>\n" +
-            "ENERGY_REQUIRED\n" +
-            "2019fuel_emissions\n" +
+            "TIME_STEP  = 0.03125\n" +
+            "\t~\tYear [0,?]\n" +
+            "\t~\tThe time step for the simulation.\n" +
+            "\t|\n" +
+            "********\n" +
+            "\t.Control\n" +
+            "********~\n" +
+            "other_symbol  = 0\n" +
+            "\t~~|\n" +
             "</pre>\n" +
             "<h2>Compliant Solution</h2>\n" +
             "<pre>\n" +
-            "energy_required\n" +
-            "fuel_emissions_2019\n" +
+            "other_symbol  = 0\n" +
+            "\t~~|\n" +
+            "********\n" +
+            "\t.Control\n" +
+            "********~\n" +
+            "TIME_STEP  = 0.03125\n" +
+            "\t~\tYear [0,?]\n" +
+            "\t~\tThe time step for the simulation.\n" +
+            "\t|\n" +
             "</pre>\n";
 
-    public static final String DEFAULT_CONTROL_SYMBOLS = "TIME STEP;INITIAL TIME;FINAL TIME;SAVEPER";
     public static final String DEFAULT_CONTROL_GROUP_NAME = "Control";
     @RuleProperty(
             key = "control-group-symbol",
             defaultValue = DEFAULT_CONTROL_SYMBOLS,
             description = "The list of symbols that must be in control group (separated with \";\").")
-    public final String symbols = DEFAULT_CONTROL_SYMBOLS;
+    public  final String symbols = DEFAULT_CONTROL_SYMBOLS;
 
-    private List<String> getDefaultControlSymbols() {
+    private  List<String> getDefaultControlSymbols() {
         try {
-            List<String> symbolsCustom = Arrays.asList(symbols.split(";"));
-            return symbolsCustom;
+            return Arrays.asList(symbols.split(";"));
         } catch (PatternSyntaxException exception) {
             LOG.unique("The rule " + NAME + " has an invalid configuration: The selected list of symbols is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);
