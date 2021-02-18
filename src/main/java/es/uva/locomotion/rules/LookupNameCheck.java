@@ -43,13 +43,13 @@ public class LookupNameCheck extends AbstractVensimCheck{
 
     public static final String NAME = "LookupNameCheck" ;
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger LOG = VensimLogger.getInstance();
     public static final String DEFAULT_REGEXP = "([a-z0-9]+_)*[a-z0-9]+_lt";
     @RuleProperty(
             key = "lookup-name-regexp",
             defaultValue = DEFAULT_REGEXP,
             description = "The regexp definition of a lookup name.")
-    public String regexp = DEFAULT_REGEXP;
+    public final String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {
         try {

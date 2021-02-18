@@ -58,9 +58,7 @@ public class MultiChannelTokenStream extends BufferedTokenStream {
     public void disable(int channel) {
         int remainder = 0;
         for (int i = 0; i < channels.length; i++) {
-            if (channels[i] == channel) {
-                continue;
-            } else {
+            if (channels[i] != channel) {
                 channels[remainder] = channels[i];
                 remainder++;
             }
@@ -111,8 +109,7 @@ public class MultiChannelTokenStream extends BufferedTokenStream {
     public int getNumberOfOnChannelTokens() {
         int n = 0;
         fill();
-        for (int i = 0; i < tokens.size(); i++) {
-            Token t = tokens.get(i);
+        for (Token t : tokens) {
             for (int channel : channels) {
                 if (t.getChannel() == channel) {
                     n++;

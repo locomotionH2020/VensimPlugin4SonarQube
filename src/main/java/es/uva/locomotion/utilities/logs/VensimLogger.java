@@ -10,7 +10,7 @@ public class VensimLogger {
     private static VensimLogger instance;
     private static LogOutputMethod outputMethod = new LogConsolePrinter();
     private static boolean logServerCommunication = false;
-    private Set<String> uniqueLoggedMessages;
+    private final Set<String> uniqueLoggedMessages;
 
     private VensimLogger(){
         uniqueLoggedMessages = new HashSet<>();
@@ -31,6 +31,16 @@ public class VensimLogger {
         outputMethod.log(LoggingLevel.INFO, formatMessage(message,file));
 
     }
+
+    public void warn(String message){
+        warn(message,"");
+    }
+
+    public void warn(String message, String file){
+        outputMethod.log(LoggingLevel.WARNING, formatMessage(message,file));
+
+    }
+
 
     public void error(String message) {
         error(message,"");

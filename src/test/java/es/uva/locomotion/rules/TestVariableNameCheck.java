@@ -160,6 +160,8 @@ public class TestVariableNameCheck {
             s.setComment("Parsed Comment");
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setAcronyms(new AcronymsList());
+
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
 
@@ -178,6 +180,8 @@ public class TestVariableNameCheck {
             s.setComment("Parsed Comment");
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setAcronyms(new AcronymsList());
+
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
 
@@ -195,6 +199,8 @@ public class TestVariableNameCheck {
             s.setComment("Parsed Comment");
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setAcronyms(new AcronymsList());
+
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
 
@@ -213,6 +219,7 @@ public class TestVariableNameCheck {
             s.setComment("Parsed Comment");
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setAcronyms(new AcronymsList());
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
 
@@ -231,6 +238,8 @@ public class TestVariableNameCheck {
             s.setComment("Parsed Comment");
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setAcronyms(new AcronymsList());
+
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
         dbDataAcronyms.addAcronym("H2O");
@@ -252,6 +261,8 @@ public class TestVariableNameCheck {
             s.setComment("Parsed Comment");
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
+        dbData.setAcronyms(new AcronymsList());
+
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
 

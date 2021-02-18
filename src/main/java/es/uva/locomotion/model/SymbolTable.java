@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 public class SymbolTable {
 
 
-    private Map<String, Symbol> table;
+    private final Map<String, Symbol> table;
 
     public SymbolTable() {
         this.table = new HashMap<>();

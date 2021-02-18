@@ -3,7 +3,7 @@ fs = require('fs');
 
 module.exports = [
 
-{path: '/integrationTest/qaAddSymbolsDefinition',
+{path: '/qaAddSymbolsDefinition',
 method: 'POST',
 template: function(params,query,body){
   let expectedObject = {

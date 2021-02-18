@@ -1,14 +1,14 @@
 package es.uva.locomotion.parser.visitors;
 
-import es.uva.locomotion.parser.ModelBaseVisitor;
-import es.uva.locomotion.parser.Model;
+import es.uva.locomotion.parser.ModelParser;
+import es.uva.locomotion.parser.ModelParserBaseVisitor;
 import es.uva.locomotion.utilities.Constants;
 
 /**
  * From the outside you should only call 'callIsACompoundNumber'. The other methods can't be protected/private
  * due to inheritance.
  */
-public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
+public class CompoundMagicNumberVisitor extends ModelParserBaseVisitor<Object> {
 
 
     /**
@@ -20,14 +20,14 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
      *        - If there are nested calls, every function called must be included in Constants.FUNCTIONS_THAT_FORM_COMPOUND_MAGIC_NUMBERS
      *        - It doesn't contain wildcards
      */
-    public boolean callIsACompoundNumber(Model.CallContext call){
+    public boolean callIsACompoundNumber(ModelParser.CallContext call){
         return visitCall(call);
     }
 
 
     @Override
-    public Boolean visitExprList(Model.ExprListContext ctx) {
-        for(Model.ExprContext expr: ctx.expr()){
+    public Boolean visitExprList(ModelParser.ExprListContext ctx) {
+        for(ModelParser.ExprContext expr: ctx.expr()){
             if(! (boolean) this.visit(expr))
                 return false;
         }
@@ -37,17 +37,17 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
 
     @Override
-    public Boolean visitExprOperation(Model.ExprOperationContext ctx) {
+    public Boolean visitExprOperation(ModelParser.ExprOperationContext ctx) {
         return (boolean) visit(ctx.expr(0)) && (boolean) visit(ctx.expr(1));
     }
 
     @Override
-    public Object visitConstVensim(Model.ConstVensimContext ctx) {
+    public Object visitConstVensim(ModelParser.ConstVensimContext ctx) {
         return ctx.StringConst()==null;
     }
 
     @Override
-    public Object visitKeyword(Model.KeywordContext ctx) {
+    public Object visitKeyword(ModelParser.KeywordContext ctx) {
         if(ctx.expr()==null)
             return true;
 
@@ -55,14 +55,14 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
     }
 
     @Override
-    public Object visitLookup(Model.LookupContext ctx) {
+    public Object visitLookup(ModelParser.LookupContext ctx) {
         return false;
     }
 
 
 
     @Override
-    public Boolean visitCall(Model.CallContext ctx) {
+    public Boolean visitCall(ModelParser.CallContext ctx) {
         String funcName = ctx.Id().getText();
         return Constants.FUNCTIONS_THAT_FORM_COMPOUND_MAGIC_NUMBERS.contains(funcName) && visitExprList(ctx.exprList());
     }
@@ -70,17 +70,17 @@ public class CompoundMagicNumberVisitor extends ModelBaseVisitor {
 
 
     @Override
-    public Boolean visitWildCard(Model.WildCardContext ctx) {
+    public Boolean visitWildCard(ModelParser.WildCardContext ctx) {
         return false;
     }
 
     @Override
-    public Object visitSignExpr(Model.SignExprContext ctx) {
-        if(ctx.exprAllowSign() instanceof Model.ParensContext) {
-            Model.ParensContext parenth = (Model.ParensContext) ctx.exprAllowSign();
+    public Object visitSignExpr(ModelParser.SignExprContext ctx) {
+        if(ctx.exprAllowSign() instanceof ModelParser.ParensContext) {
+            ModelParser.ParensContext parenth = (ModelParser.ParensContext) ctx.exprAllowSign();
             return visit(parenth.expr());
 
-        }else if(ctx.exprAllowSign() instanceof Model.CallExprContext)
+        }else if(ctx.exprAllowSign() instanceof ModelParser.CallExprContext)
             return visit(ctx.exprAllowSign());
 
         return false;

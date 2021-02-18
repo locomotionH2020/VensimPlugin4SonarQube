@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 public class GeneralTestUtilities {
 
@@ -51,17 +50,17 @@ public class GeneralTestUtilities {
 
     }
 
-    public static Model.FileContext getParseTree(String file_path) throws IOException {
+    public static ModelParser.FileContext getParseTree(String file_path) throws IOException {
 
 
         return getParseTreeFromString(loadFile(file_path));
     }
 
-    public static Model.FileContext getParseTreeFromString(String fileContent) {
-        Tokens lexer = new Tokens(CharStreams.fromString(fileContent));
+    public static ModelParser.FileContext getParseTreeFromString(String fileContent) {
+        ModelLexer lexer = new ModelLexer(CharStreams.fromString(fileContent));
 
         MultiChannelTokenStream tokens = new MultiChannelTokenStream(lexer);
-        Model parser = new Model(tokens);
+        ModelParser parser = new ModelParser(tokens);
         parser.removeErrorListeners();
         parser.addErrorListener(new VensimErrorListener());
         return parser.file();
@@ -79,7 +78,7 @@ public class GeneralTestUtilities {
     public static SymbolTable getRAWSymbolTableFromString(String content){
 
 
-        Model.FileContext root = getParseTreeFromString(content);
+        ModelParser.FileContext root = getParseTreeFromString(content);
 
 
         RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
@@ -87,25 +86,30 @@ public class GeneralTestUtilities {
     }
 
     public static ViewTable getViewTableFromString(String content){
-
-
-        Model.FileContext root = getParseTreeFromString(content);
-
-
-        ViewTableVisitor visitor = new ViewTableVisitor();
+        ModelParser.FileContext root = getParseTreeFromString(content);
+        ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor();
+        return visitor.getViewTable(root);
+    }
+    public static ViewTable getViewTableFromString(String content, String moduleSeparator, String categorySeparator){
+        ModelParser.FileContext root = getParseTreeFromString(content);
+        ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator,categorySeparator);
+        return visitor.getViewTable(root);
+    }
+    public static ViewTable getViewTableFromString(String content, String moduleSeparator){
+        ModelParser.FileContext root = getParseTreeFromString(content);
+        ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator);
         return visitor.getViewTable(root);
     }
 
-
     public static SymbolTable getRAWSymbolTable(String file_path) throws IOException {
-        Model.FileContext tree = getParseTree(file_path);
+        ModelParser.FileContext tree = getParseTree(file_path);
 
         RawSymbolTableVisitor visitor = new RawSymbolTableVisitor();
         return visitor.getSymbolTable(tree);
     }
 
     public static SymbolTable getSymbolTable(String file_path) throws IOException {
-        Model.FileContext tree = getParseTree(file_path);
+        ModelParser.FileContext tree = getParseTree(file_path);
         return SymbolTableGenerator.getSymbolTable(tree);
     }
 
@@ -158,18 +162,20 @@ public class GeneralTestUtilities {
         return  symbolSet;
     }
 
-    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, int... lines){
+    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, String group, int... lines){
         Symbol symbol = new Symbol(token);
         if(type!=null)
             symbol.setType(type);
 
         for(int line: lines)
             symbol.addDefinitionLine(line);
-
+        symbol.setGroup(group);
         table.addSymbol(symbol);
         return symbol;
     }
-
+    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, int... lines) {
+        return addSymbolInLines(table,token,type,null,lines);
+    }
 
 
     public static List<Issue> getIssuesFromType(VensimVisitorContext context, Class type){

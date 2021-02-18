@@ -48,7 +48,6 @@ public class MagicNumberCheck extends AbstractVensimCheck {
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
     public MagicNumberCheck(){
-
     }
 
 

@@ -1,6 +1,5 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.model.AcronymsList;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
@@ -10,7 +9,6 @@ import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -27,11 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertThrows;
 
-public class TestDBFacade {
+public class TestDBFacadeSymbols {
 
     @After
     public void resetDbServiceHandler() {
@@ -53,7 +50,7 @@ public class TestDBFacade {
         Symbol foo = new Symbol("foo");
         foo.setUnits("foo unit");
         foo.setComment("foo comment");
-        foo.setPrimary_view("module 1");
+        foo.setPrimary_module("module 1");
         foo.setCategory("foo category");
         foo.addShadow_view("module 2");
         foo.setType(SymbolType.Constant);
@@ -62,7 +59,7 @@ public class TestDBFacade {
         Symbol var = new Symbol("var");
         var.setUnits("var unit");
         var.setComment("var comment");
-        var.setPrimary_view("module 3");
+        var.setPrimary_module("module 3");
         var.setCategory("var category");
         var.addShadow_view("module 4");
         var.addIndexLine(List.of(index1, index2));
@@ -118,7 +115,7 @@ public class TestDBFacade {
         Symbol foo = new Symbol("foo");
         foo.setUnits("foo unit");
         foo.setComment("foo comment");
-        foo.setPrimary_view("module 1");
+        foo.setPrimary_module("module 1");
         foo.setCategory("foo category");
         foo.addShadow_view("module 2");
         foo.setType(SymbolType.Constant);
@@ -417,11 +414,11 @@ public class TestDBFacade {
 
         symbols.add(constant);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"constant\",\"unit\":\"constant units\",\"definition\":\"constant comment\",\"isIndexed\":\"true\",\"category\":\"constant category\",\"programmingSymbolType\":\"Constant\"}], \"indexes\": [], \"module\": \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"constant\",\"unit\":\"constant units\",\"definition\":\"constant comment\",\"isIndexed\":\"true\",\"category\":\"constant category\",\"programmingSymbolType\":\"Constant\"}], \"indexes\": [], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", "module", symbols, "token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols,"module", "token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -438,11 +435,11 @@ public class TestDBFacade {
 
         symbols.add(subscript);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [], \"indexes\": [{\"indexName\":\"subscript\",\"values\":[\"value1\",\"value2\"]}], \"module\": \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [], \"indexes\": [{\"indexName\":\"subscript\",\"values\":[\"value1\",\"value2\"]}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", "module", symbols, "token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols,"module", "token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -454,11 +451,11 @@ public class TestDBFacade {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("value", SymbolType.Subscript_Value));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [], \"indexes\": [], \"module\": \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [], \"indexes\": [], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", "module", symbols, "token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -470,11 +467,11 @@ public class TestDBFacade {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("variable", SymbolType.Variable));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"variable\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Variable\"}], \"indexes\": [], \"module\": \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"variable\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Variable\"}], \"indexes\": [], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", "module", symbols, "token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -486,11 +483,11 @@ public class TestDBFacade {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("function", SymbolType.Function));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [], \"indexes\": [], \"module\": \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [], \"indexes\": [], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", "module", symbols, "token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -502,11 +499,11 @@ public class TestDBFacade {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("reality check", SymbolType.Reality_Check));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"reality check\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Reality_Check\"}], \"indexes\": [], \"module\": \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"reality check\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Reality_Check\"}], \"indexes\": [], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", "module", symbols, "token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -518,11 +515,11 @@ public class TestDBFacade {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("lookup table", SymbolType.Lookup_Table));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"lookup table\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Lookup_Table\"}], \"indexes\": [], \"module\": \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"lookup table\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Lookup_Table\"}], \"indexes\": [], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", "module", symbols, "token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -535,127 +532,12 @@ public class TestDBFacade {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("switch", SymbolType.Switches));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"switch\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Switches\"}], \"indexes\": [], \"module\": \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"switch\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Switches\"}], \"indexes\": [], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", "module", symbols, "token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
-
-    @Test
-    public void testGetAcronymsEmptyResponse() {
-        String jsonDbTable = "[]";
-
-
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
-
-        AcronymsList obtainedList = DBFacade.getExistingAcronymsFromDB("", "token");
-
-        assertEquals(new AcronymsList(), obtainedList);
-
-    }
-
-    @Test
-    public void testGetAcronymsParsedJson() {
-        AcronymsList list = new AcronymsList();
-        list.addAcronym("RES");
-        list.addAcronym("2GEN");
-
-        String jsonDbTable = "[{\"id\": 1,\"name\": \"RES\", \"definition\": \"Renewable Energy Source\" }, {\"id\":2,\"name\": \"2GEN\",\"definition\": \"Second generation biofuels\"}]";
-
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
-
-        AcronymsList obtainedList = DBFacade.getExistingAcronymsFromDB("", "token");
-        assertEquals(list, obtainedList);
-    }
-
-    @Ignore //Definition is not used
-    @Test(expected = ServiceResponseFormatNotValid.class)
-    public void testGetAcronymsDefinionMissing() {
-        String jsonDbTable = "[{\"id\": 1,\"name\": \"RES\", \"definition\": \"Renewable Energy Source\" }, {\"id\":2,\"name\": \"2GEN\"}]";
-
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
-        DBFacade.getExistingAcronymsFromDB("http://localhost", "token");
-
-    }
-
-    @Test(expected = ServiceResponseFormatNotValid.class)
-    public void testGetAcronymsNameMissing() {
-        String jsonDbTable = "[{\"id\": 1,\"name\": \"RES\", \"definition\": \"Renewable Energy Source\" }, {\"id\":2,\"definition\": \"Second generation biofuels\"}]";
-
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
-        DBFacade.getExistingAcronymsFromDB("http://localhost", "token");
-
-    }
-
-    @Ignore //Definition is not used
-    @Test(expected = ServiceResponseFormatNotValid.class)
-    public void testGetAcronymsIdMissing() {
-        String jsonDbTable = "[{\"id\": 1,\"name\": \"RES\", \"definition\": \"Renewable Energy Source\" }, {\"name\": \"2GEN\",\"definition\": \"Second generation biofuels\"}]";
-
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
-        DBFacade.getExistingAcronymsFromDB("http://localhost", "token");
-
-    }
-
-    @Test(expected = ServiceResponseFormatNotValid.class)
-    public void testGetAcronymsUnexpectedFormatArrayOfLiterals() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[1,3,4]");
-
-        DBFacade.getExistingAcronymsFromDB("http://localhost", "token");
-    }
-
-
-    @Test(expected = ServiceResponseFormatNotValid.class)
-    public void testGetAcronymsResponseIsntAJson() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("some text");
-
-        DBFacade.getExistingAcronymsFromDB("http://localhost", "token");
-    }
-
-    @Test(expected = EmptyServiceException.class)
-    public void testGetAcronymsEmptyServiceRaisesException() {
-        DBFacade.getExistingAcronymsFromDB("", "token");
-    }
-
-    @Test(expected = EmptyServiceException.class)
-    public void testGetAcronymsNullServiceRaisesException() {
-        DBFacade.getExistingAcronymsFromDB(null, "token");
-    }
-
-    @Test(expected = InvalidServiceUrlException.class)
-    public void testGetAcronymsServiceWithAnotherProtocol() {
-        DBFacade.getExistingAcronymsFromDB("ftp://somedomain/folder/file.txt", "token");
-    }
-
-    @Test(expected = InvalidServiceUrlException.class)
-    public void testGetAcronymsServiceWithInvalidProtocol() {
-        DBFacade.getExistingAcronymsFromDB("\\some$randomtext", "token");
-    }
-
-    @Test(expected = InvalidServiceUrlException.class)
-    public void testGetAcronymsDomainWithoutProtocol() {
-        DBFacade.getExistingAcronymsFromDB("www.google.com", "token");
-    }
-
-
-    @Test
-    public void testGetAcronymsDomainWithoutWWW() throws IOException, InterruptedException {
-        String jsonDbTable = "[{\"id\": 1,\"name\": \"RES\", \"definition\": \"Renewable Energy Source\" }, {\"id\":2,\"name\": \"2GEN\",\"definition\": \"Second generation biofuels\"}]";
-
-        ServiceConnectionHandler handler = new ServiceConnectionHandler();
-        HttpClient mockClient = mock(HttpClient.class);
-        HttpResponse<String> mockResponse = mock(HttpResponse.class);
-        doReturn(mockResponse).when(mockClient).send(any(), any());
-        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
-        when(mockResponse.body()).thenReturn(jsonDbTable);
-
-        handler.client = mockClient;
-        DBFacade.handler = handler;
-
-        DBFacade.getExistingAcronymsFromDB("http://google.com", "token");
-    }
-
 
 }

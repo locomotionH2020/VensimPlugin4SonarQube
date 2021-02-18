@@ -1,6 +1,6 @@
 module.exports = [
     {
-        path: '/mocksBackend/qaGetAcronyms',
+        path: '/qaGetAcronyms',
         method: 'GET',
         template: [
             {

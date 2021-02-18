@@ -6,15 +6,44 @@ import es.uva.locomotion.parser.*;
 
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
-public class ViewTableVisitor extends ModelBaseVisitor<Object> {
+
+public class ViewTableVisitor extends ModelParserBaseVisitor<Object> {
     private ViewTable table;
     private View actualView;
+
+    private String moduleSeparator;
+    private String categorySeparator;
+
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
-    private static int SYMBOL_PRIVATE_ID = 10;
+    private static final int SYMBOL_PRIVATE_ID = 10;
 
-    public ViewTable getViewTable(Model.FileContext context){
+    private ViewTableVisitor() {
+    }
+
+    public static ViewTableVisitor createViewTableVisitor(String moduleSeparator, String categorySeparator) {
+        ViewTableVisitor vtv = new ViewTableVisitor();
+        vtv.moduleSeparator = moduleSeparator;
+        vtv.categorySeparator = categorySeparator;
+        return vtv;
+    }
+    public static ViewTableVisitor createViewTableVisitor(String moduleSeparator) {
+        ViewTableVisitor vtv = new ViewTableVisitor();
+        vtv.moduleSeparator = moduleSeparator;
+        vtv.categorySeparator = null;
+        return vtv;
+    }
+    public static ViewTableVisitor createViewTableVisitor() {
+        ViewTableVisitor vtv = new ViewTableVisitor();
+        vtv.moduleSeparator = null;
+        vtv.categorySeparator = null;
+        return vtv;    }
+
+    public ViewTable getViewTable(ModelParser.FileContext context){
         table = new ViewTable();
         visit(context);
         return table;
@@ -25,22 +54,47 @@ public class ViewTableVisitor extends ModelBaseVisitor<Object> {
 
     }
     @Override
-    public Object visitViewName(Model.ViewNameContext ctx) {
+    public Object visitViewName(ModelParser.ViewNameContext ctx) {
         String viewName = ctx.getText().trim().substring(1);
+        String module = viewName;
+        String category = null;
+        String subcategory = null;
+        boolean isValid = false;
+        if(moduleSeparator != null){
+            String[] aux = viewName.split(Pattern.quote(moduleSeparator));
 
-        actualView = table.createOrSelectView(viewName);
+            if( aux.length != 2){
+                module = viewName;
+            }else{
+                module = aux[0];
+                category =  aux[1];
+
+                if(categorySeparator != null){
+                    aux = category.split(Pattern.quote(categorySeparator));
+                    subcategory = aux.length  == 2 ? aux[1] : null;
+                    category = aux[0];
+                    if(aux.length <= 2){
+                        isValid = true;
+                    }
+                }
+            }
+
+        }
+        actualView = table.createOrSelectView(module,category,subcategory, isValid);
 
         return super.visitViewName(ctx);
     }
 
     @Override
-    public Object visitViewVariable(Model.ViewVariableContext ctx) {
+    public Object visitViewVariable(ModelParser.ViewVariableContext ctx) {
+
         int internalId = Integer.parseInt(ctx.internalId.getText());
         if(internalId == SYMBOL_PRIVATE_ID) {
             int objectType = Integer.parseInt(ctx.bits.getText());
             String token = ctx.name.getText();
             String underScoreToken = token.replace(" ", "_");
             if (isEven(objectType)){
+
                 actualView.addShadow(token);
                 actualView.addShadow(underScoreToken);
             }else{

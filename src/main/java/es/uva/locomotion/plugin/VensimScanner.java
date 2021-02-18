@@ -1,10 +1,6 @@
 package es.uva.locomotion.plugin;
 
-import es.uva.locomotion.model.DataBaseRepresentation;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.View;
-import es.uva.locomotion.model.ViewTable;
-import es.uva.locomotion.parser.MultiChannelTokenStream;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.parser.*;
@@ -42,11 +38,14 @@ public class VensimScanner {
 
     private final SensorContext context;
     private final Checks<VensimCheck> checks;
-    private  final JsonSymbolTableBuilder jsonBuilder;
-  
-    private ServiceController serviceController;
+    private final JsonSymbolTableBuilder jsonBuilder;
+
+    private final ServiceController serviceController;
 
     private static final String VIEW_PREFIX = "vensim.view.prefix";
+    private static final String MODULE_NAME = "vensim.view.module.name";
+    private static final String MODULE_SEPARATOR = "vensim.view.module.separator";
+    private static final String CATEGORY_SEPARATOR = "vensim.view.category.separator";
 
     public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder, ServiceController serviceController) {
         this.context = context;
@@ -65,21 +64,20 @@ public class VensimScanner {
             try {
                 scanFile(vensimFile);
             } catch (Exception e) {
-                LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.toString() );
-                for(StackTraceElement ele : e.getStackTrace()){
+                LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.toString());
+                for (StackTraceElement ele : e.getStackTrace()) {
                     LOG.error(ele.toString());
                 }
             }
         }
 
-       
+
         generateJsonOutput();
 
     }
 
     protected void generateJsonOutput() {
-       JsonArray symbolTable =  jsonBuilder.build();
-
+        JsonArray symbolTable = jsonBuilder.build();
         try {
 
             File file = new File("symbolTable.json");
@@ -87,17 +85,17 @@ public class VensimScanner {
             writer.writeArray(symbolTable);
             writer.close();
         } catch (FileNotFoundException e) {
-            LOG.error("Unable to create symbolTable.json. Error:" + e.getMessage() );
+            LOG.error("Unable to create symbolTable.json. Error:" + e.getMessage());
         }
 
     }
 
-    protected Model.FileContext getParseTree(String file_content){
-        Tokens lexer = new Tokens(CharStreams.fromString(file_content));
+    protected ModelParser.FileContext getParseTree(String file_content) {
+        ModelLexer lexer = new ModelLexer(CharStreams.fromString(file_content));
         MultiChannelTokenStream tokens = new MultiChannelTokenStream(lexer);
 
         //CommonTokenStream tokens = new CommonTokenStream(lexer);
-        Model parser = new Model(tokens);
+        ModelParser parser = new ModelParser(tokens);
         parser.removeErrorListeners();
         parser.addErrorListener(new VensimErrorListener());
 
@@ -107,28 +105,52 @@ public class VensimScanner {
     public void scanFile(InputFile inputFile) {
 
         String viewPrefix = context.config().get(VIEW_PREFIX).orElse("");
+        String moduleName = context.config().get(MODULE_NAME).orElse("");
+        String moduleSeparator = context.config().get(MODULE_SEPARATOR).orElse("");
+        String categorySeparator = context.config().get(CATEGORY_SEPARATOR).orElse("");
 
         try {
             String content = inputFile.contents();
             String module = getModuleNameFromFileName(inputFile.filename());
 
-            Model.FileContext root = getParseTree(content);
+            ModelParser.FileContext root = getParseTree(content);
             SymbolTable table = SymbolTableGenerator.getSymbolTable(root);
 
-            ViewTable viewTable = ViewTableUtility.getViewTable(root);
+            ViewTable viewTable;
+            if (!viewPrefix.isEmpty()) { //Support for viewPrefix
+                viewTable = ViewTableUtility.getViewTable(root);
+                LOG.warn("vensim.view.prefix is deprecated, please use: vensim.view.module.name and vensim.view.module.separator");
+            } else if (!moduleSeparator.isEmpty()) {
+                if (!categorySeparator.isEmpty()) {
+                    viewTable = ViewTableUtility.getViewTable(root, moduleSeparator, categorySeparator);
+                } else {
+                    viewTable = ViewTableUtility.getViewTable(root, moduleSeparator);
+                }
+            } else {
+                if (!categorySeparator.isEmpty()) {
+                    LOG.warn("vensim.view.category.separator is set, but not vensim.view.module.separator, ignoring category separator");
+                }
+                viewTable = ViewTableUtility.getViewTable(root);
+            }
             ViewTableUtility.addViews(table, viewTable);
 
-            jsonBuilder.addSymbolTable(inputFile.filename(), table);
+            jsonBuilder.addTables(inputFile.filename(), table, viewTable);
 
 
             DataBaseRepresentation dbData = new DataBaseRepresentation();
             if (serviceController.isAuthenticated()) {
                 dbData.setDataBaseSymbols(serviceController.getSymbolsFromDb(new ArrayList<>(table.getSymbols())));
                 dbData.setAcronyms(serviceController.getAcronymsFromDb());
+                dbData.setModules(serviceController.getModulesFromDb());
+                dbData.setCategories(serviceController.getCategoriesFromDb());
             }
             //mark the symbols tha need to be filtered.
-            if(!viewPrefix.isEmpty()) {
+
+            if (!viewPrefix.isEmpty()) {
                 ViewTableUtility.filterPrefix(table, viewPrefix);
+            } else if (!moduleName.isEmpty()) {
+                ViewTableUtility.filterPrefix(table, moduleName);
+
             }
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbData);
 
@@ -140,8 +162,14 @@ public class VensimScanner {
 
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
+            if (!moduleSeparator.isEmpty() && dbData.getModules() != null) {
+                serviceController.injectNewModules(viewTable.getModules(), dbData.getModules());
+                if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
+                    serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
+            }
             if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
-                serviceController.injectNewSymbols(module, new ArrayList<>(table.getSymbols()), dbData.getDataBaseSymbols());
+                serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), viewTable.getModules(), dbData.getDataBaseSymbols());
+
         } catch (IOException e) {
             LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
         } catch (ParseCancellationException e) {
@@ -150,10 +178,10 @@ public class VensimScanner {
 
     }
 
-    protected String getModuleNameFromFileName(String fileName){
+    protected String getModuleNameFromFileName(String fileName) {
         String suffix = VensimLanguage.VENSIM_PLAIN_TEXT_SUFIX;
-        if(fileName.endsWith(suffix))
-            return fileName.substring(0,fileName.length()-suffix.length());
+        if (fileName.endsWith(suffix))
+            return fileName.substring(0, fileName.length() - suffix.length());
         else
             return fileName;
 
@@ -161,7 +189,7 @@ public class VensimScanner {
     }
 
 
-    public void checkIssues(VensimVisitorContext fileContext){
+    public void checkIssues(VensimVisitorContext fileContext) {
         //System.out.println("module");
 
         for (VensimCheck check : checks.all()) {
@@ -170,10 +198,10 @@ public class VensimScanner {
     }
 
 
-    protected void saveIssues(InputFile file, List<Issue> issues){
+    protected void saveIssues(InputFile file, List<Issue> issues) {
         for (Issue preciseIssue : issues) {
             RuleKey ruleKey = checks.ruleKey(preciseIssue.getCheck());
- 
+
             NewIssue newIssue = context
                     .newIssue()
                     .forRule(ruleKey);
