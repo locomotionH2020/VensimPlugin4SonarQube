@@ -3,6 +3,7 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +28,7 @@ public class TestSymbolWithoutCommentCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"CONST", SymbolType.Constant,1,2,3);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 
@@ -39,7 +40,7 @@ public class TestSymbolWithoutCommentCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"var", SymbolType.Variable,9);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 
@@ -51,7 +52,7 @@ public class TestSymbolWithoutCommentCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"reality_check", SymbolType.Reality_Check,9);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 
@@ -64,7 +65,7 @@ public class TestSymbolWithoutCommentCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"MATERIALS_I", SymbolType.Subscript,9);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 
@@ -77,7 +78,7 @@ public class TestSymbolWithoutCommentCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"my_lookup_lt", SymbolType.Lookup_Table,9);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 
@@ -89,7 +90,7 @@ public class TestSymbolWithoutCommentCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"my_macro", SymbolType.Function,9);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 
@@ -101,7 +102,7 @@ public class TestSymbolWithoutCommentCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"SCENARIO1", SymbolType.Subscript_Value,9);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 
@@ -114,7 +115,7 @@ public class TestSymbolWithoutCommentCheck {
         Symbol symbol = addSymbolInLines(table,"CONST", SymbolType.Constant,1,2,3,4,5);
         symbol.setComment(" comment ");
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
         check.scan(context);
 
         assertTrue(context.getIssues().isEmpty());
@@ -129,7 +130,7 @@ public class TestSymbolWithoutCommentCheck {
         symbol.setType(SymbolType.Constant);
         table.addSymbol(symbol);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
         check.scan(context);
 
         assertTrue(context.getIssues().isEmpty());
@@ -142,7 +143,7 @@ public class TestSymbolWithoutCommentCheck {
         Symbol symbol = addSymbolInLines(table,"CONST", SymbolType.Constant,7);
         symbol.setComment("                                                                                 ");
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
         check.scan(context);
 
         assertHasIssueInLines(context,SymbolWithoutCommentCheck.class,7);
@@ -161,7 +162,7 @@ public class TestSymbolWithoutCommentCheck {
         table.addSymbol(invalid);
         table.addSymbol(valid);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
         check.scan(context);
 
         Assert.assertTrue(valid.isValid());

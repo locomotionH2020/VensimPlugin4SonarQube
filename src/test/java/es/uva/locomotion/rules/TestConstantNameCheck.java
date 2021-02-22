@@ -3,6 +3,7 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import org.junit.Test;
@@ -174,7 +175,7 @@ public class TestConstantNameCheck {
         table.addSymbol(invalid);
         table.addSymbol(valid);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
         check.scan(context);
 
         assertTrue(valid.isValid());

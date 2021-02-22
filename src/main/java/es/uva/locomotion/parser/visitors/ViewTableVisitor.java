@@ -81,7 +81,7 @@ public class ViewTableVisitor extends ModelParserBaseVisitor<Object> {
 
         }
         actualView = table.createOrSelectView(module,category,subcategory, isValid);
-
+        actualView.setLine(ctx.getStart().getLine());
         return super.visitViewName(ctx);
     }
 

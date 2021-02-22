@@ -3,6 +3,7 @@ package es.uva.locomotion.rules;
 
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
@@ -48,7 +49,7 @@ public class TestMagicNumberCheck {
     public void testRepetitionsEqualsTheMinimumParameterAreMajor(){
 
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
@@ -73,7 +74,7 @@ public class TestMagicNumberCheck {
     @Test
     public void testRepetitionsBiggerThanMinimumParameterAreMajor(){
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS+1; i++)
@@ -95,7 +96,7 @@ public class TestMagicNumberCheck {
     @Test
     public void testRepetitionsLowerThanMinimumParameterAreInfo(){
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
@@ -115,7 +116,7 @@ public class TestMagicNumberCheck {
     public void testWithNumberNotDefined(){
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("51"));
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         check.scan(context);
@@ -126,7 +127,7 @@ public class TestMagicNumberCheck {
     @Test
     public void testCountsRepetitionsInSameLine(){
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
@@ -147,7 +148,7 @@ public class TestMagicNumberCheck {
      @Test
     public void testTableWithBothTypesOfIssues(){
          SymbolTable table = new SymbolTable();
-         VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
          Symbol magicNumber = table.addSymbol(new Symbol("51"));
          for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
@@ -191,7 +192,7 @@ public class TestMagicNumberCheck {
             magicNumber.addDefinitionLine(3);
         }
 
-         VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
          MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
          check.scan(context);
@@ -208,7 +209,7 @@ public class TestMagicNumberCheck {
             magicNumber.addDefinitionLine(3);
         }
 
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         check.scan(context);
@@ -225,7 +226,7 @@ public class TestMagicNumberCheck {
             magicNumber.addDefinitionLine(3);
         }
 
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         check.scan(context);
@@ -242,7 +243,7 @@ public class TestMagicNumberCheck {
             magicNumber.addDefinitionLine(3);
         }
 
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         check.scan(context);
@@ -256,7 +257,7 @@ public class TestMagicNumberCheck {
        final int REPETITIONS = 9;
 
          SymbolTable table = new SymbolTable();
-         VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
          Symbol symbol = table.addSymbol(new Symbol("51"));
          for(int i = 0; i< REPETITIONS; i++)
@@ -281,7 +282,7 @@ public class TestMagicNumberCheck {
          final int REPETITIONS = 9;
 
          SymbolTable table = new SymbolTable();
-         VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
          Symbol symbol = table.addSymbol(new Symbol("51"));
          for(int i = 0; i< REPETITIONS-1; i++)
@@ -301,7 +302,7 @@ public class TestMagicNumberCheck {
     public void testZeroAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
 
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
@@ -325,7 +326,7 @@ public class TestMagicNumberCheck {
     public void testZeroAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
 
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
@@ -349,7 +350,7 @@ public class TestMagicNumberCheck {
     @Test
     public void testOneAsMinimumRepetitionsOnlyCreatesMajorIssues(){
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         symbol.addDefinitionLine(1);
@@ -375,7 +376,7 @@ public class TestMagicNumberCheck {
     @Test
     public void testNegativeNumberAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
@@ -399,7 +400,7 @@ public class TestMagicNumberCheck {
     public void testNegativeNumberAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
 
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
@@ -421,7 +422,7 @@ public class TestMagicNumberCheck {
     @Test
     public void testEmptyStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
@@ -445,7 +446,7 @@ public class TestMagicNumberCheck {
     public void testEmptyStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
 
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
@@ -467,7 +468,7 @@ public class TestMagicNumberCheck {
     @Test
     public void testStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
@@ -491,7 +492,7 @@ public class TestMagicNumberCheck {
     public void testStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
 
         SymbolTable table = new SymbolTable();
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         Symbol symbol = table.addSymbol(new Symbol("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
@@ -515,7 +516,7 @@ public class TestMagicNumberCheck {
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("1"));
         table.addSymbol(new Symbol("2"));
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
@@ -534,7 +535,7 @@ public class TestMagicNumberCheck {
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("1"));
         table.addSymbol(new Symbol("2"));
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
@@ -554,7 +555,7 @@ public class TestMagicNumberCheck {
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("1"));
         table.addSymbol(new Symbol("2"));
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
@@ -573,7 +574,7 @@ public class TestMagicNumberCheck {
         SymbolTable table = new SymbolTable();
         table.addSymbol(new Symbol("1"));
         table.addSymbol(new Symbol("2"));
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);

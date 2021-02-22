@@ -1,9 +1,6 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.DataBaseRepresentation;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
@@ -36,7 +33,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbVar.setUnits("meters");
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -67,7 +64,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbVar.setUnits("    kg   ");
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
@@ -93,7 +90,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbVar.setUnits("l");
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -133,7 +130,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbValid.setUnits("Same units");
         dbValid2.setUnits("Same units");
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
@@ -155,7 +152,7 @@ public class TestDictionaryUnitsMismatchCheck {
         var.setUnits("kg");
         parsedTable.addSymbol(var);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new DataBaseRepresentation());
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, new DataBaseRepresentation());
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -175,7 +172,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbVar.setUnits("kg");
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), new ViewTable(), null, dbData);
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -200,7 +197,7 @@ public class TestDictionaryUnitsMismatchCheck {
         dbVar.setUnits("l");
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -218,7 +215,7 @@ public class TestDictionaryUnitsMismatchCheck {
         parsedVar.setUnits("Units");
         parsedTable.addSymbol(parsedVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, null);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, null);
 
 
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
@@ -248,7 +245,7 @@ public class TestDictionaryUnitsMismatchCheck {
             dbTable.addSymbol(symbol);
         });
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 
@@ -285,7 +282,7 @@ public class TestDictionaryUnitsMismatchCheck {
             s.setUnits("Db units");
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryUnitsMismatchCheck check = new DictionaryUnitsMismatchCheck();
         check.scan(context);
 

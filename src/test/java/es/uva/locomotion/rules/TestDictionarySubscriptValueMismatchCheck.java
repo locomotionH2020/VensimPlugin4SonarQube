@@ -1,9 +1,6 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.DataBaseRepresentation;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import org.junit.Test;
@@ -31,7 +28,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbVar.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -66,7 +63,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -100,7 +97,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -128,7 +125,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -157,7 +154,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -185,7 +182,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -213,7 +210,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -239,7 +236,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -265,7 +262,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Constant);
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -287,7 +284,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         parsedSubscript.addDefinitionLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -309,7 +306,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
         dbTable.addSymbol(dbSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();
@@ -328,7 +325,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         parsedSubscript.addDefinitionLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, null);
 
 
         DictionarySubscriptValueMismatchCheck check = new DictionarySubscriptValueMismatchCheck();

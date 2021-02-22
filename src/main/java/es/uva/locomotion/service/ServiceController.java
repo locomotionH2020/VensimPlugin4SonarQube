@@ -127,7 +127,7 @@ public class ServiceController {
 
         List<Symbol> validSymbols = newSymbols.stream().filter(Symbol::isValid).collect(Collectors.toList());
 
-
+        //TODO filtrar símbolos por el modulo a filtrar.
 
         if (validSymbols.size() >= 1) {
             try {

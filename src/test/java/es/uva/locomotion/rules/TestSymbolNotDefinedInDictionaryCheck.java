@@ -1,9 +1,6 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.DataBaseRepresentation;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 
 import es.uva.locomotion.utilities.Constants;
@@ -24,7 +21,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
 
     @Test
     public void testCompareEmptyTables() {
-        VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), new DataBaseRepresentation());
+        VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), new ViewTable(), null, new DataBaseRepresentation());
 
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
@@ -34,7 +31,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
 
     @Test
     public void testDbTableIsNull() {
-        VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), null);
+        VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), new ViewTable(), null, null);
 
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
@@ -49,7 +46,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
 
         DataBaseRepresentation dbdata= new DataBaseRepresentation();
         dbdata.setDataBaseSymbols(new SymbolTable());
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbdata);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbdata);
 
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
@@ -65,7 +62,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         Symbol symbol = new Symbol("foo");
         dbTable.addSymbol(symbol);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), new ViewTable(), null, dbData);
 
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
@@ -90,7 +87,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         addSymbolInLines(parsedTable, "easter_egg", SymbolType.Lookup_Table, 2, 3);
         dbTable.addSymbol(new Symbol("easter_egg"));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
@@ -115,7 +112,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         addSymbolInLines(parsedTable, "var2.5", SymbolType.Lookup_Table, 5);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
@@ -133,7 +130,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         SymbolTable parsedTable = new SymbolTable();
         parsedTable.addSymbol(new Symbol("foo"));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new DataBaseRepresentation());
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, new DataBaseRepresentation());
 
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
@@ -160,7 +157,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         addSymbolInLines(parsedTable, "funko3", SymbolType.Function, 9);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
@@ -185,7 +182,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
             parsedTable.addSymbol(symbol);
         });
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
         check.scan(context);
@@ -212,7 +209,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         dbTable.addSymbol(new Symbol("valid"));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         check.scan(context);
 
         assertTrue(valid.isValid());

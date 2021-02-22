@@ -18,4 +18,14 @@ public class Constants {
     public static final List<String> DEFAULT_VENSIM_SYMBOLS= Arrays.asList("TIME", "FINAL TIME", "INITIAL TIME", "SAVEPER", "TIME STEP");
 
     public static  final List<String> IGNORED_MAGIC_NUMBERS = Arrays.asList("0","1","100","-1");
+
+    public static final String DICTIONARY_SERVICE_PARAMETER = "vensim.dictionaryService";
+    public static final String DICTIONARY_USERNAME_PARAMETER =  "vensim.dictionaryUsername";
+    public static final String DICTIONARY_PASSWORD_PARAMETER = "vensim.dictionaryPassword";
+    public static final String DICTIONARY_LOG_SERVER_COMMUNICATIONS = "vensim.logServerMessages";
+    public static final String LOG_IN_FILE = "vensim.logFile";
+    public static final String VIEW_PREFIX = "vensim.view.prefix";
+    public static final String MODULE_NAME = "vensim.view.module.name";
+    public static final String MODULE_SEPARATOR = "vensim.view.module.separator";
+    public static final String CATEGORY_SEPARATOR = "vensim.view.category.separator";
 }

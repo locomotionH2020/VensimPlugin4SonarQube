@@ -1,10 +1,9 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +27,7 @@ public class TestSymbolGroupCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"TIME STEP", SymbolType.Constant,"",1,2,3);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 
@@ -40,7 +39,7 @@ public class TestSymbolGroupCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"TIME STEP", SymbolType.Constant,"Control",1,2,3);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 
@@ -52,7 +51,7 @@ public class TestSymbolGroupCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"symbol", SymbolType.Constant,"Control",1,2,3);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 
@@ -64,7 +63,7 @@ public class TestSymbolGroupCheck {
         SymbolTable table = new SymbolTable();
         addSymbolInLines(table,"symbol", SymbolType.Constant,"",1,2,3);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
         check.scan(context);
 

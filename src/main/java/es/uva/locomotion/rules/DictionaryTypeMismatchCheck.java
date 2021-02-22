@@ -35,7 +35,7 @@ public class DictionaryTypeMismatchCheck extends AbstractVensimCheck {
                 SymbolType expectedType = dbTable.getSymbol(foundSymbol.getToken()).getType();
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has type '"+foundSymbol.getType() + "' but the dictionary has '"+ expectedType + "'." );
-                    addIssue(context,issue,foundSymbol);
+                    addIssue(context,issue,foundSymbol.isFiltered());
                 }
             }
         }

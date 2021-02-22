@@ -78,7 +78,7 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
                         Issue issue = new Issue(this, line, "This symbol is declared in the group \"Control\"" +
                                 " but it does not belongs in it. Try repositioning its declaration to outside of this group");
                         issue.setSeverity(Severity.MAJOR);
-                        addIssue(context, issue, symbol);
+                        addIssue(context, issue, symbol.isFiltered());
                     }
                 }
             } else {
@@ -88,7 +88,7 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
                         Issue issue = new Issue(this, line, "This symbol is not declared in the group \"Control\"" +
                                 " but it does belongs in it. Try repositioning its declaration to inside of this group");
                         issue.setSeverity(Severity.MAJOR);
-                        addIssue(context, issue, symbol);
+                        addIssue(context, issue, symbol.isFiltered());
                     }
                 }
             }

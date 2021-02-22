@@ -1,9 +1,6 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.DataBaseRepresentation;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
@@ -35,7 +32,7 @@ public class TestDictionaryCommentMismatchCheck {
         dbVar.setComment("Doesn't match");
         dbTable.getDataBaseSymbols().addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
 
 
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
@@ -65,7 +62,7 @@ public class TestDictionaryCommentMismatchCheck {
         dbVar.setComment("comment");
         dbTable.getDataBaseSymbols().addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
 
 
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
@@ -90,7 +87,7 @@ public class TestDictionaryCommentMismatchCheck {
         dbVar.setComment("    Some comment    ");
         dbTable.getDataBaseSymbols().addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
 
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
         check.scan(context);
@@ -129,7 +126,7 @@ public class TestDictionaryCommentMismatchCheck {
         dbValid.setComment("Same comment");
         dbValid2.setComment("Same comment");
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
 
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
         check.scan(context);
@@ -151,7 +148,7 @@ public class TestDictionaryCommentMismatchCheck {
         var.setComment("Some comment");
         parsedTable.addSymbol(var);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new DataBaseRepresentation());
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, new DataBaseRepresentation());
 
 
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
@@ -170,7 +167,7 @@ public class TestDictionaryCommentMismatchCheck {
         dbVar.setComment("Some comment");
         dbTable.getDataBaseSymbols().addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), new ViewTable(), null, dbTable);
 
 
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
@@ -194,7 +191,7 @@ public class TestDictionaryCommentMismatchCheck {
         dbVar.setComment("Doesn't match");
         dbTable.getDataBaseSymbols().addSymbol(dbVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
 
 
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
@@ -212,7 +209,7 @@ public class TestDictionaryCommentMismatchCheck {
         parsedVar.setComment("A comment");
         parsedTable.addSymbol(parsedVar);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, null);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, null);
 
 
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
@@ -241,7 +238,7 @@ public class TestDictionaryCommentMismatchCheck {
             dbTable.getDataBaseSymbols().addSymbol(symbol);
         });
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbTable);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
         check.scan(context);
 
@@ -277,7 +274,7 @@ public class TestDictionaryCommentMismatchCheck {
             s.setComment("Db Comment");
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryCommentMismatchCheck check = new DictionaryCommentMismatchCheck();
         check.scan(context);
 
