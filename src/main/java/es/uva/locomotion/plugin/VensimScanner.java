@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static es.uva.locomotion.utilities.Constants.*;
+
 public class VensimScanner {
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
@@ -42,10 +44,7 @@ public class VensimScanner {
 
     private final ServiceController serviceController;
 
-    private static final String VIEW_PREFIX = "vensim.view.prefix";
-    private static final String MODULE_NAME = "vensim.view.module.name";
-    private static final String MODULE_SEPARATOR = "vensim.view.module.separator";
-    private static final String CATEGORY_SEPARATOR = "vensim.view.category.separator";
+
 
     public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder, ServiceController serviceController) {
         this.context = context;
@@ -152,7 +151,7 @@ public class VensimScanner {
                 ViewTableUtility.filterPrefix(table, moduleName);
 
             }
-            VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, dbData);
+            VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, viewTable, context, dbData);
 
 
             checkIssues(visitorContext);

@@ -3,6 +3,7 @@ package es.uva.locomotion.rules;
 
 import com.ibm.icu.impl.Pair;
 import es.uva.locomotion.model.Symbol;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.visitors.EmbeddedLookupVisitor;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
@@ -45,7 +46,7 @@ public class TestEmbeddedLookupCheck {
     @Test
     public void testOneLookup(){
 
-        VensimVisitorContext context = new VensimVisitorContext(null,null,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         List<Pair<Symbol,Integer>> pairs = new ArrayList<>();
 

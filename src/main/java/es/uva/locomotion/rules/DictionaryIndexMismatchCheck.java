@@ -48,7 +48,7 @@ public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
                     Symbol dbSymbol = dbTable.getSymbol(foundSymbol.getToken().trim());
                     List<String> dbTxt = dbSymbol.getIndexes().stream().map(list -> list.get(0).getToken()).collect(Collectors.toList());
                     Issue issue = new Issue(this, line,"The symbol '" +  foundSymbol.getToken() +"' is indexed by values that aren't stored in the database.'\nFound:" + foundTxt + ".\nExpected a subset of:" + dbTxt );
-                    addIssue(context,issue,foundSymbol);
+                    addIssue(context,issue,foundSymbol.isFiltered());
 
                 }
             }

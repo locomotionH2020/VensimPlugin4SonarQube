@@ -12,6 +12,8 @@ public class View {
 
     private final boolean isValid;
 
+    private int line;
+
     private final Collection<String> shadow_symbols;
 
     public View(String module, String category, String subcategory, boolean isValid) {
@@ -116,8 +118,18 @@ public class View {
     }
 
     public static String generateIdentifier(String module, String category, String subcategory) {
-        return module + (category != null ? category : "") + (subcategory != null ? subcategory : "");
+        return module + (category != null ?  "_" + category : "") +  (subcategory != null ? "_" + subcategory : "");
     }
 
+    public int getLine() {
+        return line;
+    }
 
+    public void setLine(int line) {
+        this.line = line;
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
 }

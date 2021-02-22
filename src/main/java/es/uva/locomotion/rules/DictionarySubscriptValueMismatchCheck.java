@@ -35,7 +35,7 @@ public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
 
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The subscript '"+ foundSymbol.getToken() + "' has values that aren't defined in the database. Unexpected values: '["+ getUnexpectedSymbolsString(foundSymbol,dbTable)+"]'.");
-                    addIssue(context,issue,foundSymbol);
+                    addIssue(context,issue,foundSymbol.isFiltered());
 
                 }
             }

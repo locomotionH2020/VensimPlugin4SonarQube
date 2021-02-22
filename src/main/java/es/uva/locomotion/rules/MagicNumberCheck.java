@@ -87,7 +87,7 @@ public class MagicNumberCheck extends AbstractVensimCheck {
                         Issue issue = new Issue(this, line, "The number " + symbol.getToken() + " is repeated " +
                                 symbol.getDefinitionLines().size() + " times. Consider replacing it by a constant");
                         issue.setSeverity(issueSeverity);
-                        addIssue(context,issue,symbol);
+                        addIssue(context,issue,symbol.isFiltered());
 
                     }
 

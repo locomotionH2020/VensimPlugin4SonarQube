@@ -35,7 +35,7 @@ public class DictionaryCommentMismatchCheck extends AbstractVensimCheck {
 
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has a comment '"+foundSymbol.getComment().trim() + "' but the dictionary has '"+ expectedComment + "'." );
-                    addIssue(context,issue,foundSymbol);
+                    addIssue(context,issue,foundSymbol.isFiltered());
 
                 }
             }

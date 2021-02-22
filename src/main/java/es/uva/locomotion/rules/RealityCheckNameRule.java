@@ -68,7 +68,7 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The reality check '" + symbol.getToken() + "' doesn't follow the naming convention.");
-                    addIssue(context,issue,symbol);
+                    addIssue(context,issue,symbol.isFiltered());
 
                 }
 

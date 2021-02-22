@@ -144,7 +144,7 @@ public class TestVariableNameCheck {
         table.addSymbol(invalid);
         table.addSymbol(valid);
 
-        VensimVisitorContext context = new VensimVisitorContext(null,table,null);
+        VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
         check.scan(context);
 
         assertTrue(valid.isValid());
@@ -165,7 +165,7 @@ public class TestVariableNameCheck {
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
         VariableNameCheck check = new VariableNameCheck();
         check.scan(context);
         assertDoesntHaveIssueInLines(context,VariableNameCheck.class,1);
@@ -185,7 +185,7 @@ public class TestVariableNameCheck {
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
         VariableNameCheck check = new VariableNameCheck();
         check.scan(context);
         assertDoesntHaveIssueInLines(context,VariableNameCheck.class,1);
@@ -204,7 +204,7 @@ public class TestVariableNameCheck {
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
         VariableNameCheck check = new VariableNameCheck();
         check.scan(context);
         assertDoesntHaveIssueInLines(context,VariableNameCheck.class,1);
@@ -223,7 +223,7 @@ public class TestVariableNameCheck {
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
         VariableNameCheck check = new VariableNameCheck();
         check.scan(context);
         assertDoesntHaveIssueInLines(context,VariableNameCheck.class,1);
@@ -245,7 +245,7 @@ public class TestVariableNameCheck {
         dbDataAcronyms.addAcronym("H2O");
         dbDataAcronyms.addAcronym("CO2");
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
         VariableNameCheck check = new VariableNameCheck();
         check.scan(context);
         assertDoesntHaveIssueInLines(context,VariableNameCheck.class,1);
@@ -266,7 +266,7 @@ public class TestVariableNameCheck {
         AcronymsList dbDataAcronyms = dbData.getAcronyms();
         dbDataAcronyms.addAcronym("ACR");
 
-        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable,dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
         VariableNameCheck check = new VariableNameCheck();
         check.scan(context);
         assertHasIssueInLines(context,VariableNameCheck.class,1,2);

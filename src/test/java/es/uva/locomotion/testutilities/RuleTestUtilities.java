@@ -1,5 +1,6 @@
 package es.uva.locomotion.testutilities;
 
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.plugin.Issue;
@@ -19,6 +20,7 @@ import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.rule.RuleKey;
 
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -117,7 +119,11 @@ public class RuleTestUtilities {
 
     public static VensimVisitorContext getVisitorContextFromString(String program){
         ModelParser.FileContext root =  getParseTreeFromString(program);
-        return new VensimVisitorContext(root,getSymbolTableFromString(program),null);
+        File file = new File(
+                GeneralTestUtilities.class.getClassLoader().getResource(".").getFile()
+        );
+        SensorContextTester contextTester = SensorContextTester.create(file);
+        return new VensimVisitorContext(root,getSymbolTableFromString(program), new ViewTable(), contextTester, null);
     }
 
 

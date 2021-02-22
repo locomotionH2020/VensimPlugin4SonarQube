@@ -23,16 +23,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static es.uva.locomotion.utilities.Constants.*;
+
 
 public class VensimSquidSensor implements Sensor {
 
 
     private static final String NAME = "Vensim Squid Sensor";
-    private static final String DICTIONARY_SERVICE_PARAMETER = "vensim.dictionaryService";
-    private static final String DICTIONARY_USERNAME_PARAMETER =  "vensim.dictionaryUsername";
-    private static final String DICTIONARY_PASSWORD_PARAMETER = "vensim.dictionaryPassword";
-    private static final String DICTIONARY_LOG_SERVER_COMMUNICATIONS = "vensim.logServerMessages";
-    private static final String LOG_IN_FILE = "vensim.logFile";
+
 
 
     private final Checks<VensimCheck> checks;

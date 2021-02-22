@@ -1,9 +1,6 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.DataBaseRepresentation;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
@@ -43,7 +40,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(year2017, year2016));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
 
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
@@ -77,7 +74,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(year2017, year2016));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -106,7 +103,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(scenario, typeOfEnergy));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -140,7 +137,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(scenario, parsedTable.getSymbol("CARBON")));
         parsedVar.addIndexLine(List.of(scenario, parsedTable.getSymbol("SUN")));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -168,7 +165,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(scenarioCopy));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -195,7 +192,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(scenario));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -223,7 +220,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(scenario));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -253,7 +250,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(fooSubscript));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -288,7 +285,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(fooSubscript));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -311,7 +308,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1, 2);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -331,7 +328,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1, 2);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -361,7 +358,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(fileScenario, fileEnergyType));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -385,7 +382,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(parsedSubscript));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -409,7 +406,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(new Symbol("EMPTY_SUBSCRIPT", SymbolType.Subscript)));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -437,7 +434,7 @@ public class TestDictionaryIndexMismatchCheck {
 
         parsedVar.addIndexLine(List.of(fileScenario));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -456,7 +453,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(fileSubscript));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, null);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, null);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -474,7 +471,7 @@ public class TestDictionaryIndexMismatchCheck {
         parsedVar.addIndexLine(List.of(fileSubscript));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new DataBaseRepresentation());
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, new DataBaseRepresentation());
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -521,7 +518,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(dbVarAfter);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -550,7 +547,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(dbVar);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -578,7 +575,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(dbVar);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -606,7 +603,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(dbVar);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -635,7 +632,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(dbVar);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 
@@ -663,7 +660,7 @@ public class TestDictionaryIndexMismatchCheck {
         dbTable.addSymbol(new Symbol("varTwo"));
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryIndexMismatchCheck check = new DictionaryIndexMismatchCheck();
         check.scan(context);
 

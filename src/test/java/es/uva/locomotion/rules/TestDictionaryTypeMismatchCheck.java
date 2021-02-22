@@ -1,10 +1,7 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.DataBaseRepresentation;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.*;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
@@ -32,7 +29,7 @@ public class TestDictionaryTypeMismatchCheck {
         Symbol parsedVar = addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1, 2, 3);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
 
         DictionaryTypeMismatchCheck check = new DictionaryTypeMismatchCheck();
@@ -69,7 +66,7 @@ public class TestDictionaryTypeMismatchCheck {
         GeneralTestUtilities.addSymbolInLines(dbTable, "var3", SymbolType.Lookup_Table);
         GeneralTestUtilities.addSymbolInLines(parsedTable, "var3", SymbolType.Subscript, 5);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
         DictionaryTypeMismatchCheck check = new DictionaryTypeMismatchCheck();
         check.scan(context);
@@ -88,7 +85,7 @@ public class TestDictionaryTypeMismatchCheck {
         GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1, 2, 3);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new DataBaseRepresentation());
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, new DataBaseRepresentation());
         DictionaryTypeMismatchCheck check = new DictionaryTypeMismatchCheck();
         check.scan(context);
 
@@ -103,7 +100,7 @@ public class TestDictionaryTypeMismatchCheck {
         GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1, 2, 3);
 
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, null);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, null);
         DictionaryTypeMismatchCheck check = new DictionaryTypeMismatchCheck();
         check.scan(context);
 
@@ -122,7 +119,7 @@ public class TestDictionaryTypeMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         dbTable.addSymbol(new Symbol("var", SymbolType.Reality_Check));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
 
         DictionaryTypeMismatchCheck check = new DictionaryTypeMismatchCheck();
@@ -156,7 +153,7 @@ public class TestDictionaryTypeMismatchCheck {
         addSymbolInLines(dbTable, "lookup", SymbolType.Variable);
         addSymbolInLines(dbTable, "realityCheck", SymbolType.Variable);
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryTypeMismatchCheck check = new DictionaryTypeMismatchCheck();
         check.scan(context);
 
@@ -187,7 +184,7 @@ public class TestDictionaryTypeMismatchCheck {
             dbTable.addSymbol(symbol);
         });
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryTypeMismatchCheck check = new DictionaryTypeMismatchCheck();
         check.scan(context);
 
@@ -205,7 +202,7 @@ public class TestDictionaryTypeMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         dbTable.addSymbol(new Symbol("var", SymbolType.Reality_Check));
 
-        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, dbData);
+        VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
 
         DictionaryTypeMismatchCheck check = new DictionaryTypeMismatchCheck();

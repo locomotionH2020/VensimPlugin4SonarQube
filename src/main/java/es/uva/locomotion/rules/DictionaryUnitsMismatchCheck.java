@@ -38,7 +38,7 @@ public class DictionaryUnitsMismatchCheck extends AbstractVensimCheck{
                 String expectedUnits = dbTable.getSymbol(foundSymbol.getToken()).getUnits().trim();
                 for(int line: foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has '"+foundSymbol.getUnits().trim() + "' as units but the dictionary has '"+ expectedUnits + "'." );
-                    addIssue(context,issue,foundSymbol);
+                    addIssue(context,issue,foundSymbol.isFiltered());
 
                 }
             }

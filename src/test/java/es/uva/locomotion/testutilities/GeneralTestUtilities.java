@@ -20,10 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -33,11 +30,10 @@ public class GeneralTestUtilities {
     public static final Set<Symbol> NO_DEPENDENCIES = new HashSet<>();
 
 
-    public static String loadFile(String file_path) throws IOException{
+    public static String loadFile(String file_path) throws IOException {
         File file = new File(
                 GeneralTestUtilities.class.getClassLoader().getResource(file_path).getFile()
         );
-
 
 
         FileInputStream fileInputStream = new FileInputStream(file.getPath());
@@ -67,7 +63,7 @@ public class GeneralTestUtilities {
 
     }
 
-    public static SymbolTable getSymbolTableFromString(String content){
+    public static SymbolTable getSymbolTableFromString(String content) {
 
         SymbolTable table = getRAWSymbolTableFromString(content);
         SymbolTableGenerator.resolveSymbolTable(table);
@@ -75,7 +71,7 @@ public class GeneralTestUtilities {
         return table;
     }
 
-    public static SymbolTable getRAWSymbolTableFromString(String content){
+    public static SymbolTable getRAWSymbolTableFromString(String content) {
 
 
         ModelParser.FileContext root = getParseTreeFromString(content);
@@ -85,17 +81,19 @@ public class GeneralTestUtilities {
         return visitor.getSymbolTable(root);
     }
 
-    public static ViewTable getViewTableFromString(String content){
+    public static ViewTable getViewTableFromString(String content) {
         ModelParser.FileContext root = getParseTreeFromString(content);
         ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor();
         return visitor.getViewTable(root);
     }
-    public static ViewTable getViewTableFromString(String content, String moduleSeparator, String categorySeparator){
+
+    public static ViewTable getViewTableFromString(String content, String moduleSeparator, String categorySeparator) {
         ModelParser.FileContext root = getParseTreeFromString(content);
-        ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator,categorySeparator);
+        ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator, categorySeparator);
         return visitor.getViewTable(root);
     }
-    public static ViewTable getViewTableFromString(String content, String moduleSeparator){
+
+    public static ViewTable getViewTableFromString(String content, String moduleSeparator) {
         ModelParser.FileContext root = getParseTreeFromString(content);
         ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator);
         return visitor.getViewTable(root);
@@ -113,87 +111,92 @@ public class GeneralTestUtilities {
         return SymbolTableGenerator.getSymbolTable(tree);
     }
 
-    public static Set<Symbol> createSet(Symbol... symbols){
+    public static Set<Symbol> createSet(Symbol... symbols) {
 
         return new HashSet<>(Arrays.asList(symbols));
 
     }
 
 
-    public static void assertSymbol(Symbol symbol, SymbolType expectedType, int expectedLine, Set<Symbol> expectedDependencies){
-        assertNotNull("The symbol is null",symbol);
-       assertSymbolType(symbol,expectedType);
-        assertSymbolDefinedOnlyIn(expectedLine,symbol);
-        assertEquals(expectedDependencies,symbol.getDependencies());
-        assertFalse("The symbol depends on null",expectedDependencies.contains(null));
+    public static void assertSymbol(Symbol symbol, SymbolType expectedType, int expectedLine, Set<Symbol> expectedDependencies) {
+        assertNotNull("The symbol is null", symbol);
+        assertSymbolType(symbol, expectedType);
+        assertSymbolDefinedOnlyIn(expectedLine, symbol);
+        assertEquals(expectedDependencies, symbol.getDependencies());
+        assertFalse("The symbol depends on null", expectedDependencies.contains(null));
     }
 
 
-
-
-    public static void assertSymbolType(Symbol symbol, SymbolType expectedType){
-        assertEquals("Expected type: '" + expectedType + "' Actual: '" + symbol.getType() +"' for symbol " + symbol.getToken(),
-                expectedType,symbol.getType());
+    public static void assertSymbolType(Symbol symbol, SymbolType expectedType) {
+        assertEquals("Expected type: '" + expectedType + "' Actual: '" + symbol.getType() + "' for symbol " + symbol.getToken(),
+                expectedType, symbol.getType());
     }
 
-    public static void assertSymbolDefinedOnlyIn(int expectedLine, Symbol symbol ){
-        assertEquals("The symbol is defined in several lines" + symbol.getDefinitionLines() ,1,symbol.getDefinitionLines().size());
+    public static void assertSymbolDefinedOnlyIn(int expectedLine, Symbol symbol) {
+        assertEquals("The symbol is defined in several lines" + symbol.getDefinitionLines(), 1, symbol.getDefinitionLines().size());
 
-        int line =  symbol.getDefinitionLines().iterator().next();
-        assertEquals("Symbol '" + symbol.getToken() +"' expected at line " + expectedLine + " found at: " + line,
-                expectedLine,line);
+        int line = symbol.getDefinitionLines().iterator().next();
+        assertEquals("Symbol '" + symbol.getToken() + "' expected at line " + expectedLine + " found at: " + line,
+                expectedLine, line);
 
     }
 
-    public static void assertNoDependencies(Symbol symbol){
+    public static void assertNoDependencies(Symbol symbol) {
         assertEquals("Error: Expected 0 dependencies in symbol " + symbol.getToken() + " found " + symbol.getDependencies().size() + ".",
-                NO_DEPENDENCIES,symbol.getDependencies());
+                NO_DEPENDENCIES, symbol.getDependencies());
     }
 
 
-    public static Set<Symbol> getSymbols(SymbolTable table,String... symbols ){
+    public static Set<Symbol> getSymbols(SymbolTable table, String... symbols) {
         Set<Symbol> symbolSet = new HashSet<>();
 
-        for(String symbolStr: symbols){
-            Symbol symbolObject =   table.getSymbol(symbolStr);
-            assertNotNull("The table of symbols doesn't have any symbol called: " + symbolStr + "." ,symbolObject);
+        for (String symbolStr : symbols) {
+            Symbol symbolObject = table.getSymbol(symbolStr);
+            assertNotNull("The table of symbols doesn't have any symbol called: " + symbolStr + ".", symbolObject);
             symbolSet.add(symbolObject);
         }
-        return  symbolSet;
+        return symbolSet;
     }
 
-    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, String group, int... lines){
+    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, String prymary_module, List<String> shadow_modules, String group, int... lines) {
         Symbol symbol = new Symbol(token);
-        if(type!=null)
+        if (type != null)
             symbol.setType(type);
 
-        for(int line: lines)
+        for (int line : lines)
             symbol.addDefinitionLine(line);
         symbol.setGroup(group);
+        symbol.setPrimary_module(prymary_module);
+        for (String shadow : shadow_modules) {
+            symbol.addShadow_view(shadow);
+        }
         table.addSymbol(symbol);
         return symbol;
     }
+    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, String primary_module, int... lines) {
+        return addSymbolInLines(table, token, type, primary_module, new ArrayList<>(), null, lines);
+    }
     public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, int... lines) {
-        return addSymbolInLines(table,token,type,null,lines);
+        return addSymbolInLines(table, token, type, null, new ArrayList<>(), null, lines);
     }
 
 
-    public static List<Issue> getIssuesFromType(VensimVisitorContext context, Class type){
-        if(!VensimCheck.class.isAssignableFrom(type))
-            throw new IllegalArgumentException("The type: '"+ type+"' isn't a rule.");
-        return context.getIssues().stream().filter(issue -> issue.getCheck().getClass()==type).collect(Collectors.toList());
+    public static List<Issue> getIssuesFromType(VensimVisitorContext context, Class type) {
+        if (!VensimCheck.class.isAssignableFrom(type))
+            throw new IllegalArgumentException("The type: '" + type + "' isn't a rule.");
+        return context.getIssues().stream().filter(issue -> issue.getCheck().getClass() == type).collect(Collectors.toList());
     }
 
 
-    public static Symbol createSubscript(SymbolTable table,String subscriptName, String... values){
+    public static Symbol createSubscript(SymbolTable table, String subscriptName, String... values) {
 
-        Symbol subscript = new Symbol(subscriptName,SymbolType.Subscript);
+        Symbol subscript = new Symbol(subscriptName, SymbolType.Subscript);
 
-        for(String value:values){
+        for (String value : values) {
             Symbol valueSymbol = UtilityFunctions.getSymbolOrCreate(table, value);
 
-            if(valueSymbol.getType()!=SymbolType.Subscript_Value && valueSymbol.getType()!=SymbolType.UNDETERMINED)
-                throw new IllegalStateException("The table already contains a symbol named '"+value+"' that isn't a Subscript_Value");
+            if (valueSymbol.getType() != SymbolType.Subscript_Value && valueSymbol.getType() != SymbolType.UNDETERMINED)
+                throw new IllegalStateException("The table already contains a symbol named '" + value + "' that isn't a Subscript_Value");
 
             valueSymbol.setType(SymbolType.Subscript_Value);
             subscript.addDependency(valueSymbol);
@@ -205,18 +208,15 @@ public class GeneralTestUtilities {
     }
 
 
-    public static JsonObject getJsonObjectFromList(String ...symbols){
+    public static JsonObject getJsonObjectFromList(String... symbols) {
         JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-        for(String s: symbols)
+        for (String s : symbols)
             arrayBuilder.add(s);
 
-        jsonBuilder.add("symbols",arrayBuilder);
+        jsonBuilder.add("symbols", arrayBuilder);
         return jsonBuilder.build();
     }
-
-
-
 
 
 }

@@ -39,6 +39,7 @@ public class VensimRuleRepository implements RulesDefinition{
         set.add(SubscriptValueNameCheck.class);
         set.add(LookupNameCheck.class);
         set.add(VariableNameCheck.class);
+        set.add(ViewNameCheck.class);
         set.add(EmbeddedLookupCheck.class);
         set.add(SymbolGroupCheck.class);
         set.add(ConstantNameCheck.class);
