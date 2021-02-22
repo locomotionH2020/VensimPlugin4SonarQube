@@ -50,7 +50,7 @@ public class TestView {
     @Test
     public void getIdentifier() {
         View v = new View("moduleName", "categoryName", "subcategoryName");
-        assertEquals("moduleNamecategoryNamesubcategoryName", v.getIdentifier());
+        assertEquals("moduleName_categoryName_subcategoryName", v.getIdentifier());
     }
 
     @Test

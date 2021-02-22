@@ -9,6 +9,7 @@ import org.stringtemplate.v4.ST;
 
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -126,16 +127,16 @@ public class ServiceController {
                 .collect(Collectors.toList());
 
         List<Symbol> validSymbols = newSymbols.stream().filter(Symbol::isValid).collect(Collectors.toList());
-
-        //TODO filtrar símbolos por el modulo a filtrar.
-
-        if (validSymbols.size() >= 1) {
+        List<Symbol> filteredSymbols = validSymbols.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
+        if (filteredSymbols.size() >= 1) {
             try {
                 for (String module : validModules) {
-                    DBFacade.injectSymbols(dictionaryService, validSymbols.stream().filter(symbol -> symbol.getPrimary_module().equals(module)).collect(Collectors.toList()), module, token);
-                    List<String> tokensInjected = validSymbols.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
-                    LOG.info("Injected symbols: " + tokensInjected);
-
+                    List<Symbol> symbolsToInject = filteredSymbols.stream().filter(symbol -> symbol.getPrimary_module().equals(module)).collect(Collectors.toList());
+                    if (symbolsToInject.size() >= 1) {
+                        DBFacade.injectSymbols(dictionaryService, symbolsToInject, module, token);
+                        List<String> tokensInjected = symbolsToInject.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
+                        LOG.info("Injected symbols in module \"" + module + "\": " + tokensInjected);
+                    }
                 }
             } catch (InvalidServiceUrlException ex) {
                 LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);

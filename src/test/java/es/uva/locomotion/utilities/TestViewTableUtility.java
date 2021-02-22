@@ -22,6 +22,7 @@ public class TestViewTableUtility {
     public static final String VIEW_NAME_2 = "All_Another name";
     public static final String VIEW_NAME_3 = "Filter_A view";
     public static final String VIEW_NAME_4 = "None_Last view";
+    public static final String CATEGORY = "category";
 
     @Test
     public void testAddView() {
@@ -31,14 +32,14 @@ public class TestViewTableUtility {
                         VARIABLE_3_EQ + " = SMOOTH3(3, 4)~~| \n" +
                         "\\\\\\---/// Sketch information - do not modify anything except names\n" +
                         "V300  Do not put anything below this section - it will be ignored\n" +
-                        "*" + VIEW_NAME + "\n" +
+                        "*" + VIEW_NAME + "|" + CATEGORY + "\n" +
                         "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
                         "10,2," + VARIABLE_1_VIEW + ",1586,885,40,20,3,3,0,0,0,0,0,0\n" +
                         "10,2," + VARIABLE_2_VIEW + ",1586,885,40,20,3,2,0,0,0,0,0,0\n" +
                         "///---\\\\\\\n";
 
         SymbolTable symbolTable = getSymbolTableFromString(program);
-        ViewTable viewTable = getViewTableFromString(program);
+        ViewTable viewTable = getViewTableFromString(program, "|", ".");
         ViewTableUtility.addViews(symbolTable, viewTable);
 
         Symbol s = symbolTable.getSymbol(VARIABLE_1_EQ);
@@ -64,30 +65,30 @@ public class TestViewTableUtility {
                         VARIABLE_3_EQ + " = SMOOTH3(3, 4)~~| \n" +
                         "\\\\\\---/// Sketch information - do not modify anything except names\n" +
                         "V300  Do not put anything below this section - it will be ignored\n" +
-                        "*" + VIEW_NAME + "\n" +
+                        "*" + VIEW_NAME + "|" + CATEGORY + "\n" +
                         "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
                         "10,2," + VARIABLE_1_VIEW + ",1586,885,40,20,3,3,0,0,0,0,0,0\n" +
                         "10,2," + VARIABLE_3_VIEW + ",1586,885,40,20,3,2,0,0,0,0,0,0\n" +
                         "\\\\\\---/// Sketch information - do not modify anything except names\n" +
                         "V300  Do not put anything below this section - it will be ignored\n" +
-                        "*" + VIEW_NAME_2 + "\n" +
+                        "*" + VIEW_NAME_2 + "|" + CATEGORY + "\n" +
                         "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
                         "10,2," + VARIABLE_1_VIEW + ",1586,885,40,20,3,2,0,0,0,0,0,0\n" +
                         "10,2," + VARIABLE_2_VIEW + ",1586,885,40,20,3,3,0,0,0,0,0,0\n" +
                         "10,2," + VARIABLE_3_VIEW + ",1586,885,40,20,3,2,0,0,0,0,0,0\n" +
                         "\\\\\\---/// Sketch information - do not modify anything except names\n" +
                         "V300  Do not put anything below this section - it will be ignored\n" +
-                        "*" + VIEW_NAME_3 + "\n" +
+                        "*" + VIEW_NAME_3 + "|" + CATEGORY + "\n" +
                         "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
                         "10,2," + VARIABLE_2_VIEW + ",1586,885,40,20,3,2,0,0,0,0,0,0\n" +
                         "\\\\\\---/// Sketch information - do not modify anything except names\n" +
                         "V300  Do not put anything below this section - it will be ignored\n" +
-                        "*" + VIEW_NAME_4 + "\n" +
+                        "*" + VIEW_NAME_4 + "|" + CATEGORY + "\n" +
                         "$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,5,0\n" +
                         "///---\\\\\\\n";
         //Filter first view
         SymbolTable symbolTable = getSymbolTableFromString(program);
-        ViewTable viewTable = getViewTableFromString(program);
+        ViewTable viewTable = getViewTableFromString(program, "|", ".");
         ViewTableUtility.addViews(symbolTable, viewTable);
 
         ViewTableUtility.filterPrefix(symbolTable, VIEW_NAME);
@@ -98,12 +99,12 @@ public class TestViewTableUtility {
         s = symbolTable.getSymbol(VARIABLE_3_EQ);
         assertFalse(s.isFiltered());
 
-        //Filter "Filter_"
+        //Filter "Filter"
         symbolTable = getSymbolTableFromString(program);
-        viewTable = getViewTableFromString(program);
+        viewTable = getViewTableFromString(program, "|", ".");
         ViewTableUtility.addViews(symbolTable, viewTable);
 
-        ViewTableUtility.filterPrefix(symbolTable, "Filter_");
+        ViewTableUtility.filterPrefix(symbolTable, "Filter");
         s = symbolTable.getSymbol(VARIABLE_1_EQ);
         assertFalse(s.isFiltered());
         s = symbolTable.getSymbol(VARIABLE_2_EQ);
@@ -116,7 +117,7 @@ public class TestViewTableUtility {
         viewTable = getViewTableFromString(program);
         ViewTableUtility.addViews(symbolTable, viewTable);
 
-        ViewTableUtility.filterPrefix(symbolTable, "None_");
+        ViewTableUtility.filterPrefix(symbolTable, "None");
         s = symbolTable.getSymbol(VARIABLE_1_EQ);
         assertTrue(s.isFiltered());
         s = symbolTable.getSymbol(VARIABLE_2_EQ);
@@ -126,10 +127,10 @@ public class TestViewTableUtility {
 
         //Filter Second view
         symbolTable = getSymbolTableFromString(program);
-        viewTable = getViewTableFromString(program);
+        viewTable = getViewTableFromString(program, "|", ".");
         ViewTableUtility.addViews(symbolTable, viewTable);
 
-        ViewTableUtility.filterPrefix(symbolTable, "All_");
+        ViewTableUtility.filterPrefix(symbolTable, "All");
         s = symbolTable.getSymbol(VARIABLE_1_EQ);
         assertFalse(s.isFiltered());
         s = symbolTable.getSymbol(VARIABLE_2_EQ);

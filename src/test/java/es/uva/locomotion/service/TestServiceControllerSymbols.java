@@ -25,6 +25,8 @@ import java.util.stream.Stream;
 
 public class TestServiceControllerSymbols {
 
+    public static final String MODULE = "module";
+
     @After
     public void resetDbFacade() {
         DBFacade.handler = new ServiceConnectionHandler();
@@ -253,7 +255,7 @@ public class TestServiceControllerSymbols {
 
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), List.of("module"), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), List.of(MODULE), new SymbolTable());
 
 
         verify(logger, never()).info(anyString());
@@ -271,7 +273,7 @@ public class TestServiceControllerSymbols {
         GeneralTestUtilities.addSymbolInLines(table, "  constant  ", SymbolType.Constant, 1);
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), List.of("module"),null);
+        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), List.of(MODULE), null);
 
 
         verify(logger, never()).info(anyString());
@@ -293,7 +295,7 @@ public class TestServiceControllerSymbols {
         }
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()),List.of("module"), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), List.of(MODULE), new SymbolTable());
 
 
         verify(logger, never()).info(anyString());
@@ -309,14 +311,14 @@ public class TestServiceControllerSymbols {
         ServiceController.LOG = logger;
 
         SymbolTable foundTable = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(foundTable, "  constant  ", SymbolType.Constant, 1);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "variable", SymbolType.Variable, 2);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "swtich", SymbolType.Switches, 3);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "subscript", SymbolType.Subscript, 4);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "subscript value", SymbolType.Subscript_Value, 5);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "reality check", SymbolType.Reality_Check, 6);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "lookup table", SymbolType.Lookup_Table, 7);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "Symbol found in db", SymbolType.Constant, 8);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "  constant  ", SymbolType.Constant, MODULE, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "variable", SymbolType.Variable, MODULE, 2);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "swtich", SymbolType.Switches, MODULE, 3);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "subscript", SymbolType.Subscript, MODULE, 4);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "subscript value", SymbolType.Subscript_Value, MODULE, 5);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "reality check", SymbolType.Reality_Check, MODULE, 6);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "lookup table", SymbolType.Lookup_Table, MODULE, 7);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "Symbol found in db", SymbolType.Constant, MODULE, 8);
 
         Symbol notValid = GeneralTestUtilities.addSymbolInLines(foundTable, "invalid symbol", SymbolType.Constant, 9);
         notValid.setAsInvalid();
@@ -326,10 +328,10 @@ public class TestServiceControllerSymbols {
         dbTable.addSymbol(new Symbol("            Symbol found in db     ", SymbolType.Constant));
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of("module"),dbTable);
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(MODULE), dbTable);
 
 
-        verify(logger, times(1)).info("Injected symbols: [constant, lookup table, reality check, subscript, swtich, variable]");
+        verify(logger, times(1)).info("Injected symbols in module \"module\": [constant, lookup table, reality check, subscript, swtich, variable]");
     }
 
     @Test
@@ -340,9 +342,9 @@ public class TestServiceControllerSymbols {
         ServiceController controller = getAuthenticatedServiceController("");
 
         SymbolTable foundTable = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, MODULE, 1);
 
-        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()),List.of("module"), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(MODULE), new SymbolTable());
 
 
         verify(logger, times(1)).unique("Missing dictionary service parameter.\nThe rules that require the data from the dictionary service will be skipped."
@@ -357,9 +359,9 @@ public class TestServiceControllerSymbols {
         ServiceController controller = getAuthenticatedServiceController(null);
 
         SymbolTable foundTable = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, MODULE, 1);
 
-        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of("module"),new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(MODULE), new SymbolTable());
 
 
         verify(logger, times(1)).unique("Missing dictionary service parameter.\nThe rules that require the data from the dictionary service will be skipped."
@@ -377,9 +379,9 @@ public class TestServiceControllerSymbols {
         ServiceController.LOG = logger;
 
         SymbolTable foundTable = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, MODULE, 1);
 
-        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()),List.of("module"), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(MODULE), new SymbolTable());
 
 
         verify(logger, times(1)).unique("The dictionary service was unreachable.\nThe rules that require the data from the dictionary service will be skipped.", LoggingLevel.ERROR);
@@ -394,9 +396,9 @@ public class TestServiceControllerSymbols {
         ServiceController controller = getAuthenticatedServiceController("www.google.com");
 
         SymbolTable foundTable = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, MODULE, 1);
 
-        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()),List.of("module"), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(MODULE), new SymbolTable());
 
 
         verify(logger, times(1))
@@ -416,7 +418,7 @@ public class TestServiceControllerSymbols {
         SymbolTable foundTable = new SymbolTable();
         foundTable.addSymbol(new Symbol("constant", SymbolType.Constant));
 
-        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()),List.of("module"), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(MODULE), new SymbolTable());
 
 
         verify(logger, never()).info(anyString());

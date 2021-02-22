@@ -7,6 +7,8 @@ import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
 import static es.uva.locomotion.testutilities.RuleTestUtilities.assertDoesntHaveIssueInLines;
 import static es.uva.locomotion.testutilities.RuleTestUtilities.assertHasIssueInLines;
@@ -37,7 +39,7 @@ public class TestSymbolGroupCheck {
     @Test
     public void testControlInControlGroup(){
         SymbolTable table = new SymbolTable();
-        addSymbolInLines(table,"TIME STEP", SymbolType.Constant,"Control",1,2,3);
+        addSymbolInLines(table,"TIME STEP", SymbolType.Constant,"module", new ArrayList<>(), "Control",1,2,3);
 
         VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 
@@ -49,7 +51,7 @@ public class TestSymbolGroupCheck {
     @Test
     public void testSymbolInControlGroupCreatesIssue(){
         SymbolTable table = new SymbolTable();
-        addSymbolInLines(table,"symbol", SymbolType.Constant,"Control",1,2,3);
+        addSymbolInLines(table,"symbol", SymbolType.Constant,"module", new ArrayList<>(), "Control",1,2,3);
 
         VensimVisitorContext context = new VensimVisitorContext(null,table, new ViewTable(), null, null);
 

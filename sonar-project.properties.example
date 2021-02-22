@@ -1,11 +1,9 @@
-sonar.host.url=http://localhost:9000
-sonar.projectKey=integrationTests
+sonar.host.url=https://sonarqube-locomotion.infor.uva.es
+sonar.projectKey=Project Name
 sonar.sources=.
 #vensim.dictionaryService= http://www.cres.gr/LOCOMOTION_services/webresources/
 #vensim.dictionaryUsername=testingservice
 #vensim.dictionaryPassword=testing_DD_2020
-sonar.login=admin
-sonar.password=1234
 #vensim.view.module.name=materials
-#vensim.view.module.separator=
-#vensim.view.category.separator=
+#vensim.view.module.separator= Module/Category Separator
+#vensim.view.category.separator= Category/Subcategory Separator

@@ -31,7 +31,7 @@ public class ViewTableUtility {
     public static void addViews(SymbolTable table, ViewTable viewTable) {
         for (Symbol symbol : table.getSymbols()) {
             String token = symbol.getToken();
-            for (View view : viewTable.getViews()) {
+            for (View view : viewTable.getValidViews()) {
                 if (view.hasPrimary(token)) {
                     symbol.setPrimary_module(view.getModule());
                     symbol.setCategory(view.getCategoryOrSubcategory());

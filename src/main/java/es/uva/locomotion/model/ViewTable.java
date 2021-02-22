@@ -1,6 +1,7 @@
 package es.uva.locomotion.model;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 //TODO refactor to unbind from CategoryMap
 public class ViewTable {
@@ -37,7 +38,12 @@ public class ViewTable {
         view.sort(Comparator.comparing(View::getModule));
         return view;
     }
-
+    public List<View> getValidViews() {
+        List<View> view = new ArrayList<>(table.values());
+        view = view.stream().filter(View::isValid).collect(Collectors.toList());
+        view.sort(Comparator.comparing(View::getModule));
+        return view;
+    }
 
     public boolean hasView(String name) {
         return table.containsKey(name);
@@ -66,6 +72,7 @@ public class ViewTable {
                     if (!hasSubcategory(category, subcategory) && isValid) addSubcategory(category, subcategory);
                 }
             }
+
             addView(newView);
             return newView;
         }
