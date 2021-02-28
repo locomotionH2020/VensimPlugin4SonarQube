@@ -13,7 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class ServiceConnectionHandler {
+public class ServiceConnectionHandler { //TODO eso podría ser solo dos funciones casi
 
     protected final VensimLogger LOG = VensimLogger.getInstance();
     protected HttpClient client;
@@ -246,7 +246,7 @@ public class ServiceConnectionHandler {
         try {
             url = URI.create(serviceUrl);
             url = url.resolve("qaGetCategories");
-            LOG.server("Sending POST request to: " + url.toString());
+            LOG.server("Sending GET request to: " + url.toString());
             requestBuilder.uri(url);
         } catch (IllegalArgumentException ex) {
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
@@ -342,5 +342,41 @@ public class ServiceConnectionHandler {
             throw new ConnectionFailedException(e);
         }
 
+    }
+
+    public String sendUnitsRequestToDictionaryService(String serviceUrl, String token) {
+        if(serviceUrl==null || "".equals(serviceUrl.trim()))
+            throw new EmptyServiceException("Service Url is null or an empty string");
+
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
+        requestBuilder.setHeader("Authorization","Bearer "+ token);
+
+        if(serviceUrl.charAt(serviceUrl.length()-1)!='/')
+            serviceUrl = serviceUrl + "/";
+
+        URI url;
+        try{
+            url = URI.create(serviceUrl);
+            url = url.resolve("qaGetUnitSystem");
+            LOG.server("Sending GET request to: " + url.toString());
+            requestBuilder.uri(url);
+        }catch (IllegalArgumentException ex){
+            throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
+        }
+        HttpRequest request  =requestBuilder.GET().build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            String responseBody = response.body();
+            LOG.server("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() +": \n" + responseBody);
+            if (response.statusCode() == HttpURLConnection.HTTP_OK)
+                return responseBody;
+            else
+                throw new ConnectionFailedException(new IllegalArgumentException("The status code of the response to qaGetAcronyms was: " + response.statusCode()));
+
+        } catch (InterruptedException | IOException e) {
+            LOG.server("The connection failed: " + e.getMessage());
+            throw new ConnectionFailedException(e);
+        }
     }
 }

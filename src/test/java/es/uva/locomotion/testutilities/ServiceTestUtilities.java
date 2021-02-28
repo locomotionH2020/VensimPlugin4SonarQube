@@ -13,6 +13,7 @@ public class ServiceTestUtilities {
         doReturn(returnValue).when(handler).sendAcronymsRequestToDictionaryService(any(),any());
         doReturn(returnValue).when(handler).sendModuleRequestToDictionaryService(any(),any());
         doReturn(returnValue).when(handler).sendCategoriesRequestToDictionaryService(any(),any());
+        doReturn(returnValue).when(handler).sendUnitsRequestToDictionaryService(any(),any());
 
         doReturn("").when(handler).authenticate(any(),any(),any());
 

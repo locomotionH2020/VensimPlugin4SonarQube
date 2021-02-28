@@ -142,6 +142,7 @@ public class VensimScanner {
                 dbData.setAcronyms(serviceController.getAcronymsFromDb());
                 dbData.setModules(serviceController.getModulesFromDb());
                 dbData.setCategories(serviceController.getCategoriesFromDb());
+                dbData.setUnits(serviceController.getUnitsFromDb());
             }
             //mark the symbols tha need to be filtered.
 

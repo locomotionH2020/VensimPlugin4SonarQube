@@ -29,6 +29,7 @@ public class DBFacade {
     public static final String FIELD_INDEX_VALUES = "values";
     public static final String FIELD_INJECTION_IS_INDEXED = "isIndexed";
     public static final String FIELD_SYMBOL_UNITS = "unit";
+    public static final String FIELD_UNITS_CONCEPTS = "concepts";
 
     public static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_NAME, FIELD_SYMBOL_TYPE, FIELD_SYMBOL_COMMENT, FIELD_SYMBOL_CATEGORY, FIELD_SYMBOL_INDEXES, FIELD_SYMBOL_MODULES, FIELD_SYMBOL_UNITS);
     public static final List<String> REQUIRED_FIELDS_IN_INDEXES = List.of(FIELD_INDEX_NAME, FIELD_INDEX_VALUES, FIELD_SYMBOL_COMMENT);
@@ -361,6 +362,28 @@ public class DBFacade {
         return list;
     }
 
+    public static void injectModules(String serviceUrl, List<String> newModules, String token) {
+
+        List<String> alreadyAdded = new ArrayList<>();
+        newModules.sort(Comparator.comparing(String::toString));
+        JsonArrayBuilder jsonModulesBuilder = Json.createArrayBuilder();
+
+        for (String st : newModules) {
+            if (!alreadyAdded.contains(st)) {
+                jsonModulesBuilder.add(st);
+                alreadyAdded.add(st);
+            } else {
+                LOG.warn("Received duplicated module '" + st + "' to inject to the dictionary service.");
+            }
+        }
+
+        if (alreadyAdded.size() > 0) {
+            handler.injectModules(serviceUrl, jsonModulesBuilder.build(), token);
+        } else {
+            LOG.warn("Module list to inject is empty.");
+        }
+    }
+
     public static CategoryMap getExistingCategoriesFromDB(String serviceUrl, String token) {
 
         String serviceResponse = handler.sendCategoriesRequestToDictionaryService(serviceUrl, token);
@@ -442,27 +465,7 @@ public class DBFacade {
     }
 
 
-    public static void injectModules(String serviceUrl, List<String> newModules, String token) {
 
-        List<String> alreadyAdded = new ArrayList<>();
-        newModules.sort(Comparator.comparing(String::toString));
-        JsonArrayBuilder jsonModulesBuilder = Json.createArrayBuilder();
-
-        for (String st : newModules) {
-            if (!alreadyAdded.contains(st)) {
-                jsonModulesBuilder.add(st);
-                alreadyAdded.add(st);
-            } else {
-                LOG.warn("Received duplicated module '" + st + "' to inject to the dictionary service.");
-            }
-        }
-
-        if (alreadyAdded.size() > 0) {
-            handler.injectModules(serviceUrl, jsonModulesBuilder.build(), token);
-        } else {
-            LOG.warn("Module list to inject is empty.");
-        }
-    }
 
     public static void injectCategories(String serviceUrl, List<Category> newCategories, String token) {
 
@@ -489,6 +492,64 @@ public class DBFacade {
             }
         }
         handler.injectCategories(serviceUrl, jsonCategoriesBuilder.build(), token);
+    }
+
+    public static List<String> getExistingUnitsFromDB(String serviceUrl, String token) {
+        String serviceResponse = handler.sendUnitsRequestToDictionaryService(serviceUrl, token);
+
+        if (serviceResponse == null)
+            return null;
+
+        try (JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse))) {
+
+            JsonArray unitsFound = jsonReader.readArray();
+
+            if(unitsFound == null){
+                throw new ServiceResponseFormatNotValid("\"" + FIELD_SYMBOL_MODULES + "\" key not found in object.", serviceResponse);
+            }
+            return createUnitsListFromJson(unitsFound);
+        } catch (JsonException ex) {
+            throw new ServiceResponseFormatNotValid("Expected an array.", serviceResponse);
+        } catch (ServiceResponseFormatNotValid ex) {
+            ex.setServiceResponse(serviceResponse);
+            throw ex;
+        }
 
     }
+
+    private static List<String> createUnitsListFromJson(JsonArray unitsFound) {
+
+        List<String> list = new ArrayList<>();
+        JsonObject acronym;
+        for (int s = 0; s < unitsFound.size(); s++) {
+            if (unitsFound.get(s).getValueType() != JsonValue.ValueType.OBJECT) {
+                throw new ServiceResponseFormatNotValid("Recived '" + unitsFound.get(s) + "' that is not a unit json object.");
+            }
+            JsonObject jsonUnit = unitsFound.getJsonObject(s);
+            validateJsonUnits(jsonUnit);
+            String unit;
+
+            unit = jsonUnit.getString(FIELD_SYMBOL_UNITS);
+            if (list.contains(unit)) {
+                LOG.warn("Received duplicated unit '" + unit + "' from the dictionary service.");
+                continue;
+            }
+           list.add(unit);
+
+        }
+        return list;
+    }
+
+    private static void validateJsonUnits(JsonObject jsonSymbol) {
+        if (!jsonSymbol.containsKey(FIELD_SYMBOL_UNITS) || jsonSymbol.get(FIELD_SYMBOL_UNITS) == JsonValue.NULL) {
+            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_SYMBOL_UNITS + "' field from a unit.");
+        }
+
+        String name = jsonSymbol.getString(FIELD_SYMBOL_UNITS);
+        if (!jsonSymbol.containsKey(FIELD_UNITS_CONCEPTS)  || jsonSymbol.get(FIELD_UNITS_CONCEPTS) == JsonValue.NULL) {
+            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_UNITS_CONCEPTS + "' field in category '" + name + "'.");
+        }
+    }
+
+
 }

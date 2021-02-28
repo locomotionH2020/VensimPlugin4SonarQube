@@ -8,10 +8,12 @@ public class DataBaseRepresentation {
     private AcronymsList acronyms;
     private List<String> modules;
     private CategoryMap categories;
+    private List<String> units;
 
     public DataBaseRepresentation() {
     dataBaseSymbols = null;
     acronyms = null;
+    units=null;
     }
 
     public SymbolTable getDataBaseSymbols() {
@@ -45,5 +47,13 @@ public class DataBaseRepresentation {
 
     public void setModules(List<String> modules) {
         this.modules = modules;
+    }
+
+    public List<String> getUnits() {
+        return units;
+    }
+
+    public void setUnits(List<String> units) {
+        this.units = units;
     }
 }
