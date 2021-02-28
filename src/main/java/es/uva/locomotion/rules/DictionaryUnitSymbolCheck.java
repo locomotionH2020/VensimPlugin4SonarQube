@@ -16,12 +16,13 @@ import java.util.stream.Collectors;
 
 @Rule(key = DictionaryUnitSymbolCheck.CHECK_KEY, name = DictionaryUnitSymbolCheck.NAME, description = DictionaryUnitSymbolCheck.HTML_DESCRIPTION)
 public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
-    public static final String CHECK_KEY = "unit-convention";
+    public static final String CHECK_KEY = "unit-convention-dictionary";
 
-    public static final String HTML_DESCRIPTION = ""; //TODO
+    public static final String HTML_DESCRIPTION = ""+
+            "<p>This rule checks that all the symbols contains a unit from the dictionary</p>";
 
 
-    public static final String NAME = "UnitSymbolCheck";
+    public static final String NAME = "DictionaryUnitSymbolCheck";
 
     protected static final VensimLogger LOG = VensimLogger.getInstance();
 
@@ -33,6 +34,7 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
 
         if (context.getDbdata() != null) {
             List<String> dbUnits = context.getDbdata().getUnits();
+            dbUnits.add("Dmnl");
             checkSymbolsUnits(context, parsedTable, dbUnits);
         }
     }
@@ -43,7 +45,7 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
                 foundSymbol.setAsInvalid();
 
                 for (int line : foundSymbol.getDefinitionLines()) {
-                    Issue issue = new Issue(this, line, "The symbol '" + foundSymbol.getToken() + "' has '" + foundSymbol.getUnits().trim() + " as units, but they don't exists in the dictionary, permited units are: " + dbUnits + ".");
+                    Issue issue = new Issue(this, line, "The symbol '" + foundSymbol.getToken() + "' has '" + foundSymbol.getUnits().trim() + "' as units, but they don't exists in the dictionary, permited units are: " + dbUnits + ".");
                     addIssue(context, issue, foundSymbol.isFiltered());
 
                 }
@@ -56,9 +58,6 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
             return false;
 
         if (dbUnits.contains(foundSymbol.getToken()))
-            return false;
-
-        if (foundSymbol.getToken().equals("Dmnl"))
             return false;
 
         String fileUnits = foundSymbol.getUnits();
