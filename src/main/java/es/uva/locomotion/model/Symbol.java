@@ -133,6 +133,19 @@ public class Symbol {
                 getShadow_module().equals(symbol.getShadow_module());
     }
 
+    public boolean dbEquals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Symbol)) return false;
+        Symbol symbol = (Symbol) o;
+        return getToken().equals(symbol.getToken()) &&
+                getIndexes().equals(symbol.getIndexes()) &&
+                getUnits().equals(symbol.getUnits()) &&
+                getComment().equals(symbol.getComment()) &&
+                getType() == symbol.getType() &&
+                getCategory().equals(symbol.getCategory()) &&
+                getPrimary_module().equals(symbol.getPrimary_module()) &&
+                getShadow_module().equals(symbol.getShadow_module());
+    }
     @Override
     public String toString() {
         return "Symbol{" +

@@ -8,6 +8,7 @@ import es.uva.locomotion.rules.VensimCheck;
 
 
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
+import es.uva.locomotion.utilities.OutputFilesGenerator;
 import es.uva.locomotion.utilities.SymbolTableGenerator;
 import es.uva.locomotion.utilities.ViewTableUtility;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -29,6 +30,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,16 +43,16 @@ public class VensimScanner {
 
     private final SensorContext context;
     private final Checks<VensimCheck> checks;
-    private final JsonSymbolTableBuilder jsonBuilder;
+    private final OutputFilesGenerator outputFilesGenerator;
 
     private final ServiceController serviceController;
 
 
 
-    public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder, ServiceController serviceController) {
+    public VensimScanner(SensorContext context, Checks<VensimCheck> checks, OutputFilesGenerator builder, ServiceController serviceController) {
         this.context = context;
         this.checks = checks;
-        this.jsonBuilder = builder;
+        this.outputFilesGenerator = builder;
         this.serviceController = serviceController;
 
 
@@ -76,17 +79,7 @@ public class VensimScanner {
     }
 
     protected void generateJsonOutput() {
-        JsonArray symbolTable = jsonBuilder.build();
-        try {
-
-            File file = new File("symbolTable.json");
-            JsonWriter writer = Json.createWriter(new FileOutputStream(file));
-            writer.writeArray(symbolTable);
-            writer.close();
-        } catch (FileNotFoundException e) {
-            LOG.error("Unable to create symbolTable.json. Error:" + e.getMessage());
-        }
-
+        outputFilesGenerator.generateFiles(Paths.get("resume"));
     }
 
     protected ModelParser.FileContext getParseTree(String file_content) {
@@ -133,7 +126,6 @@ public class VensimScanner {
             }
             ViewTableUtility.addViews(table, viewTable);
 
-            jsonBuilder.addTables(inputFile.filename(), table, viewTable);
 
 
             DataBaseRepresentation dbData = new DataBaseRepresentation();
@@ -145,6 +137,7 @@ public class VensimScanner {
                 dbData.setUnits(serviceController.getUnitsFromDb());
             }
             //mark the symbols tha need to be filtered.
+            outputFilesGenerator.addTables(inputFile.filename(), table, viewTable,dbData);
 
             if (!viewPrefix.isEmpty()) {
                 ViewTableUtility.filterPrefix(table, viewPrefix);

@@ -96,17 +96,17 @@ public class TestSymbolTable {
         Symbol symbol3 = new Symbol("symbol3");
         symbolTable.addSymbol(symbol3);
 
-        symbolTable.removeSymbol(symbol1);
+        symbolTable.removeSymbol(symbol1.getToken());
         Symbol[] returnedSymbols = symbolTable.getSymbols().toArray(new Symbol[0]);
         Symbol[] expectedSymbols ={symbol2,symbol3};
         assertArrayEquals(expectedSymbols,returnedSymbols);
 
-        symbolTable.removeSymbol(symbol3);
+        symbolTable.removeSymbol(symbol3.getToken());
         returnedSymbols = symbolTable.getSymbols().toArray(new Symbol[0]);
         Symbol[] expectedSymbols2 ={symbol2};
         assertArrayEquals(expectedSymbols2,returnedSymbols);
 
-        symbolTable.removeSymbol(symbol2);
+        symbolTable.removeSymbol(symbol2.getToken());
         returnedSymbols = symbolTable.getSymbols().toArray(new Symbol[0]);
         Symbol[] expectedSymbols3 ={};
         assertArrayEquals(expectedSymbols3,returnedSymbols);
@@ -120,7 +120,7 @@ public class TestSymbolTable {
         Symbol symbol2 = new Symbol("symbol2");
 
 
-        assertThrows(IllegalArgumentException.class, () -> symbolTable.removeSymbol(symbol2));
+        assertThrows(IllegalArgumentException.class, () -> symbolTable.removeSymbol(symbol2.getToken()));
 
     }
 }

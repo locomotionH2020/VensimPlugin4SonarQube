@@ -6,6 +6,7 @@ import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import es.uva.locomotion.service.ServiceController;
+import es.uva.locomotion.utilities.OutputFilesGenerator;
 import es.uva.locomotion.utilities.logs.LogConsolePrinter;
 import es.uva.locomotion.utilities.logs.LogFileWriter;
 import es.uva.locomotion.utilities.logs.LogOutputMethod;
@@ -60,9 +61,11 @@ public class VensimSquidSensor implements Sensor {
         String dictionaryUsername = sensorContext.config().get(DICTIONARY_USERNAME_PARAMETER).orElse("").trim();
         String dictionaryPassword = sensorContext.config().get(DICTIONARY_PASSWORD_PARAMETER).orElse("").trim();
         String strLogServerComms = sensorContext.config().get(DICTIONARY_LOG_SERVER_COMMUNICATIONS).orElse("false");
+        String strcreateGetDiffFile = sensorContext.config().get(CREATE_GET_DIFF_FILE).orElse("false");
         String logFile = sensorContext.config().get(LOG_IN_FILE).orElse("");
 
         boolean logServerComms = !"false".equals(strLogServerComms);
+        boolean createGetDiffFile = !"false".equals(strcreateGetDiffFile);
 
         LogOutputMethod logMethod;
         if(logFile.isEmpty())
@@ -88,7 +91,7 @@ public class VensimSquidSensor implements Sensor {
         ServiceController controller = new ServiceController(dictionaryService);
         controller.authenticate(dictionaryUsername, dictionaryPassword);
 
-        VensimScanner scanner = new VensimScanner(sensorContext, checks, new JsonSymbolTableBuilder(), controller);
+        VensimScanner scanner = new VensimScanner(sensorContext, checks, new OutputFilesGenerator(createGetDiffFile), controller);
         scanner.scanFiles(inputFiles);
     }
 }
