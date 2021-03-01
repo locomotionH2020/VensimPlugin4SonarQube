@@ -99,6 +99,8 @@ public class TestDbServiceHandlerCategories {
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.body()).thenReturn("[]");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
         handler.client = mockClient;
 
         String foundCategories = "[\"category1\"]";
@@ -150,6 +152,7 @@ public class TestDbServiceHandlerCategories {
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.body()).thenReturn("[]");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
         handler.client = mockClient;
 
         doReturn(mockResponse).when(mockClient).send(any(), any());
@@ -160,12 +163,14 @@ public class TestDbServiceHandlerCategories {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testInjectCategoriesEmptyRequest() {
+    public void testInjectCategoriesEmptyRequest() throws IOException, InterruptedException {
         ServiceConnectionHandler handler = new ServiceConnectionHandler();
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
+        doReturn(mockResponse).when(mockClient).send(any(), any());
         when(mockResponse.body()).thenReturn("[]");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
         handler.client = mockClient;
 
         handler.injectCategories("https://randomUrl", Json.createArrayBuilder().build(), "token");
@@ -211,6 +216,7 @@ public class TestDbServiceHandlerCategories {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         doReturn(mockResponse).when(mockClient).send(any(), any());
         when(mockResponse.body()).thenReturn("honk");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
 
         handler.client = mockClient;
 

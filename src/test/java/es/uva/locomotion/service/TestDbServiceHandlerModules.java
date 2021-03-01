@@ -99,6 +99,8 @@ public class TestDbServiceHandlerModules {
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.body()).thenReturn("[]");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
         handler.client = mockClient;
 
         String foundModules = "[\"module1\"]";
@@ -150,6 +152,8 @@ public class TestDbServiceHandlerModules {
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.body()).thenReturn("[]");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
         handler.client = mockClient;
 
         doReturn(mockResponse).when(mockClient).send(any(), any());
@@ -160,12 +164,14 @@ public class TestDbServiceHandlerModules {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testInjectModulesEmptyRequest() {
+    public void testInjectModulesEmptyRequest() throws IOException, InterruptedException {
         ServiceConnectionHandler handler = new ServiceConnectionHandler();
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
+        doReturn(mockResponse).when(mockClient).send(any(), any());
         when(mockResponse.body()).thenReturn("[]");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
         handler.client = mockClient;
 
         handler.injectModules("https://randomUrl", Json.createArrayBuilder().build(), "token");
@@ -211,6 +217,7 @@ public class TestDbServiceHandlerModules {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         doReturn(mockResponse).when(mockClient).send(any(), any());
         when(mockResponse.body()).thenReturn("honk");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
 
         handler.client = mockClient;
 
