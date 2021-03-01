@@ -70,7 +70,7 @@ public class ServiceController {
         List<String> symbolsFound = symbols.stream().filter(this::hasToFetchSymbolFromDB).map(Symbol::getToken).collect(Collectors.toList());
         String logMessage;
         try {
-            return DBFacade.getExistingSymbolsFromDB(dictionaryService, symbolsFound, token);
+            return DBFacade.getExistingSymbolsAndIndexesFromDB(dictionaryService, symbolsFound, token);
         } catch (InvalidServiceUrlException ex) {
             LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
@@ -139,6 +139,10 @@ public class ServiceController {
                         LOG.info("Injected symbols in module \"" + module + "\": " + tokensInjected);
                     }
                 }
+                DBFacade.injectIndexes(dictionaryService, filteredSymbols, token);
+                List<String> tokensInjected = filteredSymbols.stream().filter(symbol -> symbol.getType() == SymbolType.Subscript).sorted(Comparator.comparing(Symbol::getToken)).map(Symbol::getToken).collect(Collectors.toList());
+                LOG.info("Injected indexes: " + tokensInjected);
+
             } catch (InvalidServiceUrlException ex) {
                 LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             } catch (EmptyServiceException ex) {

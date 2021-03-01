@@ -206,7 +206,7 @@ public class TestServiceControllerSymbols {
 
     @Test
     public void testGetSymbolsDictionaryInvalidFormatMissingKey() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}");
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}", "[]");
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
@@ -223,7 +223,7 @@ public class TestServiceControllerSymbols {
 
     @Test
     public void testGetSymbolsConsecutiveDifferentErrorsAreLogged() {
-        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}");
+        DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{\"randomKey\":\"foo\"}", "[]");
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);

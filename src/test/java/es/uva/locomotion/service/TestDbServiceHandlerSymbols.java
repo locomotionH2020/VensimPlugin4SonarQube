@@ -166,6 +166,8 @@ public class TestDbServiceHandlerSymbols {
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.body()).thenReturn("[]");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
         handler.client = mockClient;
 
         String foundSymbols = "{\"symbols\":[],\"indexes\":[],\"module\":\"some module\"}";
@@ -217,6 +219,8 @@ public class TestDbServiceHandlerSymbols {
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.body()).thenReturn("[]");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
         handler.client = mockClient;
 
         doReturn(mockResponse).when(mockClient).send(any(), any());
@@ -227,12 +231,15 @@ public class TestDbServiceHandlerSymbols {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testInjectSymbolsEmptyRequest() {
+    public void testInjectSymbolsEmptyRequest() throws IOException, InterruptedException {
         ServiceConnectionHandler handler = new ServiceConnectionHandler();
         HttpClient mockClient = mock(HttpClient.class);
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
+        doReturn(mockResponse).when(mockClient).send(any(), any());
+
         when(mockResponse.body()).thenReturn("[]");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
         handler.client = mockClient;
 
         handler.injectSymbols("https://randomUrl", Json.createObjectBuilder().build(), "token");
@@ -278,6 +285,7 @@ public class TestDbServiceHandlerSymbols {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         doReturn(mockResponse).when(mockClient).send(any(), any());
         when(mockResponse.body()).thenReturn("honk");
+        when(mockResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
 
         handler.client = mockClient;
 

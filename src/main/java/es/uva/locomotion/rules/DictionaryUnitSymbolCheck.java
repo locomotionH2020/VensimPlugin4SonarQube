@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "unit-convention-dictionary";
 
-    public static final String HTML_DESCRIPTION = ""+
+    public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the symbols contains a unit from the dictionary</p>";
 
 
@@ -33,9 +33,11 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
         SymbolTable parsedTable = context.getParsedSymbolTable();
 
         if (context.getDbdata() != null) {
-            List<String> dbUnits = context.getDbdata().getUnits();
-            dbUnits.add("Dmnl");
-            checkSymbolsUnits(context, parsedTable, dbUnits);
+            if (context.getDbdata().getUnits() != null) {
+                List<String> dbUnits = context.getDbdata().getUnits();
+                dbUnits.add("Dmnl");
+                checkSymbolsUnits(context, parsedTable, dbUnits);
+            }
         }
     }
 
