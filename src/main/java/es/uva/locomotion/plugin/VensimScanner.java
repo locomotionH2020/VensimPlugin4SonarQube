@@ -66,6 +66,7 @@ public class VensimScanner {
             try {
                 scanFile(vensimFile);
             } catch (Exception e) {
+                e.printStackTrace();
                 LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.toString());
                 for (StackTraceElement ele : e.getStackTrace()) {
                     LOG.error(ele.toString());

@@ -51,6 +51,9 @@ public class DataBaseRepresentation {
     }
 
     public List<String> getUnits() {
+        if(units == null){
+            return null;
+        }
         return new ArrayList<>(units);
     }
 

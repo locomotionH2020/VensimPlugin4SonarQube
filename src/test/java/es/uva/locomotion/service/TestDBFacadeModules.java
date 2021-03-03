@@ -187,7 +187,7 @@ public class TestDBFacadeModules {
         modules.add("Module1");
         modules.add("Module1");
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"module\":[\"Module1\"]}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"modules\":[\"Module1\"]}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 

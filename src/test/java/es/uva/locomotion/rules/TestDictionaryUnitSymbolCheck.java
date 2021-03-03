@@ -22,10 +22,9 @@ public class TestDictionaryUnitSymbolCheck {
     public void testIssue() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         SymbolTable parsedTable = new SymbolTable();
-        dbData.setUnits(new ArrayList<>());
-        List<String> dbUnits = dbData.getUnits();
+        List<String> dbUnits = new ArrayList<>();
         dbUnits.add("kg");
-
+        dbData.setUnits(dbUnits);
         Symbol parsedVar = new Symbol("var");
         parsedVar.setUnits("                                                                               kg                                              ");
         parsedVar.addDefinitionLine(1);
@@ -44,8 +43,7 @@ public class TestDictionaryUnitSymbolCheck {
     @Test
     public void testBothUnitsAreTrimmed() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setUnits(new ArrayList<>());
-        List<String> dbTable = dbData.getUnits();
+        List<String> dbTable = new ArrayList<>();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -54,7 +52,7 @@ public class TestDictionaryUnitSymbolCheck {
         parsedTable.addSymbol(parsedVar);
 
         dbTable.add("    kg   ");
-
+        dbData.setUnits(dbTable);
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
         DictionaryUnitSymbolCheck check = new DictionaryUnitSymbolCheck();
@@ -91,8 +89,7 @@ public class TestDictionaryUnitSymbolCheck {
     @Test
     public void testIssueInDifferentSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setUnits(new ArrayList<>());
-        List<String> dbTable = dbData.getUnits();
+        List<String> dbTable = new ArrayList<>();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol var = GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1);
@@ -108,6 +105,7 @@ public class TestDictionaryUnitSymbolCheck {
         valid2.setUnits("Same units");
 
         dbTable.add("Same units");
+        dbData.setUnits(dbTable);
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 

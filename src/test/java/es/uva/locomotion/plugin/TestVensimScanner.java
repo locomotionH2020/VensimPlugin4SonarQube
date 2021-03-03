@@ -6,6 +6,7 @@ import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.testutilities.RuleTestUtilities;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
+import es.uva.locomotion.utilities.OutputFilesGenerator;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +66,7 @@ public class TestVensimScanner {
 
         SensorContext context = Mockito.mock(SensorContext.class, Mockito.RETURNS_DEEP_STUBS);
         Checks<VensimCheck> checks = (Checks<VensimCheck>) Mockito.mock(Checks.class);
-        JsonSymbolTableBuilder builder = mock(JsonSymbolTableBuilder.class);
+        OutputFilesGenerator builder = mock(OutputFilesGenerator.class);
         ServiceController controller = mock(ServiceController.class);
         when(controller.isAuthenticated()).thenReturn(true);
         when(controller.getSymbolsFromDb(any())).thenReturn(mock(SymbolTable.class));
@@ -91,7 +92,7 @@ public class TestVensimScanner {
 
 
 
-        JsonSymbolTableBuilder builder = Mockito.mock(JsonSymbolTableBuilder.class);
+        OutputFilesGenerator builder = Mockito.mock(OutputFilesGenerator.class);
         VensimScanner.LOG = logger;
         InputFile fileBefore = Mockito.mock(InputFile.class);
         InputFile wrongFile = Mockito.mock(InputFile.class);

@@ -1,5 +1,6 @@
 package es.uva.locomotion.testutilities;
 
+import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.service.ServiceController;
@@ -9,6 +10,7 @@ import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
+import es.uva.locomotion.utilities.OutputFilesGenerator;
 import org.mockito.Mockito;
 import org.sonar.api.batch.rule.ActiveRules;
 import org.sonar.api.batch.rule.CheckFactory;
@@ -69,7 +71,7 @@ public class RuleTestUtilities {
         Path path = Paths.get("");
         SensorContextTester context = SensorContextTester.create(path);
 
-        return  new VensimScanner(context,checks, new JsonSymbolTableBuilder(), Mockito.mock(ServiceController.class));
+        return  new VensimScanner(context,checks, new OutputFilesGenerator(false), Mockito.mock(ServiceController.class));
     }
 
     public static void assertHasIssueInLines(VensimVisitorContext context, Class type, Integer... lines){

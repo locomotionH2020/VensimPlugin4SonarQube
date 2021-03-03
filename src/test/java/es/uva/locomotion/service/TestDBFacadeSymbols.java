@@ -421,7 +421,7 @@ public class TestDBFacadeSymbols {
 
         symbols.add(subscript);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"indexes\":[{\"indexName\":\"subscript\",\"values\":[\"value1\",\"value2\"]}]}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"indexes\":[{\"indexName\":\"subscript\",\"values\":[\"value1\",\"value2\"],\"definition\":\"\"}]}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -437,7 +437,7 @@ public class TestDBFacadeSymbols {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("value", SymbolType.Subscript_Value));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{indexes:[]}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"indexes\":[]}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
