@@ -400,7 +400,7 @@ public class TestDBFacadeSymbols {
 
         symbols.add(constant);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"constant\",\"unit\":\"constant units\",\"definition\":\"constant comment\",\"isIndexed\":\"true\",\"category\":\"constant category\",\"programmingSymbolType\":\"Constant\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"constant\",\"unit\":\"constant units\",\"definition\":\"constant comment\",\"isIndexed\":\"true\",\"category\":\"constant category\",\"programmingsymboltype\":\"Constant\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -453,7 +453,7 @@ public class TestDBFacadeSymbols {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("variable", SymbolType.Variable));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"variable\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Variable\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"variable\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Variable\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -485,7 +485,7 @@ public class TestDBFacadeSymbols {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("reality check", SymbolType.Reality_Check));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"reality check\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Reality_Check\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"reality check\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Reality_Check\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -501,7 +501,7 @@ public class TestDBFacadeSymbols {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("lookup table", SymbolType.Lookup_Table));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"lookup table\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Lookup_Table\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"lookup table\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Lookup_Table\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -518,7 +518,7 @@ public class TestDBFacadeSymbols {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("switch", SymbolType.Switches));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"switch\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingSymbolType\":\"Switches\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"switch\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Switches\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
