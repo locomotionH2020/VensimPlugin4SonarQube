@@ -149,7 +149,7 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
         return sendGETRequest(serviceUrl, "qaGetCategories", token);
     }
 
-    public String injectModules(String serviceUrl, JsonArray modules, String token) {
+    public String injectModules(String serviceUrl, JsonObject modules, String token) {
         return sendPOSTRequest(serviceUrl, "qaAddModules", modules, token);
     }
 
@@ -164,7 +164,7 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
     public String sendIndexesRequestToDictionaryService(String serviceUrl, String token) {
         return sendGETRequest(serviceUrl, "qaGetIndexesDefinition", token);
     }
-    public String injectIndexes(String serviceUrl, JsonArray indexes, String token) {
+    public String injectIndexes(String serviceUrl, JsonObject indexes, String token) {
         return sendPOSTRequest(serviceUrl, "qaAddIndexesDefinition", indexes, token);
     }
 

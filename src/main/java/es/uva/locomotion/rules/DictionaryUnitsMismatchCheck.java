@@ -33,7 +33,7 @@ public class DictionaryUnitsMismatchCheck extends AbstractVensimCheck{
     private void checkSymbolsUnits(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
-                foundSymbol.setAsInvalid();
+                foundSymbol.setAsInvalid(this.getClass());
 
                 String expectedUnits = dbTable.getSymbol(foundSymbol.getToken()).getUnits().trim();
                 for(int line: foundSymbol.getDefinitionLines()) {

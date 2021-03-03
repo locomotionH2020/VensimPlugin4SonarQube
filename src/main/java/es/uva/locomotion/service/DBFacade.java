@@ -339,6 +339,7 @@ public class DBFacade {
 
         List<String> alreadyAdded = new ArrayList<>();
         newModules.sort(Comparator.comparing(String::toString));
+        JsonObjectBuilder jsonTosend = Json.createObjectBuilder();
         JsonArrayBuilder jsonModulesBuilder = Json.createArrayBuilder();
 
         for (String st : newModules) {
@@ -350,8 +351,9 @@ public class DBFacade {
             }
         }
 
+        jsonTosend.add("modules", jsonModulesBuilder);
         if (alreadyAdded.size() > 0) {
-            handler.injectModules(serviceUrl, jsonModulesBuilder.build(), token);
+            handler.injectModules(serviceUrl, jsonTosend.build(), token);
         } else {
             LOG.warn("Module list to inject is empty.");
         }
@@ -603,7 +605,9 @@ public class DBFacade {
 
         JsonArray jsonIndexes = getInjectIndexesJson(indexes);
 
-        handler.injectIndexes(serviceUrl, jsonIndexes, token);
+        JsonObjectBuilder jsonToSend = Json.createObjectBuilder();
+        jsonToSend.add("indexes", jsonIndexes);
+        handler.injectIndexes(serviceUrl, jsonToSend.build(), token);
     }
 
 
@@ -622,6 +626,7 @@ public class DBFacade {
                 jsonValues.add(value.getToken().trim());
             }
             jsonSymbol.add(FIELD_INDEX_VALUES, jsonValues.build());
+            jsonSymbol.add(FIELD_SYMBOL_COMMENT, index.getComment());
 
             jsonIndexes.add(jsonSymbol);
         }

@@ -44,7 +44,7 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
     private void checkSymbolsUnits(VensimVisitorContext context, SymbolTable parsedTable, List<String> dbUnits) {
         for (Symbol foundSymbol : parsedTable.getSymbols()) {
             if (raisesIssue(foundSymbol, dbUnits)) {
-                foundSymbol.setAsInvalid();
+                foundSymbol.setAsInvalid(this.getClass());
 
                 for (int line : foundSymbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line, "The symbol '" + foundSymbol.getToken() + "' has '" + foundSymbol.getUnits().trim() + "' as units, but they don't exists in the dictionary, permited units are: " + dbUnits + ".");

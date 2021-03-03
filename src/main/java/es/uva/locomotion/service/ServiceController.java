@@ -139,9 +139,36 @@ public class ServiceController {
                         LOG.info("Injected symbols in module \"" + module + "\": " + tokensInjected);
                     }
                 }
-                DBFacade.injectIndexes(dictionaryService, filteredSymbols, token);
-                List<String> tokensInjected = filteredSymbols.stream().filter(symbol -> symbol.getType() == SymbolType.Subscript).sorted(Comparator.comparing(Symbol::getToken)).map(Symbol::getToken).collect(Collectors.toList());
+
+            } catch (InvalidServiceUrlException ex) {
+                LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+            } catch (EmptyServiceException ex) {
+                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.INFO);
+            } catch (ConnectionFailedException ex) {
+                LOG.unique(SERVICE_UNREACHABLE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+            }
+
+        }
+        List<Symbol> indexes = foundSymbols.stream().filter(symbol -> symbol.getType() == SymbolType.Subscript).collect(Collectors.toList());
+        List<Symbol> validIndexes = indexes.stream().filter(Symbol::isValid).collect(Collectors.toList());
+        List<Symbol> filteredindexes = validIndexes.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
+        List<Symbol> indexesToSend = new ArrayList<>();
+        for(Symbol index : filteredindexes){
+            if(dbSymbolTable.hasSymbol(index.getToken())) {
+                Symbol dbIndex = dbSymbolTable.getSymbol(index.getToken());
+                if(!index.getDependencies().equals(dbIndex.getDependencies())){
+                    indexesToSend.add(index);
+                }
+            }else{
+                indexesToSend.add(index);
+            }
+        }
+        if (indexesToSend.size() >= 1) {
+            try {
+                DBFacade.injectIndexes(dictionaryService, indexesToSend, token);
+                List<String> tokensInjected = indexesToSend.stream().sorted(Comparator.comparing(Symbol::getToken)).map(Symbol::getToken).collect(Collectors.toList());
                 LOG.info("Injected indexes: " + tokensInjected);
+
 
             } catch (InvalidServiceUrlException ex) {
                 LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
@@ -247,7 +274,7 @@ public class ServiceController {
         if (newCategories.size() >= 1) {
             try {
                 DBFacade.injectCategories(dictionaryService, newCategories, token);
-                List<String> tokensInjected = newCategories.stream().map(Category::getName).sorted(String::compareTo).collect(Collectors.toList());
+                List<String> tokensInjected = newCategories.stream().map(Category::getWholeName).sorted(String::compareTo).collect(Collectors.toList());
                 LOG.info("Injected categories: " + tokensInjected);
 
             } catch (InvalidServiceUrlException ex) {

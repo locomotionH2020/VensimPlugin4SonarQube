@@ -30,7 +30,7 @@ public class DictionaryCommentMismatchCheck extends AbstractVensimCheck {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
 
-                foundSymbol.setAsInvalid();
+                foundSymbol.setAsInvalid(this.getClass());
                 String expectedComment = dbTable.getSymbol(foundSymbol.getToken()).getComment().trim();
 
                 for(int line: foundSymbol.getDefinitionLines()) {

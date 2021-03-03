@@ -421,8 +421,8 @@ public class TestDBFacadeSymbols {
 
         symbols.add(subscript);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("[{\"indexName\":\"subscript\",\"values\":[\"value1\",\"value2\"]}]"));
-        JsonArray object = jsonReader.readArray();
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"indexes\":[{\"indexName\":\"subscript\",\"values\":[\"value1\",\"value2\"]}]}"));
+        JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
         DBFacade.injectIndexes("http://www.gaagle.com", symbols, "token");
@@ -437,8 +437,8 @@ public class TestDBFacadeSymbols {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("value", SymbolType.Subscript_Value));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("[]"));
-        JsonArray object = jsonReader.readArray();
+        JsonReader jsonReader = Json.createReader(new StringReader("{indexes:[]}"));
+        JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
         DBFacade.injectIndexes("http://www.gaagle.com", symbols,"token");

@@ -321,7 +321,7 @@ public class TestServiceControllerSymbols {
         GeneralTestUtilities.addSymbolInLines(foundTable, "Symbol found in db", SymbolType.Constant, MODULE, 8);
 
         Symbol notValid = GeneralTestUtilities.addSymbolInLines(foundTable, "invalid symbol", SymbolType.Constant, 9);
-        notValid.setAsInvalid();
+        notValid.setAsInvalid(this.getClass());
 
 
         SymbolTable dbTable = new SymbolTable();

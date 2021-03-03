@@ -86,6 +86,7 @@ public class EmbeddedLookupCheck extends AbstractVensimCheck {
                     issueSeverity = Severity.MAJOR;
 
                 for (int line : lookup.getDefinitionLines()) {
+                    lookup.setAsInvalid(this.getClass());
 
                     Issue issue = new Issue(this, line, "This lookup have " + foundRepetitions + " embedded" +
                             " data points. Consider replacing it by an external excel.");

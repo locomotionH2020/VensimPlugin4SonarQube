@@ -20,6 +20,7 @@ public class Symbol {
     private String group;
 
     private boolean isValid;
+    private Class<?> invalidReason;
 
 
     private boolean isFiltered;
@@ -207,14 +208,17 @@ public class Symbol {
         this.dependencies = dependencies;
     }
 
-    public void setAsInvalid(){
+    public void setAsInvalid(Class<?> who){
         isValid = false;
+        invalidReason = who;
     }
 
     public boolean isValid() {
         return isValid;
     }
-
+    public String getReasonForInvalid() {
+        return invalidReason.getSimpleName();
+    }
     public String getPrimary_module() { return primary_module; }
 
     public void setPrimary_module(String primary_module) { this.primary_module = primary_module; }

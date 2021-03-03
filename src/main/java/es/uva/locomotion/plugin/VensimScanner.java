@@ -137,9 +137,8 @@ public class VensimScanner {
                 dbData.setUnits(serviceController.getUnitsFromDb());
             }
             //mark the symbols tha need to be filtered.
-            outputFilesGenerator.addTables(inputFile.filename(), table, viewTable,dbData);
 
-            if (!viewPrefix.isEmpty()) {
+            if (!viewPrefix.isBlank()) {
                 ViewTableUtility.filterPrefix(table, viewPrefix);
             } else if (!moduleName.isEmpty()) {
                 ViewTableUtility.filterPrefix(table, moduleName);
@@ -151,11 +150,14 @@ public class VensimScanner {
             checkIssues(visitorContext);
             saveIssues(inputFile, visitorContext.getIssues());
 
-            int lines = content.split("[\r\n]+").length;
+            outputFilesGenerator.addTables(inputFile.filename(), table, viewTable,dbData);
 
+
+            int lines = content.split("[\r\n]+").length;
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
             if (!moduleSeparator.isEmpty() && dbData.getModules() != null) {
+
                 serviceController.injectNewModules(viewTable.getModules(), dbData.getModules());
                 if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
                     serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());

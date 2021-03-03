@@ -66,7 +66,7 @@ public class ConstantNameCheck extends AbstractVensimCheck {
 
             if (mustGenerateIssue(symbol)) {
 
-                symbol.setAsInvalid();
+                symbol.setAsInvalid(this.getClass());
 
                 for (int line : symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line, "The constant '" + symbol.getToken() + "' doesn't follow the naming convention.");

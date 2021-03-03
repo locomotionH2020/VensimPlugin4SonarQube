@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -103,9 +104,9 @@ public class TestDbServiceHandlerModules {
 
         handler.client = mockClient;
 
-        String foundModules = "[\"module1\"]";
+        String foundModules = "{\"module\":[\"module1\"]}";
         JsonReader jsonReader = Json.createReader(new StringReader(foundModules));
-        JsonArray array = jsonReader.readArray();
+        JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
@@ -125,7 +126,7 @@ public class TestDbServiceHandlerModules {
 
             return mockResponse;
         }).when(mockClient).send(any(), any());
-        String actualValue = handler.injectModules(serviceUrl, array,"token");
+        String actualValue = handler.injectModules(serviceUrl, object,"token");
 
         verify(mockClient, times(1)).send(eq(request), any());
         assertEquals(actualValue, "[]");
@@ -135,9 +136,9 @@ public class TestDbServiceHandlerModules {
     public void testInjectModulesUriWithoutSlash() throws IOException, InterruptedException {
         final String serviceUrl = "http://www.google.com";
 
-        String foundModules = "[\"module1\"]";
+        String foundModules = "{\"modules\":[\"module1\"]}";
         JsonReader jsonReader = Json.createReader(new StringReader(foundModules));
-        JsonArray array = jsonReader.readArray();
+        JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
 
@@ -159,7 +160,7 @@ public class TestDbServiceHandlerModules {
         doReturn(mockResponse).when(mockClient).send(any(), any());
 
 
-        handler.injectModules(serviceUrl, array, "token");
+        handler.injectModules(serviceUrl, object, "token");
         verify(mockClient, times(1)).send(eq(request), any());
 
     }
@@ -174,7 +175,7 @@ public class TestDbServiceHandlerModules {
 
         handler.client = mockClient;
 
-        handler.injectModules("https://randomUrl", Json.createArrayBuilder().build(), "token");
+        handler.injectModules("https://randomUrl", Json.createObjectBuilder().build(), "token");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -186,27 +187,27 @@ public class TestDbServiceHandlerModules {
     @Test(expected = EmptyServiceException.class)
     public void testInjectModulesEmptyUrl() {
         ServiceConnectionHandler handler = new ServiceConnectionHandler();
-        handler.injectModules("", mock(JsonArray.class), "token");
+        handler.injectModules("", mock(JsonObject.class), "token");
     }
 
     @Test(expected = EmptyServiceException.class)
     public void testInjectModulesNullUrl() {
-        new ServiceConnectionHandler().injectModules(null, mock(JsonArray.class), "token");
+        new ServiceConnectionHandler().injectModules(null, mock(JsonObject.class), "token");
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testInjectModulesServiceWithAnotherProtocol() {
-        new ServiceConnectionHandler().injectModules("ftp://somedomain/folder/file.txt", mock(JsonArray.class), "token");
+        new ServiceConnectionHandler().injectModules("ftp://somedomain/folder/file.txt", mock(JsonObject.class), "token");
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testInjectModulesServiceWithInvalidProtocol() {
-        new ServiceConnectionHandler().injectModules("\\some$randomtext", mock(JsonArray.class), "token");
+        new ServiceConnectionHandler().injectModules("\\some$randomtext", mock(JsonObject.class), "token");
     }
 
     @Test(expected = InvalidServiceUrlException.class)
     public void testInjectModulesDomainWithoutProtocol() {
-        new ServiceConnectionHandler().injectModules("www.google.com", mock(JsonArray.class), "token");
+        new ServiceConnectionHandler().injectModules("www.google.com", mock(JsonObject.class), "token");
     }
 
 
@@ -221,7 +222,7 @@ public class TestDbServiceHandlerModules {
 
         handler.client = mockClient;
 
-        String actualValue = handler.injectModules("http://google.com", mock(JsonArray.class), "token");
+        String actualValue = handler.injectModules("http://google.com", mock(JsonObject.class), "token");
 
         assertEquals("honk", actualValue);
 

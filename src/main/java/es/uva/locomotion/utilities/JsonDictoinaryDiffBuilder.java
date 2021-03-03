@@ -181,12 +181,13 @@ public class JsonDictoinaryDiffBuilder {
 
             }
 
-            List<Category> DBCategories = dbCategories.stream().sorted(Comparator.comparing(Category::getName)).collect(Collectors.toList());
+
+        }
+        List<Category> DBCategories = dbCategories.stream().sorted(Comparator.comparing(Category::getWholeName)).collect(Collectors.toList());
 
 
-            for (Category dbCategory : DBCategories) {
-                missingLocalBuilder.add(dbCategory.getWholeName());
-            }
+        for (Category dbCategory : DBCategories) {
+            missingLocalBuilder.add(dbCategory.getWholeName());
         }
 
         tableBuilder.add("missmatches", missmatchBuilder);

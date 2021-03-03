@@ -77,7 +77,7 @@ public class VariableNameCheck extends AbstractVensimCheck {
                 }
 
                 if (!isOnlyAnAcronym) {
-                    symbol.setAsInvalid();
+                    symbol.setAsInvalid(this.getClass());
 
                     for (int line : symbol.getDefinitionLines()) {
                         Issue issue = new Issue(this, line, "The variable '" + symbol.getToken() + "' doesn't follow the naming convention." + aronymsListMisingWarning);
