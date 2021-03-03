@@ -147,7 +147,6 @@ public class VensimScanner {
             }
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, viewTable, context, dbData);
 
-
             checkIssues(visitorContext);
             saveIssues(inputFile, visitorContext.getIssues());
 

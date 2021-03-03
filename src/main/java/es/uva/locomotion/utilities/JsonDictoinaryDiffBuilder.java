@@ -54,7 +54,8 @@ public class JsonDictoinaryDiffBuilder {
         JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
         JsonArrayBuilder missingDBBuilder = Json.createArrayBuilder();
         int counter = 1;
-        List<Symbol> localSymbols = symbolTable.getSymbols().stream().sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
+        List<SymbolType> ignore = Arrays.asList(SymbolType.Function,SymbolType.Subscript_Value);
+        List<Symbol> localSymbols = symbolTable.getSymbols().stream().filter(symbol -> !ignore.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
 
 
         for (Symbol symbol : localSymbols) {

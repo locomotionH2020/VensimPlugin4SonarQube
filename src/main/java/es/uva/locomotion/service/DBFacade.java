@@ -23,7 +23,8 @@ public class DBFacade {
     public static final String FIELD_INDEXES = "indexes";
     public static final String FIELD_SYMBOL_COMMENT = "definition";
     public static final String FIELD_SYMBOL_CATEGORY = "category";
-    public static final String FIELD_SYMBOL_TYPE = "programmingSymbolType";
+    public static final String FIELD_SYMBOL_TYPE_SEND = "programmingsymboltype";
+    public static final String FIELD_SYMBOL_TYPE_RECIEVE = "programmingSymbolType";
     public static final String FIELD_SYMBOL_INDEXES = "indexes";
     public static final String FIELD_SYMBOL_MODULES = "modules";
     public static final String FIELD_INDEX_VALUES = "values";
@@ -31,7 +32,7 @@ public class DBFacade {
     public static final String FIELD_SYMBOL_UNITS = "unit";
     public static final String FIELD_UNITS_CONCEPTS = "concepts";
 
-    public static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_NAME, FIELD_SYMBOL_TYPE, FIELD_SYMBOL_COMMENT, FIELD_SYMBOL_CATEGORY, FIELD_SYMBOL_INDEXES, FIELD_SYMBOL_MODULES, FIELD_SYMBOL_UNITS);
+    public static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_NAME, FIELD_SYMBOL_TYPE_RECIEVE, FIELD_SYMBOL_COMMENT, FIELD_SYMBOL_CATEGORY, FIELD_SYMBOL_INDEXES, FIELD_SYMBOL_MODULES, FIELD_SYMBOL_UNITS);
     public static final List<String> REQUIRED_FIELDS_IN_INDEXES = List.of(FIELD_INDEX_NAME, FIELD_INDEX_VALUES, FIELD_SYMBOL_COMMENT);
     private static final String FIELD_SYMBOL_MODULES_MAIN = "main";
     private static final String FIELD_SYMBOL_MODULES_SECONDARY = "secondary";
@@ -188,7 +189,7 @@ public class DBFacade {
             String category = jsonSymbol.getString(FIELD_SYMBOL_CATEGORY);
             symbol.setCategory(category);
 
-            String type = jsonSymbol.getString(FIELD_SYMBOL_TYPE);
+            String type = jsonSymbol.getString(FIELD_SYMBOL_TYPE_RECIEVE);
             try {
                 symbol.setType(SymbolType.valueOf(type));
             } catch (IllegalArgumentException ex) {
@@ -246,7 +247,7 @@ public class DBFacade {
             jsonSymbol.add(FIELD_SYMBOL_COMMENT, s.getComment().trim());
             jsonSymbol.add(FIELD_INJECTION_IS_INDEXED, String.valueOf(!s.getIndexes().isEmpty()).toLowerCase());
             jsonSymbol.add(FIELD_SYMBOL_CATEGORY, s.getCategory().trim());
-            jsonSymbol.add(FIELD_SYMBOL_TYPE, s.getType().toString());
+            jsonSymbol.add(FIELD_SYMBOL_TYPE_SEND, s.getType().toString());
 
             jsonSymbols.add(jsonSymbol);
         }
