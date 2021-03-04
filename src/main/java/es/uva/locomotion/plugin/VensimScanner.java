@@ -8,6 +8,7 @@ import es.uva.locomotion.rules.VensimCheck;
 
 
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
+import es.uva.locomotion.utilities.OutputFilesGenerator;
 import es.uva.locomotion.utilities.SymbolTableGenerator;
 import es.uva.locomotion.utilities.ViewTableUtility;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -29,6 +30,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,16 +43,16 @@ public class VensimScanner {
 
     private final SensorContext context;
     private final Checks<VensimCheck> checks;
-    private final JsonSymbolTableBuilder jsonBuilder;
+    private final OutputFilesGenerator outputFilesGenerator;
 
     private final ServiceController serviceController;
 
 
 
-    public VensimScanner(SensorContext context, Checks<VensimCheck> checks, JsonSymbolTableBuilder builder, ServiceController serviceController) {
+    public VensimScanner(SensorContext context, Checks<VensimCheck> checks, OutputFilesGenerator builder, ServiceController serviceController) {
         this.context = context;
         this.checks = checks;
-        this.jsonBuilder = builder;
+        this.outputFilesGenerator = builder;
         this.serviceController = serviceController;
 
 
@@ -63,6 +66,7 @@ public class VensimScanner {
             try {
                 scanFile(vensimFile);
             } catch (Exception e) {
+                e.printStackTrace();
                 LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.toString());
                 for (StackTraceElement ele : e.getStackTrace()) {
                     LOG.error(ele.toString());
@@ -70,24 +74,12 @@ public class VensimScanner {
             }
         }
 
+        String auxiliaryFilesDirName = context.config().get(AUXILIARY_FILES_DIR_NAME).orElse("auxiliary_files");
 
-        generateJsonOutput();
-
-    }
-
-    protected void generateJsonOutput() {
-        JsonArray symbolTable = jsonBuilder.build();
-        try {
-
-            File file = new File("symbolTable.json");
-            JsonWriter writer = Json.createWriter(new FileOutputStream(file));
-            writer.writeArray(symbolTable);
-            writer.close();
-        } catch (FileNotFoundException e) {
-            LOG.error("Unable to create symbolTable.json. Error:" + e.getMessage());
-        }
+        outputFilesGenerator.generateFiles(Paths.get(auxiliaryFilesDirName));;
 
     }
+
 
     protected ModelParser.FileContext getParseTree(String file_content) {
         ModelLexer lexer = new ModelLexer(CharStreams.fromString(file_content));
@@ -133,7 +125,6 @@ public class VensimScanner {
             }
             ViewTableUtility.addViews(table, viewTable);
 
-            jsonBuilder.addTables(inputFile.filename(), table, viewTable);
 
 
             DataBaseRepresentation dbData = new DataBaseRepresentation();
@@ -142,10 +133,11 @@ public class VensimScanner {
                 dbData.setAcronyms(serviceController.getAcronymsFromDb());
                 dbData.setModules(serviceController.getModulesFromDb());
                 dbData.setCategories(serviceController.getCategoriesFromDb());
+                dbData.setUnits(serviceController.getUnitsFromDb());
             }
             //mark the symbols tha need to be filtered.
 
-            if (!viewPrefix.isEmpty()) {
+            if (!viewPrefix.isBlank()) {
                 ViewTableUtility.filterPrefix(table, viewPrefix);
             } else if (!moduleName.isEmpty()) {
                 ViewTableUtility.filterPrefix(table, moduleName);
@@ -153,15 +145,17 @@ public class VensimScanner {
             }
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, viewTable, context, dbData);
 
-
             checkIssues(visitorContext);
             saveIssues(inputFile, visitorContext.getIssues());
 
-            int lines = content.split("[\r\n]+").length;
+            outputFilesGenerator.addTables(inputFile.filename(), table, viewTable,dbData);
 
+
+            int lines = content.split("[\r\n]+").length;
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
             if (!moduleSeparator.isEmpty() && dbData.getModules() != null) {
+
                 serviceController.injectNewModules(viewTable.getModules(), dbData.getModules());
                 if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
                     serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());

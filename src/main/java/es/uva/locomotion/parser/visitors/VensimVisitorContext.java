@@ -20,8 +20,6 @@ public class VensimVisitorContext {
     private final ViewTable viewTable;
     private final SensorContext context;
 
-
-
     private final DataBaseRepresentation dbData;
 
     public ModelParser.FileContext getRootNode() {
@@ -57,6 +55,10 @@ public class VensimVisitorContext {
     }
     public AcronymsList getDbAcronyms(){
         return dbData != null ? dbData.getAcronyms() : null;
+    }
+
+    public DataBaseRepresentation getDbdata(){
+        return dbData;
     }
 
     public ViewTable getViewTable() {

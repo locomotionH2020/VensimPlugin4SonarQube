@@ -29,6 +29,7 @@ public class ServiceController {
     private final String ACRONYMS_DISABLED_MESSAGE = "Variable name check may cause false positives without acronyms.";
     private final String MODULES_DISABLED_MESSAGE = "Injection of new modules can't be done without the modules from the dictionary.";
     private final String CATEGORIES_DISABLED_MESSAGE = "Injection of new categories can't be done without the categories from the dictionary.";
+    private final String UNITS_DISABLED_MESSAGE = "Units check can't be done without the units from the dictionary.";
     private final String INVALID_URL_MESSAGE = "The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n";
     private final String MISSING_DICTIONARY_SERVICE_MESSAGE = "Missing dictionary service parameter.\n";
     private final String SERVICE_UNREACHABLE_MESSAGE = "The dictionary service was unreachable.\n";
@@ -69,7 +70,7 @@ public class ServiceController {
         List<String> symbolsFound = symbols.stream().filter(this::hasToFetchSymbolFromDB).map(Symbol::getToken).collect(Collectors.toList());
         String logMessage;
         try {
-            return DBFacade.getExistingSymbolsFromDB(dictionaryService, symbolsFound, token);
+            return DBFacade.getExistingSymbolsAndIndexesFromDB(dictionaryService, symbolsFound, token);
         } catch (InvalidServiceUrlException ex) {
             LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
@@ -138,6 +139,37 @@ public class ServiceController {
                         LOG.info("Injected symbols in module \"" + module + "\": " + tokensInjected);
                     }
                 }
+
+            } catch (InvalidServiceUrlException ex) {
+                LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+            } catch (EmptyServiceException ex) {
+                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.INFO);
+            } catch (ConnectionFailedException ex) {
+                LOG.unique(SERVICE_UNREACHABLE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+            }
+
+        }
+        List<Symbol> indexes = foundSymbols.stream().filter(symbol -> symbol.getType() == SymbolType.Subscript).collect(Collectors.toList());
+        List<Symbol> validIndexes = indexes.stream().filter(Symbol::isValid).collect(Collectors.toList());
+        List<Symbol> filteredindexes = validIndexes.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
+        List<Symbol> indexesToSend = new ArrayList<>();
+        for(Symbol index : filteredindexes){
+            if(dbSymbolTable.hasSymbol(index.getToken())) {
+                Symbol dbIndex = dbSymbolTable.getSymbol(index.getToken());
+                if(!index.getDependencies().equals(dbIndex.getDependencies())){
+                    indexesToSend.add(index);
+                }
+            }else{
+                indexesToSend.add(index);
+            }
+        }
+        if (indexesToSend.size() >= 1) {
+            try {
+                DBFacade.injectIndexes(dictionaryService, indexesToSend, token);
+                List<String> tokensInjected = indexesToSend.stream().sorted(Comparator.comparing(Symbol::getToken)).map(Symbol::getToken).collect(Collectors.toList());
+                LOG.info("Injected indexes: " + tokensInjected);
+
+
             } catch (InvalidServiceUrlException ex) {
                 LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             } catch (EmptyServiceException ex) {
@@ -242,7 +274,7 @@ public class ServiceController {
         if (newCategories.size() >= 1) {
             try {
                 DBFacade.injectCategories(dictionaryService, newCategories, token);
-                List<String> tokensInjected = newCategories.stream().map(Category::getName).sorted(String::compareTo).collect(Collectors.toList());
+                List<String> tokensInjected = newCategories.stream().map(Category::getWholeName).sorted(String::compareTo).collect(Collectors.toList());
                 LOG.info("Injected categories: " + tokensInjected);
 
             } catch (InvalidServiceUrlException ex) {
@@ -289,4 +321,32 @@ public class ServiceController {
     private boolean moduleNameIsValid(String module) {
         return module.matches("^([a-zA-Z0-9]+_)*[a-zA-Z0-9]+$");
     }
+
+    public List<String> getUnitsFromDb() {
+        if (!isAuthenticated())
+            throw new NotAuthenticatedException();
+
+        String logMessage;
+        try {
+            return DBFacade.getExistingUnitsFromDB(dictionaryService, token);
+        } catch (InvalidServiceUrlException ex) {
+            LOG.unique(INVALID_URL_MESSAGE + UNITS_DISABLED_MESSAGE, LoggingLevel.ERROR);
+            return null;
+        } catch (EmptyServiceException ex) {
+            LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + UNITS_DISABLED_MESSAGE, LoggingLevel.INFO);
+            return null;
+        } catch (ConnectionFailedException ex) {
+            LOG.unique(SERVICE_UNREACHABLE_MESSAGE + UNITS_DISABLED_MESSAGE, LoggingLevel.ERROR);
+            return null;
+        } catch (ServiceResponseFormatNotValid ex) {
+            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + " Dictionary response: " + ex.getServiceResponse() + ".\n" +
+                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
+                    UNITS_DISABLED_MESSAGE;
+
+            LOG.error(logMessage);
+            return null;
+        }
+
+    }
+
 }

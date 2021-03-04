@@ -53,6 +53,7 @@ public class VensimRuleRepository implements RulesDefinition{
         set.add(DictionaryUnitsMismatchCheck.class);
         set.add(DictionarySubscriptValueMismatchCheck.class);
         set.add(DictionaryIndexMismatchCheck.class);
+        set.add(DictionaryUnitSymbolCheck.class);
 
         return set;
     }

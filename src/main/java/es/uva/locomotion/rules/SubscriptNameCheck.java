@@ -66,7 +66,7 @@ public class SubscriptNameCheck extends AbstractVensimCheck {
         for(Symbol symbol:table.getSymbols()){
 
             if(symbol.getType()== SymbolType.Subscript && !checkSubscriptNameFollowsConvention(symbol.getToken())){
-                symbol.setAsInvalid();
+                symbol.setAsInvalid(this.getClass());
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The subscript '"+ symbol.getToken() + "' doesn't follow the naming convention");

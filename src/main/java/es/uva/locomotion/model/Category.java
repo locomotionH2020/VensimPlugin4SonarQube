@@ -102,4 +102,12 @@ public class Category implements Comparable<Category> {
     public int compareTo(Category o) {
         return name.compareTo(o.getName());
     }
+
+    public String getWholeName(){
+        if(this.superCategory != null){
+            return this.superCategory.getWholeName() + "." + this.name;
+        }else{
+            return this.name;
+        }
+    }
 }

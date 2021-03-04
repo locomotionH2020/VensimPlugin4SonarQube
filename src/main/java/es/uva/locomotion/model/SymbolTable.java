@@ -52,14 +52,13 @@ public class SymbolTable {
         return symbol;
     }
 
-    public Symbol removeSymbol(Symbol symbol) {
-        String token = symbol.getToken().trim();
+    public Symbol removeSymbol(String symbol) {
 
-        if(!hasSymbol(token))
-            throw new IllegalArgumentException("The symbol:  "+ token+ " is not in the Table.");
+        if(!hasSymbol(symbol))
+            throw new IllegalArgumentException("The symbol:  "+ symbol+ " is not in the Table.");
 
-        table.remove(token);
-        return symbol;
+        Symbol symbol1 = table.remove(symbol);
+        return symbol1;
     }
 
     @Override
@@ -76,4 +75,5 @@ public class SymbolTable {
                 "table=" + table +
                 '}';
     }
+
 }

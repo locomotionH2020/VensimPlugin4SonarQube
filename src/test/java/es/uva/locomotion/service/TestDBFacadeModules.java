@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -167,12 +168,12 @@ public class TestDBFacadeModules {
         modules.add("Module1");
         modules.add("AnotherModule");
 
-        JsonReader jsonReader = Json.createReader(new StringReader("[\"AnotherModule\",\"Module1\"]"));
-        JsonArray array = jsonReader.readArray();
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"modules\":[\"AnotherModule\",\"Module1\"]}"));
+        JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
         DBFacade.injectModules("http://www.gaagle.com", modules, "token");
-        verify(handler).injectModules("http://www.gaagle.com", array, "token");
+        verify(handler).injectModules("http://www.gaagle.com", object, "token");
     }
 
     @Test
@@ -186,12 +187,12 @@ public class TestDBFacadeModules {
         modules.add("Module1");
         modules.add("Module1");
 
-        JsonReader jsonReader = Json.createReader(new StringReader("[\"Module1\"]"));
-        JsonArray array = jsonReader.readArray();
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"modules\":[\"Module1\"]}"));
+        JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
         DBFacade.injectModules("http://www.gaagle.com", modules, "token");
-        verify(handler).injectModules("http://www.gaagle.com", array, "token");
+        verify(handler).injectModules("http://www.gaagle.com", object, "token");
 
         verify(logger, times(1)).warn("Received duplicated module 'Module1' to inject to the dictionary service.");
     }

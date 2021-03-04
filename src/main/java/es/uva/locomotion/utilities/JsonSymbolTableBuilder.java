@@ -26,6 +26,8 @@ public class JsonSymbolTableBuilder {
     public static final String KEY_LEVEL = "level";
     public static final String KEY_SUPER = "super";
     public static final String KEY_GROUP = "group";
+    public static final String KEY_VALID = "notValidBecause";
+    public static final String KEY_FILTERED = "isFiltered";
 
     public JsonSymbolTableBuilder() {
         fileBuilder = Json.createArrayBuilder();
@@ -83,6 +85,10 @@ public class JsonSymbolTableBuilder {
         symbolBuilder.add(KEY_COMMENT, symbol.getComment());
         symbolBuilder.add(KEY_GROUP, symbol.getGroup() == null ?  "null" : symbol.getGroup());
 
+        if(!symbol.isValid()) {
+            symbolBuilder.add(KEY_VALID, symbol.getReasonForInvalid());
+        }
+        symbolBuilder.add(KEY_FILTERED, symbol.isFiltered());
 
         return symbolBuilder.build();
 

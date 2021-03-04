@@ -85,6 +85,7 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
                 if (!controlSymbols.contains(symbol.getToken())) {
                     for (int line : symbol.getDefinitionLines()) {
 
+                        symbol.setAsInvalid(this.getClass());
                         Issue issue = new Issue(this, line, "This symbol is declared in the group \"Control\"" +
                                 " but it does not belongs in it. Try repositioning its declaration to outside of this group");
                         issue.setSeverity(Severity.MAJOR);
@@ -94,7 +95,7 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
             } else {
                 if (controlSymbols.contains(symbol.getToken())) {
                     for (int line : symbol.getDefinitionLines()) {
-
+                        symbol.setAsInvalid(this.getClass());
                         Issue issue = new Issue(this, line, "This symbol is not declared in the group \"Control\"" +
                                 " but it does belongs in it. Try repositioning its declaration to inside of this group");
                         issue.setSeverity(Severity.MAJOR);

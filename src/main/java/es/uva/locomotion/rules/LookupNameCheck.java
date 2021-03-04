@@ -69,7 +69,7 @@ public class LookupNameCheck extends AbstractVensimCheck{
 
         for(Symbol symbol:table.getSymbols()){
             if(symbol.getType()== SymbolType.Lookup_Table && !checkLookupFollowsConvention(symbol.getToken())){
-                symbol.setAsInvalid();
+                symbol.setAsInvalid(this.getClass());
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this, line, "The lookup '" + symbol.getToken() + "' doesn't follow the naming convention");

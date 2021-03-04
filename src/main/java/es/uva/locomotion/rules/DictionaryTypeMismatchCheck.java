@@ -30,7 +30,7 @@ public class DictionaryTypeMismatchCheck extends AbstractVensimCheck {
     private void checkSymbolsType(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
-                foundSymbol.setAsInvalid();
+                foundSymbol.setAsInvalid(this.getClass());
 
                 SymbolType expectedType = dbTable.getSymbol(foundSymbol.getToken()).getType();
                 for(int line: foundSymbol.getDefinitionLines()) {

@@ -13,7 +13,7 @@ public class AcronymsList {
     }
 
     public List<String> getAcronyms() {
-        return acronyms;
+        return new ArrayList<>(acronyms);
     }
 
 

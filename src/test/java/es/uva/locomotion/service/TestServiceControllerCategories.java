@@ -247,7 +247,7 @@ public class TestServiceControllerCategories {
         controller.injectNewCategories(foundList.getCategoriesAndSubcategories(), dbList.getCategoriesAndSubcategories());
 
 
-        verify(logger, times(1)).info("Injected categories: [Category_1, Category_4, Category_empty_2, Subcategory_1, Subcategory_4, Subcategory_6]");
+        verify(logger, times(1)).info("Injected categories: [Category_1, Category_1.Subcategory_1, Category_4, Category_4.Subcategory_4, Category_already_in_db_5.Subcategory_6, Category_empty_2]");
     }
     @Test
     public void testInjectNewCategoriesNoneInjected() {

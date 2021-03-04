@@ -39,7 +39,7 @@ public class SymbolWithoutCommentCheck extends AbstractVensimCheck{
 
         for(Symbol symbol: table.getSymbols()){
             if(!IGNORED_TYPES.contains(symbol.getType()) && symbol.getComment().isBlank()){
-                symbol.setAsInvalid();
+                symbol.setAsInvalid(this.getClass());
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The symbol '"+ symbol.getToken() + "' should have a comment");

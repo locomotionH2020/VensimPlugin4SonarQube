@@ -33,6 +33,7 @@ public final class VensimQualityProfile implements BuiltInQualityProfilesDefinit
         profile.activateRule(REPO_KEY, DictionaryUnitsMismatchCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY, DictionarySubscriptValueMismatchCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY, DictionaryIndexMismatchCheck.CHECK_KEY);
+        profile.activateRule(REPO_KEY, DictionaryUnitSymbolCheck.CHECK_KEY);
 
 
         profile.done();

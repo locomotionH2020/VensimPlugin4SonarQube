@@ -41,7 +41,7 @@ public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
     private void checkSymbolsIndexes(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
-                foundSymbol.setAsInvalid();
+                foundSymbol.setAsInvalid(this.getClass());
 
                 for(int line: foundSymbol.getDefinitionLines()) {
                     List<List<String>> foundTxt = foundSymbol.getIndexes().stream().map(list -> list.stream().map(Symbol::getToken).collect(Collectors.toList())).collect(Collectors.toList());

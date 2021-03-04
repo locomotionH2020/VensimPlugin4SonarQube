@@ -7,3 +7,5 @@ sonar.sources=.
 #vensim.view.module.name=materials
 #vensim.view.module.separator= Module/Category Separator
 #vensim.view.category.separator= Category/Subcategory Separator
+#vensim.dictionary.getDiff=true
+#vensim.auxiliaryFiles.directoryName=auxiliary_files

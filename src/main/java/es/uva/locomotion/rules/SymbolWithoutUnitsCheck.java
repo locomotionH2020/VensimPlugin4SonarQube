@@ -31,7 +31,7 @@ public class SymbolWithoutUnitsCheck extends AbstractVensimCheck{
 
     public static final String NAME = "SymbolWithoutUnits" ;
 
-    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.Function,SymbolType.Subscript_Value);
+    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.Function,SymbolType.Subscript_Value,SymbolType.Subscript);
 
     @Override
     public void scan(VensimVisitorContext context) {
@@ -39,7 +39,7 @@ public class SymbolWithoutUnitsCheck extends AbstractVensimCheck{
 
         for(Symbol symbol: table.getSymbols()){
             if(!IGNORED_TYPES.contains(symbol.getType()) && symbol.getUnits().isBlank()){
-                symbol.setAsInvalid();
+                symbol.setAsInvalid(this.getClass());
 
                 for(int line: symbol.getDefinitionLines()) {
                     Issue issue = new Issue(this,line,"The symbol '"+ symbol.getToken() + "' should have units.");
