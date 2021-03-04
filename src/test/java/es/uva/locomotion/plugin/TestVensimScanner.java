@@ -74,7 +74,6 @@ public class TestVensimScanner {
 
         VensimScanner scanner = spy(new VensimScanner(context, checks, builder, controller));
 
-        Mockito.doNothing().when(scanner).generateJsonOutput();
         Mockito.doNothing().when(scanner).checkIssues(any());
         Mockito.doNothing().when(scanner).saveIssues(any(), anyList());
         Mockito.doCallRealMethod().when(scanner).scanFile(file);
@@ -135,7 +134,6 @@ public class TestVensimScanner {
         Mockito.doCallRealMethod().when(scanner).getParseTree(Mockito.any());
         Mockito.doCallRealMethod().when(scanner).checkIssues(Mockito.any());
         Mockito.doReturn("").when(scanner).getModuleNameFromFileName(any());
-        Mockito.doNothing().when(scanner).generateJsonOutput();
         Mockito.doNothing().when(scanner).saveIssues(any(), any());
 
 
