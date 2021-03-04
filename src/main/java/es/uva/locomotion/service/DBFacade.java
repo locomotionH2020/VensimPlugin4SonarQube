@@ -505,7 +505,7 @@ public class DBFacade {
 
             unit = jsonUnit.getString(FIELD_SYMBOL_UNITS);
             if (list.contains(unit)) {
-                LOG.warn("Received duplicated unit '" + unit + "' from the dictionary service.");
+                LOG.warn("Received duplicated unit '" + unit + "' from the dictionary service."); //TODO quitar, no son únicas.
                 continue;
             }
             list.add(unit);

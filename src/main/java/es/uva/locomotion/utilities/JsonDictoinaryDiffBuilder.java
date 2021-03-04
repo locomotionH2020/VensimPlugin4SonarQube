@@ -58,6 +58,7 @@ public class JsonDictoinaryDiffBuilder {
         List<Symbol> localSymbols = symbolTable.getSymbols().stream().filter(symbol -> !ignore.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
 
 
+
         for (Symbol symbol : localSymbols) {
 
             if (dbTable.hasSymbol(symbol.getToken())) {
@@ -70,6 +71,7 @@ public class JsonDictoinaryDiffBuilder {
                 missingDBBuilder.add(symbol.getToken());
             }
         }
+//TODO separar índices.
 
         List<Symbol> DBSymbols = dbTable.getSymbols().stream().sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
 

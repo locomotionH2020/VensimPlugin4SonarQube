@@ -74,14 +74,12 @@ public class VensimScanner {
             }
         }
 
+        String auxiliaryFilesDirName = context.config().get(AUXILIARY_FILES_DIR_NAME).orElse("auxiliary_files");
 
-        generateJsonOutput();
+        outputFilesGenerator.generateFiles(Paths.get(auxiliaryFilesDirName));;
 
     }
 
-    protected void generateJsonOutput() {
-        outputFilesGenerator.generateFiles(Paths.get("resume"));
-    }
 
     protected ModelParser.FileContext getParseTree(String file_content) {
         ModelLexer lexer = new ModelLexer(CharStreams.fromString(file_content));

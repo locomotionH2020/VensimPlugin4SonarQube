@@ -29,4 +29,5 @@ public class Constants {
     public static final String MODULE_SEPARATOR = "vensim.view.module.separator";
     public static final String CATEGORY_SEPARATOR = "vensim.view.category.separator";
     public static final String CREATE_GET_DIFF_FILE = "vensim.dictionary.getDiff";
+    public static final String AUXILIARY_FILES_DIR_NAME = "vensim.auxiliaryFiles.directoryName";
 }
