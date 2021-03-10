@@ -67,8 +67,6 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
     @Override
     public void scan(VensimVisitorContext context) {
         SymbolTable table = context.getParsedSymbolTable();
-        SymbolTable dbTable = context.getDbSymbolTable();
-        AcronymsList acronymsList = context.getDbAcronyms();
         List<String> controlSymbols = getDefaultControlSymbols();
         for (Symbol symbol : table.getSymbols()) {
             if (checkGroupControl(symbol.getGroup())) {

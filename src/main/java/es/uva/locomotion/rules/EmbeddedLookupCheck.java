@@ -2,7 +2,6 @@ package es.uva.locomotion.rules;
 
 
 import com.ibm.icu.impl.Pair;
-import es.uva.locomotion.model.AcronymsList;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;

@@ -13,6 +13,7 @@ import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -95,7 +96,9 @@ public class VariableNameCheck extends AbstractVensimCheck {
     private  boolean checkIfVariableHaveAnAcronym(String name, List<String> acronyms){
         String trimmed_name = name;
         for(String acr : acronyms){
-            if(trimmed_name.contains(acr))
+            LOG.error(acr);
+            LOG.error(trimmed_name);
+            if(trimmed_name.matches(".*(^|_|\")"+acr+"($|_|\").*"))
                 trimmed_name = trimmed_name.replace(acr, acr.toLowerCase());
         }
         return  checkVariableFollowsConvention(trimmed_name);

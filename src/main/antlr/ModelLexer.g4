@@ -46,7 +46,7 @@ At: '@';
 
 Ignore: ':IGNORE:';
 Except:':EXCEPT:';
-Id: ( ( Nondigit IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) | StringLiteral );
+Id: ( ( (Nondigit|Digit+ Nondigit) IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) | StringLiteral );
 
 
 fragment
