@@ -7,6 +7,7 @@ import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import org.sonar.check.Rule;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
             if(raisesIssue(foundSymbol,dbTable)){
 
                 for(int line: foundSymbol.getDefinitionLines()) {
-                    Issue issue = new Issue(this, line,"The subscript '"+ foundSymbol.getToken() + "' has values that aren't defined in the database. Unexpected values: '["+ getUnexpectedSymbolsString(foundSymbol,dbTable)+"]'.");
+                    Issue issue = new Issue(this, line,"The subscript '"+ foundSymbol.getToken() + "' has values that aren't defined in the database. Unexpected values: '"+ getUnexpectedSymbols(foundSymbol,dbTable)+"'.");
                     addIssue(context,issue,foundSymbol.isFiltered());
 
                 }
@@ -41,13 +42,13 @@ public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
         }
     }
 
-    private String getUnexpectedSymbolsString(Symbol foundSymbol, SymbolTable dbTable){
+    private List<String> getUnexpectedSymbols(Symbol foundSymbol, SymbolTable dbTable){
         Set<String> dbValues = dbTable.getSymbol(foundSymbol.getToken().trim()).getDependencies().stream().map(Symbol::getToken).collect(Collectors.toSet());
         Set<String> foundValues = foundSymbol.getDependencies().stream().map(Symbol::getToken).collect(Collectors.toSet());
 
         foundValues.removeAll(dbValues);
 
-        return foundValues.stream().sorted().collect(Collectors.joining(", "));
+        return foundValues.stream().sorted().collect(Collectors.toList());
 
     }
 
@@ -66,7 +67,7 @@ public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
         Set<Symbol> dbValues = dbSymbol.getDependencies();
         Set<Symbol> foundValues = foundSymbol.getDependencies();
 
-        return !dbValues.containsAll(foundValues);
+        return !getUnexpectedSymbols(foundSymbol, dbTable).isEmpty();
 
 
     }
