@@ -9,3 +9,4 @@ sonar.sources=.
 #vensim.view.category.separator= Category/Subcategory Separator
 #vensim.dictionary.getDiff=true
 #vensim.auxiliaryFiles.directoryName=auxiliary_files
+#vensim.dictionary.inject=false

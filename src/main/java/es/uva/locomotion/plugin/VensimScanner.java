@@ -99,7 +99,9 @@ public class VensimScanner {
         String moduleName = context.config().get(MODULE_NAME).orElse("");
         String moduleSeparator = context.config().get(MODULE_SEPARATOR).orElse("");
         String categorySeparator = context.config().get(CATEGORY_SEPARATOR).orElse("");
+        String inject = context.config().get(INJECT).orElse("false");
 
+        boolean needToInject  = !inject.equals("false");
         try {
             String content = inputFile.contents();
             String module = getModuleNameFromFileName(inputFile.filename());
@@ -154,15 +156,16 @@ public class VensimScanner {
             int lines = content.split("[\r\n]+").length;
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
-            if (!moduleSeparator.isEmpty() && dbData.getModules() != null) {
+            if(needToInject) {
+                if (!moduleSeparator.isEmpty() && dbData.getModules() != null) {
 
-                serviceController.injectNewModules(viewTable.getModules(), dbData.getModules());
-                if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
-                    serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
+                    serviceController.injectNewModules(viewTable.getModules(), dbData.getModules());
+                    if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
+                        serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
+                }
+                if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
+                    serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), viewTable.getModules(), dbData.getDataBaseSymbols());
             }
-            if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
-                serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), viewTable.getModules(), dbData.getDataBaseSymbols());
-
         } catch (IOException e) {
             LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
         } catch (ParseCancellationException e) {

@@ -96,8 +96,6 @@ public class VariableNameCheck extends AbstractVensimCheck {
     private  boolean checkIfVariableHaveAnAcronym(String name, List<String> acronyms){
         String trimmed_name = name;
         for(String acr : acronyms){
-            LOG.error(acr);
-            LOG.error(trimmed_name);
             if(trimmed_name.matches(".*(^|_|\")"+acr+"($|_|\").*"))
                 trimmed_name = trimmed_name.replace(acr, acr.toLowerCase());
         }
