@@ -1,9 +1,14 @@
 package es.uva.locomotion.utilities;
 
 import es.uva.locomotion.model.*;
+import org.antlr.v4.runtime.misc.Triple;
 
 import javax.json.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JsonSymbolTableBuilder {
 
@@ -28,6 +33,13 @@ public class JsonSymbolTableBuilder {
     public static final String KEY_GROUP = "group";
     public static final String KEY_VALID = "notValidBecause";
     public static final String KEY_FILTERED = "isFiltered";
+    public static final String KEY_INDEXES = "indexes";
+    public static final String KEY_EXCEL = "excels";
+    public static final String KEY_SHEET = "sheet";
+    public static final String KEY_CELLRANGE = "cellrange";
+    public static final String KEY_SERIES = "series";
+    public static final String KEY_INFO = "info";
+    public static final String KEY_FILENAME = "filename";
 
     public JsonSymbolTableBuilder() {
         fileBuilder = Json.createArrayBuilder();
@@ -79,17 +91,61 @@ public class JsonSymbolTableBuilder {
         symbolBuilder.add(KEY_SHADOW_VIEWS, shadowBuilder);
 
         if (symbol.getCategory() != null)
-        symbolBuilder.add(KEY_CATEGORY, symbol.getCategory());
+            symbolBuilder.add(KEY_CATEGORY, symbol.getCategory());
 
         symbolBuilder.add(KEY_UNITS, symbol.getUnits());
         symbolBuilder.add(KEY_COMMENT, symbol.getComment());
-        symbolBuilder.add(KEY_GROUP, symbol.getGroup() == null ?  "null" : symbol.getGroup());
+        symbolBuilder.add(KEY_GROUP, symbol.getGroup() == null ? "null" : symbol.getGroup());
 
-        if(!symbol.isValid()) {
+        if (!symbol.isValid()) {
             symbolBuilder.add(KEY_VALID, symbol.getReasonForInvalid());
         }
         symbolBuilder.add(KEY_FILTERED, symbol.isFiltered());
 
+        if (!symbol.getIndexes().isEmpty()) {
+            List<String> indexes = symbol.getIndexes().stream().reduce(new ArrayList<>(), (subtotal, element) -> Stream.concat(subtotal.stream(), element.stream()).collect(Collectors.toList())).stream().map(Symbol::getToken).collect(Collectors.toList());
+
+            JsonArrayBuilder indexBuilder = Json.createArrayBuilder();
+
+            for(String index : indexes){
+                indexBuilder.add(index);
+            }
+
+            symbolBuilder.add(KEY_INDEXES, indexBuilder);
+        }
+
+        if (!symbol.getExcel().isEmpty()) {
+            JsonArrayBuilder excelBuilder = Json.createArrayBuilder();
+
+            for (ExcelRef excel : symbol.getExcel()) {
+                JsonObjectBuilder fileBuilder = Json.createObjectBuilder();
+                fileBuilder.add(KEY_SHEET, excel.getSheet());
+                fileBuilder.add(KEY_FILENAME, excel.getFilename());
+                JsonArrayBuilder infoListBuilder = Json.createArrayBuilder();
+
+                for (Triple<List<String>, String, String> info : excel.getCellRangeInformation()) {
+                    JsonObjectBuilder infoBuilder = Json.createObjectBuilder();
+
+                    if (!info.a.isEmpty()) {
+                        JsonArrayBuilder indexBuilder = Json.createArrayBuilder();
+                        for (String indexName : info.a) {
+                            indexBuilder.add(indexName);
+                        }
+                        infoBuilder.add(KEY_INDEXES, indexBuilder);
+                    }
+                    infoBuilder.add(KEY_CELLRANGE, info.b);
+                    if (info.c != null)
+                        infoBuilder.add(KEY_SERIES, info.c);
+
+                    infoListBuilder.add(infoBuilder);
+                }
+                fileBuilder.add(KEY_INFO, infoListBuilder);
+
+
+                excelBuilder.add(fileBuilder);
+            }
+            symbolBuilder.add(KEY_EXCEL, excelBuilder);
+        }
         return symbolBuilder.build();
 
     }

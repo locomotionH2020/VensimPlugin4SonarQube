@@ -18,10 +18,10 @@ public class Symbol {
     private String primary_module;
     private final List<String> shadow_module;
     private String group;
+    private List<ExcelRef> excel;
 
     private boolean isValid;
     private Class<?> invalidReason;
-
 
     private boolean isFiltered;
 
@@ -39,6 +39,7 @@ public class Symbol {
         primary_module = "";
         shadow_module = new ArrayList<>();
         group = "";
+        excel = new ArrayList<>();
 
     }
 
@@ -147,19 +148,26 @@ public class Symbol {
                 getPrimary_module().equals(symbol.getPrimary_module()) &&
                 getShadow_module().equals(symbol.getShadow_module());
     }
+
+
     @Override
     public String toString() {
         return "Symbol{" +
                 "token='" + token + '\'' +
                 ", linesDefined=" + linesDefined +
-                ", indexes=" + indexes+
+                ", indexes=" + indexes +
                 ", units='" + units + '\'' +
                 ", comment='" + comment + '\'' +
                 ", dependencies=" + dependencies.stream().map(Symbol::getToken).collect(Collectors.toList()) +
                 ", type=" + type +
                 ", category='" + category + '\'' +
-                ", primary module='" + getPrimary_module() + '\'' +
-                ", shadow modules='" + getShadow_module() +
+                ", primary_module='" + getPrimary_module() + '\'' +
+                ", shadow_module=" + getShadow_module() +
+                ", group='" + group + '\'' +
+                ", excel=" + excel +
+                ", isValid=" + isValid +
+                ", invalidReason=" + invalidReason +
+                ", isFiltered=" + isFiltered +
                 '}';
     }
 
@@ -243,5 +251,25 @@ public class Symbol {
 
     public void setFiltered(boolean filtered) {
         isFiltered = filtered;
+    }
+
+    public List<ExcelRef> getExcel() {
+        return excel;
+    }
+
+
+    public void setExcel(List<ExcelRef> excel) {
+        this.excel = excel;
+    }
+
+    public ExcelRef getExcelOrCreate(String filename, String sheet) {
+        ExcelRef excelTmp = new ExcelRef(filename,sheet);
+        if (excel.contains(excelTmp))
+            return excel.get(excel.indexOf(excelTmp));
+
+        else {
+            excel.add(excelTmp);
+            return excelTmp;
+        }
     }
 }

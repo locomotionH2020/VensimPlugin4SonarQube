@@ -1,5 +1,6 @@
 package es.uva.locomotion.parser.visitors;
 
+import es.uva.locomotion.model.ExcelRef;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
@@ -11,6 +12,8 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 
 public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
@@ -18,13 +21,17 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     private SymbolTable table;
     protected static final VensimLogger LOG = VensimLogger.getInstance();
     private static final Pattern sequencePattern = Pattern.compile("(.*?)(\\d+)");
-
+    private static final List<String> excelFunctions = List.of("GET_DIRECT_CONSTANTS", "GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA");
+    private static final List<String> excelData = List.of("GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA");
     private String actualGroup;
+    private Symbol actualSymbol;
+    private List<String> actualIndex;
 
     public SymbolTable getSymbolTable(ModelParser.FileContext context) {
         table = new SymbolTable();
         actualGroup = null; //Default group is marked as null.
-
+        actualSymbol = null;
+        actualIndex = null;
         visit(context);
 
         return table;
@@ -330,11 +337,28 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
             call = table.getSymbol(token);
         else {
             call = table.addSymbol(new Symbol(token));
-            call.setGroup(actualGroup);
             call.setType(SymbolType.UNDETERMINED_FUNCTION);
         }
 
+        if(excelFunctions.contains(token)){
 
+            List<String> exprs = ctx.exprList().expr().stream().map(ModelParser.ExprContext::getText).collect(Collectors.toList());
+
+            String filename = exprs.get(0).replaceAll("^'|'$", "");
+            String sheet = exprs.get(1).replaceAll("^'|'$", "");
+            ExcelRef excel =  actualSymbol.getExcelOrCreate(filename, sheet);
+
+            if (excelData.contains(token)) {
+                String seriesCellRange = exprs.get(2).replaceAll("^'|'$", "");
+                String cellRange = exprs.get(3).replaceAll("^'|'$", "");
+                excel.addCellRangeInformation(actualIndex, cellRange, seriesCellRange);
+
+            }else{
+                String cellRange = exprs.get(2).replaceAll("^'|'$", "");
+                excel.addCellRangeInformation(actualIndex, cellRange);
+            }
+
+        }
         List<Symbol> symbols;
         if (ctx.exprList() != null)
             symbols = (List<Symbol>) visit(ctx.exprList());
@@ -342,6 +366,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
             symbols = new ArrayList<>();
 
         symbols.add(call);
+
         return symbols;
     }
 
@@ -474,11 +499,16 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     public Symbol visitLhs(ModelParser.LhsContext ctx) {
         Symbol id = getSymbolOrCreate(table, ctx.Id().getText());
         id.setGroup(actualGroup);
+        List<Symbol> indexes = null;
         if (ctx.indexes != null) {
-            List<Symbol> indexes = visitSubscript(ctx.indexes);
+           indexes = visitSubscript(ctx.indexes);
             id.addIndexLine(indexes);
-        }
+            actualIndex = indexes.stream().map(Symbol::getToken).collect(Collectors.toList());
 
+        }else{
+            actualIndex = new ArrayList<>();
+        }
+        actualSymbol = id;
         return id;
     }
 
