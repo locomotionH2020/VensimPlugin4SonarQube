@@ -43,6 +43,10 @@ public class DataBaseRepresentation {
     }
 
     public List<String> getModules() {
+        if(modules == null) {
+            return null;
+        }
+
         return new ArrayList<>(modules);
     }
 
