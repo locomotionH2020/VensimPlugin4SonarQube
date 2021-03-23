@@ -1,5 +1,7 @@
 package es.uva.locomotion.parser.visitors;
 
+import es.uva.locomotion.model.NumberTable;
+import es.uva.locomotion.model.Number;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.parser.*;
@@ -14,13 +16,13 @@ public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
-    private SymbolTable numberTable;
+    private NumberTable numberTable;
 
     private SymbolTable symbols;
     private boolean isSymbolFiltered;
 
     public MagicNumberTableVisitor() {
-        numberTable = new SymbolTable();
+        numberTable = new NumberTable();
         isSymbolFiltered = false;
     }
 
@@ -47,8 +49,8 @@ public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
 
     }
 
-    public SymbolTable getSymbolTable(ModelParser.FileContext context) {
-        numberTable = new SymbolTable();
+    public NumberTable getNumberTable(ModelParser.FileContext context) {
+        numberTable = new NumberTable();
         visit(context);
         return numberTable;
     }
@@ -77,12 +79,12 @@ public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
         return exprIsAConstant(ctx) || exprIsACompoundNumber(ctx);
     }
 
-    private Symbol getSymbolOrCreate(SymbolTable table, String token) {
-        if (table.hasSymbol(token))
-            return table.getSymbol(token);
+    private Number getNumberOrCreate(NumberTable table, String token) {
+        if (table.hasNumber(token))
+            return table.getNumber(token);
 
         else {
-            return table.addSymbol(new Symbol(token));
+            return table.addNumber(new Number(token));
         }
     }
 
@@ -123,8 +125,8 @@ public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
 
         if (!isSymbolFiltered) {
             String value = String.valueOf(stringToInt(ctx.getText()));
-            Symbol integer = getSymbolOrCreate(numberTable, value);
-            integer.addDefinitionLine(ctx.start.getLine());
+            Number integer =  getNumberOrCreate(numberTable, value);
+            integer.addLine(ctx.start.getLine());
         }
         return null;
     }
@@ -141,8 +143,8 @@ public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
             strValue = String.valueOf(value);
         }
         if (!isSymbolFiltered) {
-            Symbol floatSymbol = getSymbolOrCreate(numberTable, strValue);
-            floatSymbol.addDefinitionLine(ctx.start.getLine());
+            Number floatSymbol = getNumberOrCreate(numberTable, strValue);
+            floatSymbol.addLine(ctx.start.getLine());
         }
         return null;
     }
@@ -180,8 +182,8 @@ public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
 
 
         if (isCompoundNumber(ctx) && !isSymbolFiltered) {
-            Symbol integer = getSymbolOrCreate(numberTable, ctx.getText().trim());
-            integer.addDefinitionLine(ctx.start.getLine());
+            Number integer = getNumberOrCreate(numberTable, ctx.getText().trim());
+            integer.addLine(ctx.start.getLine());
             return null;
         }
 

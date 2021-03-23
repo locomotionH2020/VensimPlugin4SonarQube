@@ -1,14 +1,16 @@
 package es.uva.locomotion.rules;
 
+import com.sun.net.httpserver.Headers;
 import es.uva.locomotion.model.*;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import es.uva.locomotion.utilities.Constants;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
@@ -22,12 +24,12 @@ public class TestDictionaryUnitSymbolCheck {
     public void testIssue() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         SymbolTable parsedTable = new SymbolTable();
-        List<String> dbUnits = new ArrayList<>();
+        Set<String> dbUnits = new HashSet<>();
         dbUnits.add("kg");
         dbData.setUnits(dbUnits);
         Symbol parsedVar = new Symbol("var");
         parsedVar.setUnits("                                                                               kg                                              ");
-        parsedVar.addDefinitionLine(1);
+        parsedVar.addLine(1);
         parsedTable.addSymbol(parsedVar);
 
 
@@ -43,12 +45,12 @@ public class TestDictionaryUnitSymbolCheck {
     @Test
     public void testBothUnitsAreTrimmed() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        List<String> dbTable = new ArrayList<>();
+        Set<String> dbTable = new HashSet<>();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
         parsedVar.setUnits("                                                                               kg                                              ");
-        parsedVar.addDefinitionLine(1);
+        parsedVar.addLine(1);
         parsedTable.addSymbol(parsedVar);
 
         dbTable.add("    kg   ");
@@ -66,13 +68,13 @@ public class TestDictionaryUnitSymbolCheck {
     @Test
     public void testParsedSymbolDoesntHaveUnits() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setUnits(new ArrayList<>());
-        List<String> dbTable = dbData.getUnits();
+        dbData.setUnits(new HashSet<>());
+        Set<String> dbTable = dbData.getUnits();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
-        parsedVar.addDefinitionLine(1);
-        parsedVar.addDefinitionLine(2);
+        parsedVar.addLine(1);
+        parsedVar.addLine(2);
         parsedTable.addSymbol(parsedVar);
 
         dbTable.add("l");
@@ -89,7 +91,7 @@ public class TestDictionaryUnitSymbolCheck {
     @Test
     public void testIssueInDifferentSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        List<String> dbTable = new ArrayList<>();
+        Set<String> dbTable = new HashSet<>();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol var = GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1);
@@ -122,8 +124,8 @@ public class TestDictionaryUnitSymbolCheck {
     @Test
     public void testSymbolInDbButNotInFile() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setUnits(new ArrayList<>());
-        List<String> dbTable = dbData.getUnits();
+        dbData.setUnits(new HashSet<>());
+        Set<String> dbTable = dbData.getUnits();
 
         dbTable.add("kg");
 
@@ -140,8 +142,8 @@ public class TestDictionaryUnitSymbolCheck {
     @Test
     public void testDoesntRaiseIssueIfThereIsntDefinitionLines() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setUnits(new ArrayList<>());
-        List<String> dbTable = dbData.getUnits();
+        dbData.setUnits(new HashSet<>());
+        Set<String> dbTable = dbData.getUnits();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -180,22 +182,20 @@ public class TestDictionaryUnitSymbolCheck {
     @Test
     public void testIgnoresDefaultSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setUnits(new ArrayList<>());
-        List<String> dbTable = dbData.getUnits();
+        dbData.setUnits(new HashSet<>());
+        Set<String> dbTable = dbData.getUnits();
         SymbolTable parsedTable = new SymbolTable();
 
 
         List<Symbol> parsedSymbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         parsedSymbols.forEach(symbol -> {
-            symbol.addDefinitionLine(1);
+            symbol.addLine(1);
             symbol.setUnits("Parsed units");
             parsedTable.addSymbol(symbol);
         });
 
         List<Symbol> dbSymbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
-        dbSymbols.forEach(symbol -> {
-            symbol.setUnits("DB units");
-        });
+        dbSymbols.forEach(symbol -> symbol.setUnits("DB units"));
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryUnitSymbolCheck check = new DictionaryUnitSymbolCheck();
@@ -219,8 +219,8 @@ public class TestDictionaryUnitSymbolCheck {
             s.setUnits("Parsed units");
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setUnits(new ArrayList<>());
-        List<String> dbTable = dbData.getUnits();
+        dbData.setUnits(new HashSet<>());
+        Set<String> dbTable = dbData.getUnits();
 
         dbTable.add("Db units");
 

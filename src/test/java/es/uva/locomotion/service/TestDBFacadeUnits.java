@@ -18,7 +18,9 @@ import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -34,7 +36,7 @@ public class TestDBFacadeUnits {
     @Test
     public void testGetUnitsParsedJson() {
 
-        List<String> expected = new ArrayList<>();
+        Set<String> expected = new HashSet<>();
 
         expected.add("AnotherUnit");
         expected.add("Unit1");
@@ -45,7 +47,7 @@ public class TestDBFacadeUnits {
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
 
-        List<String> obtainedList = DBFacade.getExistingUnitsFromDB("","token");
+        Set<String> obtainedList = DBFacade.getExistingUnitsFromDB("","token");
         assertEquals(expected, obtainedList);
     }
 
@@ -57,9 +59,9 @@ public class TestDBFacadeUnits {
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
-        List<String> obtainedList = DBFacade.getExistingUnitsFromDB("", "token");
+        Set<String> obtainedList = DBFacade.getExistingUnitsFromDB("", "token");
 
-        assertEquals(new ArrayList<>(), obtainedList);
+        assertEquals(new HashSet<>(), obtainedList);
     }
 
 

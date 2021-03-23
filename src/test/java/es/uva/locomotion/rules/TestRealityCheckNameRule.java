@@ -176,9 +176,9 @@ public class TestRealityCheckNameRule {
 
         SymbolTable table = new SymbolTable();
         Symbol invalid = new Symbol("invalid", SymbolType.Reality_Check);
-        invalid.addDefinitionLine(1);
+        invalid.addLine(1);
         Symbol valid = new Symbol("valid_check", SymbolType.Reality_Check);
-        valid.addDefinitionLine(2);
+        valid.addLine(2);
         table.addSymbol(invalid);
         table.addSymbol(valid);
 

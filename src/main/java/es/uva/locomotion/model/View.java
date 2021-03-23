@@ -1,94 +1,93 @@
 package es.uva.locomotion.model;
 
+import es.uva.locomotion.model.category.Category;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class View {
+public class View extends IssuableAbs {
 
-    private final String module;
-    private final String category;
-    private final String subcategory;
+    private final Module module;
+    private final Category category;
+    private final Category subcategory;
 
-    private final Collection<String> primary_symbols;
+    private final Set<Symbol> primary_symbols;
+    private final Set<Symbol> shadow_symbols;
 
-    private final boolean isValid;
+    public View(Module module, Category category, Category subcategory) {
+        super();
 
-    private int line;
-
-    private final Collection<String> shadow_symbols;
-
-    public View(String module, String category, String subcategory, boolean isValid) {
         this.module = module;
         this.category = category;
         this.subcategory = subcategory;
-        this.isValid = isValid;
-
         primary_symbols = new HashSet<>();
         shadow_symbols = new HashSet<>();
     }
-    public View(String module, String category, String subcategory) {
-        this(module, category, subcategory, true);
 
+    public View(Module module) {
+        this(module, null, null);
     }
 
-    public View(String module, String category) {
-        this(module, category, null, false);
-    }
-
-    public View(String module) {
-        this(module, null, null, false);
-    }
-
-    public String getModule() {
+    public Module getModule() {
         return module;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public String getSubcategory() {
+    public Category getSubcategory() {
         return subcategory;
     }
 
-    public Collection<String> getSymbols() {
-        Collection<String> collection = new HashSet<>();
+    public Category getCategoryOrSubcategory() {
+        if (getSubcategory() == null) {
+            return getCategory();
+        }
+        return getSubcategory();
+    }
+
+    public Set<Symbol> getSymbols() {
+        Set<Symbol> collection = new HashSet<>();
         collection.addAll(primary_symbols);
         collection.addAll(shadow_symbols);
         return collection;
     }
 
-    public Collection<String> getPrimary_symbols() {
+    public Set<Symbol> getPrimary_symbols() {
         return primary_symbols;
     }
 
-    public Collection<String> getShadow_symbols() {
+    public Set<Symbol> getShadow_symbols() {
         return shadow_symbols;
     }
 
-    public void addPrimary(String token) {
+    public void addPrimary(Symbol token) {
+        token.setPrimary_module(getModule());
+        token.setCategory(getCategory());
         primary_symbols.add(token);
     }
 
-    public void addShadow(String token) {
+    public void addShadow(Symbol token) {
+        token.addShadow_module(getModule());
         shadow_symbols.add(token);
+
     }
 
     public boolean hasSymbol(String token) {
-        return getSymbols().contains(token);
+        return getSymbols().stream().map(Symbol::getToken).collect(Collectors.toList()).contains(token);
+    }
+
+    public Symbol getSymbol(String token) {
+        return getSymbols().stream().filter((s) -> s.getToken().equals(token)).collect(Collectors.toList()).get(0);
     }
 
     public boolean hasPrimary(String token) {
-        return getPrimary_symbols().contains(token);
+        return getPrimary_symbols().stream().map(Symbol::getToken).collect(Collectors.toList()).contains(token);
     }
 
     public boolean hasShadow(String token) {
-        return getShadow_symbols().contains(token);
-    }
-
-    public String getCategoryOrSubcategory() {
-        if (getSubcategory() != null) return getSubcategory();
-        if (getCategory() != null) return getCategory();
-        return null;
+        return getShadow_symbols().stream().map(Symbol::getToken).collect(Collectors.toList()).contains(token);
     }
 
     @Override
@@ -96,12 +95,12 @@ public class View {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         View view = (View) o;
-        return Objects.equals(module, view.module) && Objects.equals(category, view.category) && Objects.equals(subcategory, view.subcategory) && Objects.equals(primary_symbols, view.primary_symbols) && Objects.equals(shadow_symbols, view.shadow_symbols);
+        return module.equals(view.module) && Objects.equals(category, view.category) && Objects.equals(subcategory, view.subcategory);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(module, category, subcategory, primary_symbols, shadow_symbols);
+        return Objects.hash(module, category, subcategory);
     }
 
     @Override
@@ -114,22 +113,20 @@ public class View {
     }
 
     public String getIdentifier() {
-        return generateIdentifier(getModule(), getCategory(), getSubcategory());
+        return generateIdentifier(getModule().getName(), getCategory() == null ? null : getCategory().getName(), getSubcategory() == null ? null : getSubcategory().getName());
     }
+
 
     public static String generateIdentifier(String module, String category, String subcategory) {
-        return module + (category != null ?  "_" + category : "") +  (subcategory != null ? "_" + subcategory : "");
+        return module + (category != null ? "_" + category : "") + (subcategory != null ? "_" + subcategory : "");
     }
 
-    public int getLine() {
-        return line;
-    }
+    @Override
+    public void addLine(int line) {
+        super.addLine(line);
 
-    public void setLine(int line) {
-        this.line = line;
-    }
-
-    public boolean isValid() {
-        return isValid;
+        if (getCategory() != null)
+            getCategory().addLine(line);
+        getModule().addLine(line);
     }
 }

@@ -19,8 +19,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
         parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
         parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDefinitionLine(1);
-        parsedSubscript.addDefinitionLine(2);
+        parsedSubscript.addLine(1);
+        parsedSubscript.addLine(2);
         parsedTable.addSymbol(parsedSubscript);
 
         Symbol dbVar = new Symbol("subscript",SymbolType.Subscript);
@@ -55,7 +55,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
         parsedSubscript.addDependency(new Symbol("unexpected_value1",SymbolType.Subscript_Value));
         parsedSubscript.addDependency(new Symbol("unexpected_value2",SymbolType.Subscript_Value));
-        parsedSubscript.addDefinitionLine(1);
+        parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
@@ -89,7 +89,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
         parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
         parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDefinitionLine(1);
+        parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
@@ -117,7 +117,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
         parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDefinitionLine(1);
+        parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
@@ -146,7 +146,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
         parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
         parsedSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDefinitionLine(1);
+        parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
@@ -174,7 +174,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Variable);
         parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
         parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDefinitionLine(1);
+        parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
@@ -202,7 +202,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
         parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
         parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDefinitionLine(1);
+        parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Constant);
@@ -228,7 +228,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
-        parsedSubscript.addDefinitionLine(1);
+        parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Constant);
@@ -256,7 +256,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
         parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
         parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDefinitionLine(1);
+        parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
         Symbol dbSubscript = new Symbol("subscript",SymbolType.Constant);
@@ -281,7 +281,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
         parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
         parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDefinitionLine(1);
+        parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -322,7 +322,7 @@ public class TestDictionarySubscriptValueMismatchCheck {
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
         parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
         parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDefinitionLine(1);
+        parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, null);

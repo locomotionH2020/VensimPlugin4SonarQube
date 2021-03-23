@@ -13,7 +13,6 @@ import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -78,9 +77,9 @@ public class VariableNameCheck extends AbstractVensimCheck {
                 }
 
                 if (!isOnlyAnAcronym) {
-                    symbol.setAsInvalid(this.getClass());
+                    symbol.setAsInvalid(this.getClass().getSimpleName());
 
-                    for (int line : symbol.getDefinitionLines()) {
+                    for (int line : symbol.getLines()) {
                         Issue issue = new Issue(this, line, "The variable '" + symbol.getToken() + "' doesn't follow the naming convention." + aronymsListMisingWarning);
                         addIssue(context, issue, symbol.isFiltered());
                     }

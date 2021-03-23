@@ -11,7 +11,6 @@ public class ExcelRef {
     private String filename;
     private String sheet;
     private List<Triple<List<String>, String,String>> cellRangeInformation; //subscript cellrange seriescellrange?
-
     public ExcelRef(String filename, String sheet){
         this.filename = filename;
         this.sheet = sheet;

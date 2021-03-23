@@ -1,11 +1,13 @@
 package es.uva.locomotion.service;
 
 import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.Module;
+import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.category.CategoryMap;
 import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.exceptions.*;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
-import org.stringtemplate.v4.ST;
 
 
 import java.util.*;
@@ -117,7 +119,7 @@ public class ServiceController {
 
     }
 
-    public void injectNewSymbols(List<Symbol> foundSymbols, List<String> validModules, SymbolTable dbSymbolTable) {
+    public void injectNewSymbols(List<Symbol> foundSymbols, List<Module> validModules, SymbolTable dbSymbolTable) {
         if (dbSymbolTable == null)
             return;
 
@@ -131,12 +133,12 @@ public class ServiceController {
         List<Symbol> filteredSymbols = validSymbols.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
         if (filteredSymbols.size() >= 1) {
             try {
-                for (String module : validModules) {
+                for (Module module : validModules) {
                     List<Symbol> symbolsToInject = filteredSymbols.stream().filter(symbol -> symbol.getPrimary_module().equals(module)).collect(Collectors.toList());
                     if (symbolsToInject.size() >= 1) {
-                        DBFacade.injectSymbols(dictionaryService, symbolsToInject, module, token);
+                        DBFacade.injectSymbols(dictionaryService, symbolsToInject, module.getName(), token);
                         List<String> tokensInjected = symbolsToInject.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
-                        LOG.info("Injected symbols in module \"" + module + "\": " + tokensInjected);
+                        LOG.info("Injected symbols in module \"" + module.getName() + "\": " + tokensInjected);
                     }
                 }
 
@@ -153,13 +155,13 @@ public class ServiceController {
         List<Symbol> validIndexes = indexes.stream().filter(Symbol::isValid).collect(Collectors.toList());
         List<Symbol> filteredindexes = validIndexes.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
         List<Symbol> indexesToSend = new ArrayList<>();
-        for(Symbol index : filteredindexes){
-            if(dbSymbolTable.hasSymbol(index.getToken())) {
+        for (Symbol index : filteredindexes) {
+            if (dbSymbolTable.hasSymbol(index.getToken())) {
                 Symbol dbIndex = dbSymbolTable.getSymbol(index.getToken());
-                if(!index.getDependencies().equals(dbIndex.getDependencies())){
+                if (!index.getDependencies().equals(dbIndex.getDependencies())) {
                     indexesToSend.add(index);
                 }
-            }else{
+            } else {
                 indexesToSend.add(index);
             }
         }
@@ -190,18 +192,18 @@ public class ServiceController {
     private boolean hasToFetchSymbolFromDB(Symbol symbol) {
         return !List.of(SymbolType.Function, SymbolType.Subscript_Value, SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION).
                 contains(symbol.getType()) && !Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim()) &&
-                !symbol.getDefinitionLines().isEmpty();
+                !symbol.getLines().isEmpty();
 
     }
 
 
-    public List<String> getModulesFromDb() {
+    public Set<Module> getModulesFromDb() {
         if (!isAuthenticated())
             throw new NotAuthenticatedException();
 
         String logMessage;
         try {
-            return DBFacade.getExistingModulesFromDB(dictionaryService, token);
+            return DBFacade.getExistingModulesFromDB(dictionaryService, token).stream().map(Module::new).collect(Collectors.toSet());
         } catch (InvalidServiceUrlException ex) {
             LOG.unique(INVALID_URL_MESSAGE + MODULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
@@ -257,19 +259,11 @@ public class ServiceController {
 
         List<Category> categories = new ArrayList<>(categoriesFound);
 
-        categories = categories.stream().filter(category -> {
-            if (category.getSuperCategory() != null) {
-                return moduleNameIsValid(category.getName()) && moduleNameIsValid(category.getSuperCategory().getName());
-            }
-            return moduleNameIsValid(category.getName());
-        })
+        categories = categories.stream().filter(Category::isValid)
                 .collect(Collectors.toList());
 
         List<Category> newCategories = categories.stream().filter(category -> !dbCategories.contains(category))
                 .collect(Collectors.toList());
-
-
-        categories.removeAll(newCategories);
 
         if (newCategories.size() >= 1) {
             try {
@@ -290,14 +284,16 @@ public class ServiceController {
 
     }
 
-    public void injectNewModules(List<String> modulesList, List<String> dbModules) {
+    public void injectNewModules(Set<Module> modulesList, Set<Module> dbModules) {
         if (dbModules == null)
             return;
 
         if (!isAuthenticated())
             throw new NotAuthenticatedException();
 
-        List<String> newModules = modulesList.stream().filter(module -> !dbModules.contains(module) && moduleNameIsValid(module))
+        List<String> newModules = modulesList.stream()
+                .filter(module -> !dbModules.contains(module) && moduleNameIsValid(module.getName()))
+                .map(Module::getName)
                 .collect(Collectors.toList());
 
         if (newModules.size() >= 1) {
@@ -322,7 +318,7 @@ public class ServiceController {
         return module.matches("^([a-zA-Z0-9]+_)*[a-zA-Z0-9]+$");
     }
 
-    public List<String> getUnitsFromDb() {
+    public Set<String> getUnitsFromDb() {
         if (!isAuthenticated())
             throw new NotAuthenticatedException();
 

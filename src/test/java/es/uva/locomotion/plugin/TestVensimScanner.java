@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
+import static es.uva.locomotion.utilities.Constants.INJECT;
 import static org.mockito.Mockito.*;
 
 public class TestVensimScanner {
@@ -70,6 +71,7 @@ public class TestVensimScanner {
         ServiceController controller = mock(ServiceController.class);
         when(controller.isAuthenticated()).thenReturn(true);
         when(controller.getSymbolsFromDb(any())).thenReturn(mock(SymbolTable.class));
+        when(context.config().get(anyString())).thenReturn(Optional.of("true"));
 
 
         VensimScanner scanner = spy(new VensimScanner(context, checks, builder, controller));

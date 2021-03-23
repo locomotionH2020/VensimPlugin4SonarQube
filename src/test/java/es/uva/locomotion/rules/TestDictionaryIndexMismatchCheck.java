@@ -132,7 +132,7 @@ public class TestDictionaryIndexMismatchCheck {
         Symbol scenario = GeneralTestUtilities.createSubscript(parsedTable, "SCENARIO", "SCENARIO_1", "SCENARIO_2");
         GeneralTestUtilities.createSubscript(parsedTable, "TYPE_OF_ENERGY", "CARBON", "SUN", "WIND");
 
-        parsedTable.getSymbol("SCENARIO_1").addDefinitionLine(1);
+        parsedTable.getSymbol("SCENARIO_1").addLine(1);
 
         parsedVar.addIndexLine(List.of(scenario, parsedTable.getSymbol("CARBON")));
         parsedVar.addIndexLine(List.of(scenario, parsedTable.getSymbol("SUN")));

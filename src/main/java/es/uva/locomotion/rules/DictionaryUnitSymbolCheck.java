@@ -12,6 +12,7 @@ import org.sonar.check.Rule;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Rule(key = DictionaryUnitSymbolCheck.CHECK_KEY, name = DictionaryUnitSymbolCheck.NAME, description = DictionaryUnitSymbolCheck.HTML_DESCRIPTION)
@@ -34,19 +35,19 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
 
         if (context.getDbdata() != null) {
             if (context.getDbdata().getUnits() != null) {
-                List<String> dbUnits = context.getDbdata().getUnits();
+                Set<String> dbUnits = context.getDbdata().getUnits();
                 dbUnits.add("Dmnl");
                 checkSymbolsUnits(context, parsedTable, dbUnits);
             }
         }
     }
 
-    private void checkSymbolsUnits(VensimVisitorContext context, SymbolTable parsedTable, List<String> dbUnits) {
+    private void checkSymbolsUnits(VensimVisitorContext context, SymbolTable parsedTable, Set<String> dbUnits) {
         for (Symbol foundSymbol : parsedTable.getSymbols()) {
             if (raisesIssue(foundSymbol, dbUnits)) {
-                foundSymbol.setAsInvalid(this.getClass());
+                foundSymbol.setAsInvalid(this.getClass().getSimpleName());
 
-                for (int line : foundSymbol.getDefinitionLines()) {
+                for (int line : foundSymbol.getLines()) {
                     Issue issue = new Issue(this, line, "The symbol '" + foundSymbol.getToken() + "' has '" + foundSymbol.getUnits().trim() + "' as units, but they don't exists in the dictionary, permited units are: " + dbUnits + ".");
                     addIssue(context, issue, foundSymbol.isFiltered());
 
@@ -55,7 +56,7 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
         }
     }
 
-    private boolean raisesIssue(Symbol foundSymbol, List<String> dbUnits) {
+    private boolean raisesIssue(Symbol foundSymbol, Set<String> dbUnits) {
         if (symbolIsIgnored(foundSymbol))
             return false;
 

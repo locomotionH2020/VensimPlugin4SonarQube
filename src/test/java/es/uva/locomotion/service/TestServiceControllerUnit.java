@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
@@ -49,7 +50,7 @@ public class TestServiceControllerUnit {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        List<String> actualValue = controller.getUnitsFromDb();
+         Set<String> actualValue = controller.getUnitsFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
@@ -62,7 +63,7 @@ public class TestServiceControllerUnit {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        List<String> actualValue = controller.getUnitsFromDb();
+         Set<String> actualValue = controller.getUnitsFromDb();
 
 
         Assert.assertNull(actualValue);
@@ -76,7 +77,7 @@ public class TestServiceControllerUnit {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        List<String> actualValue = controller.getUnitsFromDb();
+         Set<String> actualValue = controller.getUnitsFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
@@ -89,7 +90,7 @@ public class TestServiceControllerUnit {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        List<String> actualValue = controller.getUnitsFromDb();
+         Set<String> actualValue = controller.getUnitsFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
@@ -102,7 +103,7 @@ public class TestServiceControllerUnit {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        List<String> actualValue = controller.getUnitsFromDb();
+         Set<String> actualValue = controller.getUnitsFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
@@ -119,7 +120,7 @@ public class TestServiceControllerUnit {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        List<String> actualValue = controller.getUnitsFromDb();
+         Set<String> actualValue = controller.getUnitsFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).unique("The dictionary service was unreachable.\n" +
@@ -134,7 +135,7 @@ public class TestServiceControllerUnit {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        List<String> actualValue = controller.getUnitsFromDb();
+         Set<String> actualValue = controller.getUnitsFromDb();
         Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected an array. Dictionary response: {\"name\":\"Juan\"}.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
@@ -151,7 +152,7 @@ public class TestServiceControllerUnit {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-        List<String> actualValue = controller.getUnitsFromDb();
+         Set<String> actualValue = controller.getUnitsFromDb();
 
         Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Missing 'unit' field from a unit. Dictionary response: [{\"notTheKey\":\"foo\"}].\n" +

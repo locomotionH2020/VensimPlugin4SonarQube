@@ -178,7 +178,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
 
         List<Symbol> symbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         symbols.forEach(symbol -> {
-            symbol.addDefinitionLine(1);
+            symbol.addLine(1);
             parsedTable.addSymbol(symbol);
         });
 
@@ -197,9 +197,9 @@ public class TestSymbolNotDefinedInDictionaryCheck {
 
         SymbolTable parsedTable = new SymbolTable();
         Symbol symbolNotInDB = new Symbol("invalid", SymbolType.Subscript_Value);
-        symbolNotInDB.addDefinitionLine(1);
+        symbolNotInDB.addLine(1);
         Symbol valid = new Symbol("valid", SymbolType.Subscript_Value);
-        valid.addDefinitionLine(2);
+        valid.addLine(2);
         parsedTable.addSymbol(symbolNotInDB);
         parsedTable.addSymbol(valid);
 

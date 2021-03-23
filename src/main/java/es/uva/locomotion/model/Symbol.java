@@ -1,42 +1,39 @@
 package es.uva.locomotion.model;
 
 
+import es.uva.locomotion.model.category.Category;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Symbol {
+public class Symbol extends IssuableAbs {
 
 
     private final String token;
-    private final List<Integer> linesDefined;
     private final List<List<Symbol>> indexes;
     private String units;
     private String comment;
     private Set<Symbol> dependencies;
     private SymbolType type;
-    private String category;
-    private String primary_module;
-    private final List<String> shadow_module;
+    private Category category;
+    private Module primary_module;
+    private final List<Module> shadow_module;
     private String group;
     private List<ExcelRef> excel;
-
-    private boolean isValid;
-    private Class<?> invalidReason;
 
     private boolean isFiltered;
 
 
-    public Symbol(String token){
+    public Symbol(String token) {
+        super();
         this.token = token.strip();
         dependencies = new HashSet<>();
         type = SymbolType.UNDETERMINED;
-        linesDefined = new ArrayList<>();
         units = "";
-        comment ="";
-        category = "";
+        comment = "";
+        category = null;
         indexes = new ArrayList<>();
-        isValid = true;
-        primary_module = "";
+        primary_module = null;
         shadow_module = new ArrayList<>();
         group = "";
         excel = new ArrayList<>();
@@ -44,22 +41,13 @@ public class Symbol {
     }
 
 
-    public Symbol(String token, SymbolType type){
-      this(token);
-      this.type = type;
-    }
-
-    public void addDefinitionLine(int line){
-        linesDefined.add(line);
+    public Symbol(String token, SymbolType type) {
+        this(token);
+        this.type = type;
     }
 
     public void setType(SymbolType type) {
         this.type = type;
-    }
-
-
-    public List<Integer> getDefinitionLines(){
-        return linesDefined;
     }
 
     /*
@@ -74,17 +62,16 @@ public class Symbol {
         return type;
     }
 
-    public void addDependency(Symbol symbol){
+    public void addDependency(Symbol symbol) {
         dependencies.add(symbol);
 
     }
 
-    public void addDependencies(Collection<Symbol> symbols){
-        for(Symbol symb: symbols){
+    public void addDependencies(Collection<Symbol> symbols) {
+        for (Symbol symb : symbols) {
             addDependency(symb);
         }
     }
-
 
 
     public String getToken() {
@@ -92,19 +79,19 @@ public class Symbol {
     }
 
 
-    public boolean hasType(){
-        return getType()!=SymbolType.UNDETERMINED;
+    public boolean hasType() {
+        return getType() != SymbolType.UNDETERMINED;
     }
 
-    public void addIndexLine(List<Symbol> indexLine){
+    public void addIndexLine(List<Symbol> indexLine) {
 
         int sizeDiff = indexLine.size() - indexes.size();
-        if(sizeDiff>0)
-            for(int i=0;i<sizeDiff;i++)
+        if (sizeDiff > 0)
+            for (int i = 0; i < sizeDiff; i++)
                 indexes.add(new ArrayList<>());
 
 
-        for(int i = 0; i<indexLine.size();i++){
+        for (int i = 0; i < indexLine.size(); i++) {
             Symbol index = indexLine.get(i);
             indexes.get(i).add(index);
         }
@@ -113,26 +100,16 @@ public class Symbol {
     }
 
 
-
-    public List<List<Symbol>> getIndexes(){
+    public List<List<Symbol>> getIndexes() {
         return indexes;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Symbol)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Symbol symbol = (Symbol) o;
-        return getToken().equals(symbol.getToken()) &&
-                linesDefined.equals(symbol.linesDefined) &&
-                getIndexes().equals(symbol.getIndexes()) &&
-                getUnits().equals(symbol.getUnits()) &&
-                getComment().equals(symbol.getComment()) &&
-                getDependencies().equals(symbol.getDependencies()) &&
-                getType() == symbol.getType() &&
-                getCategory().equals(symbol.getCategory()) &&
-                getPrimary_module().equals(symbol.getPrimary_module()) &&
-                getShadow_module().equals(symbol.getShadow_module());
+        return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && Objects.equals(dependencies, symbol.dependencies) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primary_module, symbol.primary_module) && Objects.equals(shadow_module, symbol.shadow_module) && Objects.equals(group, symbol.group) && Objects.equals(excel, symbol.excel);
     }
 
     public boolean dbEquals(Object o) {
@@ -154,7 +131,6 @@ public class Symbol {
     public String toString() {
         return "Symbol{" +
                 "token='" + token + '\'' +
-                ", linesDefined=" + linesDefined +
                 ", indexes=" + indexes +
                 ", units='" + units + '\'' +
                 ", comment='" + comment + '\'' +
@@ -173,14 +149,14 @@ public class Symbol {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getToken(), linesDefined, getIndexes(), getUnits(), getComment(), getType(), getCategory(), getPrimary_module(), getShadow_module());
+        return Objects.hash(getToken(), getIndexes(), getUnits(), getComment(), getType(), getCategory(), getPrimary_module(), getShadow_module());
     }
 
     public void setUnits(String units) {
         this.units = units.strip();
     }
 
-    public void setComment(String comment){
+    public void setComment(String comment) {
         this.comment = comment.strip();
     }
 
@@ -192,11 +168,11 @@ public class Symbol {
         return comment;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
-    public String getCategory(){
+    public Category getCategory() {
         return category;
     }
 
@@ -204,44 +180,40 @@ public class Symbol {
         this.group = group;
     }
 
-    public String getGroup(){
+    public String getGroup() {
         return group;
     }
 
     /**
      * Overrides the dependencies
+     *
      * @param dependencies new dependencies
      */
     public void setDependencies(Set<Symbol> dependencies) {
         this.dependencies = dependencies;
     }
 
-    public void setAsInvalid(Class<?> who){
-        isValid = false;
-        invalidReason = who;
+
+    public Module getPrimary_module() {
+        return primary_module;
     }
 
-    public boolean isValid() {
-        return isValid;
+    public void setPrimary_module(Module primary_module) {
+        this.primary_module = primary_module;
     }
-    public String getReasonForInvalid() {
-        return invalidReason.getSimpleName();
-    }
-    public String getPrimary_module() { return primary_module; }
 
-    public void setPrimary_module(String primary_module) { this.primary_module = primary_module; }
-
-    public List<String> getShadow_module() {
+    public List<Module> getShadow_module() {
         return shadow_module;
     }
 
-    public void addShadow_view(String module){
-        shadow_module.add(module.trim());
+    public void addShadow_module(Module module) {
+        shadow_module.add(module);
     }
 
-    public List<String> get_views(){
-        List<String> list = new ArrayList<>(getShadow_module());
-        list.add(getPrimary_module());
+    public List<Module> get_views() {
+        List<Module> list = new ArrayList<>(getShadow_module());
+        if (getPrimary_module() != null)
+            list.add(getPrimary_module());
         return list;
     }
 
@@ -263,7 +235,7 @@ public class Symbol {
     }
 
     public ExcelRef getExcelOrCreate(String filename, String sheet) {
-        ExcelRef excelTmp = new ExcelRef(filename,sheet);
+        ExcelRef excelTmp = new ExcelRef(filename, sheet);
         if (excel.contains(excelTmp))
             return excel.get(excel.indexOf(excelTmp));
 

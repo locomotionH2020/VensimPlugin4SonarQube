@@ -1,52 +1,59 @@
-package es.uva.locomotion.model;
+package es.uva.locomotion.model.category;
 
+
+import es.uva.locomotion.model.IssuableAbs;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class Category implements Comparable<Category> {
+public class CategoryImpl extends IssuableAbs implements Comparable<Category>, Category {
 
 
     private Category superCategory;
-    private String name;
+    private final String name;
     private Set<Category> subcategories;
 
-
-    public Category(String name) {
+    CategoryImpl(String name) {
+        super();
         this.superCategory = null;
         this.name = name;
         this.subcategories = null;
     }
 
-
+    @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getWholeName() {
+        if (getSuperCategory() != null) {
+            return getSuperCategory().getWholeName() + "." + getName();
+        } else {
+            return getName();
+        }
     }
 
     public Category getSuperCategory() {
         return superCategory;
     }
 
-    private void setSuperCategory(Category superCategory) {
+    protected void setSuperCategory(Category superCategory) {
         this.superCategory = superCategory;
     }
 
-    public Set<String> getSubcategoriesNames() {
-        if(subcategories == null){
-            return null;
-        }
-        return subcategories.stream().map(Category::getName).collect(Collectors.toSet());
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    @Override
     public Set<Category> getSubcategories() {
         return subcategories;
     }
 
-    public void addSubcategory(Category subcategory) {
+    @Override
+    public Category getSubcategory(String subcategory) {
+        if(getSubcategories() == null) return null;
+        return subcategories.stream().filter((subcat) -> subcat.getName().equals(subcategory)).findFirst().orElse(null);
+    }
+
+
+    public void addSubcategory(CategoryImpl subcategory) {
         if (this.getSuperCategory() != null) {
             throw new IllegalStateException("Subcategories can't have new subcategories");
         }
@@ -61,12 +68,18 @@ public class Category implements Comparable<Category> {
         if (subcategory.getSuperCategory() != null && !subcategory.getSuperCategory().equals(this)) {
             throw new IllegalStateException("Category " + subcategory.getName() + " already have a supercategory: " + subcategory.getSuperCategory().getName());
         }
+
         subcategory.setSuperCategory(this);
         if (subcategories == null) {
             subcategories = new HashSet<>();
         }
         this.subcategories.add(subcategory);
     }
+
+    public void setSubcategories(Set<Category> subcategories) {
+        this.subcategories = subcategories;
+    }
+
 
     @Override
     public String toString() {
@@ -81,7 +94,7 @@ public class Category implements Comparable<Category> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Category category = (Category) o;
+        CategoryImpl category = (CategoryImpl) o;
         if (superCategory != null && category.getSuperCategory() != null) {
             return superCategory.getName().equals(category.superCategory.getName()) && name.equals(category.name);
         } else if (superCategory != null ^ category.getSuperCategory() != null) {
@@ -103,11 +116,12 @@ public class Category implements Comparable<Category> {
         return name.compareTo(o.getName());
     }
 
-    public String getWholeName(){
-        if(this.superCategory != null){
-            return this.superCategory.getWholeName() + "." + this.name;
-        }else{
-            return this.name;
-        }
+    @Override
+    public void addLine(int line) {
+        super.addLine(line);
+        if (getSubcategories() != null)
+            for (Category sub : getSubcategories()) {
+                sub.addLine(line);
+            }
     }
 }

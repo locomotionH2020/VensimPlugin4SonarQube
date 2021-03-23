@@ -2,9 +2,6 @@ package es.uva.locomotion.model;
 
 import  static org.junit.Assert.*;
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +36,7 @@ public class TestSymbolTable {
         Symbol symbol = table.addSymbol(new Symbol("mySymbol"));
         assertEquals(symbol.getToken(),"mySymbol");
         assertTrue(table.hasSymbol("mySymbol"));
-        assertTrue(symbol.getDefinitionLines().isEmpty());
+        assertTrue(symbol.getLines().isEmpty());
         assertEquals(NO_DEPENDENCIES,symbol.getDependencies());
         assertSymbolType(symbol, SymbolType.UNDETERMINED);
     }
@@ -63,9 +60,9 @@ public class TestSymbolTable {
         assertSame(expectedSymbol,actualSymbol);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetSymbolDoesntExist(){
-        table.getSymbol("doesntExist");
+        assertNull(table.getSymbol("doesntExist"));
     }
 
     @Test

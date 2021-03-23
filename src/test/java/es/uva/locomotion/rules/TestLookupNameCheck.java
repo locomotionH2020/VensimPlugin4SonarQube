@@ -211,9 +211,9 @@ public class TestLookupNameCheck {
 
         SymbolTable table = new SymbolTable();
         Symbol invalid = new Symbol("invalid", SymbolType.Lookup_Table);
-        invalid.addDefinitionLine(1);
+        invalid.addLine(1);
         Symbol valid = new Symbol("valid_lt", SymbolType.Lookup_Table);
-        valid.addDefinitionLine(2);
+        valid.addLine(2);
         table.addSymbol(invalid);
         table.addSymbol(valid);
 

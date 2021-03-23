@@ -173,7 +173,7 @@ public class TestDictionaryTypeMismatchCheck {
 
         List<Symbol> parsedSymbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         parsedSymbols.forEach(symbol -> {
-            symbol.addDefinitionLine(1);
+            symbol.addLine(1);
             symbol.setType(SymbolType.Variable);
             parsedTable.addSymbol(symbol);
         });

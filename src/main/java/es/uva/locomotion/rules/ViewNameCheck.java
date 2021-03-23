@@ -71,11 +71,12 @@ public class ViewNameCheck extends AbstractVensimCheck {
         String categorySeparator = sensorContext.config().get(CATEGORY_SEPARATOR).orElse("");
         for (View view : table.getViews()) {
             if (!view.isValid()) {
-                int line = view.getLine();
-                Issue issue = new Issue(this, line, "The view '" + view.getIdentifier() + "' deos not follow the naming convention, it should use the Module separator: \"" + moduleSeparator + "\" and the Category separator \"" + categorySeparator + "\".");
+                for(int line : view.getLines()) {
+                    Issue issue = new Issue(this, line, "The view '" + view.getIdentifier() + "' deos not follow the naming convention, it should use the Module separator: \"" + moduleSeparator + "\" and the Category separator \"" + categorySeparator + "\".");
 
-                boolean generateIssue = moduleName.equals("") || view.getModule().contains(moduleName);
-                addIssue(context, issue, !generateIssue);
+                    boolean generateIssue = moduleName.equals("") || view.getModule().getName().contains(moduleName);
+                    addIssue(context, issue, !generateIssue);
+                }
             }
 
         }

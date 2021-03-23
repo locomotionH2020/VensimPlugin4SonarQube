@@ -51,7 +51,7 @@ public class TestEmbeddedLookupCheck {
         List<Pair<Symbol,Integer>> pairs = new ArrayList<>();
 
         Symbol lookup = new Symbol("name");
-        lookup.addDefinitionLine(1);
+        lookup.addLine(1);
         pairs.add(Pair.of(lookup,1));
 
 

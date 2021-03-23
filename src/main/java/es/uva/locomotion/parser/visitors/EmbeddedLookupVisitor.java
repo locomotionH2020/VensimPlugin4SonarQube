@@ -58,7 +58,7 @@ public class EmbeddedLookupVisitor extends ModelParserBaseVisitor<Void> {
     public Void visitLookupPointList(ModelParser.LookupPointListContext ctx) {
         int size = ctx.lookupPoint().size();
         Symbol lookup = new Symbol("not used");
-        lookup.addDefinitionLine(ctx.start.getLine());
+        lookup.addLine(ctx.start.getLine());
         lookup.setFiltered(isSymbolFiltered);
         lookupsTable.add(Pair.of(lookup, size));
 
@@ -70,7 +70,7 @@ public class EmbeddedLookupVisitor extends ModelParserBaseVisitor<Void> {
 
         int size = ctx.integerConst().size() + ctx.floatingConst().size();
         Symbol lookup = new Symbol("not used");
-        lookup.addDefinitionLine(ctx.start.getLine());
+        lookup.addLine(ctx.start.getLine());
         lookup.setFiltered(isSymbolFiltered);
         lookupsTable.add(Pair.of(lookup, size));
 

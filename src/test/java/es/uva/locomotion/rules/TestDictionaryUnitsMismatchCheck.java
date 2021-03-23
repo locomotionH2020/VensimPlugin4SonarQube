@@ -25,8 +25,8 @@ public class TestDictionaryUnitsMismatchCheck {
 
         Symbol parsedVar = new Symbol("var");
         parsedVar.setUnits("kg");
-        parsedVar.addDefinitionLine(1);
-        parsedVar.addDefinitionLine(2);
+        parsedVar.addLine(1);
+        parsedVar.addLine(2);
         parsedTable.addSymbol(parsedVar);
 
         Symbol dbVar = new Symbol("var");
@@ -57,7 +57,7 @@ public class TestDictionaryUnitsMismatchCheck {
 
         Symbol parsedVar = new Symbol("var");
         parsedVar.setUnits("                                                                               kg                                              ");
-        parsedVar.addDefinitionLine(1);
+        parsedVar.addLine(1);
         parsedTable.addSymbol(parsedVar);
 
         Symbol dbVar = new Symbol("var");
@@ -82,8 +82,8 @@ public class TestDictionaryUnitsMismatchCheck {
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
-        parsedVar.addDefinitionLine(1);
-        parsedVar.addDefinitionLine(2);
+        parsedVar.addLine(1);
+        parsedVar.addLine(2);
         parsedTable.addSymbol(parsedVar);
 
         Symbol dbVar = new Symbol("var");
@@ -234,7 +234,7 @@ public class TestDictionaryUnitsMismatchCheck {
 
         List<Symbol> parsedSymbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         parsedSymbols.forEach(symbol -> {
-            symbol.addDefinitionLine(1);
+            symbol.addLine(1);
             symbol.setUnits("Parsed units");
             parsedTable.addSymbol(symbol);
         });

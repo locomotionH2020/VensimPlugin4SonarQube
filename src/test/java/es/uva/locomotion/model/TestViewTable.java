@@ -1,7 +1,7 @@
 package es.uva.locomotion.model;
 
-import es.uva.locomotion.model.View;
-import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.category.CategoryMap;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -13,14 +13,14 @@ public class TestViewTable {
     @Test
     public void viewOptions() {
         ViewTable vt = new ViewTable();
-        View v = new View("name");
+        View v = new View(new Module("name"));
         vt.addView(v);
 
         assertEquals(v, vt.getView("name"));
         assertTrue(vt.hasView("name"));
         assertFalse(vt.hasView("no This name"));
 
-        View v2 = new View("name2");
+        View v2 = new View(new Module("name2"));
         vt.addView(v2);
 
         Collection<View> viewsReturned = vt.getViews();
@@ -29,12 +29,6 @@ public class TestViewTable {
         assertTrue(viewsReturned.contains(v));
         assertTrue(viewsReturned.contains(v2));
         assertEquals(2, viewsReturned.size());
-
-        vt.removeView(v);
-
-        assertFalse(vt.hasView("name"));
-        assertTrue(vt.hasView("name2"));
-
 
     }
 
@@ -55,31 +49,34 @@ public class TestViewTable {
 
     @Test
     public void viewCreateOrSelectViewWithCategory() {
+        CategoryMap cl = new CategoryMap();
         ViewTable vt = new ViewTable();
-        View v = vt.createOrSelectView("module", "category", true);
+        View v = vt.createOrSelectView("module", "category");
+        Category c = v.getCategory();
 
         assertEquals(v, vt.getView(v.getIdentifier()));
         assertTrue(vt.hasView(v.getIdentifier()));
         assertFalse(vt.hasView("no This name"));
 
-        assertTrue(vt.hasModule("module"));
-        assertFalse(vt.hasModule("not this module"));
+        assertTrue(vt.getModules().contains(new Module("module")));
+        assertFalse(vt.getModules().contains(new Module("not this module")));
         assertEquals(1, vt.getModules().size());
 
-        assertTrue(vt.hasCategory("category"));
-        assertFalse(vt.hasCategory("not this category"));
-        assertEquals(1, vt.getCategoriesList().size());
+        assertTrue(vt.getCategories().contains(cl.createOrSelectCategory("category")));
+        assertFalse(vt.getCategories().contains(cl.createOrSelectCategory("not this category")));
+        assertEquals(1, vt.getCategories().size());
 
-        View vIgual = vt.createOrSelectView("module", "category", true);
+        View vIgual = vt.createOrSelectView("module", "category");
         assertEquals(vIgual, v);
 
-        View vDistnta = vt.createOrSelectView("module", "category2", true);
+        View vDistnta = vt.createOrSelectView("module", "category2");
         assertNotEquals(vDistnta, v);
 
     }
 
     @Test
     public void viewCreateOrSelectViewWithCategoryAndSubCategory() {
+        CategoryMap cl = new CategoryMap();
         ViewTable vt = new ViewTable();
         View v = vt.createOrSelectView("module", "category", "subcategory");
 
@@ -87,19 +84,19 @@ public class TestViewTable {
         assertTrue(vt.hasView(v.getIdentifier()));
         assertFalse(vt.hasView("no This name"));
 
-        assertTrue(vt.hasModule("module"));
-        assertFalse(vt.hasModule("not this module"));
+        assertTrue(vt.getModules().contains(new Module("module")));
+        assertFalse(vt.getModules().contains(new Module("not this module")));
         assertEquals(1, vt.getModules().size());
 
-        assertTrue(vt.hasCategory("category"));
-        assertFalse(vt.hasCategory("not this category"));
-        assertEquals(1, vt.getCategoriesList().size());
+        assertTrue(vt.getCategories().contains(cl.createOrSelectCategory("category")));
+        assertFalse(vt.getCategories().contains(cl.createOrSelectCategory("not this category")));
+        assertEquals(1, vt.getCategories().size());
 
-        assertTrue(vt.hasSubcategory("category", "subcategory"));
-        assertFalse(vt.hasSubcategory("category", "not this subtategory"));
-        assertThrows(IllegalArgumentException.class, () -> vt.hasSubcategory("not this category", "subtategory"));
-        assertEquals(1, vt.getSubcategories("category").size());
-        assertThrows(IllegalArgumentException.class, () -> assertEquals(1, vt.getSubcategories("not this category").size()));
+        assertNotNull(vt.getCategory("category").getSubcategory("subcategory"));
+        assertNull(vt.getCategory("category").getSubcategory("not this subtategory"));
+
+        assertNull(vt.getCategory("not this category"));
+        assertEquals(1, vt.getCategory("category").getSubcategories().size());
 
         View vIgual = vt.createOrSelectView("module", "category", "subcategory");
         assertEquals(vIgual, v);

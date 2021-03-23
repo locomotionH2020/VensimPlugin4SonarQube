@@ -1,6 +1,9 @@
 package es.uva.locomotion.service;
 
 import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.Module;
+import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.category.CategoryMap;
 import es.uva.locomotion.utilities.UtilityFunctions;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
@@ -13,6 +16,7 @@ import javax.json.*;
 
 import java.io.StringReader;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class DBFacade {
@@ -185,9 +189,8 @@ public class DBFacade {
 
             String units = jsonSymbol.getString(FIELD_SYMBOL_UNITS);
             symbol.setUnits(units);
-
             String category = jsonSymbol.getString(FIELD_SYMBOL_CATEGORY);
-            symbol.setCategory(category);
+            symbol.setCategory(Category.create(category));
 
             String type = jsonSymbol.getString(FIELD_SYMBOL_TYPE_RECIEVE);
             try {
@@ -206,12 +209,12 @@ public class DBFacade {
             symbol.addIndexLine(indexes);
 
             JsonObject modules = jsonSymbol.getJsonObject(FIELD_SYMBOL_MODULES);
-            symbol.setPrimary_module(modules.getString(FIELD_SYMBOL_MODULES_MAIN));
+            symbol.setPrimary_module(new Module(modules.getString(FIELD_SYMBOL_MODULES_MAIN)));
 
             JsonArray secondaryModules = modules.getJsonArray(FIELD_SYMBOL_MODULES_SECONDARY);
             for (int i = 0; i < secondaryModules.size(); i++) {
                 String module = secondaryModules.getString(i);
-                symbol.addShadow_view(module);
+                symbol.addShadow_module(new Module(module));
             }
             table.addSymbol(symbol);
 
@@ -219,11 +222,11 @@ public class DBFacade {
     }
 
 
-    public static void injectSymbols(String serviceUrl, List<Symbol> symbols, String module, String token) {
+    public static void injectSymbols(String serviceUrl, List<Symbol> symbols, String module, String token) { //TODO .filter(symbol -> symbol.getCategory() != null)
         List<Symbol> rawSymbols = symbols.stream().filter(symbol -> !List.of(SymbolType.Subscript_Value, SymbolType.Subscript,
-                SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION, SymbolType.Function).contains(symbol.getType())).filter(symbol -> symbol.getCategory() != null).collect(Collectors.toList());
+                SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION, SymbolType.Function).contains(symbol.getType())).collect(Collectors.toList());
 
-
+        rawSymbols = rawSymbols.stream().filter(Symbol::isValid).filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
         rawSymbols.sort(Comparator.comparing(Symbol::getToken));
 
         JsonArray jsonSymbols = getInjectSymbolsJson(rawSymbols);
@@ -246,7 +249,7 @@ public class DBFacade {
             jsonSymbol.add(FIELD_SYMBOL_UNITS, s.getUnits().trim());
             jsonSymbol.add(FIELD_SYMBOL_COMMENT, s.getComment().trim());
             jsonSymbol.add(FIELD_INJECTION_IS_INDEXED, String.valueOf(!s.getIndexes().isEmpty()).toLowerCase());
-            jsonSymbol.add(FIELD_SYMBOL_CATEGORY, s.getCategory().trim());
+            jsonSymbol.add(FIELD_SYMBOL_CATEGORY, s.getCategory().getName().trim());
             jsonSymbol.add(FIELD_SYMBOL_TYPE_SEND, s.getType().toString());
 
             jsonSymbols.add(jsonSymbol);
@@ -293,7 +296,7 @@ public class DBFacade {
         return list;
     }
 
-    public static List<String> getExistingModulesFromDB(String serviceUrl, String token) {
+    public static Set<String> getExistingModulesFromDB(String serviceUrl, String token) {
         String serviceResponse = handler.sendModuleRequestToDictionaryService(serviceUrl, token);
 
         if (serviceResponse == null)
@@ -316,8 +319,8 @@ public class DBFacade {
 
     }
 
-    private static List<String> createModulesListFromJson(JsonArray modulesFound) {
-        List<String> list = new ArrayList<>();
+    private static Set<String> createModulesListFromJson(JsonArray modulesFound) {
+        Set<String> list = new HashSet<>();
         JsonObject acronym;
         for (JsonValue jsonValue : modulesFound) {
             if (jsonValue.getValueType() != JsonValue.ValueType.STRING) {
@@ -331,8 +334,6 @@ public class DBFacade {
             list.add(module);
 
         }
-        list.sort(Comparator.comparing(String::toString));
-
         return list;
     }
 
@@ -406,11 +407,10 @@ public class DBFacade {
                     throw new ServiceResponseFormatNotValid("'" + name + "' father's '" + super_categoryName + "' does not exists or it is a subcategory.");
                 }
                 Category super_category = categoryMap.createOrSelectCategory(super_categoryName);
-                Category category = new Category(name);
-                super_category.addSubcategory(category);
+                Category category = categoryMap.addSubcategoryTo(super_category, name);
+
             } else { //Category
-                Category category = new Category(name);
-                categoryMap.add(category);
+                Category category = categoryMap.createOrSelectCategory(name);
             }
 
 
@@ -468,7 +468,7 @@ public class DBFacade {
         handler.injectCategories(serviceUrl, jsonCategoriesBuilder.build(), token);
     }
 
-    public static List<String> getExistingUnitsFromDB(String serviceUrl, String token) {
+    public static Set<String> getExistingUnitsFromDB(String serviceUrl, String token) {
         String serviceResponse = handler.sendUnitsRequestToDictionaryService(serviceUrl, token);
 
         if (serviceResponse == null)
@@ -491,9 +491,9 @@ public class DBFacade {
 
     }
 
-    private static List<String> createUnitsListFromJson(JsonArray unitsFound) {
+    private static Set<String> createUnitsListFromJson(JsonArray unitsFound) {
 
-        List<String> list = new ArrayList<>();
+        Set<String> list = new HashSet<>();
         JsonObject acronym;
         for (int s = 0; s < unitsFound.size(); s++) {
             if (unitsFound.get(s).getValueType() != JsonValue.ValueType.OBJECT) {

@@ -1,11 +1,14 @@
 package es.uva.locomotion.utilities;
 
 import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.Module;
+import es.uva.locomotion.model.category.Category;
 
 import javax.json.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class JsonDictoinaryDiffBuilder {
@@ -42,7 +45,7 @@ public class JsonDictoinaryDiffBuilder {
         tableBuilder.add("file", file);
         tableBuilder.add("symbols", symbolTableDiffToJson(table, dbData.getDataBaseSymbols()));
         tableBuilder.add("modules", modulesDiffToJson(viewTable.getModules(), dbData.getModules()));
-        tableBuilder.add("categories", categoriesDiffToJson(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories()));
+        tableBuilder.add("categories", categoriesDiffToJson(viewTable.getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories()));
 
         fileBuilder.add(tableBuilder);
     }
@@ -89,8 +92,8 @@ public class JsonDictoinaryDiffBuilder {
 
         if (!symbol.getPrimary_module().equals(dbSymbol.getPrimary_module())) {
             JsonObjectBuilder primaryBuilder = Json.createObjectBuilder();
-            primaryBuilder.add(KEY_LOCAL, symbol.getPrimary_module());
-            primaryBuilder.add(KEY_DICTIONARY, dbSymbol.getPrimary_module());
+            primaryBuilder.add(KEY_LOCAL, symbol.getPrimary_module().getName());
+            primaryBuilder.add(KEY_DICTIONARY, dbSymbol.getPrimary_module().getName());
             symbolBuilder.add(KEY_PRIMARY_VIEW, primaryBuilder);
         }
 
@@ -99,13 +102,13 @@ public class JsonDictoinaryDiffBuilder {
             JsonObjectBuilder shadowBuilder = Json.createObjectBuilder();
 
             JsonArrayBuilder shadowLocalBuilder = Json.createArrayBuilder();
-            for (String view : symbol.getShadow_module())
-                shadowLocalBuilder.add(view);
+            for (Module view : symbol.getShadow_module())
+                shadowLocalBuilder.add(view.getName());
             shadowBuilder.add(KEY_LOCAL, shadowLocalBuilder);
 
             JsonArrayBuilder shadowDBBuilder = Json.createArrayBuilder();
-            for (String view : symbol.getShadow_module())
-                shadowDBBuilder.add(view);
+            for (Module view : symbol.getShadow_module())
+                shadowDBBuilder.add(view.getName());
             shadowBuilder.add(KEY_DICTIONARY, shadowDBBuilder);
 
             symbolBuilder.add(KEY_SHADOW_VIEWS, shadowBuilder);
@@ -113,8 +116,8 @@ public class JsonDictoinaryDiffBuilder {
         if (!symbol.getShadow_module().equals(dbSymbol.getShadow_module())) {
 
             JsonObjectBuilder categoryBuilder = Json.createObjectBuilder();
-            categoryBuilder.add(KEY_LOCAL, symbol.getCategory());
-            categoryBuilder.add(KEY_DICTIONARY, dbSymbol.getCategory());
+            categoryBuilder.add(KEY_LOCAL, symbol.getCategory().getName());
+            categoryBuilder.add(KEY_DICTIONARY, dbSymbol.getCategory().getName());
             symbolBuilder.add(KEY_CATEGORY, categoryBuilder);
         }
         if (!symbol.getShadow_module().equals(dbSymbol.getShadow_module())) {
@@ -135,22 +138,22 @@ public class JsonDictoinaryDiffBuilder {
 
     }
 
-    private JsonObject modulesDiffToJson(List<String> modules, List<String> dbModules) {
+    private JsonObject modulesDiffToJson(Set<Module> modules, Set<Module> dbModules) {
         JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
         JsonArrayBuilder missingDBBuilder = Json.createArrayBuilder();
 
-        List<String> localModules = modules.stream().sorted().collect(Collectors.toList());
+        List<Module> localModules = modules.stream().sorted().collect(Collectors.toList());
         JsonObjectBuilder tableBuilder = Json.createObjectBuilder();
-        for (String module : localModules) {
+        for (Module module : localModules) {
             if (dbModules.contains(module))
                 dbModules.remove(module);
             else
-                missingDBBuilder.add(module);
+                missingDBBuilder.add(module.getName());
         }
-        List<String> DBModules = dbModules.stream().sorted().collect(Collectors.toList());
+        List<Module> DBModules = dbModules.stream().sorted().collect(Collectors.toList());
 
-        for (String dbModule : DBModules) {
-            missingLocalBuilder.add(dbModule);
+        for (Module dbModule : DBModules) {
+            missingLocalBuilder.add(dbModule.getName());
         }
 
         tableBuilder.add("not_found_in_DB", missingDBBuilder);
@@ -212,17 +215,17 @@ public class JsonDictoinaryDiffBuilder {
 
         JsonObjectBuilder subcategoryBuilder = Json.createObjectBuilder();
 
-        if (!category.getSubcategoriesNames().equals(dbCategory.getSubcategoriesNames())) {
+        if (!category.getSubcategories().equals(dbCategory.getSubcategories())) {
             JsonObjectBuilder superBuilder = Json.createObjectBuilder();
 
             JsonArrayBuilder subcategoriesLocalBuilder = Json.createArrayBuilder();
-            for (String subcategory : category.getSubcategoriesNames())
-                subcategoriesLocalBuilder.add(subcategory);
+            for (Category subcategory : category.getSubcategories())
+                subcategoriesLocalBuilder.add(subcategory.getName());
             subcategoryBuilder.add(KEY_LOCAL, subcategoriesLocalBuilder);
 
             JsonArrayBuilder subcategoriesDBBuilder = Json.createArrayBuilder();
-            for (String dbSubcategory : dbCategory.getSubcategoriesNames())
-                subcategoriesDBBuilder.add(dbSubcategory);
+            for (Category dbSubcategory : dbCategory.getSubcategories())
+                subcategoriesDBBuilder.add(dbSubcategory.getName());
             subcategoryBuilder.add(KEY_DICTIONARY, subcategoriesDBBuilder);
 
             categoryBuilder.add(KEY_SUBCATEGORY, subcategoryBuilder);

@@ -1,15 +1,19 @@
 package es.uva.locomotion.model;
 
+import es.uva.locomotion.model.category.CategoryMap;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DataBaseRepresentation {
 
     private SymbolTable dataBaseSymbols;
     private AcronymsList acronyms;
-    private List<String> modules;
+    private Set<Module> modules;
     private CategoryMap categories;
-    private List<String> units;
+    private Set<String> units;
 
     public DataBaseRepresentation() {
         dataBaseSymbols = null;
@@ -42,22 +46,22 @@ public class DataBaseRepresentation {
         this.categories = categories;
     }
 
-    public List<String> getModules() {
-        return new ArrayList<>(modules);
+    public Set<Module> getModules() {
+        return new HashSet<>(modules);//TODO si no hay diccionario peta.
     }
 
-    public void setModules(List<String> modules) {
+    public void setModules(Set<Module> modules) {
         this.modules = modules;
     }
 
-    public List<String> getUnits() {
+    public Set<String> getUnits() {
         if(units == null){
             return null;
         }
-        return new ArrayList<>(units);
+        return new HashSet<>(units);
     }
 
-    public void setUnits(List<String> units) {
+    public void setUnits(Set<String> units) {
         this.units = units;
     }
 }

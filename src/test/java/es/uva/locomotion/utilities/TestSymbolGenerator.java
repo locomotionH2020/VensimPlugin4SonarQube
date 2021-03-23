@@ -60,7 +60,7 @@ public class TestSymbolGenerator {
         Symbol time = table.getSymbol("Time");
 
         assertSymbolType(time,SymbolType.Variable);
-        assertTrue(time.getDefinitionLines().isEmpty());
+        assertTrue(time.getLines().isEmpty());
 
     }
 
@@ -73,7 +73,7 @@ public class TestSymbolGenerator {
 
         Symbol time = table.getSymbol("Time");
         assertSymbolType(time,SymbolType.Variable);
-        assertTrue(time.getDefinitionLines().isEmpty());
+        assertTrue(time.getLines().isEmpty());
     }
 
 

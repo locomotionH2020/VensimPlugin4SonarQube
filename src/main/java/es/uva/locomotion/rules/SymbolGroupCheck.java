@@ -1,10 +1,8 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.AcronymsList;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
@@ -13,10 +11,8 @@ import org.sonar.api.batch.rule.Severity;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 
@@ -55,8 +51,7 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
 
     private List<String> getDefaultControlSymbols() {
         try {
-            List<String> symbolsCustom = Arrays.asList(symbols.split(";"));
-            return symbolsCustom;
+            return Arrays.asList(symbols.split(";"));
         } catch (PatternSyntaxException exception) {
             LOG.unique("The rule " + NAME + " has an invalid configuration: The selected list of symbols is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);
@@ -71,9 +66,9 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
         for (Symbol symbol : table.getSymbols()) {
             if (checkGroupControl(symbol.getGroup())) {
                 if (!controlSymbols.contains(symbol.getToken())) {
-                    for (int line : symbol.getDefinitionLines()) {
+                    for (int line : symbol.getLines()) {
 
-                        symbol.setAsInvalid(this.getClass());
+                        symbol.setAsInvalid(this.getClass().getSimpleName());
                         Issue issue = new Issue(this, line, "This symbol is declared in the group \"Control\"" +
                                 " but it does not belongs in it. Try repositioning its declaration to outside of this group");
                         issue.setSeverity(Severity.MAJOR);
@@ -82,8 +77,8 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
                 }
             } else {
                 if (controlSymbols.contains(symbol.getToken())) {
-                    for (int line : symbol.getDefinitionLines()) {
-                        symbol.setAsInvalid(this.getClass());
+                    for (int line : symbol.getLines()) {
+                        symbol.setAsInvalid(this.getClass().getSimpleName());
                         Issue issue = new Issue(this, line, "This symbol is not declared in the group \"Control\"" +
                                 " but it does belongs in it. Try repositioning its declaration to inside of this group");
                         issue.setSeverity(Severity.MAJOR);

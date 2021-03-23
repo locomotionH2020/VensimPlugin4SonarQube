@@ -1,5 +1,7 @@
 package es.uva.locomotion.rules;
 
+import es.uva.locomotion.model.Number;
+import es.uva.locomotion.model.NumberTable;
 import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
@@ -65,14 +67,13 @@ public class MagicNumberCheck extends AbstractVensimCheck {
         SymbolTable symbolTable = context.getParsedSymbolTable();
         visitor.setSymbols(symbolTable);
 
-        SymbolTable numberTable = visitor.getSymbolTable(context.getRootNode());
+        NumberTable numberTable = visitor.getNumberTable(context.getRootNode());
 
         int minimumRepetitions = getMinimumRepetitions();
 
-        for(Symbol symbol: numberTable.getSymbols()){
+        for(Number symbol: numberTable.getNumbers()){
             if(!numberIsIgnored(symbol.getToken())) {
-                int foundRepetitions = symbol.getDefinitionLines().size();
-
+                int foundRepetitions = symbol.getOcurrences();
                 if(foundRepetitions>=1){
 
                     Severity issueSeverity;
@@ -82,10 +83,10 @@ public class MagicNumberCheck extends AbstractVensimCheck {
                         issueSeverity = Severity.MAJOR;
 
 
-                    for (int line : symbol.getDefinitionLines()) {
+                    for (int line : symbol.getLines()) {
 
                         Issue issue = new Issue(this, line, "The number " + symbol.getToken() + " is repeated " +
-                                symbol.getDefinitionLines().size() + " times. Consider replacing it by a constant");
+                                symbol.getOcurrences() + " times. Consider replacing it by a constant");
                         issue.setSeverity(issueSeverity);
                         addIssue(context,issue,symbol.isFiltered());
 

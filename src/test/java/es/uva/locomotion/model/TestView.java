@@ -1,9 +1,12 @@
 package es.uva.locomotion.model;
 
-import es.uva.locomotion.model.View;
+import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.category.CategoryMap;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -11,27 +14,30 @@ public class TestView {
 
     @Test
     public void getModule() {
-        View v = new View("name");
-        assertEquals("name", v.getModule());
+        View v = new View(new Module("name"));
+        assertEquals("name", v.getModule().getName());
     }
 
     @Test
     public void getSymbols() {
-        View v = new View("name");
-        v.addPrimary("symbol1");
-        v.addShadow("symbol2");
+        View v = new View(new Module("name"));
 
-        Collection<String> result = v.getPrimary_symbols();
-        assertTrue(result.contains("symbol1"));
+        Symbol s1 = new Symbol("symbol1");
+        Symbol s2 = new Symbol("symbol2");
+        v.addPrimary(s1);
+        v.addShadow(s2);
+
+        Set<Symbol> result = v.getPrimary_symbols();
+        assertTrue(result.contains(s1));//HERE
         assertEquals(1,result.size());
 
          result = v.getShadow_symbols();
-        assertTrue(result.contains("symbol2"));
+        assertTrue(result.contains(s2));
         assertEquals(1,result.size());
 
          result = v.getSymbols();
-        assertTrue(result.contains("symbol1"));
-        assertTrue(result.contains("symbol2"));
+        assertTrue(result.contains(s1));
+        assertTrue(result.contains(s2));
         assertEquals(2,result.size());
 
 
@@ -49,62 +55,95 @@ public class TestView {
 
     @Test
     public void getIdentifier() {
-        View v = new View("moduleName", "categoryName", "subcategoryName");
+        CategoryMap cl = new CategoryMap();
+        Category c = cl.createOrSelectCategory("categoryName");
+        Category c2 = cl.addSubcategoryTo(c, "subcategoryName");
+        View v = new View(new Module("moduleName"), c, c2);
         assertEquals("moduleName_categoryName_subcategoryName", v.getIdentifier());
     }
 
     @Test
     public void getCategory() {
-        View v = new View("moduleName", "categoryName");
-        assertEquals("categoryName", v.getCategory());
+        CategoryMap cl = new CategoryMap();
+        Category c = cl.createOrSelectCategory("categoryName");
+        Category c2 = cl.addSubcategoryTo(c, "subcategoryName");
+        View v = new View(new Module("moduleName"), c,c2);
+
+        assertEquals("categoryName", v.getCategory().getName());
     }
     @Test
     public void getCategoryIsNull() {
-        View v = new View("moduleName");
+        View v = new View(new Module("moduleName"));
         assertNull(v.getCategory());
     }
     @Test
     public void getSubcategory() {
-        View v = new View("moduleName", "categoryName", "subcategoryName");
-        assertEquals("subcategoryName", v.getSubcategory());
+        CategoryMap cl = new CategoryMap();
+        Category c = cl.createOrSelectCategory("categoryName");
+        Category c2 = cl.addSubcategoryTo(c, "subcategoryName");
+        View v = new View(new Module("moduleName"), c,c2);
+        assertEquals("subcategoryName", v.getSubcategory().getName());
     }
     @Test
     public void getSubcategoryIsNull() {
-        View v = new View("moduleName", "categoryName");
+        CategoryMap cl = new CategoryMap();
+        Category c = cl.createOrSelectCategory("categoryName");
+        View v = new View(new Module("moduleName"), c,null);
         assertNull( v.getSubcategory());
     }
     @Test
     public void getSubcategoryAndCategoryIsNull() {
-        View v = new View("moduleName");
-        assertNull( v.getSubcategory());
+        View v = new View(new Module("moduleName"));
+        assertNull( v.getCategoryOrSubcategory());
     }
 
     @Test
     public void getCategoryOrSubcategory() {
-        View v = new View("moduleName", "categoryName", "subcategoryName");
-        View v2 = new View("moduleName", "categoryName");
-        View v3 = new View("moduleName");
-        assertEquals("subcategoryName", v.getCategoryOrSubcategory());
-        assertEquals("categoryName", v2.getCategoryOrSubcategory());
+        CategoryMap cl = new CategoryMap();
+        Category c = cl.createOrSelectCategory("categoryName");
+        Category c2 = cl.addSubcategoryTo(c, "subcategoryName");
+        View v = new View(new Module("moduleName"), c,c2);
+
+        Category c3 = cl.createOrSelectCategory("categoryName");
+        View v2 = new View(new Module("moduleName"), c3, null);
+
+
+        View v3 = new View(new Module("moduleName"), null, null);
+
+        assertEquals("subcategoryName", v.getCategoryOrSubcategory().getName());
+        assertEquals("categoryName", v2.getCategoryOrSubcategory().getName());
         assertNull( v3.getCategoryOrSubcategory());
     }
 
         @Test
         public void testEquals(){
-            View v = new View("moduleName", "categoryName", "subcategoryName");
-            View vSubDiff = new View("moduleName", "categoryName", "different");
-            View vCatDiff = new View("moduleName", "different", "subcategoryName");
-            View vModDiff = new View("diffenert", "categoryName", "subcategoryName");
-            View vSame = new View("moduleName", "categoryName", "subcategoryName");
+            CategoryMap cl = new CategoryMap();
+            Category c = cl.createOrSelectCategory("categoryName");
+            Category c2 = cl.createOrSelectCategory("DIFERENTcategoryName");
+            Category sc = cl.addSubcategoryTo(c, "subcategoryName");
+            Category scDiff = cl.addSubcategoryTo(c, "DIFERENTsubcategoryName");
+            Category sc2 = cl.addSubcategoryTo(c2, "subcategoryName");
+            Category sc2Diff = cl.addSubcategoryTo(c2, "DIFERENTsubcategoryName");
 
-            View v2 = new View("moduleName", "categoryName");
-            View v2CatDiff = new View("moduleName", "different");
-            View v2ModDiff = new View("different", "categoryName");
-            View v2Same = new View("moduleName", "categoryName");
+            Module m = new Module("moduleName");
+            Module mDiff = new Module("DIFFERENTmoduleName");
 
-            View v3 = new View("moduleName");
-            View v3ModDiff = new View("different");
-            View v3Same = new View("moduleName");
+            View v = new View(m, c,sc);
+            View vSubDiff = new View(m, c,scDiff);
+            View vCatDiff = new View(m,c2,sc2);
+            View vModDiff = new View(mDiff,c,sc);
+            View vSame = new View(m,c,sc);
+
+
+            View v2 = new View(m, c, null);
+            View v2Same = new View(m, c, null);
+            View v2CatDiff = new View(mDiff, c, null);
+            View v2ModDiff = new View(mDiff, c, null);
+
+
+            View v3 = new View(m);
+            View v3ModDiff = new View(mDiff);
+            View v3Same = new View(m);
 
             assertNotEquals(v,vSubDiff);
             assertNotEquals(v,vCatDiff);

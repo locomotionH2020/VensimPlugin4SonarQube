@@ -158,9 +158,9 @@ public class TestSymbolWithoutUnitsCheck {
 
         SymbolTable table = new SymbolTable();
         Symbol invalid = new Symbol("invalid", SymbolType.Constant);
-        invalid.addDefinitionLine(1);
+        invalid.addLine(1);
         Symbol valid = new Symbol("VALID", SymbolType.Constant);
-        valid.addDefinitionLine(2);
+        valid.addLine(2);
         valid.setUnits("units");
         table.addSymbol(invalid);
         table.addSymbol(valid);

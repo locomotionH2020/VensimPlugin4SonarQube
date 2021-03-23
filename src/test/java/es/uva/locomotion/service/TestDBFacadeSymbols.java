@@ -1,8 +1,11 @@
 package es.uva.locomotion.service;
 
+import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.category.CategoryImpl;
 import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
@@ -13,7 +16,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.IOException;
@@ -51,18 +53,18 @@ public class TestDBFacadeSymbols {
         Symbol foo = new Symbol("foo");
         foo.setUnits("foo unit");
         foo.setComment("foo comment");
-        foo.setPrimary_module("module 1");
-        foo.setCategory("foo category");
-        foo.addShadow_view("module 2");
+        foo.setPrimary_module(new Module("module 1"));
+        foo.setCategory(Category.create("foo category"));
+        foo.addShadow_module(new Module("module 2"));
         foo.setType(SymbolType.Constant);
         dbTable.addSymbol(foo);
 
         Symbol var = new Symbol("var");
         var.setUnits("var unit");
         var.setComment("var comment");
-        var.setPrimary_module("module 3");
-        var.setCategory("var category");
-        var.addShadow_view("module 4");
+        var.setPrimary_module(new Module("module 3"));
+        var.setCategory(Category.create("var category"));
+        var.addShadow_module(new Module("module 4"));
         var.addIndexLine(List.of(index1, index2));
         var.setType(SymbolType.Variable);
         dbTable.addSymbol(var);
@@ -114,9 +116,9 @@ public class TestDBFacadeSymbols {
         Symbol foo = new Symbol("foo");
         foo.setUnits("foo unit");
         foo.setComment("foo comment");
-        foo.setPrimary_module("module 1");
-        foo.setCategory("foo category");
-        foo.addShadow_view("module 2");
+        foo.setPrimary_module(new Module("module 1"));
+        foo.setCategory(Category.create("foo category"));
+        foo.addShadow_module(new Module("module 2"));
         foo.setType(SymbolType.Constant);
         dbTable.addSymbol(foo);
 
@@ -395,7 +397,7 @@ public class TestDBFacadeSymbols {
         Symbol constant = new Symbol("    constant     ", SymbolType.Constant);
         constant.setUnits("          constant units           ");
         constant.setComment("            constant comment         ");
-        constant.setCategory("           constant category      ");
+        constant.setCategory(Category.create("           constant category      "));
         constant.addIndexLine(List.of(mock(Symbol.class)));
 
         symbols.add(constant);
@@ -451,9 +453,13 @@ public class TestDBFacadeSymbols {
         DBFacade.handler = handler;
 
         List<Symbol> symbols = new ArrayList<>();
-        symbols.add(new Symbol("variable", SymbolType.Variable));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"variable\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Variable\"}], \"module\" : \"module\"}"));
+        Symbol s = new Symbol("variable", SymbolType.Variable);
+        s.setCategory(Category.create("name"));
+
+        symbols.add(s);
+
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"variable\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Variable\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -483,9 +489,11 @@ public class TestDBFacadeSymbols {
         DBFacade.handler = handler;
 
         List<Symbol> symbols = new ArrayList<>();
-        symbols.add(new Symbol("reality check", SymbolType.Reality_Check));
+        Symbol s = new Symbol("reality check", SymbolType.Reality_Check);
+        s.setCategory(Category.create("name"));
+        symbols.add(s);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"reality check\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Reality_Check\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"reality check\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Reality_Check\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -499,9 +507,11 @@ public class TestDBFacadeSymbols {
         DBFacade.handler = handler;
 
         List<Symbol> symbols = new ArrayList<>();
-        symbols.add(new Symbol("lookup table", SymbolType.Lookup_Table));
+        Symbol s = new Symbol("lookup table", SymbolType.Lookup_Table);
+        s.setCategory(Category.create("name"));
+        symbols.add(s);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"lookup table\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Lookup_Table\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"lookup table\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Lookup_Table\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -516,9 +526,11 @@ public class TestDBFacadeSymbols {
         DBFacade.handler = handler;
 
         List<Symbol> symbols = new ArrayList<>();
-        symbols.add(new Symbol("switch", SymbolType.Switches));
+        Symbol s = new Symbol("switch", SymbolType.Switches);
+        s.setCategory(Category.create("name"));
+        symbols.add(s);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"switch\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Switches\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"switch\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Switches\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 

@@ -273,6 +273,6 @@ public class TestGrammar {
                 "10,2,Demand by sector FD,1586,885,40,20,3,3,0,0,0,0,0,0\n" +
                 "///---\\\\\\\n";
 
-        getViewTableFromString(program);
+        getViewTableFromString(program, new SymbolTable());
     }
 }

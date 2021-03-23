@@ -207,9 +207,9 @@ public class TestSubscriptNameCheck {
 
         SymbolTable table = new SymbolTable();
         Symbol invalid = new Symbol("invalid", SymbolType.Subscript);
-        invalid.addDefinitionLine(1);
+        invalid.addLine(1);
         Symbol valid = new Symbol("VALID_I", SymbolType.Subscript);
-        valid.addDefinitionLine(2);
+        valid.addLine(2);
         table.addSymbol(invalid);
         table.addSymbol(valid);
 

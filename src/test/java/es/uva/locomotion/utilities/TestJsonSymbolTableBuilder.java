@@ -89,7 +89,7 @@ public class TestJsonSymbolTableBuilder {
 
         SymbolTable table = new SymbolTable();
         Symbol symbol = table.addSymbol(new Symbol("var"));
-        symbol.addDefinitionLine(line);
+        symbol.addLine(line);
 
         builder.addTables("file",table, new ViewTable());
         JsonArray output = builder.build();

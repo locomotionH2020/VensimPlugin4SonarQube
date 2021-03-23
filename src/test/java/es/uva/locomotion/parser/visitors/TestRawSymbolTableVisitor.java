@@ -232,7 +232,7 @@ public class TestRawSymbolTableVisitor {
 
         Symbol myMacro = table.getSymbol("myMacro");
         assertSymbolType(myMacro, SymbolType.Function);
-        assertEquals(Arrays.asList(3, 4), myMacro.getDefinitionLines());
+        assertEquals(Set.of(3, 4), myMacro.getLines());
         assertTrue(table.hasSymbol("supportValue"));
         assertTrue(myMacro.getIndexes().isEmpty());
 
@@ -848,7 +848,7 @@ public class TestRawSymbolTableVisitor {
         Symbol grupo1Var = table.getSymbol("grupo1Var");
         Symbol grupo2Var = table.getSymbol("grupo2Var");
 
-        assertEquals(null, dafaultVar.getGroup());
+        assertNull(dafaultVar.getGroup());
         assertEquals("grupo1",grupo1Var.getGroup());
         assertEquals( "grupo2",grupo2Var.getGroup());
 

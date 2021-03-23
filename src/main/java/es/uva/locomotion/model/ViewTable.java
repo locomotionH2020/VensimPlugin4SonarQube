@@ -1,47 +1,37 @@
 package es.uva.locomotion.model;
 
+import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.category.CategoryMap;
+
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-//TODO refactor to unbind from CategoryMap
 public class ViewTable {
     private final Map<String, View> table;
-    private final List<String> modulesList;
+    private final Set<Module> modulesList;
     private final CategoryMap categoriesList;
 
 
     public ViewTable() {
         this.table = new HashMap<>();
-        this.modulesList = new ArrayList<>();
+        this.modulesList = new HashSet<>();
         this.categoriesList = new CategoryMap();
     }
 
-    public List<String> getModules() {
+    public Set<Module> getModules() {
         return modulesList;
-    }
-
-    public CategoryMap getCategories() {
-        return categoriesList;
     }
 
 
     public View getView(String name) {
-        if (table.containsKey(name)) {
-            return table.get(name);
-        } else
-            throw new IllegalArgumentException("Name " + name + " not found");
+        return table.getOrDefault(name, null);
     }
 
 
     public List<View> getViews() {
         List<View> view = new ArrayList<>(table.values());
-        view.sort(Comparator.comparing(View::getModule));
-        return view;
-    }
-    public List<View> getValidViews() {
-        List<View> view = new ArrayList<>(table.values());
-        view = view.stream().filter(View::isValid).collect(Collectors.toList());
-        view.sort(Comparator.comparing(View::getModule));
+        view.sort(Comparator.comparing(View::getIdentifier));
         return view;
     }
 
@@ -50,7 +40,7 @@ public class ViewTable {
     }
 
 
-    public void addView(View view) {
+    protected void addView(View view) {
         String name = view.getIdentifier().trim();
 
         if (hasView(name))
@@ -59,110 +49,69 @@ public class ViewTable {
         table.put(name, view);
     }
 
-    public View createOrSelectView(String module, String category, String subcategory, boolean isValid) {
-        String identifier = View.generateIdentifier(module, category, subcategory);
+    public View createOrSelectView(String moduleName, String categoryName, String subcategoryName) {
+        String identifier = View.generateIdentifier(moduleName, categoryName, subcategoryName);
         if (hasView(identifier)) {
             return getView(identifier);
+
         } else {
-            View newView = new View(module, category, subcategory, isValid);
-            if (!hasModule(module) && isValid) addModule(module);
-            if (category != null) {
-                if (!hasCategory(category) && isValid) addCategory(category);
-                if (subcategory != null) {
-                    if (!hasSubcategory(category, subcategory) && isValid) addSubcategory(category, subcategory);
+            Module module = createOrSelectModule(moduleName);
+            Category category = null;
+            Category subcategory = null;
+            if (categoryName != null) {
+                category = categoriesList.createOrSelectCategory(categoryName);
+                if (subcategoryName != null) {
+                    subcategory = categoriesList.addSubcategoryTo(category, subcategoryName);
+
                 }
             }
-
+            View newView = new View(module, category, subcategory);
+            addModule(module);
             addView(newView);
             return newView;
         }
     }
-    public View createOrSelectView(String module, String category, String subcategory) {
-        return createOrSelectView(module, category, subcategory, true);
 
-    }
-    public View createOrSelectView(String module, String category, boolean isValid) {
-        return createOrSelectView(module, category, null, isValid);
+    public View createOrSelectView(String module, String category) {
+        return createOrSelectView(module, category, null);
     }
 
     public View createOrSelectView(String module) {
-        return createOrSelectView(module, null, null, false);
-    }
-
-    public View removeView(View view) {
-        String name = view.getModule().trim();
-
-        if (!hasView(name))
-            throw new IllegalArgumentException("The view:  " + name + " is not in the Table.");
-
-        table.remove(name);
-        return view;
+        return createOrSelectView(module, null, null);
     }
 
 
+    private Module createOrSelectModule(String moduleName) {
+        Module module = modulesList.stream().filter(mod -> moduleName.equals(mod.getName())).findFirst().orElse(null);
 
-
-    public boolean hasModule(String name) {
-        return modulesList.contains(name);
+        if (module == null) {
+            Module newModule = new Module(moduleName);
+            modulesList.add(newModule);
+            return newModule;
+        }
+        return module;
     }
 
-    public void addModule(String module) {
+    public void addModule(Module module) {
         modulesList.add(module);
     }
 
-    public List<String> getCategoriesName() {
-        return categoriesList.getCategoriesName();
+    public Category getCategory(String category) {
+        return categoriesList.getCategory(category);
     }
 
-    public List<Category> getCategoriesList() {
-        return categoriesList.getCategoriesList();
+    public List<Category> getCategories() {
+        return categoriesList.getCategories();
     }
 
-
-    public boolean hasCategory(String name) {
-        return categoriesList.contains(name);
+    public List<Category> getSubcategories() {
+        return categoriesList.getCategories().stream().flatMap((cat) -> cat.getSubcategories().stream()).collect(Collectors.toList());
     }
 
-
-    public void addCategory(String category) {
-
-        if (hasCategory(category))
-            return;
-        Category c = new Category(category);
-        categoriesList.add(c);
+    public List<Category> getCategoriesAndSubcategories() {
+        return Stream.concat(getCategories().stream(), getSubcategories().stream())
+                .collect(Collectors.toList());
     }
-
-    public Set<Category> getSubcategories(String categoryName) {
-        if (!categoriesList.contains(categoryName)) {
-            throw new IllegalArgumentException(categoryName + " is not a category name in the map.");
-        }
-        Category category = categoriesList.createOrSelectCategory(categoryName);
-        return category.getSubcategories();
-    }
-
-    public boolean hasSubcategory(String categoryName, String subcategory) {
-        if (!categoriesList.contains(categoryName)) {
-            throw new IllegalArgumentException(categoryName + " is not a category name in the map.");
-        }
-        Category category = categoriesList.createOrSelectCategory(categoryName);
-
-        Set<String> subcategories = category.getSubcategoriesNames();
-        if (subcategories == null) {
-            return false;
-        }
-        return subcategories.contains(subcategory);
-    }
-
-    public void addSubcategory(String categoryName, String subcategory) {
-        if (!categoriesList.contains(categoryName)) {
-            throw new IllegalArgumentException(categoryName + " is not a category name in the map.");
-        }
-        Category category = categoriesList.createOrSelectCategory(categoryName);
-
-        Category sub = new Category(subcategory);
-        category.addSubcategory(sub);
-    }
-
 
     @Override
     public boolean equals(Object o) {

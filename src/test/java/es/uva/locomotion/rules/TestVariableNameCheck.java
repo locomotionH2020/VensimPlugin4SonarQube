@@ -138,9 +138,9 @@ public class TestVariableNameCheck {
 
         SymbolTable table = new SymbolTable();
         Symbol invalid = new Symbol("INVALID", SymbolType.Variable);
-        invalid.addDefinitionLine(1);
+        invalid.addLine(1);
         Symbol valid = new Symbol("valid", SymbolType.Variable);
-        valid.addDefinitionLine(2);
+        valid.addLine(2);
         table.addSymbol(invalid);
         table.addSymbol(valid);
 

@@ -1,6 +1,7 @@
 package es.uva.locomotion.plugin;
 
 import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.Module;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.parser.*;
@@ -33,7 +34,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static es.uva.locomotion.utilities.Constants.*;
 
@@ -76,7 +79,7 @@ public class VensimScanner {
 
         String auxiliaryFilesDirName = context.config().get(AUXILIARY_FILES_DIR_NAME).orElse("auxiliary_files");
 
-        outputFilesGenerator.generateFiles(Paths.get(auxiliaryFilesDirName));;
+        outputFilesGenerator.generateFiles(Paths.get(auxiliaryFilesDirName));
 
     }
 
@@ -111,21 +114,20 @@ public class VensimScanner {
 
             ViewTable viewTable;
             if (!viewPrefix.isEmpty()) { //Support for viewPrefix
-                viewTable = ViewTableUtility.getViewTable(root);
+                viewTable = ViewTableUtility.getViewTable(table, root);
                 LOG.warn("vensim.view.prefix is deprecated, please use: vensim.view.module.name and vensim.view.module.separator");
             } else if (!moduleSeparator.isEmpty()) {
                 if (!categorySeparator.isEmpty()) {
-                    viewTable = ViewTableUtility.getViewTable(root, moduleSeparator, categorySeparator);
+                    viewTable = ViewTableUtility.getViewTable(table,root, moduleSeparator, categorySeparator);
                 } else {
-                    viewTable = ViewTableUtility.getViewTable(root, moduleSeparator);
+                    viewTable = ViewTableUtility.getViewTable(table,root, moduleSeparator);
                 }
             } else {
                 if (!categorySeparator.isEmpty()) {
                     LOG.warn("vensim.view.category.separator is set, but not vensim.view.module.separator, ignoring category separator");
                 }
-                viewTable = ViewTableUtility.getViewTable(root);
+                viewTable = ViewTableUtility.getViewTable(table,root);
             }
-            ViewTableUtility.addViews(table, viewTable);
 
 
 
@@ -138,7 +140,6 @@ public class VensimScanner {
                 dbData.setUnits(serviceController.getUnitsFromDb());
             }
             //mark the symbols tha need to be filtered.
-
             if (!viewPrefix.isBlank()) {
                 ViewTableUtility.filterPrefix(table, viewPrefix);
             } else if (!moduleName.isEmpty()) {
@@ -159,12 +160,12 @@ public class VensimScanner {
             if(needToInject) {
                 if (!moduleSeparator.isEmpty() && dbData.getModules() != null) {
 
-                    serviceController.injectNewModules(viewTable.getModules(), dbData.getModules());
+                    serviceController.injectNewModules(new HashSet<>(viewTable.getModules()), dbData.getModules());
                     if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
-                        serviceController.injectNewCategories(viewTable.getCategories().getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
+                        serviceController.injectNewCategories(viewTable.getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
                 }
                 if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
-                    serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), viewTable.getModules(), dbData.getDataBaseSymbols());
+                    serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), new ArrayList<>(viewTable.getModules()), dbData.getDataBaseSymbols());
             }
         } catch (IOException e) {
             LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
@@ -186,7 +187,6 @@ public class VensimScanner {
 
 
     public void checkIssues(VensimVisitorContext fileContext) {
-        //System.out.println("module");
 
         for (VensimCheck check : checks.all()) {
             check.scan(fileContext);

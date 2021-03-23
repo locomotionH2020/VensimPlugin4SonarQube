@@ -19,7 +19,9 @@ import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -35,7 +37,7 @@ public class TestDBFacadeModules {
     @Test
     public void testGetModulesParsedJson() {
 
-        List<String> expected = new ArrayList<>();
+        Set<String> expected = new HashSet<>();
 
         expected.add("AnotherModule");
         expected.add("Module1");
@@ -46,7 +48,7 @@ public class TestDBFacadeModules {
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
 
-        List<String> obtainedList = DBFacade.getExistingModulesFromDB("","token");
+        Set<String> obtainedList = DBFacade.getExistingModulesFromDB("","token");
         assertEquals(expected, obtainedList);
     }
 
@@ -58,9 +60,9 @@ public class TestDBFacadeModules {
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
-        List<String> obtainedList = DBFacade.getExistingModulesFromDB("", "token");
+        Set<String> obtainedList = DBFacade.getExistingModulesFromDB("", "token");
 
-        assertEquals(new ArrayList<>(), obtainedList);
+        assertEquals(new HashSet<>(), obtainedList);
     }
 
 

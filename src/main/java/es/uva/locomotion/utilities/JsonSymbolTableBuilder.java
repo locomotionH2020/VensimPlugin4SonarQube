@@ -1,12 +1,14 @@
 package es.uva.locomotion.utilities;
 
 import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.Module;
+import es.uva.locomotion.model.category.Category;
 import org.antlr.v4.runtime.misc.Triple;
 
 import javax.json.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,7 +54,7 @@ public class JsonSymbolTableBuilder {
         tableBuilder.add("symbols", symbolTableToJson(table));
         tableBuilder.add("views", viewsToJson(viewTable.getViews()));
         tableBuilder.add("modules", modulesToJson(viewTable.getModules()));
-        tableBuilder.add("categories", categoriesToJson(viewTable.getCategories().getCategoriesAndSubcategories()));
+        tableBuilder.add("categories", categoriesToJson(viewTable.getCategoriesAndSubcategories()));
 
         fileBuilder.add(tableBuilder);
     }
@@ -73,7 +75,7 @@ public class JsonSymbolTableBuilder {
 
         symbolBuilder.add(KEY_TYPE, symbol.getType().toString());
         JsonArrayBuilder lines = Json.createArrayBuilder();
-        for (int line : symbol.getDefinitionLines())
+        for (int line : symbol.getLines())
             lines.add(line);
 
         symbolBuilder.add(KEY_LINES, lines);
@@ -83,22 +85,22 @@ public class JsonSymbolTableBuilder {
             dependenciesBuilder.add(dependency.getToken());
         symbolBuilder.add(KEY_DEPENDENCIES, dependenciesBuilder);
 
-        symbolBuilder.add(KEY_PRIMARY_VIEW, symbol.getPrimary_module());
+        symbolBuilder.add(KEY_PRIMARY_VIEW, symbol.getPrimary_module() == null ? "null" : symbol.getPrimary_module().getName());
 
         JsonArrayBuilder shadowBuilder = Json.createArrayBuilder();
-        for (String view : symbol.getShadow_module())
-            shadowBuilder.add(view);
+        for (Module module : symbol.getShadow_module())
+            shadowBuilder.add(module.getName());
         symbolBuilder.add(KEY_SHADOW_VIEWS, shadowBuilder);
 
         if (symbol.getCategory() != null)
-            symbolBuilder.add(KEY_CATEGORY, symbol.getCategory());
+            symbolBuilder.add(KEY_CATEGORY, symbol.getCategory()== null ? "null" :symbol.getCategory().getName());
 
         symbolBuilder.add(KEY_UNITS, symbol.getUnits());
         symbolBuilder.add(KEY_COMMENT, symbol.getComment());
         symbolBuilder.add(KEY_GROUP, symbol.getGroup() == null ? "null" : symbol.getGroup());
 
         if (!symbol.isValid()) {
-            symbolBuilder.add(KEY_VALID, symbol.getReasonForInvalid());
+            symbolBuilder.add(KEY_VALID, symbol.getInvalidReason());
         }
         symbolBuilder.add(KEY_FILTERED, symbol.isFiltered());
 
@@ -111,7 +113,7 @@ public class JsonSymbolTableBuilder {
                 indexBuilder.add(index);
             }
 
-            symbolBuilder.add(KEY_INDEXES, indexBuilder);
+            symbolBuilder.add(KEY_INDEXES, indexBuilder); //TODO salen duplicados.
         }
 
         if (!symbol.getExcel().isEmpty()) {
@@ -155,11 +157,11 @@ public class JsonSymbolTableBuilder {
         for (View view : table) {
 
             JsonObjectBuilder viewBuilder = Json.createObjectBuilder();
-            viewBuilder.add(KEY_MODULE, view.getModule());
+            viewBuilder.add(KEY_MODULE, view.getModule().getName());
             if (view.getCategory() != null)
-                viewBuilder.add(KEY_CATEGORY, view.getCategory());
+                viewBuilder.add(KEY_CATEGORY, view.getCategory().getName());
             if (view.getSubcategory() != null)
-                viewBuilder.add(KEY_SUBCATEGORY, view.getSubcategory());
+                viewBuilder.add(KEY_SUBCATEGORY, view.getSubcategory().getName());
             tableBuilder.add(viewBuilder);
 
         }
@@ -168,10 +170,10 @@ public class JsonSymbolTableBuilder {
     }
 
 
-    private JsonArray modulesToJson(List<String> table) {
+    private JsonArray modulesToJson(Set<Module> table) {
         JsonArrayBuilder tableBuilder = Json.createArrayBuilder();
-        for (String module : table) {
-            tableBuilder.add(module);
+        for (Module module : table) {
+            tableBuilder.add(module.getName());
         }
         return tableBuilder.build();
     }
