@@ -10,6 +10,7 @@ import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
 import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
 import es.uva.locomotion.utilities.logs.VensimLogger;
+import org.antlr.v4.runtime.misc.Triple;
 
 
 import javax.json.*;
@@ -43,6 +44,15 @@ public class DBFacade {
     private static final String FIELD_CATEGORY_LEVEL = "level";
     private static final String FIELD_CATEGORY_SUPER_CATEGORY = "super_category";
     private static final String FIELD_MODULE = "module";
+
+    public static final String KEY_INDEXES = "indexes";
+    public static final String KEY_EXCEL = "excels";
+    public static final String KEY_SHEET = "sheet";
+    public static final String KEY_CELLRANGE = "cellrange";
+    public static final String KEY_SERIES = "series";
+    public static final String KEY_INFO = "info";
+    public static final String KEY_FILENAME = "filename";
+
     protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
@@ -74,7 +84,7 @@ public class DBFacade {
             ex.setServiceResponse(symbolsFound.toString());
             throw ex;
         }
-        try{
+        try {
             loadIndexes(table, indexesFound);
         } catch (ServiceResponseFormatNotValid ex) {
             ex.setServiceResponse(indexesFound.toString());
@@ -251,7 +261,38 @@ public class DBFacade {
             jsonSymbol.add(FIELD_INJECTION_IS_INDEXED, String.valueOf(!s.getIndexes().isEmpty()).toLowerCase());
             jsonSymbol.add(FIELD_SYMBOL_CATEGORY, s.getCategory().getName().trim());
             jsonSymbol.add(FIELD_SYMBOL_TYPE_SEND, s.getType().toString());
+            if (!s.getExcel().isEmpty()) {
+                JsonArrayBuilder excelBuilder = Json.createArrayBuilder();
 
+                for (ExcelRef excel : s.getExcel()) {
+                    JsonObjectBuilder fileBuilder = Json.createObjectBuilder();
+                    fileBuilder.add(KEY_SHEET, excel.getSheet());
+                    fileBuilder.add(KEY_FILENAME, excel.getFilename());
+                    JsonArrayBuilder infoListBuilder = Json.createArrayBuilder();
+
+                    for (Triple<List<String>, String, String> info : excel.getCellRangeInformation()) {
+                        JsonObjectBuilder infoBuilder = Json.createObjectBuilder();
+
+                        if (!info.a.isEmpty()) {
+                            JsonArrayBuilder indexBuilder = Json.createArrayBuilder();
+                            for (String indexName : info.a) {
+                                indexBuilder.add(indexName);
+                            }
+                            infoBuilder.add(KEY_INDEXES, indexBuilder);
+                        }
+                        infoBuilder.add(KEY_CELLRANGE, info.b);
+                        if (info.c != null)
+                            infoBuilder.add(KEY_SERIES, info.c);
+
+                        infoListBuilder.add(infoBuilder);
+                    }
+                    fileBuilder.add(KEY_INFO, infoListBuilder);
+
+
+                    excelBuilder.add(fileBuilder);
+                }
+                jsonSymbol.add(KEY_EXCEL, excelBuilder);
+            }
             jsonSymbols.add(jsonSymbol);
         }
 
@@ -551,14 +592,13 @@ public class DBFacade {
         SymbolTable table = new SymbolTable();
 
 
-
-
-        try{
+        try {
             loadIndexes(table, symbolsFound);
         } catch (ServiceResponseFormatNotValid ex) {
             ex.setServiceResponse(symbolsFound.toString());
             throw ex;
-        }        return table;
+        }
+        return table;
     }
 
     private static void loadIndexes(SymbolTable table, JsonArray indexes) {

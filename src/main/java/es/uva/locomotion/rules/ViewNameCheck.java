@@ -42,11 +42,11 @@ public class ViewNameCheck extends AbstractVensimCheck {
             "fuel_emissions_2019\n" +
             "</pre>\n";
 
-    public static final String DEFAULT_REGEXP = "([a-z0-9]+_)*[a-z0-9]+";
+    public static final String DEFAULT_REGEXP = "([a-z0-9]+)*[a-z0-9]+";
     @RuleProperty(
-            key = "variable-name-regexp",
+            key = "view-name-regexp",
             defaultValue = DEFAULT_REGEXP,
-            description = "The regexp definition of a variable symbol name.")
+            description = "The regexp definition of a module/category of a view name (without the separators)")
     public final String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {
@@ -70,8 +70,9 @@ public class ViewNameCheck extends AbstractVensimCheck {
         String moduleSeparator = sensorContext.config().get(MODULE_SEPARATOR).orElse("");
         String categorySeparator = sensorContext.config().get(CATEGORY_SEPARATOR).orElse("");
         for (View view : table.getViews()) {
-            if (!view.isValid()) {
-                for(int line : view.getLines()) {
+            if (generateIssue(view)) {
+                view.setAsInvalid(this.getClass().getSimpleName());
+                for (int line : view.getLines()) {
                     Issue issue = new Issue(this, line, "The view '" + view.getIdentifier() + "' deos not follow the naming convention, it should use the Module separator: \"" + moduleSeparator + "\" and the Category separator \"" + categorySeparator + "\".");
 
                     boolean generateIssue = moduleName.equals("") || view.getModule().getName().contains(moduleName);
@@ -80,6 +81,17 @@ public class ViewNameCheck extends AbstractVensimCheck {
             }
 
         }
+    }
+
+    private boolean generateIssue(View view) {
+        if (view.getModule() == null || !view.getModule().getName().matches(getRegexp()))
+            return true;
+
+        if (view.getCategory() != null && !view.getCategory().getName().matches(getRegexp()))
+            return true;
+        if (view.getSubcategory() != null && !view.getSubcategory().getName().matches(getRegexp()))
+            return true;
+        return false;
     }
 
 

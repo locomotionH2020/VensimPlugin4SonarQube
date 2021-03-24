@@ -131,6 +131,8 @@ public class ServiceController {
 
         List<Symbol> validSymbols = newSymbols.stream().filter(Symbol::isValid).collect(Collectors.toList());
         List<Symbol> filteredSymbols = validSymbols.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
+
+        validModules = validModules.stream().filter(Module::isValid).collect(Collectors.toList());
         if (filteredSymbols.size() >= 1) {
             try {
                 for (Module module : validModules) {
@@ -151,12 +153,13 @@ public class ServiceController {
             }
 
         }
+        //Index does not have module.
         List<Symbol> indexes = foundSymbols.stream().filter(symbol -> symbol.getType() == SymbolType.Subscript).collect(Collectors.toList());
         List<Symbol> validIndexes = indexes.stream().filter(Symbol::isValid).collect(Collectors.toList());
         List<Symbol> filteredindexes = validIndexes.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
         List<Symbol> indexesToSend = new ArrayList<>();
         for (Symbol index : filteredindexes) {
-            if (dbSymbolTable.hasSymbol(index.getToken())) {
+            if (dbSymbolTable.hasSymbol(index.getToken().trim())) {
                 Symbol dbIndex = dbSymbolTable.getSymbol(index.getToken());
                 if (!index.getDependencies().equals(dbIndex.getDependencies())) {
                     indexesToSend.add(index);
@@ -292,7 +295,7 @@ public class ServiceController {
             throw new NotAuthenticatedException();
 
         List<String> newModules = modulesList.stream()
-                .filter(module -> !dbModules.contains(module) && moduleNameIsValid(module.getName()))
+                .filter(module -> !dbModules.contains(module))
                 .map(Module::getName)
                 .collect(Collectors.toList());
 
@@ -312,10 +315,6 @@ public class ServiceController {
 
         }
 
-    }
-
-    private boolean moduleNameIsValid(String module) {
-        return module.matches("^([a-zA-Z0-9]+_)*[a-zA-Z0-9]+$");
     }
 
     public Set<String> getUnitsFromDb() {

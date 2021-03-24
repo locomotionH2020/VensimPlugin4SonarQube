@@ -24,11 +24,12 @@ public class SubcategoryDuplicatedCheck extends AbstractVensimCheck {
 
     @Override
     public void scan(VensimVisitorContext context) {
-        List<Category> categoryList = context.getViewTable().getSubcategories();
+        List<Category> categoryList = new ArrayList<>(context.getViewTable().getSubcategories());
 
         while (!categoryList.isEmpty()) {
             Category actual = categoryList.remove(0);
             if (categoryList.stream().anyMatch((subcat) -> subcat.getName().equals(actual.getName()))) {
+                actual.setAsInvalid(this.getClass().getSimpleName());
                 for (int line : actual.getLines()) {
                     Issue issue = new Issue(this, line, "The subcategory '" + actual.getName() + " already exists in the model in another category, this can not happen.");
                     addIssue(context, issue, false);

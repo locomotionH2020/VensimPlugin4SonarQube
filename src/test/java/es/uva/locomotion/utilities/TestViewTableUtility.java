@@ -100,6 +100,7 @@ public class TestViewTableUtility {
 
         //Filter "Filter"
         symbolTable = getSymbolTableFromString(program);
+        viewTable = getViewTableFromString(program, symbolTable,"|", ".");
 
         ViewTableUtility.filterPrefix(symbolTable, "Filter");
         s = symbolTable.getSymbol(VARIABLE_1_EQ);
@@ -111,6 +112,7 @@ public class TestViewTableUtility {
 
         //Filter last view
         symbolTable = getSymbolTableFromString(program);
+        viewTable = getViewTableFromString(program,symbolTable);
 
         ViewTableUtility.filterPrefix(symbolTable, "None");
         s = symbolTable.getSymbol(VARIABLE_1_EQ);
@@ -122,6 +124,7 @@ public class TestViewTableUtility {
 
         //Filter Second view
         symbolTable = getSymbolTableFromString(program);
+        viewTable = getViewTableFromString(program, symbolTable, "|", ".");
 
         ViewTableUtility.filterPrefix(symbolTable, "All");
         s = symbolTable.getSymbol(VARIABLE_1_EQ);

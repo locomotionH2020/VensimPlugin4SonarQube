@@ -244,4 +244,9 @@ public class Symbol extends IssuableAbs {
             return excelTmp;
         }
     }
+
+    @Override
+    public boolean isValid() {
+       return  super.isValid() && category.isValid() && primary_module.isValid();
+    }
 }

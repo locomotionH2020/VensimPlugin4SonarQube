@@ -129,4 +129,13 @@ public class View extends IssuableAbs {
             getCategory().addLine(line);
         getModule().addLine(line);
     }
+
+    @Override
+    public void setAsInvalid(String invalidReason) {
+        super.setAsInvalid(invalidReason);
+        category.setAsInvalid(invalidReason);
+        subcategory.setAsInvalid(invalidReason);
+        primary_symbols.forEach((symbol) -> symbol.setAsInvalid(invalidReason));
+        shadow_symbols.forEach((symbol) -> symbol.setAsInvalid(invalidReason));
+    }
 }
