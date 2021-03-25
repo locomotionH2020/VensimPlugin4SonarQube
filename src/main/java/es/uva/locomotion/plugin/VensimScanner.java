@@ -42,7 +42,6 @@ public class VensimScanner {
     private final ServiceController serviceController;
 
 
-
     public VensimScanner(SensorContext context, Checks<VensimCheck> checks, OutputFilesGenerator builder, ServiceController serviceController) {
         this.context = context;
         this.checks = checks;
@@ -95,7 +94,7 @@ public class VensimScanner {
         String categorySeparator = context.config().get(CATEGORY_SEPARATOR).orElse("");
         String inject = context.config().get(INJECT).orElse("false");
 
-        boolean needToInject  = !inject.equals("false");
+        boolean needToInject = !inject.equals("false");
         try {
             String content = inputFile.contents();
             String module = getModuleNameFromFileName(inputFile.filename());
@@ -109,17 +108,16 @@ public class VensimScanner {
                 LOG.warn("vensim.view.prefix is deprecated, please use: vensim.view.module.name and vensim.view.module.separator");
             } else if (!moduleSeparator.isEmpty()) {
                 if (!categorySeparator.isEmpty()) {
-                    viewTable = ViewTableUtility.getViewTable(table,root, moduleSeparator, categorySeparator);
+                    viewTable = ViewTableUtility.getViewTable(table, root, moduleSeparator, categorySeparator);
                 } else {
-                    viewTable = ViewTableUtility.getViewTable(table,root, moduleSeparator);
+                    viewTable = ViewTableUtility.getViewTable(table, root, moduleSeparator);
                 }
             } else {
                 if (!categorySeparator.isEmpty()) {
                     LOG.warn("vensim.view.category.separator is set, but not vensim.view.module.separator, ignoring category separator");
                 }
-                viewTable = ViewTableUtility.getViewTable(table,root);
+                viewTable = ViewTableUtility.getViewTable(table, root);
             }
-
 
 
             DataBaseRepresentation dbData = new DataBaseRepresentation();
@@ -142,20 +140,20 @@ public class VensimScanner {
             checkIssues(visitorContext);
             saveIssues(inputFile, visitorContext.getIssues());
 
-            outputFilesGenerator.addTables(inputFile.filename(), table, viewTable,dbData);
+            outputFilesGenerator.addTables(inputFile.filename(), table, viewTable, dbData);
 
 
             int lines = content.split("[\r\n]+").length;
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
-            if(needToInject) {
+            if (needToInject && serviceController.isAuthenticated()) {
                 if (!moduleSeparator.isEmpty() && dbData.getModules() != null) {
 
                     serviceController.injectNewModules(new HashSet<>(viewTable.getModules()), dbData.getModules());
                     if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
                         serviceController.injectNewCategories(viewTable.getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
                 }
-                if (serviceController.isAuthenticated() && dbData.getDataBaseSymbols() != null)
+                if (dbData.getDataBaseSymbols() != null)
                     serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), new ArrayList<>(viewTable.getModules()), dbData.getDataBaseSymbols());
             }
         } catch (IOException e) {

@@ -50,6 +50,11 @@ public class OutputFilesGenerator {
     public void addTables(String filename, SymbolTable table, ViewTable viewTable, DataBaseRepresentation dbData) {
         symbolsJson.addTables(filename, table, viewTable);
         if (generateGetDiff)
-            diffJson.addTables(filename, table, viewTable, dbData);
+            if(dbData.getDataBaseSymbols() == null){
+                LOG.warn("Trying to create diff with dictionary, but unable to recieve data from it.");
+                generateGetDiff = false;
+            }else {
+                diffJson.addTables(filename, table, viewTable, dbData);
+            }
     }
 }
