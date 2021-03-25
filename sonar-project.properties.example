@@ -1,14 +1,61 @@
+
+############################################################################
+# Sonar scanner default properties                                         #
+############################################################################
+#-Set the URL of the sonarqube instance.
 sonar.host.url=https://sonarqube-locomotion.infor.uva.es
+
+#-Set the name of the project that will apear in sonaqube.
 sonar.projectKey=Project Name
+
+#-Set the folder where sonar scanner will search for models.
 sonar.sources=.
-#vensim.dictionaryService= http://www.cres.gr/LOCOMOTION_services/webresources/
-#vensim.dictionaryUsername=testingservice
-#vensim.dictionaryPassword=testing_DD_2020
-#vensim.view.module.name=materials
-#vensim.view.module.separator= Module/Category Separator
-#vensim.view.category.separator= Category/Subcategory Separator
+
+############################################################################
+# Dictionary properties                                                    #
+############################################################################
+#-Set the URL of the dictionary service.
+#vensim.dictionary.service= http://www.cres.gr/LOCOMOTION_services/webresources/
+
+#-Set the username of the dictionary service.
+#vensim.dictionary.username=testingservice
+
+#-Set the password of the username.
+#vensim.dictionary.password=testing_DD_2020
+
+#-If true, outputs a file containing all the differences between local symbols and dictionary symbols.
+#-(Default: false)
 #vensim.dictionary.getDiff=true
+
+#-If true, inject all valid and unfiltered symbols, indexes, modules and categories to the dictionary.
+#-(Default: false)
+#vensim.dictionary.inject=true
+
+############################################################################
+# Views and filter properties                                              #
+############################################################################
+#-Set the name of the module to filter with. Unset for unfiltered validation.
+#vensim.view.module.name=materials
+
+#-Set the separator between module and category in a view name.
+#-Example: land_and_water.land ("." would be the separator)
+#vensim.view.module.separator=.
+
+#-Set the separator between category and subcategory in a view name.
+#-Example: land_and_water.land-forest ("-" would be the separator)
+#vensim.view.category.separator=-
+
+############################################################################
+# Log and output files properties                                          #
+############################################################################
+#-If true, all communications with the dictionary would be logged.
+#-(Default: false)
+#vensim.log.serverMessages=true
+
+#-Set the name of the file where is saves all the log generated.
+#-Is unset, log will be outputted in the terminal.
+#vensim.log.file=log.txt
+
+#-Set the folder name where all generated files will be stored.
+#-(Default: auxiliary_files)
 #vensim.auxiliaryFiles.directoryName=auxiliary_files
-#vensim.dictionary.inject=false
-#vensim.logServerMessages=true
-#vensim.logFile=log
