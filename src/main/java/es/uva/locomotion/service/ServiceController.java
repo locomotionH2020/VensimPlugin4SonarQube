@@ -136,7 +136,7 @@ public class ServiceController {
         if (filteredSymbols.size() >= 1) {
             try {
                 for (Module module : validModules) {
-                    List<Symbol> symbolsToInject = filteredSymbols.stream().filter(symbol -> symbol.getPrimary_module().equals(module)).collect(Collectors.toList());
+                    List<Symbol> symbolsToInject = filteredSymbols.stream().filter(symbol -> symbol.getPrimary_module() != null && symbol.getPrimary_module().equals(module)).collect(Collectors.toList());
                     if (symbolsToInject.size() >= 1) {
                         DBFacade.injectSymbols(dictionaryService, symbolsToInject, module.getName(), token);
                         List<String> tokensInjected = symbolsToInject.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
@@ -294,8 +294,10 @@ public class ServiceController {
         if (!isAuthenticated())
             throw new NotAuthenticatedException();
 
+
         List<String> newModules = modulesList.stream()
                 .filter(module -> !dbModules.contains(module))
+                .filter(Module::isValid)
                 .map(Module::getName)
                 .collect(Collectors.toList());
 

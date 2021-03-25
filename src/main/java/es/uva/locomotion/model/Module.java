@@ -2,7 +2,7 @@ package es.uva.locomotion.model;
 
 import java.util.Objects;
 
-public class Module extends IssuableAbs {
+public class Module extends IssuableAbs implements Comparable<Module> {
     private String name;
 
     public Module(String name) {
@@ -35,5 +35,10 @@ public class Module extends IssuableAbs {
         return "Module{" +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Module o) {
+        return name.compareTo(o.getName());
     }
 }

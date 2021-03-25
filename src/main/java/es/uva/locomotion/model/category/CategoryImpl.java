@@ -128,6 +128,6 @@ public class CategoryImpl extends IssuableAbs implements Comparable<Category>, C
     @Override
     public void setAsInvalid(String invalidReason) {
         super.setAsInvalid(invalidReason);
-        subcategories.forEach((symbol) -> symbol.setAsInvalid("Supercategory inheritance: " + invalidReason));
+        if(subcategories != null) subcategories.forEach((symbol) -> symbol.setAsInvalid("Supercategory inheritance: " + invalidReason));
     }
 }

@@ -112,19 +112,14 @@ public class Symbol extends IssuableAbs {
         return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && Objects.equals(dependencies, symbol.dependencies) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primary_module, symbol.primary_module) && Objects.equals(shadow_module, symbol.shadow_module) && Objects.equals(group, symbol.group) && Objects.equals(excel, symbol.excel);
     }
 
+
     public boolean dbEquals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Symbol)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Symbol symbol = (Symbol) o;
-        return getToken().equals(symbol.getToken()) &&
-                getIndexes().equals(symbol.getIndexes()) &&
-                getUnits().equals(symbol.getUnits()) &&
-                getComment().equals(symbol.getComment()) &&
-                getType() == symbol.getType() &&
-                getCategory().equals(symbol.getCategory()) &&
-                getPrimary_module().equals(symbol.getPrimary_module()) &&
-                getShadow_module().equals(symbol.getShadow_module());
+        return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primary_module, symbol.primary_module) && Objects.equals(shadow_module, symbol.shadow_module);
     }
+
 
 
     @Override
@@ -247,6 +242,12 @@ public class Symbol extends IssuableAbs {
 
     @Override
     public boolean isValid() {
-       return  super.isValid() && category.isValid() && primary_module.isValid();
+        if (category != null && !category.isValid()) {
+            this.setAsInvalid(category.getInvalidReason());
+        }
+        if (primary_module != null && !primary_module.isValid()) {
+            this.setAsInvalid(primary_module.getInvalidReason());
+        }
+        return super.isValid();
     }
 }

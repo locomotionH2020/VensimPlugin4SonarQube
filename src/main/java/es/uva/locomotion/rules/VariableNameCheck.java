@@ -63,7 +63,6 @@ public class VariableNameCheck extends AbstractVensimCheck {
     @Override
     public void scan(VensimVisitorContext context) {
         SymbolTable table = context.getParsedSymbolTable();
-        SymbolTable dbTable = context.getDbSymbolTable();
         AcronymsList acronymsList = context.getDbAcronyms();
         for (Symbol symbol : table.getSymbols()) {
             if (symbol.getType() == SymbolType.Variable && !"Time".equals(symbol.getToken()) && !checkVariableFollowsConvention(symbol.getToken())) {

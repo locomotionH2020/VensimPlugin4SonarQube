@@ -133,8 +133,9 @@ public class View extends IssuableAbs {
     @Override
     public void setAsInvalid(String invalidReason) {
         super.setAsInvalid(invalidReason);
-        category.setAsInvalid(invalidReason);
-        subcategory.setAsInvalid(invalidReason);
+        module.setAsInvalid(invalidReason);
+        if (category != null) category.setAsInvalid(invalidReason);
+        if (subcategory != null) subcategory.setAsInvalid(invalidReason);
         primary_symbols.forEach((symbol) -> symbol.setAsInvalid(invalidReason));
         shadow_symbols.forEach((symbol) -> symbol.setAsInvalid(invalidReason));
     }

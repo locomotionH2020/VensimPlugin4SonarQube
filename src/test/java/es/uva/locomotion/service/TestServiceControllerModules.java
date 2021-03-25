@@ -214,12 +214,17 @@ public class TestServiceControllerModules {
 
          Set<Module> foundList = new HashSet<>();
         foundList.add(new Module("module_correct_1"));
-        foundList.add(new Module("module_not_correct 2"));
-        foundList.add(new Module("module_not_correct_3$"));
+        Module m = new Module("module_not_correct 2");
+        m.setAsInvalid("Invalid name");
+        foundList.add(m);
+        Module m2 = new Module("module_not_correct_3$");
+        m2.setAsInvalid("Invalid name");
+        foundList.add(m2);
         foundList.add(new Module("module4"));
         foundList.add(new Module("module5_in_db"));
-        foundList.add(new Module("module__not_correct_6"));
-
+        Module m3 = new Module("module__not_correct_6");
+        m3.setAsInvalid("Invalid name");
+        foundList.add(m3);
 
 
          Set<Module> dbList = new HashSet<>();
@@ -237,13 +242,17 @@ public class TestServiceControllerModules {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
         ServiceController.LOG = logger;
 
-         Set<Module> foundList = new HashSet<>();
-        foundList.add(new Module("module_not_correct 2"));
-        foundList.add(new Module("module_not_correct_3$"));
+        Set<Module> foundList = new HashSet<>();
+        Module m = new Module("module_not_correct 2");
+        m.setAsInvalid("Invalid name");
+        foundList.add(m);
+        Module m2 = new Module("module_not_correct_3$");
+        m2.setAsInvalid("Invalid name");
+        foundList.add(m2);
         foundList.add(new Module("module5_in_db"));
-        foundList.add(new Module("module__not_correct_6"));
-
-
+        Module m3 = new Module("module__not_correct_6");
+        m3.setAsInvalid("Invalid name");
+        foundList.add(m3);
 
          Set<Module> dbList = new HashSet<>();
         dbList.add(new Module("module5_in_db"));

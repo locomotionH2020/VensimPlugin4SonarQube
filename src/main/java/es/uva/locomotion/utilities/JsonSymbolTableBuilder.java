@@ -162,6 +162,9 @@ public class JsonSymbolTableBuilder {
                 viewBuilder.add(KEY_CATEGORY, view.getCategory().getName());
             if (view.getSubcategory() != null)
                 viewBuilder.add(KEY_SUBCATEGORY, view.getSubcategory().getName());
+            if (!view.isValid()) {
+                viewBuilder.add(KEY_VALID, view.getInvalidReason());
+            }
             tableBuilder.add(viewBuilder);
 
         }
@@ -173,7 +176,12 @@ public class JsonSymbolTableBuilder {
     private JsonArray modulesToJson(Set<Module> table) {
         JsonArrayBuilder tableBuilder = Json.createArrayBuilder();
         for (Module module : table) {
-            tableBuilder.add(module.getName());
+            JsonObjectBuilder moduleBuilder = Json.createObjectBuilder();
+
+            moduleBuilder.add(KEY_NAME,module.getName());
+            if (!module.isValid()) {
+                moduleBuilder.add(KEY_VALID, module.getInvalidReason());
+            }
         }
         return tableBuilder.build();
     }
@@ -182,18 +190,20 @@ public class JsonSymbolTableBuilder {
         JsonArrayBuilder tableBuilder = Json.createArrayBuilder();
         for (Category category : table) {
 
-            JsonObjectBuilder viewBuilder = Json.createObjectBuilder();
+            JsonObjectBuilder categoryBuilder = Json.createObjectBuilder();
 
-            viewBuilder.add(KEY_NAME, category.getName());
+            categoryBuilder.add(KEY_NAME, category.getName());
             if (category.getSuperCategory() != null) {
-                viewBuilder.add(KEY_LEVEL, 2);
-                viewBuilder.add(KEY_SUPER, category.getSuperCategory().getName());
+                categoryBuilder.add(KEY_LEVEL, 2);
+                categoryBuilder.add(KEY_SUPER, category.getSuperCategory().getName());
             } else {
-                viewBuilder.add(KEY_LEVEL, 1);
-                viewBuilder.add(KEY_SUPER, JsonValue.NULL);
+                categoryBuilder.add(KEY_LEVEL, 1);
+                categoryBuilder.add(KEY_SUPER, JsonValue.NULL);
             }
-
-            tableBuilder.add(viewBuilder);
+            if (!category.isValid()) {
+                categoryBuilder.add(KEY_VALID, category.getInvalidReason());
+            }
+            tableBuilder.add(categoryBuilder);
 
         }
 

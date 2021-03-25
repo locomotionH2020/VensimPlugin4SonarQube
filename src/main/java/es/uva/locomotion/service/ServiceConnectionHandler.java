@@ -41,7 +41,7 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
         try {
             url = URI.create(serviceUrl);
             url = url.resolve(service);
-            LOG.server("Sending POST request to: " + url.toString() + " with data: \n" + data);
+            LOG.serverInfo("Sending POST request to: " + url.toString() + " with data: \n" + data);
             requestBuilder.uri(url);
         } catch (IllegalArgumentException ex) {
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
@@ -50,17 +50,9 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
                 .header("Content-Type", "application/json").build();
 
         try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            String responseBody = response.body();
-            LOG.server("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
-            if (response.statusCode() == HttpURLConnection.HTTP_OK)
-                return responseBody;
-            else
-                throw new ConnectionFailedException(new IllegalArgumentException("The status code of the response to qaGetSymbolsDefinition was: " + response.statusCode()));
-
+            return sendRequest(url, request);
         } catch (InterruptedException | IOException e) {
-            LOG.server("The connection failed: " + e.getMessage());
+            LOG.serverError("The connection failed: " + e.getMessage());
             throw new ConnectionFailedException(e);
         }
     }
@@ -80,7 +72,7 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
         try {
             url = URI.create(serviceUrl);
             url = url.resolve(service);
-            LOG.server("Sending GET request to: " + url.toString());
+            LOG.serverInfo("Sending GET request to: " + url.toString());
             requestBuilder.uri(url);
         } catch (IllegalArgumentException ex) {
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
@@ -88,18 +80,23 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
         HttpRequest request = requestBuilder.GET().build();
 
         try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            String responseBody = response.body();
-            LOG.server("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
-            if (response.statusCode() == HttpURLConnection.HTTP_OK)
-                return responseBody;
-            else
-                throw new ConnectionFailedException(new IllegalArgumentException("The status code of the response to qaGetAcronyms was: " + response.statusCode()));
-
+            return sendRequest(url, request);
         } catch (InterruptedException | IOException e) {
-            LOG.server("The connection failed: " + e.getMessage());
+            LOG.serverInfo("The connection failed: " + e.getMessage());
             throw new ConnectionFailedException(e);
+        }
+    }
+
+    private String sendRequest(URI url, HttpRequest request) throws IOException, InterruptedException {
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        String responseBody = response.body();
+        LOG.serverInfo("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
+        if (response.statusCode() == HttpURLConnection.HTTP_OK)
+            return responseBody;
+        else {
+            LOG.serverError("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
+            throw new ConnectionFailedException(new IllegalArgumentException("The status code of the response to "+ url.toString() +  " was: " + response.statusCode()));
         }
     }
 
@@ -111,15 +108,7 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
         return sendPOSTRequest(serviceUrl, "authenticate", credentials.build(), null);
     }
 
-    /**
-     * @param serviceUrl
-     * @param jsonSymbols
-     * @return
-     * @throws InvalidServiceUrlException If the url isn't valid (doesn't have a protocol or invalid format)
-     * @throws ConnectionFailedException  If the domain address can't be resolved or the page is inaccessible.
-     * @throws EmptyServiceException      If {@code serviceUrl} is empty if null
-     * @throws IllegalArgumentException   If {@code symbols} is null
-     */
+
     public String sendSymbolTableRequestToDictionaryService(String serviceUrl, JsonObject jsonSymbols, String token) {
         return sendPOSTRequest(serviceUrl, "qaGetSymbolsDefinition", jsonSymbols, token);
     }
@@ -128,15 +117,6 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
         return sendGETRequest(serviceUrl, "qaGetAcronyms", token);
     }
 
-    /**
-     * @param serviceUrl
-     * @param symbols
-     * @return
-     * @throws InvalidServiceUrlException If the url isn't valid (doesn't have a protocol or invalid format)
-     * @throws ConnectionFailedException  If the domain address can't be resolved or the page is inaccessible.
-     * @throws EmptyServiceException      If {@code serviceUrl} is empty if null
-     * @throws IllegalArgumentException   If {@code symbols} is null or empty
-     */
     public String injectSymbols(String serviceUrl, JsonObject symbols, String token) {
         return sendPOSTRequest(serviceUrl, "qaAddSymbolsDefinition", symbols, token);
     }
@@ -164,6 +144,7 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
     public String sendIndexesRequestToDictionaryService(String serviceUrl, String token) {
         return sendGETRequest(serviceUrl, "qaGetIndexesDefinition", token);
     }
+
     public String injectIndexes(String serviceUrl, JsonObject indexes, String token) {
         return sendPOSTRequest(serviceUrl, "qaAddIndexesDefinition", indexes, token);
     }

@@ -5,10 +5,7 @@ import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.category.Category;
 
 import javax.json.*;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JsonDictoinaryDiffBuilder {
@@ -44,22 +41,22 @@ public class JsonDictoinaryDiffBuilder {
 
         tableBuilder.add("file", file);
         tableBuilder.add("symbols", symbolTableDiffToJson(table, dbData.getDataBaseSymbols()));
+        tableBuilder.add("indexes", indexesTableDiffToJson(table, dbData.getDataBaseSymbols()));
+        tableBuilder.add("indexes_values", indexValuesTableDiffToJson(table, dbData.getDataBaseSymbols()));
         tableBuilder.add("modules", modulesDiffToJson(viewTable.getModules(), dbData.getModules()));
         tableBuilder.add("categories", categoriesDiffToJson(viewTable.getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories()));
 
         fileBuilder.add(tableBuilder);
     }
 
-    //TODO hacer tres grupos, diferencias, solo en local y solo en remoto.
     private JsonObject symbolTableDiffToJson(SymbolTable symbolTable, SymbolTable dbTable) {
         JsonObjectBuilder tableBuilder = Json.createObjectBuilder();
         JsonObjectBuilder missmatchBuilder = Json.createObjectBuilder();
         JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
         JsonArrayBuilder missingDBBuilder = Json.createArrayBuilder();
         int counter = 1;
-        List<SymbolType> ignore = Arrays.asList(SymbolType.Function,SymbolType.Subscript_Value);
+        List<SymbolType> ignore = Arrays.asList(SymbolType.Function, SymbolType.Subscript_Value, SymbolType.Subscript_Value);
         List<Symbol> localSymbols = symbolTable.getSymbols().stream().filter(symbol -> !ignore.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
-
 
 
         for (Symbol symbol : localSymbols) {
@@ -74,7 +71,74 @@ public class JsonDictoinaryDiffBuilder {
                 missingDBBuilder.add(symbol.getToken());
             }
         }
-//TODO separar índices.
+
+        List<Symbol> DBSymbols = dbTable.getSymbols().stream().sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
+
+        for (Symbol dbsymbol : DBSymbols) {
+            missingLocalBuilder.add(dbsymbol.getToken());
+        }
+        tableBuilder.add("missmatches", missmatchBuilder);
+        tableBuilder.add("not_found_in_DB", missingDBBuilder);
+        tableBuilder.add("not_found_in_local", missingLocalBuilder);
+        return tableBuilder.build();
+    }
+
+    private JsonObject indexValuesTableDiffToJson(SymbolTable symbolTable, SymbolTable dbTable) {
+        JsonObjectBuilder tableBuilder = Json.createObjectBuilder();
+        JsonObjectBuilder missmatchBuilder = Json.createObjectBuilder();
+        JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
+        JsonArrayBuilder missingDBBuilder = Json.createArrayBuilder();
+        int counter = 1;
+        List<SymbolType> select = Collections.singletonList(SymbolType.Subscript_Value);
+        List<Symbol> localSymbols = symbolTable.getSymbols().stream().filter(symbol -> select.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
+
+
+        for (Symbol symbol : localSymbols) {
+
+            if (dbTable.hasSymbol(symbol.getToken())) {
+                Symbol dbSymbol = dbTable.getSymbol(symbol.getToken());
+                if (!symbol.dbEquals(dbSymbol)) {
+                    missmatchBuilder.add(symbol.getToken(), symbolDiffToJson(symbol, dbSymbol));
+                }
+                dbTable.removeSymbol(symbol.getToken());
+            } else {
+                missingDBBuilder.add(symbol.getToken());
+            }
+        }
+
+        List<Symbol> DBSymbols = dbTable.getSymbols().stream().sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
+
+        for (Symbol dbsymbol : DBSymbols) {
+            missingLocalBuilder.add(dbsymbol.getToken());
+        }
+        tableBuilder.add("missmatches", missmatchBuilder);
+        tableBuilder.add("not_found_in_DB", missingDBBuilder);
+        tableBuilder.add("not_found_in_local", missingLocalBuilder);
+        return tableBuilder.build();
+    }
+
+    private JsonObject indexesTableDiffToJson(SymbolTable symbolTable, SymbolTable dbTable) {
+        JsonObjectBuilder tableBuilder = Json.createObjectBuilder();
+        JsonObjectBuilder missmatchBuilder = Json.createObjectBuilder();
+        JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
+        JsonArrayBuilder missingDBBuilder = Json.createArrayBuilder();
+        int counter = 1;
+        List<SymbolType> select = Collections.singletonList(SymbolType.Subscript);
+        List<Symbol> localSymbols = symbolTable.getSymbols().stream().filter(symbol -> select.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
+
+
+        for (Symbol symbol : localSymbols) {
+
+            if (dbTable.hasSymbol(symbol.getToken())) {
+                Symbol dbSymbol = dbTable.getSymbol(symbol.getToken());
+                if (!symbol.dbEquals(dbSymbol)) {
+                    missmatchBuilder.add(symbol.getToken(), symbolDiffToJson(symbol, dbSymbol));
+                }
+                dbTable.removeSymbol(symbol.getToken());
+            } else {
+                missingDBBuilder.add(symbol.getToken());
+            }
+        }
 
         List<Symbol> DBSymbols = dbTable.getSymbols().stream().sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
 

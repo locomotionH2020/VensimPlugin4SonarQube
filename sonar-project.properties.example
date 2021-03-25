@@ -10,3 +10,5 @@ sonar.sources=.
 #vensim.dictionary.getDiff=true
 #vensim.auxiliaryFiles.directoryName=auxiliary_files
 #vensim.dictionary.inject=false
+#vensim.logServerMessages=true
+#vensim.logFile=log
