@@ -230,7 +230,7 @@ public class DBFacade {
                 symbol.addShadow_module(new Module(module));
             }
 
-            JsonArray excelJsonList = jsonSymbol.getJsonArray(FIELD_SYMBOL_MODULES);
+            JsonArray excelJsonList = jsonSymbol.getJsonArray(KEY_EXCEL);
             if (excelJsonList != null) {
                 List<ExcelRef> excelList = new ArrayList<>();
                 for (int i = 0; i < excelJsonList.size(); i++) {

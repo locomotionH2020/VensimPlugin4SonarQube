@@ -128,6 +128,8 @@ public class View extends IssuableAbs {
 
         if (getCategory() != null)
             getCategory().addLine(line);
+        if (getSubcategory() != null)
+            getSubcategory().addLine(line);
         getModule().addLine(line);
     }
 

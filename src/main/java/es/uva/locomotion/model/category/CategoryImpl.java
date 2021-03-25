@@ -117,15 +117,6 @@ public class CategoryImpl extends IssuableAbs implements Comparable<Category>, C
     }
 
     @Override
-    public void addLine(int line) {
-        super.addLine(line);
-        if (getSubcategories() != null)
-            for (Category sub : getSubcategories()) {
-                sub.addLine(line);
-            }
-    }
-
-    @Override
     public void setAsInvalid(String invalidReason) {
         super.setAsInvalid(invalidReason);
         if(subcategories != null) subcategories.forEach((symbol) -> symbol.setAsInvalid("Supercategory inheritance: " + invalidReason));

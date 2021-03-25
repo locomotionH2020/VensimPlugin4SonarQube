@@ -160,6 +160,13 @@ public class JsonSymbolTableBuilder {
 
             JsonObjectBuilder viewBuilder = Json.createObjectBuilder();
             viewBuilder.add(KEY_MODULE, view.getModule().getName());
+
+            JsonArrayBuilder lines = Json.createArrayBuilder();
+            for (int line : view.getLines())
+                lines.add(line);
+
+            viewBuilder.add(KEY_LINES, lines);
+
             if (view.getCategory() != null)
                 viewBuilder.add(KEY_CATEGORY, view.getCategory().getName());
             if (view.getSubcategory() != null)
@@ -184,6 +191,12 @@ public class JsonSymbolTableBuilder {
             if (!module.isValid()) {
                 moduleBuilder.add(KEY_VALID, module.getInvalidReason());
             }
+            JsonArrayBuilder lines = Json.createArrayBuilder();
+            for (int line : module.getLines())
+                lines.add(line);
+
+            moduleBuilder.add(KEY_LINES, lines);
+
         }
         return tableBuilder.build();
     }
@@ -195,6 +208,12 @@ public class JsonSymbolTableBuilder {
             JsonObjectBuilder categoryBuilder = Json.createObjectBuilder();
 
             categoryBuilder.add(KEY_NAME, category.getName());
+            JsonArrayBuilder lines = Json.createArrayBuilder();
+            for (int line : category.getLines())
+                lines.add(line);
+
+            categoryBuilder.add(KEY_LINES, lines);
+
             if (category.getSuperCategory() != null) {
                 categoryBuilder.add(KEY_LEVEL, 2);
                 categoryBuilder.add(KEY_SUPER, category.getSuperCategory().getName());
