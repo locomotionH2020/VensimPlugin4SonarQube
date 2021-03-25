@@ -44,6 +44,7 @@ public class VensimRuleRepository implements RulesDefinition{
         set.add(SubcategoryDuplicatedCheck.class);
         set.add(EmbeddedLookupCheck.class);
         set.add(SymbolGroupCheck.class);
+        set.add(DictionarySymbolExcelRefCheck.class);
         set.add(ConstantNameCheck.class);
         set.add(RealityCheckNameRule.class);
         set.add(MagicNumberCheck.class);

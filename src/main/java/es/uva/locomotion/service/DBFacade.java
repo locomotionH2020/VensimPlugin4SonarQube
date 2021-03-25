@@ -229,6 +229,43 @@ public class DBFacade {
                 String module = secondaryModules.getString(i);
                 symbol.addShadow_module(new Module(module));
             }
+
+            JsonArray excelJsonList = jsonSymbol.getJsonArray(FIELD_SYMBOL_MODULES);
+            if (excelJsonList != null) {
+                List<ExcelRef> excelList = new ArrayList<>();
+                for (int i = 0; i < excelJsonList.size(); i++) {
+                    JsonObject excelJson = excelJsonList.getJsonObject(i);
+
+                    String sheet = excelJson.getString(KEY_SHEET);
+                    String filename = excelJson.getString(KEY_SHEET);
+                    ExcelRef excel = new ExcelRef(sheet, filename);
+
+                    JsonArray infoJsonList = excelJson.getJsonArray(KEY_INFO);
+                    for (int j = 0; j < infoJsonList.size(); j++) {
+                        JsonObject infoJson = infoJsonList.getJsonObject(j);
+
+                        JsonArray indexJson = infoJson.getJsonArray(KEY_INDEXES);
+                        List<String> indexList = null;
+                        if (indexJson != null) {
+                            indexList = new ArrayList<>();
+                            for (int k = 0; k < indexJson.size(); k++) {
+                                indexList.add(indexJson.getString(k));
+                            }
+                        }
+                        String cellRange = infoJson.getString(KEY_CELLRANGE);
+                        String series = infoJson.getString(KEY_SERIES);
+
+                        if (series == null) {
+                            excel.addCellRangeInformation(indexList, cellRange);
+                        } else {
+                            excel.addCellRangeInformation(indexList, cellRange, series);
+                        }
+                    }
+                    excelList.add(excel);
+                }
+                symbol.setExcel(excelList);
+            }
+
             table.addSymbol(symbol);
 
         }

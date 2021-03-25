@@ -50,7 +50,7 @@ public class ExcelRef {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ExcelRef excelRef = (ExcelRef) o;
-        return filename.equals(excelRef.filename) && sheet.equals(excelRef.sheet);
+        return filename.equals(excelRef.filename) && sheet.equals(excelRef.sheet) && cellRangeInformation.equals(excelRef.cellRangeInformation);
     }
 
     @Override
