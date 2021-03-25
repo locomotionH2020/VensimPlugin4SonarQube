@@ -1,8 +1,8 @@
 package es.uva.locomotion.parser.visitors;
 
 import com.ibm.icu.impl.Pair;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.parser.ModelParserBaseVisitor;
 import es.uva.locomotion.utilities.logs.LoggingLevel;

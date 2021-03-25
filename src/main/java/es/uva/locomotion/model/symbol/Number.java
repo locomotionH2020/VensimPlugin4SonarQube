@@ -1,4 +1,6 @@
-package es.uva.locomotion.model;
+package es.uva.locomotion.model.symbol;
+
+import es.uva.locomotion.model.symbol.Symbol;
 
 public class Number extends Symbol {
     private int ocurrences;

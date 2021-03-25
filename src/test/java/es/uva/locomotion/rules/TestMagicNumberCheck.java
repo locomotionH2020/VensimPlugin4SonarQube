@@ -1,8 +1,8 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.NumberTable;
-import es.uva.locomotion.model.Number;
+import es.uva.locomotion.model.symbol.NumberTable;
+import es.uva.locomotion.model.symbol.Number;
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
 import es.uva.locomotion.plugin.Issue;

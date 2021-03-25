@@ -1,9 +1,8 @@
 package es.uva.locomotion.utilities;
 
 import es.uva.locomotion.model.Module;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.View;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.*;
 import es.uva.locomotion.parser.visitors.ViewTableVisitor;

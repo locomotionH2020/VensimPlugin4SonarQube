@@ -1,6 +1,5 @@
 package es.uva.locomotion.testutilities;
 
-import es.uva.locomotion.model.Symbol;
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.service.ServiceController;
@@ -9,7 +8,6 @@ import es.uva.locomotion.plugin.VensimRuleRepository;
 import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.rules.VensimCheck;
-import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import es.uva.locomotion.utilities.OutputFilesGenerator;
 import org.mockito.Mockito;
 import org.sonar.api.batch.rule.ActiveRules;

@@ -1,20 +1,19 @@
 package es.uva.locomotion.parser.visitors;
 
-import es.uva.locomotion.model.*;
-import es.uva.locomotion.model.Number;
-import es.uva.locomotion.model.NumberTable;
+import es.uva.locomotion.model.symbol.Number;
+import es.uva.locomotion.model.symbol.NumberTable;
 
 import static org.junit.Assert.*;
 
 
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.internal.apachecommons.lang.StringUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Set;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.getVisitorContextFromString;

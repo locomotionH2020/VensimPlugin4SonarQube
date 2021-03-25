@@ -1,6 +1,9 @@
-package es.uva.locomotion.model;
+package es.uva.locomotion.model.symbol;
 
 
+import es.uva.locomotion.model.ExcelRef;
+import es.uva.locomotion.model.IssuableAbs;
+import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.category.Category;
 
 import java.util.*;

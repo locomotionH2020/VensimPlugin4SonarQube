@@ -1,14 +1,13 @@
 package es.uva.locomotion.plugin;
 
 import es.uva.locomotion.model.*;
-import es.uva.locomotion.model.Module;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.parser.*;
 import es.uva.locomotion.rules.VensimCheck;
 
 
-import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import es.uva.locomotion.utilities.OutputFilesGenerator;
 import es.uva.locomotion.utilities.SymbolTableGenerator;
 import es.uva.locomotion.utilities.ViewTableUtility;
@@ -24,19 +23,11 @@ import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.rule.RuleKey;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static es.uva.locomotion.utilities.Constants.*;
 

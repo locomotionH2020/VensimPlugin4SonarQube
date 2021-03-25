@@ -2,12 +2,11 @@ package es.uva.locomotion.testutilities;
 
 
 import es.uva.locomotion.model.Module;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.category.Category;
-import es.uva.locomotion.model.category.CategoryImpl;
 import es.uva.locomotion.parser.*;
 import es.uva.locomotion.parser.visitors.RawSymbolTableVisitor;
 import es.uva.locomotion.parser.visitors.ViewTableVisitor;

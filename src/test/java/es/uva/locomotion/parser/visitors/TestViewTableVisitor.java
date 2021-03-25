@@ -2,6 +2,8 @@ package es.uva.locomotion.parser.visitors;
 
 import es.uva.locomotion.model.*;
 import es.uva.locomotion.model.Module;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import org.junit.Test;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getSymbolTableFromString;

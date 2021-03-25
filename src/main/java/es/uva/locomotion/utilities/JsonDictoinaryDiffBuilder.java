@@ -3,6 +3,9 @@ package es.uva.locomotion.utilities;
 import es.uva.locomotion.model.*;
 import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 
 import javax.json.*;
 import java.util.*;
@@ -154,7 +157,7 @@ public class JsonDictoinaryDiffBuilder {
     private JsonObject symbolDiffToJson(Symbol symbol, Symbol dbSymbol) {
         JsonObjectBuilder symbolBuilder = Json.createObjectBuilder();
 
-        if (!symbol.getPrimary_module().equals(dbSymbol.getPrimary_module())) {
+        if (symbol.getPrimary_module() != null && !symbol.getPrimary_module().equals(dbSymbol.getPrimary_module())) {
             JsonObjectBuilder primaryBuilder = Json.createObjectBuilder();
             primaryBuilder.add(KEY_LOCAL, symbol.getPrimary_module().getName());
             primaryBuilder.add(KEY_DICTIONARY, dbSymbol.getPrimary_module().getName());

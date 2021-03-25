@@ -1,7 +1,6 @@
-package es.uva.locomotion.model;
+package es.uva.locomotion.model.symbol;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class NumberTable {
 

@@ -1,6 +1,7 @@
 package es.uva.locomotion.utilities;
 
 import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
 import javax.json.*;
@@ -8,7 +9,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.nio.file.Path;
-import java.util.List;
 
 public class OutputFilesGenerator {
 

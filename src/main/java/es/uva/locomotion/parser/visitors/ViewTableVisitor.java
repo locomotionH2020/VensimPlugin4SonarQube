@@ -1,8 +1,8 @@
 package es.uva.locomotion.parser.visitors;
 
 import es.uva.locomotion.model.*;
-import es.uva.locomotion.model.Module;
-import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.parser.*;
 
 import es.uva.locomotion.utilities.logs.VensimLogger;

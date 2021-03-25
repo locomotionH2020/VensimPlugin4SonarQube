@@ -3,7 +3,7 @@ package es.uva.locomotion.parser.visitors;
 
 import es.uva.locomotion.model.AcronymsList;
 import es.uva.locomotion.model.DataBaseRepresentation;
-import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.plugin.Issue;

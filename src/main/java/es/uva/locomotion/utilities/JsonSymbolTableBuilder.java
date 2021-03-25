@@ -3,6 +3,8 @@ package es.uva.locomotion.utilities;
 import es.uva.locomotion.model.*;
 import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import org.antlr.v4.runtime.misc.Triple;
 
 import javax.json.*;

@@ -1,10 +1,9 @@
 package es.uva.locomotion.model;
 
 import es.uva.locomotion.model.category.CategoryMap;
+import es.uva.locomotion.model.symbol.SymbolTable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class DataBaseRepresentation {

@@ -1,9 +1,10 @@
 package es.uva.locomotion.parser.visitors;
 
 import es.uva.locomotion.model.ExcelRef;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.symbol.Subscript;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.*;
 
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -50,7 +51,17 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
             return table.addSymbol(symbol);
         }
     }
+    private Subscript getSubscriptOrCreate(SymbolTable table, String token, boolean isCopy) {
 
+        if (table.hasSymbol(token)) {
+            Symbol s = table.getSymbol(token);
+            return (Subscript)s;
+        }
+        else {
+            Subscript symbol = new Subscript(token, isCopy);
+            return (Subscript)table.addSymbol(symbol);
+        }
+    }
     @Override
     public String visitGroup(ModelParser.GroupContext ctx) {
         actualGroup = ctx.name.getText();
@@ -58,8 +69,8 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     }
 
     @Override
-    public Symbol visitSubscriptRange(ModelParser.SubscriptRangeContext ctx) {
-        Symbol subscript = getSymbolOrCreate(table, ctx.Id().getSymbol().getText());
+    public Subscript visitSubscriptRange(ModelParser.SubscriptRangeContext ctx) {
+        Subscript subscript = getSubscriptOrCreate(table, ctx.Id().getSymbol().getText(), false);
         subscript.addLine(getStartLine(ctx));
         subscript.setType(SymbolType.Subscript);
 
@@ -158,12 +169,12 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     @Override
     public Symbol visitSubscriptCopy(ModelParser.SubscriptCopyContext ctx) {
 
-        Symbol copy = getSymbolOrCreate(table, ctx.copy.getText());
+        Subscript copy = getSubscriptOrCreate(table, ctx.copy.getText(), true);
         copy.setGroup(actualGroup);
         copy.setType(SymbolType.Subscript);
         copy.addLine(getStartLine(ctx));
 
-        Symbol original = getSymbolOrCreate(table, ctx.original.getText());
+        Symbol original = getSubscriptOrCreate(table, ctx.original.getText(), false);
         copy.setDependencies(original.getDependencies()); // Must be setDependencies instead of addDependencies so it works even if 'original' hasn't been defined yet.
 
         return copy;
@@ -181,8 +192,8 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
 
 
     @Override
-    public Symbol visitSubscriptId(ModelParser.SubscriptIdContext ctx) {
-        return getSymbolOrCreate(table, ctx.Id().getSymbol().getText());
+    public Subscript visitSubscriptId(ModelParser.SubscriptIdContext ctx) {
+        return getSubscriptOrCreate(table, ctx.Id().getSymbol().getText(), false);
     }
 
     @Override
@@ -193,8 +204,8 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
             return parseSubscriptSequence(ctx);
         } catch (IllegalArgumentException ex) {
             LOG.info(ex.getMessage() + "\nThe in-between values of the range will be ignored.");
-            Symbol firstSymbol = getSymbolOrCreate(table, ctx.Id(0).getSymbol().getText());
-            Symbol secondSymbol = getSymbolOrCreate(table, ctx.Id(1).getSymbol().getText());
+            Symbol firstSymbol = getSubscriptOrCreate(table, ctx.Id(0).getSymbol().getText(), false);
+            Symbol secondSymbol = getSubscriptOrCreate(table, ctx.Id(1).getSymbol().getText(), false);
 
             firstSymbol.setType(SymbolType.Subscript_Value);
             firstSymbol.addLine(getStartLine(ctx));
@@ -231,7 +242,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
 
             String text = ctx.start.getText().trim();
             for (int i = startNumber; i < endNumber + 1; i++) {
-                Symbol value = getSymbolOrCreate(table, text.replace(startMatcher.group(2), String.valueOf(i)));
+                Symbol value = getSubscriptOrCreate(table, text.replace(startMatcher.group(2), String.valueOf(i)), false);
                 value.setType(SymbolType.Subscript_Value);
                 value.addLine(getStartLine(ctx));
                 symbolSequence.add(value);

@@ -1,6 +1,7 @@
 package es.uva.locomotion.model;
 
 import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.symbol.Symbol;
 
 import java.util.*;
 import java.util.stream.Collectors;

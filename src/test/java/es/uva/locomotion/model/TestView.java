@@ -2,10 +2,9 @@ package es.uva.locomotion.model;
 
 import es.uva.locomotion.model.category.Category;
 import es.uva.locomotion.model.category.CategoryMap;
+import es.uva.locomotion.model.symbol.Symbol;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Set;
 
 import static org.junit.Assert.*;

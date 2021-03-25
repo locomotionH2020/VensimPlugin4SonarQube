@@ -16,6 +16,7 @@ public final class VensimQualityProfile implements BuiltInQualityProfilesDefinit
         String REPO_KEY = VensimRuleRepository.REPOSITORY_KEY;
 
         profile.activateRule(REPO_KEY, SubscriptNameCheck.CHECK_KEY);
+        profile.activateRule(REPO_KEY, SubscriptCopyNameCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY, SubscriptValueNameCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY, LookupNameCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY, VariableNameCheck.CHECK_KEY);
