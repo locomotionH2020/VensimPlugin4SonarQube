@@ -46,14 +46,14 @@ At: '@';
 
 Ignore: ':IGNORE:';
 Except:':EXCEPT:';
-Id: ( ( (Nondigit|Digit+ Nondigit) IdChar*  ) | ( Nondigit ( IdChar | ' ' )* IdChar ) | StringLiteral );
+Id: (Nondigit (( IdChar | ' ' )* IdChar)?)| (Digit+ NondigitIdChar (( IdChar | ' ' )* IdChar )?) | StringLiteral;
 
-//TODO 1- peta en id
 //TODO una comilla hace petar también.
 fragment
 IdChar : [a-zA-Z0-9_$'&%\u00A1-\u00ff\u0100-\u017f\u0180-\u024f\u1e02-\u1ef3] ;
 
-
+fragment
+NondigitIdChar : [a-zA-Z_$'&%\u00A1-\u00ff\u0100-\u017f\u0180-\u024f\u1e02-\u1ef3] ;
 fragment
 Nondigit : [a-zA-Z_] ;
 
