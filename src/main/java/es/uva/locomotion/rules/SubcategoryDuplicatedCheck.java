@@ -9,7 +9,6 @@ import org.sonar.check.Rule;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Rule(key = SubcategoryDuplicatedCheck.CHECK_KEY, name = SubcategoryDuplicatedCheck.NAME, description = SubcategoryDuplicatedCheck.HTML_DESCRIPTION)

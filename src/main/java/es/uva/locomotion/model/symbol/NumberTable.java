@@ -16,9 +16,9 @@ public class NumberTable {
     }
 
     public Collection<Number> getNumbers(){
-        List<Number> Numbers =  new ArrayList<>(table.values());
-        Numbers.sort(Comparator.comparing(Number::getToken));
-        return Numbers;
+        List<Number> numbers =  new ArrayList<>(table.values());
+        numbers.sort(Comparator.comparing(Number::getToken));
+        return numbers;
     }
 
 
@@ -27,22 +27,22 @@ public class NumberTable {
     }
 
 
-    public Number addNumber(Number Number) {
-        String token = Number.getToken().trim();
+    public Number addNumber(Number number) {
+        String token = number.getToken().trim();
 
         if(hasNumber(token))
-            throw new IllegalArgumentException("The Number:  "+ token+ " already exists.");
+            throw new IllegalArgumentException("The number:  "+ token+ " already exists.");
 
-        table.put(token,Number);
-        return Number;
+        table.put(token,number);
+        return number;
     }
 
-    public Number removeNumber(String Number) {
+    public Number removeNumber(String number) {
 
-        if(!hasNumber(Number))
-            throw new IllegalArgumentException("The Number:  "+ Number+ " is not in the Table.");
+        if(!hasNumber(number))
+            throw new IllegalArgumentException("The number:  "+ number+ " is not in the Table.");
 
-        return table.remove(Number);
+        return table.remove(number);
     }
 
     @Override
@@ -51,6 +51,11 @@ public class NumberTable {
         if (!(o instanceof NumberTable)) return false;
         NumberTable table1 = (NumberTable) o;
         return table.equals(table1.table);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(table);
     }
 
     @Override

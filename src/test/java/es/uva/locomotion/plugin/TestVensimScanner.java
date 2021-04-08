@@ -2,9 +2,9 @@ package es.uva.locomotion.plugin;
 
 
 import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.testutilities.RuleTestUtilities;
-import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.OutputFilesGenerator;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.Before;
@@ -18,13 +18,12 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.measure.NewMeasure;
 import org.sonar.api.config.Configuration;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.loadFile;
 import static org.mockito.Mockito.*;
 
 public class TestVensimScanner {

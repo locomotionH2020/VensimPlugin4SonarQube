@@ -2,10 +2,10 @@ package es.uva.locomotion.rules;
 
 import es.uva.locomotion.model.symbol.Number;
 import es.uva.locomotion.model.symbol.NumberTable;
-import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
-import es.uva.locomotion.plugin.Issue;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -47,10 +47,6 @@ public class MagicNumberCheck extends AbstractVensimCheck {
     public static final String DEFAULT_REPETITIONS = "3";
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
-
-    public MagicNumberCheck(){
-    }
-
 
     @RuleProperty(
             key = "minimum-repetitions",

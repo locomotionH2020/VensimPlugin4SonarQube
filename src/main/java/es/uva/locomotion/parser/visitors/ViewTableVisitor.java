@@ -1,10 +1,11 @@
 package es.uva.locomotion.parser.visitors;
 
-import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.View;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
-import es.uva.locomotion.parser.*;
-
+import es.uva.locomotion.parser.ModelParser;
+import es.uva.locomotion.parser.ModelParserBaseVisitor;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
 import java.util.regex.Pattern;

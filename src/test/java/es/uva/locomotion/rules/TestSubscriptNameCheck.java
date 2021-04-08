@@ -1,16 +1,14 @@
 package es.uva.locomotion.rules;
 
 
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.symbol.Subscript;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.model.ViewTable;
-import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-
+import es.uva.locomotion.plugin.VensimScanner;
 import org.junit.Test;
-
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
 import static org.junit.Assert.assertFalse;
@@ -207,9 +205,9 @@ public class TestSubscriptNameCheck {
         SubscriptNameCheck check = new SubscriptNameCheck();
 
         SymbolTable table = new SymbolTable();
-        Symbol invalid = new Subscript("invalid", SymbolType.Subscript);
+        Symbol invalid = new Subscript("invalid", SymbolType.SUBSCRIPT);
         invalid.addLine(1);
-        Symbol valid = new Subscript("VALID_I", SymbolType.Subscript);
+        Symbol valid = new Subscript("VALID_I", SymbolType.SUBSCRIPT);
         valid.addLine(2);
         table.addSymbol(invalid);
         table.addSymbol(valid);

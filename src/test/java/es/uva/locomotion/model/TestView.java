@@ -26,11 +26,11 @@ public class TestView {
         v.addPrimary(s1);
         v.addShadow(s2);
 
-        Set<Symbol> result = v.getPrimary_symbols();
+        Set<Symbol> result = v.getPrimarySymbols();
         assertTrue(result.contains(s1));//HERE
         assertEquals(1,result.size());
 
-         result = v.getShadow_symbols();
+         result = v.getShadowSymbols();
         assertTrue(result.contains(s2));
         assertEquals(1,result.size());
 

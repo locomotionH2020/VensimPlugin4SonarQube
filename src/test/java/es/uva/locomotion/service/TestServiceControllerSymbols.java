@@ -4,8 +4,8 @@ import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
+import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
@@ -13,15 +13,16 @@ import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.mockito.Mockito.*;
-
 import org.mockito.Mockito;
 
 import javax.json.JsonObject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.mockito.Mockito.*;
 
 
 public class TestServiceControllerSymbols {
@@ -49,15 +50,15 @@ public class TestServiceControllerSymbols {
         ServiceController controller = getAuthenticatedServiceController("https://localhost");
 
 
-        List<Symbol> symbols = Arrays.asList(new Symbol("func1", SymbolType.Function),
-                new Symbol("var", SymbolType.Variable),
-                new Symbol("func2", SymbolType.Function),
-                new Symbol("const", SymbolType.Constant),
-                new Symbol("lookup", SymbolType.Lookup_Table),
-                new Symbol("subscript", SymbolType.Subscript),
-                new Symbol("sValue", SymbolType.Subscript_Value),
-                new Symbol("realityCheck", SymbolType.Reality_Check),
-                new Symbol("func3", SymbolType.Function)
+        List<Symbol> symbols = Arrays.asList(new Symbol("func1", SymbolType.FUNCTION),
+                new Symbol("var", SymbolType.VARIABLE),
+                new Symbol("func2", SymbolType.FUNCTION),
+                new Symbol("const", SymbolType.CONSTANT),
+                new Symbol("lookup", SymbolType.LOOKUP_TABLE),
+                new Symbol("subscript", SymbolType.SUBSCRIPT),
+                new Symbol("sValue", SymbolType.SUBSCRIPT_VALUE),
+                new Symbol("realityCheck", SymbolType.REALITY_CHECK),
+                new Symbol("func3", SymbolType.FUNCTION)
         );
 
         for (Symbol s : symbols)
@@ -250,7 +251,7 @@ public class TestServiceControllerSymbols {
 
 
         SymbolTable table = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(table, "function", SymbolType.Function, 1);
+        GeneralTestUtilities.addSymbolInLines(table, "function", SymbolType.FUNCTION, 1);
         GeneralTestUtilities.addSymbolInLines(table, "undetermined function", SymbolType.UNDETERMINED_FUNCTION, 2);
         GeneralTestUtilities.addSymbolInLines(table, "undetermined", SymbolType.UNDETERMINED, 3);
 
@@ -271,7 +272,7 @@ public class TestServiceControllerSymbols {
 
 
         SymbolTable table = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(table, "  constant  ", SymbolType.Constant, 1);
+        GeneralTestUtilities.addSymbolInLines(table, "  constant  ", SymbolType.CONSTANT, 1);
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
         controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), List.of(new Module(MODULE)), null);
@@ -290,7 +291,7 @@ public class TestServiceControllerSymbols {
 
         SymbolTable table = new SymbolTable();
         for (String symbol : Constants.DEFAULT_VENSIM_SYMBOLS) {
-            Symbol s = new Symbol(symbol, SymbolType.Constant);
+            Symbol s = new Symbol(symbol, SymbolType.CONSTANT);
             s.addLine(1);
             table.addSymbol(s);
         }
@@ -312,21 +313,21 @@ public class TestServiceControllerSymbols {
         ServiceController.LOG = logger;
 
         SymbolTable foundTable = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(foundTable, "  constant  ", SymbolType.Constant, MODULE, 1);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "variable", SymbolType.Variable, MODULE, 2);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "swtich", SymbolType.Switches, MODULE, 3);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "subscript", SymbolType.Subscript, MODULE, 4);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "subscript value", SymbolType.Subscript_Value, MODULE, 5);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "reality check", SymbolType.Reality_Check, MODULE, 6);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "lookup table", SymbolType.Lookup_Table, MODULE, 7);
-        GeneralTestUtilities.addSymbolInLines(foundTable, "Symbol found in db", SymbolType.Constant, MODULE, 8);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "  constant  ", SymbolType.CONSTANT, MODULE, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "variable", SymbolType.VARIABLE, MODULE, 2);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "swtich", SymbolType.SWITCHES, MODULE, 3);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "subscript", SymbolType.SUBSCRIPT, MODULE, 4);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "subscript value", SymbolType.SUBSCRIPT_VALUE, MODULE, 5);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "reality check", SymbolType.REALITY_CHECK, MODULE, 6);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "lookup table", SymbolType.LOOKUP_TABLE, MODULE, 7);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "Symbol found in db", SymbolType.CONSTANT, MODULE, 8);
 
-        Symbol notValid = GeneralTestUtilities.addSymbolInLines(foundTable, "invalid symbol", SymbolType.Constant, 9);
+        Symbol notValid = GeneralTestUtilities.addSymbolInLines(foundTable, "invalid symbol", SymbolType.CONSTANT, 9);
         notValid.setAsInvalid(this.getClass().getSimpleName());
 
 
         SymbolTable dbTable = new SymbolTable();
-        dbTable.addSymbol(new Symbol("            Symbol found in db     ", SymbolType.Constant));
+        dbTable.addSymbol(new Symbol("            Symbol found in db     ", SymbolType.CONSTANT));
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
         controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(new Module(MODULE)), dbTable);
@@ -343,7 +344,7 @@ public class TestServiceControllerSymbols {
         ServiceController controller = getAuthenticatedServiceController("");
 
         SymbolTable foundTable = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, MODULE, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.CONSTANT, MODULE, 1);
 
         controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(new Module(MODULE)), new SymbolTable());
 
@@ -360,7 +361,7 @@ public class TestServiceControllerSymbols {
         ServiceController controller = getAuthenticatedServiceController(null);
 
         SymbolTable foundTable = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, MODULE, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.CONSTANT, MODULE, 1);
 
         controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(new Module(MODULE)), new SymbolTable());
 
@@ -380,7 +381,7 @@ public class TestServiceControllerSymbols {
         ServiceController.LOG = logger;
 
         SymbolTable foundTable = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, MODULE, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.CONSTANT, MODULE, 1);
 
         controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(new Module(MODULE)), new SymbolTable());
 
@@ -397,7 +398,7 @@ public class TestServiceControllerSymbols {
         ServiceController controller = getAuthenticatedServiceController("www.google.com");
 
         SymbolTable foundTable = new SymbolTable();
-        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.Constant, MODULE, 1);
+        GeneralTestUtilities.addSymbolInLines(foundTable, "constant", SymbolType.CONSTANT, MODULE, 1);
 
         controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(new Module(MODULE)), new SymbolTable());
 
@@ -417,7 +418,7 @@ public class TestServiceControllerSymbols {
         ServiceController controller = getAuthenticatedServiceController("https://www.google.com");
 
         SymbolTable foundTable = new SymbolTable();
-        foundTable.addSymbol(new Symbol("constant", SymbolType.Constant));
+        foundTable.addSymbol(new Symbol("constant", SymbolType.CONSTANT));
 
         controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(new Module(MODULE)), new SymbolTable());
 

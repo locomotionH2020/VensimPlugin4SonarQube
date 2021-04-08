@@ -3,8 +3,8 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import org.sonar.check.Rule;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
     }
 
     private boolean raisesIssue(Symbol foundSymbol, SymbolTable dbTable) {
-        if(foundSymbol.getType() != SymbolType.Subscript)
+        if(foundSymbol.getType() != SymbolType.SUBSCRIPT)
             return false;
 
         if(!dbTable.hasSymbol(foundSymbol.getToken()))
@@ -61,12 +61,8 @@ public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
 
         Symbol dbSymbol = dbTable.getSymbol(foundSymbol.getToken());
 
-        if( dbSymbol.getType()!= SymbolType.Subscript)
+        if( dbSymbol.getType()!= SymbolType.SUBSCRIPT)
             return false;
-
-        Set<Symbol> dbValues = dbSymbol.getDependencies();
-        Set<Symbol> foundValues = foundSymbol.getDependencies();
-
         return !getUnexpectedSymbols(foundSymbol, dbTable).isEmpty();
 
 

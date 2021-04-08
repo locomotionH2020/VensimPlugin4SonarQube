@@ -1,6 +1,6 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.AcronymsList;
 import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.category.Category;
 import es.uva.locomotion.model.category.CategoryMap;
@@ -12,8 +12,10 @@ import es.uva.locomotion.utilities.exceptions.*;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,10 @@ import java.util.stream.Collectors;
  */
 public class ServiceController {
 
+    public static final String INVALID_RESPONSE = "The response of the dictionary service wasn't valid. ";
+    public static final String GENERATE_LOGS = "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n";
+    public static final String DICTIONARY_RESPONSE = " Dictionary response: ";
+    public static final String INJECTION_WAS_NOT_SUCCESFUL = "Injection was not succesful.";
     protected static VensimLogger LOG = VensimLogger.getInstance();
     private String token;
     private final String dictionaryService;
@@ -86,8 +92,8 @@ public class ServiceController {
             LOG.unique(SERVICE_UNREACHABLE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
         } catch (ServiceResponseFormatNotValid ex) {
-            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + "\n" +
-                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
+            logMessage = INVALID_RESPONSE + ex.getMessage() + "\n" +
+                    GENERATE_LOGS +
                     RULES_DISABLED_MESSAGE;
 
             LOG.error(logMessage);
@@ -112,8 +118,8 @@ public class ServiceController {
             LOG.unique(SERVICE_UNREACHABLE_MESSAGE + ACRONYMS_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
         } catch (ServiceResponseFormatNotValid ex) {
-            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + "\n" +
-                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
+            logMessage = INVALID_RESPONSE + ex.getMessage() + "\n" +
+                    GENERATE_LOGS +
                     ACRONYMS_DISABLED_MESSAGE;
 
             LOG.error(logMessage);
@@ -137,27 +143,16 @@ public class ServiceController {
 
         validModules = validModules.stream().filter(Module::isValid).collect(Collectors.toList());
         if (filteredSymbols.size() >= 1) {
-            try {
-                for (Module module : validModules) {
-                    List<Symbol> symbolsToInject = filteredSymbols.stream().filter(symbol -> symbol.getPrimary_module() != null && symbol.getPrimary_module().equals(module)).collect(Collectors.toList());
-                    if (symbolsToInject.size() >= 1) {
-                        DBFacade.injectSymbols(dictionaryService, symbolsToInject, module.getName(), token);
-                        List<String> tokensInjected = symbolsToInject.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
-                        LOG.info("Injected symbols in module \"" + module.getName() + "\": " + tokensInjected);
-                    }
-                }
-
-            } catch (InvalidServiceUrlException ex) {
-                LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            } catch (EmptyServiceException ex) {
-                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.INFO);
-            } catch (ConnectionFailedException ex) {
-                LOG.unique(SERVICE_UNREACHABLE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            }
-
+            inyectSymbols(validModules, filteredSymbols);
         }
+
+        inyectNewIndexes(foundSymbols, dbSymbolTable);
+
+    }
+
+    private void inyectNewIndexes(List<Symbol> foundSymbols, SymbolTable dbSymbolTable) {
         //Index does not have module.
-        List<Symbol> indexes = foundSymbols.stream().filter(symbol -> symbol.getType() == SymbolType.Subscript).collect(Collectors.toList());
+        List<Symbol> indexes = foundSymbols.stream().filter(symbol -> symbol.getType() == SymbolType.SUBSCRIPT).collect(Collectors.toList());
         List<Symbol> validIndexes = indexes.stream().filter(Symbol::isValid).collect(Collectors.toList());
         List<Symbol> filteredindexes = validIndexes.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
         List<Symbol> indexesToSend = new ArrayList<>();
@@ -172,22 +167,45 @@ public class ServiceController {
             }
         }
         if (indexesToSend.size() >= 1) {
-            try {
-                DBFacade.injectIndexes(dictionaryService, indexesToSend, token);
-                List<String> tokensInjected = indexesToSend.stream().sorted(Comparator.comparing(Symbol::getToken)).map(Symbol::getToken).collect(Collectors.toList());
-                LOG.info("Injected indexes: " + tokensInjected);
-
-
-            } catch (InvalidServiceUrlException ex) {
-                LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            } catch (EmptyServiceException ex) {
-                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.INFO);
-            } catch (ConnectionFailedException ex) {
-                LOG.unique(SERVICE_UNREACHABLE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            }
+            inyectIndexes(indexesToSend);
 
         }
+    }
 
+    private void inyectIndexes(List<Symbol> indexesToSend) {
+        try {
+            DBFacade.injectIndexes(dictionaryService, indexesToSend, token);
+            List<String> tokensInjected = indexesToSend.stream().sorted(Comparator.comparing(Symbol::getToken)).map(Symbol::getToken).collect(Collectors.toList());
+            LOG.info("Injected indexes: " + tokensInjected);
+
+
+        } catch (InvalidServiceUrlException ex) {
+            LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+        } catch (EmptyServiceException ex) {
+            LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.INFO);
+        } catch (ConnectionFailedException ex) {
+            LOG.unique(SERVICE_UNREACHABLE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+        }
+    }
+
+    private void inyectSymbols(List<Module> validModules, List<Symbol> filteredSymbols) {
+        try {
+            for (Module module : validModules) {
+                List<Symbol> symbolsToInject = filteredSymbols.stream().filter(symbol -> symbol.getPrimaryModule() != null && symbol.getPrimaryModule().equals(module)).collect(Collectors.toList());
+                if (symbolsToInject.size() >= 1) {
+                    DBFacade.injectSymbols(dictionaryService, symbolsToInject, module.getName(), token);
+                    List<String> tokensInjected = symbolsToInject.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
+                    LOG.info("Injected symbols in module \"" + module.getName() + "\": " + tokensInjected);
+                }
+            }
+
+        } catch (InvalidServiceUrlException ex) {
+            LOG.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+        } catch (EmptyServiceException ex) {
+            LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.INFO);
+        } catch (ConnectionFailedException ex) {
+            LOG.unique(SERVICE_UNREACHABLE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+        }
     }
 
     public boolean isAuthenticated() {
@@ -196,7 +214,7 @@ public class ServiceController {
 
 
     private boolean hasToFetchSymbolFromDB(Symbol symbol) {
-        return !List.of(SymbolType.Function, SymbolType.Subscript_Value, SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION).
+        return !List.of(SymbolType.FUNCTION, SymbolType.SUBSCRIPT_VALUE, SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION).
                 contains(symbol.getType()) && !Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim()) &&
                 !symbol.getLines().isEmpty();
 
@@ -220,8 +238,8 @@ public class ServiceController {
             LOG.unique(SERVICE_UNREACHABLE_MESSAGE + MODULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
         } catch (ServiceResponseFormatNotValid ex) {
-            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + " Dictionary response: " + ex.getServiceResponse() + ".\n" +
-                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
+            logMessage = INVALID_RESPONSE + ex.getMessage() + DICTIONARY_RESPONSE + ex.getServiceResponse() + ".\n" +
+                    GENERATE_LOGS +
                     MODULES_DISABLED_MESSAGE;
 
             LOG.error(logMessage);
@@ -247,8 +265,8 @@ public class ServiceController {
             LOG.unique(SERVICE_UNREACHABLE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
         } catch (ServiceResponseFormatNotValid ex) {
-            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + " Dictionary response: " + ex.getServiceResponse() + ".\n" +
-                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
+            logMessage = INVALID_RESPONSE + ex.getMessage() + DICTIONARY_RESPONSE + ex.getServiceResponse() + ".\n" +
+                    GENERATE_LOGS +
                     CATEGORIES_DISABLED_MESSAGE;
 
             LOG.error(logMessage);
@@ -311,11 +329,11 @@ public class ServiceController {
                 LOG.info("Injected modules: " + tokensInjected);
 
             } catch (InvalidServiceUrlException ex) {
-                LOG.unique(INVALID_URL_MESSAGE + "Injection was not succesful.", LoggingLevel.ERROR);
+                LOG.unique(INVALID_URL_MESSAGE + INJECTION_WAS_NOT_SUCCESFUL, LoggingLevel.ERROR);
             } catch (EmptyServiceException ex) {
-                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + "Injection was not succesful.", LoggingLevel.INFO);
+                LOG.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + INJECTION_WAS_NOT_SUCCESFUL, LoggingLevel.INFO);
             } catch (ConnectionFailedException ex) {
-                LOG.unique(SERVICE_UNREACHABLE_MESSAGE + "Injection was not succesful.", LoggingLevel.ERROR);
+                LOG.unique(SERVICE_UNREACHABLE_MESSAGE + INJECTION_WAS_NOT_SUCCESFUL, LoggingLevel.ERROR);
             }
 
         }
@@ -339,8 +357,8 @@ public class ServiceController {
             LOG.unique(SERVICE_UNREACHABLE_MESSAGE + UNITS_DISABLED_MESSAGE, LoggingLevel.ERROR);
             return null;
         } catch (ServiceResponseFormatNotValid ex) {
-            logMessage = "The response of the dictionary service wasn't valid. " + ex.getMessage() + " Dictionary response: " + ex.getServiceResponse() + ".\n" +
-                    "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
+            logMessage = INVALID_RESPONSE + ex.getMessage() + DICTIONARY_RESPONSE + ex.getServiceResponse() + ".\n" +
+                    GENERATE_LOGS +
                     UNITS_DISABLED_MESSAGE;
 
             LOG.error(logMessage);

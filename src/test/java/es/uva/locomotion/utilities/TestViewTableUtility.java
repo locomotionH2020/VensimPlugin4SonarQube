@@ -1,8 +1,8 @@
 package es.uva.locomotion.utilities;
 
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
-import es.uva.locomotion.model.ViewTable;
 import org.junit.Test;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getSymbolTableFromString;
@@ -42,20 +42,20 @@ public class TestViewTableUtility {
         ViewTable viewTable = getViewTableFromString(program, symbolTable, "|", ".");
 
         Symbol s = symbolTable.getSymbol(VARIABLE_1_EQ);
-        assertEquals(VIEW_NAME, s.getPrimary_module().getName());
+        assertEquals(VIEW_NAME, s.getPrimaryModule().getName());
 
-        assertEquals(0, s.getShadow_module().size());
+        assertEquals(0, s.getShadowModule().size());
 
         s = symbolTable.getSymbol(VARIABLE_2_EQ);
 
-        assertNull(s.getPrimary_module());
-        assertEquals(VIEW_NAME, s.getShadow_module().get(0).getName());
-        assertEquals(1, s.getShadow_module().size());
+        assertNull(s.getPrimaryModule());
+        assertEquals(VIEW_NAME, s.getShadowModule().get(0).getName());
+        assertEquals(1, s.getShadowModule().size());
 
         s = symbolTable.getSymbol(VARIABLE_3_EQ);
 
-        assertNull(s.getPrimary_module());
-        assertEquals(0, s.getShadow_module().size());
+        assertNull(s.getPrimaryModule());
+        assertEquals(0, s.getShadowModule().size());
     }
 
     @Test

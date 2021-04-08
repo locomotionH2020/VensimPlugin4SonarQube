@@ -1,14 +1,12 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.symbol.NumberTable;
-import es.uva.locomotion.model.symbol.Number;
 import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.symbol.Number;
+import es.uva.locomotion.model.symbol.NumberTable;
 import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
-import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import static org.junit.Assert.*;
-
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.BeforeClass;
@@ -19,7 +17,9 @@ import org.sonar.api.batch.rule.Severity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
+import static es.uva.locomotion.testutilities.RuleTestUtilities.assertHasIssueInLines;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class TestMagicNumberCheck {

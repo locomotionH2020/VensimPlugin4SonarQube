@@ -5,12 +5,14 @@ import es.uva.locomotion.model.symbol.Subscript;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.*;
-
+import es.uva.locomotion.parser.ModelParser;
+import es.uva.locomotion.parser.ModelParserBaseVisitor;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.antlr.v4.runtime.ParserRuleContext;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
 
+    public static final String REMOVE_QUOTES = "^'|'$";
     private SymbolTable table;
     protected static final VensimLogger LOG = VensimLogger.getInstance();
     private static final Pattern sequencePattern = Pattern.compile("(.*?)(\\d+)");
@@ -72,7 +75,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     public Subscript visitSubscriptRange(ModelParser.SubscriptRangeContext ctx) {
         Subscript subscript = getSubscriptOrCreate(table, ctx.Id().getSymbol().getText(), false);
         subscript.addLine(getStartLine(ctx));
-        subscript.setType(SymbolType.Subscript);
+        subscript.setType(SymbolType.SUBSCRIPT);
 
 
         if (ctx.subscriptValueList() != null) {
@@ -107,7 +110,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     @Override
     public Symbol visitConstraint(ModelParser.ConstraintContext ctx) {
         Symbol symbol = visitLhs(ctx.lhs());
-        symbol.setType(SymbolType.Reality_Check);
+        symbol.setType(SymbolType.REALITY_CHECK);
         symbol.addLine(getStartLine(ctx));
 
         return symbol;
@@ -116,7 +119,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     @Override
     public Object visitMacroDefinition(ModelParser.MacroDefinitionContext ctx) {
         Symbol symbol = getSymbolOrCreate(table, ctx.macroHeader().Id().getSymbol().getText());
-        symbol.setType(SymbolType.Function);
+        symbol.setType(SymbolType.FUNCTION);
         symbol.addLine(getStartLine(ctx));
 
         return super.visitMacroDefinition(ctx);
@@ -125,7 +128,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     @Override
     public Symbol visitUnchangeableConstant(ModelParser.UnchangeableConstantContext ctx) {
         Symbol symbol = visitLhs(ctx.lhs());
-        symbol.setType(SymbolType.Constant);
+        symbol.setType(SymbolType.CONSTANT);
         symbol.addLine(getStartLine(ctx));
         return symbol;
     }
@@ -145,7 +148,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     public Symbol visitLookupDefinition(ModelParser.LookupDefinitionContext ctx) {
         Symbol symbol = visitLhs(ctx.lhs());
         symbol.addLine(getStartLine(ctx));
-        symbol.setType(SymbolType.Lookup_Table);
+        symbol.setType(SymbolType.LOOKUP_TABLE);
 
         if (ctx.lookup() != null)
             symbol.addDependencies(visitLookup(ctx.lookup()));
@@ -159,7 +162,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     @Override
     public Symbol visitStringAssign(ModelParser.StringAssignContext ctx) {
         Symbol symbol = visitLhs(ctx.lhs());
-        symbol.setType(SymbolType.Constant);
+        symbol.setType(SymbolType.CONSTANT);
         symbol.addLine(getStartLine(ctx));
 
         return symbol;
@@ -171,7 +174,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
 
         Subscript copy = getSubscriptOrCreate(table, ctx.copy.getText(), true);
         copy.setGroup(actualGroup);
-        copy.setType(SymbolType.Subscript);
+        copy.setType(SymbolType.SUBSCRIPT);
         copy.addLine(getStartLine(ctx));
 
         Symbol original = getSubscriptOrCreate(table, ctx.original.getText(), false);
@@ -183,7 +186,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     @Override
     public Symbol visitRealityCheck(ModelParser.RealityCheckContext ctx) {
         Symbol symbol = visitLhs(ctx.lhs());
-        symbol.setType(SymbolType.Reality_Check);
+        symbol.setType(SymbolType.REALITY_CHECK);
         symbol.addLine(getStartLine(ctx));
 
         return symbol;
@@ -207,9 +210,9 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
             Symbol firstSymbol = getSubscriptOrCreate(table, ctx.Id(0).getSymbol().getText(), false);
             Symbol secondSymbol = getSubscriptOrCreate(table, ctx.Id(1).getSymbol().getText(), false);
 
-            firstSymbol.setType(SymbolType.Subscript_Value);
+            firstSymbol.setType(SymbolType.SUBSCRIPT_VALUE);
             firstSymbol.addLine(getStartLine(ctx));
-            secondSymbol.setType(SymbolType.Subscript_Value);
+            secondSymbol.setType(SymbolType.SUBSCRIPT_VALUE);
             secondSymbol.addLine(getStartLine(ctx));
 
             return Arrays.asList(firstSymbol, secondSymbol);
@@ -243,7 +246,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
             String text = ctx.start.getText().trim();
             for (int i = startNumber; i < endNumber + 1; i++) {
                 Symbol value = getSubscriptOrCreate(table, text.replace(startMatcher.group(2), String.valueOf(i)), false);
-                value.setType(SymbolType.Subscript_Value);
+                value.setType(SymbolType.SUBSCRIPT_VALUE);
                 value.addLine(getStartLine(ctx));
                 symbolSequence.add(value);
             }
@@ -308,7 +311,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
         List<Symbol> input = (List<Symbol>) visit(ctx.expr(0));
         List<Symbol> delayTime = (List<Symbol>) visit(ctx.expr(1));
         Symbol pipeline = getSymbolOrCreate(table, ctx.Id().getSymbol().getText());
-        pipeline.setType(SymbolType.Variable);
+        pipeline.setType(SymbolType.VARIABLE);
         pipeline.addLine(ctx.Id().getSymbol().getLine());
 
 
@@ -354,17 +357,17 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
 
             List<String> exprs = ctx.exprList().expr().stream().map(ModelParser.ExprContext::getText).collect(Collectors.toList());
 
-            String filename = exprs.get(0).replaceAll("^'|'$", "");
-            String sheet = exprs.get(1).replaceAll("^'|'$", "");
+            String filename = exprs.get(0).replaceAll(REMOVE_QUOTES, "");
+            String sheet = exprs.get(1).replaceAll(REMOVE_QUOTES, "");
             ExcelRef excel =  actualSymbol.getExcelOrCreate(filename, sheet);
 
             if (excelData.contains(token)) {
-                String seriesCellRange = exprs.get(2).replaceAll("^'|'$", "");
-                String cellRange = exprs.get(3).replaceAll("^'|'$", "");
+                String seriesCellRange = exprs.get(2).replaceAll(REMOVE_QUOTES, "");
+                String cellRange = exprs.get(3).replaceAll(REMOVE_QUOTES, "");
                 excel.addCellRangeInformation(actualIndex, cellRange, seriesCellRange);
 
             }else{
-                String cellRange = exprs.get(2).replaceAll("^'|'$", "");
+                String cellRange = exprs.get(2).replaceAll(REMOVE_QUOTES, "");
                 excel.addCellRangeInformation(actualIndex, cellRange);
             }
 
@@ -414,7 +417,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
         if (!ctx.subscriptId().isEmpty()) {
             for (ModelParser.SubscriptIdContext value : ctx.subscriptId()) {
                 Symbol valueSymbol = visitSubscriptId(value);
-                valueSymbol.setType(SymbolType.Subscript_Value);
+                valueSymbol.setType(SymbolType.SUBSCRIPT_VALUE);
                 valueSymbol.addLine(getStartLine(value));
 
                 symbols.add(valueSymbol);

@@ -7,19 +7,12 @@ import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.After;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static junit.framework.TestCase.assertEquals;

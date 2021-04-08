@@ -16,6 +16,9 @@ import static es.uva.locomotion.utilities.Constants.IMPURE_FUNCTIONS;
 
 public class SymbolTableGenerator {
 
+    private SymbolTableGenerator(){
+        throw new IllegalStateException("Utility class");
+    }
     private static  final List<String> symbolVariables = Collections.singletonList("Time");
     private static final List<String> lookupGeneratorFunctions  = Arrays.asList("GET DIRECT LOOKUPS", "GET XLS LOOKUPS");
 
@@ -65,10 +68,10 @@ public class SymbolTableGenerator {
     public static void addDefaultSymbols(SymbolTable table){
         for(String variable: symbolVariables) {
             if (table.hasSymbol(variable))
-                table.getSymbol(variable).setType(SymbolType.Variable);
+                table.getSymbol(variable).setType(SymbolType.VARIABLE);
             else {
                 Symbol s = new Symbol(variable);
-                s.setType(SymbolType.Variable);
+                s.setType(SymbolType.VARIABLE);
                 table.addSymbol(s);
             }
         }
@@ -80,16 +83,15 @@ public class SymbolTableGenerator {
             throw new IllegalArgumentException("You can't resolve the function type of a symbol that isn't UNDETERMINED_FUNCTION");
 
         for (Symbol dependency : symbol.getDependencies()) {
-            if (isFunction(dependency)) {
-                if (lookupGeneratorFunctions.contains(dependency.getToken())) {
-                    symbol.setType(SymbolType.Lookup_Table);
+            if (isFunction(dependency) && lookupGeneratorFunctions.contains(dependency.getToken())) {
+                    symbol.setType(SymbolType.LOOKUP_TABLE);
                     return;
-                }
             }
 
 
+
         }
-        symbol.setType(SymbolType.Function);
+        symbol.setType(SymbolType.FUNCTION);
     }
 
     private static void tryToDetermineType(Symbol symbol) {
@@ -98,16 +100,16 @@ public class SymbolTableGenerator {
         for (Symbol dependency : symbol.getDependencies()) {
 
 
-            if (dependency.getType() == SymbolType.Function) {
+            if (dependency.getType() == SymbolType.FUNCTION) {
                 if (IMPURE_FUNCTIONS.contains(dependency.getToken())) {
-                    symbol.setType(SymbolType.Variable);
+                    symbol.setType(SymbolType.VARIABLE);
                     break;
                 }else if(lookupGeneratorFunctions.contains(dependency.getToken())){
-                    symbol.setType(SymbolType.Lookup_Table);
+                    symbol.setType(SymbolType.LOOKUP_TABLE);
                 }
 
-            }else if (dependency.getType() == SymbolType.Variable) {
-                symbol.setType(SymbolType.Variable);
+            }else if (dependency.getType() == SymbolType.VARIABLE) {
+                symbol.setType(SymbolType.VARIABLE);
 
                 break;
             }else if(dependency.getType() == SymbolType.UNDETERMINED || dependency.getType() == SymbolType.UNDETERMINED_FUNCTION) {
@@ -117,13 +119,13 @@ public class SymbolTableGenerator {
 
         }
         if(!undeterminedDependency && !symbol.hasType())
-            symbol.setType(SymbolType.Constant);
+            symbol.setType(SymbolType.CONSTANT);
 
 
     }
 
     private static boolean isFunction(Symbol symbol){
-        return symbol.getType() == SymbolType.Function || symbol.getType() == SymbolType.UNDETERMINED_FUNCTION;
+        return symbol.getType() == SymbolType.FUNCTION || symbol.getType() == SymbolType.UNDETERMINED_FUNCTION;
     }
 
 

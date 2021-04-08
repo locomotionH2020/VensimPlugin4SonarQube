@@ -1,7 +1,8 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.View;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
@@ -10,7 +11,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 

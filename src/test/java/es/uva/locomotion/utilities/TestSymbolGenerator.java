@@ -5,13 +5,10 @@ import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
 import org.junit.Test;
 
-
-
 import java.io.IOException;
 
-
-import static org.junit.Assert.*;
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
+import static org.junit.Assert.*;
 
 
 public class TestSymbolGenerator {
@@ -22,7 +19,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
 
         Symbol myLookup = table.getSymbol("myLookup");
-        assertSymbolType(myLookup, SymbolType.Lookup_Table);
+        assertSymbolType(myLookup, SymbolType.LOOKUP_TABLE);
     }
 
     @Test
@@ -31,7 +28,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
 
         Symbol myLookup = table.getSymbol("myLookup");
-        assertSymbolType(myLookup,SymbolType.Lookup_Table);
+        assertSymbolType(myLookup,SymbolType.LOOKUP_TABLE);
     }
 
 
@@ -47,7 +44,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
 
         Symbol na = table.getSymbol("testKeywordNA");
-        assertSymbolType(na,SymbolType.Constant);
+        assertSymbolType(na,SymbolType.CONSTANT);
 
     }
 
@@ -59,7 +56,7 @@ public class TestSymbolGenerator {
 
         Symbol time = table.getSymbol("Time");
 
-        assertSymbolType(time,SymbolType.Variable);
+        assertSymbolType(time,SymbolType.VARIABLE);
         assertTrue(time.getLines().isEmpty());
 
     }
@@ -72,7 +69,7 @@ public class TestSymbolGenerator {
         SymbolTableGenerator.resolveSymbolTable(table);
 
         Symbol time = table.getSymbol("Time");
-        assertSymbolType(time,SymbolType.Variable);
+        assertSymbolType(time,SymbolType.VARIABLE);
         assertTrue(time.getLines().isEmpty());
     }
 
@@ -88,10 +85,10 @@ public class TestSymbolGenerator {
         Symbol directVariable = table.getSymbol("directVariable");
         Symbol indirectVariable = table.getSymbol("indirectVariable");
 
-        assertEquals(SymbolType.Constant,directConstant.getType());
-        assertEquals(SymbolType.Constant,indirectConstant.getType());
-        assertEquals(SymbolType.Variable,directVariable.getType());
-        assertEquals(SymbolType.Variable,indirectVariable.getType());
+        assertEquals(SymbolType.CONSTANT,directConstant.getType());
+        assertEquals(SymbolType.CONSTANT,indirectConstant.getType());
+        assertEquals(SymbolType.VARIABLE,directVariable.getType());
+        assertEquals(SymbolType.VARIABLE,indirectVariable.getType());
 
 
     }
@@ -104,8 +101,8 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
-        assertEquals(SymbolType.Variable,table.getSymbol("pipeline").getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
+        assertEquals(SymbolType.VARIABLE,table.getSymbol("pipeline").getType());
 
 
     }
@@ -117,7 +114,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
 
         Symbol variable = table.getSymbol("variable");
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -130,7 +127,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -142,7 +139,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -154,7 +151,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -167,7 +164,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -181,7 +178,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -194,7 +191,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -208,7 +205,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -221,7 +218,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -234,7 +231,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -247,7 +244,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -258,7 +255,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -270,7 +267,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
     }
 
     @Test
@@ -281,7 +278,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
     }
 
     @Test
@@ -292,7 +289,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
     }
 
     @Test
@@ -303,7 +300,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
     }
 
     @Test
@@ -314,7 +311,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
     }
 
     @Test
@@ -325,7 +322,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
     }
 
     @Test
@@ -336,7 +333,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
     }
 
     @Test
@@ -347,7 +344,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
     }
 
     @Test
@@ -358,7 +355,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
     }
 
     @Test
@@ -369,7 +366,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -381,7 +378,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -393,7 +390,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -405,7 +402,7 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTableFromString(program);
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -416,7 +413,7 @@ public class TestSymbolGenerator {
 
         Symbol variable = table.getSymbol("variable");
 
-        assertEquals(SymbolType.Variable, variable.getType());
+        assertEquals(SymbolType.VARIABLE, variable.getType());
 
     }
 
@@ -426,13 +423,13 @@ public class TestSymbolGenerator {
         SymbolTable table = getSymbolTable("testCyclicDependencies.mdl");
 
         Symbol level = table.getSymbol("level");
-        assertEquals(SymbolType.Variable,level.getType());
+        assertEquals(SymbolType.VARIABLE,level.getType());
 
         Symbol inputRate = table.getSymbol("inputRate");
-        assertEquals(SymbolType.Variable,inputRate.getType());
+        assertEquals(SymbolType.VARIABLE,inputRate.getType());
 
         Symbol outputRate = table.getSymbol("outputRate");
-        assertEquals(SymbolType.Variable,outputRate.getType());
+        assertEquals(SymbolType.VARIABLE,outputRate.getType());
 
     }
 
@@ -442,12 +439,12 @@ public class TestSymbolGenerator {
 
         Symbol undeterminedType = table.addSymbol(new Symbol("undeterminedType"));
         Symbol variable = table.addSymbol(new Symbol("variable"));
-        variable.setType(SymbolType.Variable);
+        variable.setType(SymbolType.VARIABLE);
 
         undeterminedType.addDependency(variable);
         SymbolTableGenerator.resolveSymbolTable(table);
 
-        assertSymbolType(undeterminedType,SymbolType.Variable);
+        assertSymbolType(undeterminedType,SymbolType.VARIABLE);
 
 
     }
@@ -458,7 +455,7 @@ public class TestSymbolGenerator {
 
         Symbol undeterminedType = table.addSymbol(new Symbol("undeterminedType"));
         Symbol variable = table.addSymbol(new Symbol("variable"));
-        variable.setType(SymbolType.Variable);
+        variable.setType(SymbolType.VARIABLE);
 
         undeterminedType.addDependency(table.addSymbol(new Symbol("undeterminedBefore")));
         undeterminedType.addDependency(variable);
@@ -466,7 +463,7 @@ public class TestSymbolGenerator {
         SymbolTableGenerator.resolveSymbolTable(table);
 
 
-        assertSymbolType(undeterminedType,SymbolType.Variable);
+        assertSymbolType(undeterminedType,SymbolType.VARIABLE);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -489,7 +486,7 @@ public class TestSymbolGenerator {
 
         assertSymbolType(undefined,SymbolType.UNDETERMINED);
         SymbolTableGenerator.resolveSymbolTable(table);
-        assertSymbolType(undefined,SymbolType.Constant);
+        assertSymbolType(undefined,SymbolType.CONSTANT);
     }
 
     @Test
@@ -499,7 +496,7 @@ public class TestSymbolGenerator {
 
         Symbol constant = table.getSymbol("constant");
 
-        assertSymbolType(constant,SymbolType.Constant);
+        assertSymbolType(constant,SymbolType.CONSTANT);
 
     }
 
@@ -510,12 +507,12 @@ public class TestSymbolGenerator {
 
         Symbol constant = table.addSymbol(new Symbol("constant"));
         Symbol subscriptValue = table.addSymbol(new Symbol("subscriptValue"));
-        subscriptValue.setType(SymbolType.Subscript_Value);
+        subscriptValue.setType(SymbolType.SUBSCRIPT_VALUE);
 
         constant.addDependency(subscriptValue);
         SymbolTableGenerator.resolveSymbolTable(table);
 
-        assertSymbolType(constant,SymbolType.Constant);
+        assertSymbolType(constant,SymbolType.CONSTANT);
     }
 
 
@@ -528,7 +525,7 @@ public class TestSymbolGenerator {
 
         Symbol constant = table.getSymbol("myLookup");
 
-        assertSymbolType(constant,SymbolType.Lookup_Table);
+        assertSymbolType(constant,SymbolType.LOOKUP_TABLE);
 
 
     }

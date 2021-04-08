@@ -1,11 +1,11 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.plugin.Issue;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
@@ -68,7 +68,7 @@ public class LookupNameCheck extends AbstractVensimCheck{
         SymbolTable table = context.getParsedSymbolTable();
 
         for(Symbol symbol:table.getSymbols()){
-            if(symbol.getType()== SymbolType.Lookup_Table && !checkLookupFollowsConvention(symbol.getToken())){
+            if(symbol.getType()== SymbolType.LOOKUP_TABLE && !checkLookupFollowsConvention(symbol.getToken())){
                 symbol.setAsInvalid(this.getClass().getSimpleName());
 
                 for(int line: symbol.getLines()) {
@@ -83,6 +83,6 @@ public class LookupNameCheck extends AbstractVensimCheck{
     }
 
     private boolean checkLookupFollowsConvention(String name) {
-        return name.matches(regexp);
+        return name.matches(getRegexp());
     }
 }

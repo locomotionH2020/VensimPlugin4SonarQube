@@ -1,8 +1,6 @@
 package es.uva.locomotion.parser;
 
 
-import static org.junit.Assert.*;
-
 import es.uva.locomotion.model.symbol.SymbolTable;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -11,6 +9,8 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TestGrammar {
 

@@ -3,8 +3,8 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
 
@@ -56,6 +56,6 @@ public class DictionaryCommentMismatchCheck extends AbstractVensimCheck {
     }
 
     private boolean symbolIsIgnored(Symbol symbol){
-        return symbol.getType()== SymbolType.Function || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
+        return symbol.getType()== SymbolType.FUNCTION || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
     }
 }

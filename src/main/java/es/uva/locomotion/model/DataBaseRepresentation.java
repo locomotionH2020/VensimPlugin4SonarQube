@@ -55,7 +55,7 @@ public class DataBaseRepresentation {
 
     public Set<String> getUnits() {
         if(units == null){
-            return null;
+            return new HashSet<>();
         }
         return new HashSet<>(units);
     }

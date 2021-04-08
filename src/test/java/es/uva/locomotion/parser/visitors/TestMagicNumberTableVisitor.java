@@ -2,10 +2,6 @@ package es.uva.locomotion.parser.visitors;
 
 import es.uva.locomotion.model.symbol.Number;
 import es.uva.locomotion.model.symbol.NumberTable;
-
-import static org.junit.Assert.*;
-
-
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
@@ -17,6 +13,7 @@ import org.sonar.api.internal.apachecommons.lang.StringUtils;
 import java.util.Set;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.getVisitorContextFromString;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 

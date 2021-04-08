@@ -3,7 +3,9 @@ package es.uva.locomotion.model.category;
 
 import es.uva.locomotion.model.IssuableAbs;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class CategoryImpl extends IssuableAbs implements Comparable<Category>, Category {
 
@@ -49,7 +51,7 @@ public class CategoryImpl extends IssuableAbs implements Comparable<Category>, C
     @Override
     public Category getSubcategory(String subcategory) {
         if(getSubcategories() == null) return null;
-        return subcategories.stream().filter((subcat) -> subcat.getName().equals(subcategory)).findFirst().orElse(null);
+        return subcategories.stream().filter(subcat -> subcat.getName().equals(subcategory)).findFirst().orElse(null);
     }
 
 
@@ -65,7 +67,7 @@ public class CategoryImpl extends IssuableAbs implements Comparable<Category>, C
             throw new IllegalArgumentException("Category can have himself as subcategory.");
         }
 
-        if (subcategory.getSuperCategory() != null && !subcategory.getSuperCategory().equals(this)) {
+        if (subcategory.getSuperCategory() != null) {
             throw new IllegalStateException("Category " + subcategory.getName() + " already have a supercategory: " + subcategory.getSuperCategory().getName());
         }
 
@@ -119,6 +121,6 @@ public class CategoryImpl extends IssuableAbs implements Comparable<Category>, C
     @Override
     public void setAsInvalid(String invalidReason) {
         super.setAsInvalid(invalidReason);
-        if(subcategories != null) subcategories.forEach((symbol) -> symbol.setAsInvalid("Supercategory inheritance: " + invalidReason));
+        if(subcategories != null) subcategories.forEach(symbol -> symbol.setAsInvalid("Supercategory inheritance: " + invalidReason));
     }
 }

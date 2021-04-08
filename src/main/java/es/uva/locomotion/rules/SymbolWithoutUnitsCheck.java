@@ -4,8 +4,8 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import org.sonar.check.Rule;
 
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class SymbolWithoutUnitsCheck extends AbstractVensimCheck{
 
     public static final String NAME = "SymbolWithoutUnits" ;
 
-    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.Function,SymbolType.Subscript_Value,SymbolType.Subscript);
+    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION,SymbolType.SUBSCRIPT_VALUE,SymbolType.SUBSCRIPT);
 
     @Override
     public void scan(VensimVisitorContext context) {

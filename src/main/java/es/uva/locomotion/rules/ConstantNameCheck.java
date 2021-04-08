@@ -1,10 +1,10 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.plugin.Issue;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -79,7 +79,7 @@ public class ConstantNameCheck extends AbstractVensimCheck {
     }
 
     private boolean mustGenerateIssue(Symbol symbol) {
-        return symbol.getType() == SymbolType.Constant
+        return symbol.getType() == SymbolType.CONSTANT
                 && !symbol.getLines().isEmpty()
                 && !isDefinedByDefaultInVensim(symbol)
                 && !checkConstantFollowsConvention(symbol.getToken());

@@ -5,32 +5,32 @@ import java.util.stream.Collectors;
 
 public class CategoryMap {
 
-    private final Map<String, CategoryImpl> categoryMap;
+    private final Map<String, CategoryImpl> map;
 
     public CategoryMap() {
-        categoryMap = new HashMap<>();
+        map = new HashMap<>();
     }
 
     public boolean contains(String category) {
-        return categoryMap.containsKey(category);
+        return map.containsKey(category);
     }
 
     public Category createOrSelectCategory(String categoryName) {
-        if (categoryMap.containsKey(categoryName)) {
-            return categoryMap.get(categoryName);
+        if (map.containsKey(categoryName)) {
+            return map.get(categoryName);
         } else {
             CategoryImpl c = new CategoryImpl(categoryName);
             c.setSubcategories(new HashSet<>());
-            categoryMap.put(categoryName, c);
+            map.put(categoryName, c);
             return c;
         }
     }
 
     public Category getCategory(String categoryName) {
-        return categoryMap.get(categoryName);
+        return map.get(categoryName);
     }
     public boolean hasCategory(String categoryName) {
-        return categoryMap.containsKey(categoryName);
+        return map.containsKey(categoryName);
     }
 
     public Category addSubcategoryTo(String category, String subcategory) {
@@ -50,7 +50,7 @@ public class CategoryMap {
     }
 
     public List<Category> getCategories() {
-        return categoryMap.values().stream().sorted().collect(Collectors.toList());
+        return map.values().stream().sorted().collect(Collectors.toList());
     }
 
     public List<Category> getCategoriesAndSubcategories() {
@@ -58,7 +58,7 @@ public class CategoryMap {
         List<Category> toReturn = new ArrayList<>();
         for (Category c : getCategories()) {
             toReturn.add(c);
-            if (c.getSubcategories() != null) toReturn.addAll(c.getSubcategories());
+            toReturn.addAll(c.getSubcategories());
         }
         return toReturn;
     }
@@ -70,7 +70,7 @@ public class CategoryMap {
     @Override
     public String toString() {
         return "CategoryMap{" +
-                "categoryMap=" + categoryMap +
+                "categoryMap=" + map +
                 '}';
     }
 
@@ -79,11 +79,11 @@ public class CategoryMap {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CategoryMap that = (CategoryMap) o;
-        return categoryMap.equals(that.categoryMap);
+        return map.equals(that.map);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(categoryMap);
+        return Objects.hash(map);
     }
 }

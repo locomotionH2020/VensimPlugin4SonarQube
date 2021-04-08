@@ -2,11 +2,11 @@ package es.uva.locomotion.rules;
 
 
 import es.uva.locomotion.model.symbol.Subscript;
-import es.uva.locomotion.plugin.Issue;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
@@ -66,7 +66,7 @@ public class SubscriptNameCheck extends AbstractVensimCheck {
 
         for (Symbol symbol : table.getSymbols()) {
 
-            if (symbol.getType() == SymbolType.Subscript) {
+            if (symbol.getType() == SymbolType.SUBSCRIPT) {
                 Subscript subscript = (Subscript) symbol;
                 if (!subscript.isCopy() && !checkSubscriptNameFollowsConvention(subscript.getToken())) {
                     symbol.setAsInvalid(this.getClass().getSimpleName());

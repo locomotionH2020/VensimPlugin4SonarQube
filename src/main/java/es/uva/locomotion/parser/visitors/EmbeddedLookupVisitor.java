@@ -8,11 +8,12 @@ import es.uva.locomotion.parser.ModelParserBaseVisitor;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmbeddedLookupVisitor extends ModelParserBaseVisitor<Void> {
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static  VensimLogger LOG = VensimLogger.getInstance();
 
     private List<Pair<Symbol, Integer>> lookupsTable;
 
@@ -34,15 +35,15 @@ public class EmbeddedLookupVisitor extends ModelParserBaseVisitor<Void> {
 
         if (symbols == null) {
             LOG.unique("Symbol table unassigned in EmbeddedLookupVisitor", LoggingLevel.INFO);
-            return null;
-        }
-        if (!symbols.hasSymbol(ctx.Id().getText())) {
-            LOG.error("Found symbol \"" + ctx.Id().getText() + "\" that is not in the symbol table");
-            return null;
-        }
-        Symbol symbol = symbols.getSymbol(ctx.Id().getText());
-        isSymbolFiltered = symbol.isFiltered();
 
+        }
+        else if (!symbols.hasSymbol(ctx.Id().getText())) {
+            LOG.error("Found symbol \"" + ctx.Id().getText() + "\" that is not in the symbol table");
+        }
+        else {
+            Symbol symbol = symbols.getSymbol(ctx.Id().getText());
+            isSymbolFiltered = symbol.isFiltered();
+        }
         return null;
 
     }

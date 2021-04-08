@@ -1,11 +1,11 @@
 package es.uva.locomotion.rules;
 
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.model.ViewTable;
-import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.VensimScanner;
 import org.junit.Test;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
@@ -168,9 +168,9 @@ public class TestConstantNameCheck {
         ConstantNameCheck check = new ConstantNameCheck();
 
         SymbolTable table = new SymbolTable();
-        Symbol invalid = new Symbol("invalid", SymbolType.Constant);
+        Symbol invalid = new Symbol("invalid", SymbolType.CONSTANT);
         invalid.addLine(1);
-        Symbol valid = new Symbol("VALID", SymbolType.Constant);
+        Symbol valid = new Symbol("VALID", SymbolType.CONSTANT);
         valid.addLine(2);
         table.addSymbol(invalid);
         table.addSymbol(valid);

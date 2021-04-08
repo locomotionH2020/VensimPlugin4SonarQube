@@ -1,15 +1,17 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import org.junit.Test;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.assertHasIssueInLines;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestDictionarySubscriptValueMismatchCheck {
     @Test
@@ -19,16 +21,16 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
-        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
+        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.SUBSCRIPT_VALUE));
         parsedSubscript.addLine(1);
         parsedSubscript.addLine(2);
         parsedTable.addSymbol(parsedSubscript);
 
-        Symbol dbVar = new Symbol("subscript",SymbolType.Subscript);
-        dbVar.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        dbVar.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
+        Symbol dbVar = new Symbol("subscript",SymbolType.SUBSCRIPT);
+        dbVar.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        dbVar.addDependency(new Symbol("second_value",SymbolType.SUBSCRIPT_VALUE));
         dbTable.addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -54,16 +56,16 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
-        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDependency(new Symbol("unexpected_value1",SymbolType.Subscript_Value));
-        parsedSubscript.addDependency(new Symbol("unexpected_value2",SymbolType.Subscript_Value));
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
+        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        parsedSubscript.addDependency(new Symbol("unexpected_value1",SymbolType.SUBSCRIPT_VALUE));
+        parsedSubscript.addDependency(new Symbol("unexpected_value2",SymbolType.SUBSCRIPT_VALUE));
         parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
-        dbSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
+        Symbol dbSubscript = new Symbol("subscript",SymbolType.SUBSCRIPT);
+        dbSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        dbSubscript.addDependency(new Symbol("second_value",SymbolType.SUBSCRIPT_VALUE));
         dbTable.addSymbol(dbSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -89,15 +91,15 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
-        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
+        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.SUBSCRIPT_VALUE));
         parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
-        dbSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
+        Symbol dbSubscript = new Symbol("subscript",SymbolType.SUBSCRIPT);
+        dbSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        dbSubscript.addDependency(new Symbol("second_value",SymbolType.SUBSCRIPT_VALUE));
         dbTable.addSymbol(dbSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -118,14 +120,14 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
-        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
+        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
         parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
-        dbSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
+        Symbol dbSubscript = new Symbol("subscript",SymbolType.SUBSCRIPT);
+        dbSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        dbSubscript.addDependency(new Symbol("second_value",SymbolType.SUBSCRIPT_VALUE));
         dbTable.addSymbol(dbSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -146,15 +148,15 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
-        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
+        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        parsedSubscript.addDependency(new Symbol("second_value",SymbolType.SUBSCRIPT_VALUE));
         parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
-        dbSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
+        Symbol dbSubscript = new Symbol("subscript",SymbolType.SUBSCRIPT);
+        dbSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        dbSubscript.addDependency(new Symbol("second_value",SymbolType.SUBSCRIPT_VALUE));
         dbTable.addSymbol(dbSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -174,15 +176,15 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Variable);
-        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.VARIABLE);
+        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.SUBSCRIPT_VALUE));
         parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
-        dbSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
+        Symbol dbSubscript = new Symbol("subscript",SymbolType.SUBSCRIPT);
+        dbSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        dbSubscript.addDependency(new Symbol("second_value",SymbolType.SUBSCRIPT_VALUE));
         dbTable.addSymbol(dbSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -202,15 +204,15 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
-        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
+        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.SUBSCRIPT_VALUE));
         parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        Symbol dbSubscript = new Symbol("subscript",SymbolType.Constant);
-        dbSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
+        Symbol dbSubscript = new Symbol("subscript",SymbolType.CONSTANT);
+        dbSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        dbSubscript.addDependency(new Symbol("second_value",SymbolType.SUBSCRIPT_VALUE));
         dbTable.addSymbol(dbSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -230,13 +232,13 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
         parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        Symbol dbSubscript = new Symbol("subscript",SymbolType.Constant);
-        dbSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
+        Symbol dbSubscript = new Symbol("subscript",SymbolType.CONSTANT);
+        dbSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        dbSubscript.addDependency(new Symbol("second_value",SymbolType.SUBSCRIPT_VALUE));
         dbTable.addSymbol(dbSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -256,13 +258,13 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
-        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
+        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.SUBSCRIPT_VALUE));
         parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
-        Symbol dbSubscript = new Symbol("subscript",SymbolType.Constant);
+        Symbol dbSubscript = new Symbol("subscript",SymbolType.CONSTANT);
         dbTable.addSymbol(dbSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -281,9 +283,9 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
-        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
+        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.SUBSCRIPT_VALUE));
         parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 
@@ -304,9 +306,9 @@ public class TestDictionarySubscriptValueMismatchCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol dbSubscript = new Symbol("subscript",SymbolType.Subscript);
-        dbSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        dbSubscript.addDependency(new Symbol("second_value",SymbolType.Subscript_Value));
+        Symbol dbSubscript = new Symbol("subscript",SymbolType.SUBSCRIPT);
+        dbSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        dbSubscript.addDependency(new Symbol("second_value",SymbolType.SUBSCRIPT_VALUE));
         dbTable.addSymbol(dbSubscript);
 
         VensimVisitorContext context = new VensimVisitorContext(null,parsedTable, new ViewTable(), null, dbData);
@@ -322,9 +324,9 @@ public class TestDictionarySubscriptValueMismatchCheck {
     public void testDbTableIsNull(){
         SymbolTable parsedTable = new SymbolTable();
 
-        Symbol parsedSubscript = new Symbol("subscript", SymbolType.Subscript);
-        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.Subscript_Value));
-        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.Subscript_Value));
+        Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
+        parsedSubscript.addDependency(new Symbol("first_value",SymbolType.SUBSCRIPT_VALUE));
+        parsedSubscript.addDependency(new Symbol("unexpected_value",SymbolType.SUBSCRIPT_VALUE));
         parsedSubscript.addLine(1);
         parsedTable.addSymbol(parsedSubscript);
 

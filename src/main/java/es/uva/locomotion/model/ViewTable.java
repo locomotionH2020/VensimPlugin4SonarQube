@@ -105,7 +105,7 @@ public class ViewTable {
     }
 
     public List<Category> getSubcategories() {
-        return categoriesList.getCategories().stream().flatMap((cat) -> cat.getSubcategories().stream()).collect(Collectors.toList());
+        return categoriesList.getCategories().stream().flatMap(cat -> cat.getSubcategories().stream()).collect(Collectors.toList());
     }
 
     public List<Category> getCategoriesAndSubcategories() {
@@ -119,6 +119,11 @@ public class ViewTable {
         if (!(o instanceof ViewTable)) return false;
         ViewTable table1 = (ViewTable) o;
         return table.equals(table1.table);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(table);
     }
 
     @Override

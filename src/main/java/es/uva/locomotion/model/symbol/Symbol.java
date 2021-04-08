@@ -19,8 +19,8 @@ public class Symbol extends IssuableAbs {
     private Set<Symbol> dependencies;
     private SymbolType type;
     private Category category;
-    private Module primary_module;
-    private final List<Module> shadow_module;
+    private Module primaryModule;
+    private final List<Module> shadowModule;
     private String group;
     private List<ExcelRef> excel;
 
@@ -36,8 +36,8 @@ public class Symbol extends IssuableAbs {
         comment = "";
         category = null;
         indexes = new ArrayList<>();
-        primary_module = null;
-        shadow_module = new ArrayList<>();
+        primaryModule = null;
+        shadowModule = new ArrayList<>();
         group = "";
         excel = new ArrayList<>();
 
@@ -112,7 +112,7 @@ public class Symbol extends IssuableAbs {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Symbol symbol = (Symbol) o;
-        return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && Objects.equals(dependencies, symbol.dependencies) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primary_module, symbol.primary_module) && Objects.equals(shadow_module, symbol.shadow_module) && Objects.equals(group, symbol.group) && Objects.equals(excel, symbol.excel);
+        return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && Objects.equals(dependencies, symbol.dependencies) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primaryModule, symbol.primaryModule) && Objects.equals(shadowModule, symbol.shadowModule) && Objects.equals(group, symbol.group) && Objects.equals(excel, symbol.excel);
     }
 
 
@@ -120,7 +120,7 @@ public class Symbol extends IssuableAbs {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Symbol symbol = (Symbol) o;
-        return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primary_module, symbol.primary_module) && Objects.equals(shadow_module, symbol.shadow_module);
+        return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primaryModule, symbol.primaryModule) && Objects.equals(shadowModule, symbol.shadowModule);
     }
 
 
@@ -135,8 +135,8 @@ public class Symbol extends IssuableAbs {
                 ", dependencies=" + dependencies.stream().map(Symbol::getToken).collect(Collectors.toList()) +
                 ", type=" + type +
                 ", category='" + category + '\'' +
-                ", primary_module='" + getPrimary_module() + '\'' +
-                ", shadow_module=" + getShadow_module() +
+                ", primary_module='" + getPrimaryModule() + '\'' +
+                ", shadow_module=" + getShadowModule() +
                 ", group='" + group + '\'' +
                 ", excel=" + excel +
                 ", isValid=" + isValid +
@@ -147,7 +147,7 @@ public class Symbol extends IssuableAbs {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getToken(), getIndexes(), getUnits(), getComment(), getType(), getCategory(), getPrimary_module(), getShadow_module());
+        return Objects.hash(getToken(), getIndexes(), getUnits(), getComment(), getType(), getCategory(), getPrimaryModule(), getShadowModule());
     }
 
     public void setUnits(String units) {
@@ -192,26 +192,26 @@ public class Symbol extends IssuableAbs {
     }
 
 
-    public Module getPrimary_module() {
-        return primary_module;
+    public Module getPrimaryModule() {
+        return primaryModule;
     }
 
-    public void setPrimary_module(Module primary_module) {
-        this.primary_module = primary_module;
+    public void setPrimaryModule(Module primaryModule) {
+        this.primaryModule = primaryModule;
     }
 
-    public List<Module> getShadow_module() {
-        return shadow_module;
+    public List<Module> getShadowModule() {
+        return shadowModule;
     }
 
-    public void addShadow_module(Module module) {
-        shadow_module.add(module);
+    public void addShadowModule(Module module) {
+        shadowModule.add(module);
     }
 
-    public List<Module> get_views() {
-        List<Module> list = new ArrayList<>(getShadow_module());
-        if (getPrimary_module() != null)
-            list.add(getPrimary_module());
+    public List<Module> getViews() {
+        List<Module> list = new ArrayList<>(getShadowModule());
+        if (getPrimaryModule() != null)
+            list.add(getPrimaryModule());
         return list;
     }
 
@@ -248,8 +248,8 @@ public class Symbol extends IssuableAbs {
         if (category != null && !category.isValid()) {
             this.setAsInvalid(category.getInvalidReason());
         }
-        if (primary_module != null && !primary_module.isValid()) {
-            this.setAsInvalid(primary_module.getInvalidReason());
+        if (primaryModule != null && !primaryModule.isValid()) {
+            this.setAsInvalid(primaryModule.getInvalidReason());
         }
         return super.isValid();
     }

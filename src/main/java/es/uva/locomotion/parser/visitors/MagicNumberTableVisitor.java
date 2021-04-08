@@ -1,13 +1,14 @@
 package es.uva.locomotion.parser.visitors;
 
-import es.uva.locomotion.model.symbol.NumberTable;
 import es.uva.locomotion.model.symbol.Number;
+import es.uva.locomotion.model.symbol.NumberTable;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
-import es.uva.locomotion.parser.*;
+import es.uva.locomotion.parser.ModelLexer;
+import es.uva.locomotion.parser.ModelParser;
+import es.uva.locomotion.parser.ModelParserBaseVisitor;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
-
 
 import static es.uva.locomotion.utilities.UtilityFunctions.stringToFloat;
 import static es.uva.locomotion.utilities.UtilityFunctions.stringToInt;
@@ -35,16 +36,13 @@ public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
 
         if (symbols == null) {
             LOG.unique("Symbol table unassigned in MagicNumberVisitor", LoggingLevel.INFO);
-            return null;
-        }
-
-        if (!symbols.hasSymbol(ctx.Id().getText())) {
+        } else if (!symbols.hasSymbol(ctx.Id().getText())) {
             LOG.error("Found symbol \"" + ctx.Id().getText() + "\" that is not in the symbol table");
-            return null;
-        }
-        Symbol symbol = symbols.getSymbol(ctx.Id().getText());
-        isSymbolFiltered = symbol.isFiltered();
 
+        } else {
+            Symbol symbol = symbols.getSymbol(ctx.Id().getText());
+            isSymbolFiltered = symbol.isFiltered();
+        }
         return null;
 
     }
@@ -125,7 +123,7 @@ public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
 
         if (!isSymbolFiltered) {
             String value = String.valueOf(stringToInt(ctx.getText()));
-            Number integer =  getNumberOrCreate(numberTable, value);
+            Number integer = getNumberOrCreate(numberTable, value);
             integer.addLine(ctx.start.getLine());
         }
         return null;
@@ -226,9 +224,9 @@ public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
 
     @Override
     public Void visitExprOperation(ModelParser.ExprOperationContext ctx) {
-        if (ctx.op.getType() == ModelLexer.Equal)
-            if (isASwitch(ctx.expr(0).getText()) || isASwitch(ctx.expr(1).getText()))
-                return null;
+        if (ctx.op.getType() == ModelLexer.Equal
+                && (isASwitch(ctx.expr(0).getText()) || isASwitch(ctx.expr(1).getText())))
+            return null;
 
         return super.visitChildren(ctx);
 

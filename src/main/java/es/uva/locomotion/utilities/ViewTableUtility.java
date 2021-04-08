@@ -1,15 +1,19 @@
 package es.uva.locomotion.utilities;
 
 import es.uva.locomotion.model.Module;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
-import es.uva.locomotion.model.ViewTable;
-import es.uva.locomotion.parser.*;
+import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.parser.visitors.ViewTableVisitor;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
 
 public class ViewTableUtility {
+
+    private ViewTableUtility(){
+        throw new IllegalStateException("Utility class");
+    }
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
@@ -39,7 +43,7 @@ public class ViewTableUtility {
         for (Symbol symbol : table.getSymbols()) {
 
             boolean filtered = true;
-            for (Module viewName : symbol.get_views()) {
+            for (Module viewName : symbol.getViews()) {
                 if (viewName.getName().startsWith(viewPrefix)) {
                     filtered = false;
                     break;

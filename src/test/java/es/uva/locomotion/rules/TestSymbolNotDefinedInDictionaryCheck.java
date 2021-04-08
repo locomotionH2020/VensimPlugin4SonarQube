@@ -1,22 +1,21 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-
 import es.uva.locomotion.utilities.Constants;
 import org.junit.Test;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
 import static es.uva.locomotion.testutilities.RuleTestUtilities.assertDoesntHaveIssueInLines;
 import static es.uva.locomotion.testutilities.RuleTestUtilities.assertHasIssueInLines;
-import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 
 public class TestSymbolNotDefinedInDictionaryCheck {
@@ -45,7 +44,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
     @Test
     public void testMissingSymbolInDB() {
         SymbolTable parsedTable = new SymbolTable();
-        addSymbolInLines(parsedTable, "foo", SymbolType.Constant, 1, 2);
+        addSymbolInLines(parsedTable, "foo", SymbolType.CONSTANT, 1, 2);
 
         DataBaseRepresentation dbdata= new DataBaseRepresentation();
         dbdata.setDataBaseSymbols(new SymbolTable());
@@ -81,13 +80,13 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         SymbolTable dbTable = dbData.getDataBaseSymbols();
         SymbolTable parsedTable = new SymbolTable();
 
-        addSymbolInLines(parsedTable, "var1", SymbolType.Constant, 1, 2, 3);
+        addSymbolInLines(parsedTable, "var1", SymbolType.CONSTANT, 1, 2, 3);
         dbTable.addSymbol(new Symbol("var1"));
 
-        addSymbolInLines(parsedTable, "foo", SymbolType.Variable, 4);
+        addSymbolInLines(parsedTable, "foo", SymbolType.VARIABLE, 4);
         dbTable.addSymbol(new Symbol("foo"));
 
-        addSymbolInLines(parsedTable, "easter_egg", SymbolType.Lookup_Table, 2, 3);
+        addSymbolInLines(parsedTable, "easter_egg", SymbolType.LOOKUP_TABLE, 2, 3);
         dbTable.addSymbol(new Symbol("easter_egg"));
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
@@ -108,11 +107,11 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         dbTable.addSymbol(new Symbol("var1"));
         dbTable.addSymbol(new Symbol("var2"));
 
-        addSymbolInLines(parsedTable, "var0", SymbolType.Variable, 1);
-        addSymbolInLines(parsedTable, "var1", SymbolType.Constant, 2);
-        addSymbolInLines(parsedTable, "var1.5", SymbolType.Subscript, 3);
-        addSymbolInLines(parsedTable, "var2", SymbolType.Subscript_Value, 4);
-        addSymbolInLines(parsedTable, "var2.5", SymbolType.Lookup_Table, 5);
+        addSymbolInLines(parsedTable, "var0", SymbolType.VARIABLE, 1);
+        addSymbolInLines(parsedTable, "var1", SymbolType.CONSTANT, 2);
+        addSymbolInLines(parsedTable, "var1.5", SymbolType.SUBSCRIPT, 3);
+        addSymbolInLines(parsedTable, "var2", SymbolType.SUBSCRIPT_VALUE, 4);
+        addSymbolInLines(parsedTable, "var2.5", SymbolType.LOOKUP_TABLE, 5);
 
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
@@ -149,15 +148,15 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         SymbolTable parsedTable = new SymbolTable();
 
 
-        addSymbolInLines(parsedTable, "funko", SymbolType.Function, 1);
-        addSymbolInLines(parsedTable, "constant", SymbolType.Constant, 2);
-        addSymbolInLines(parsedTable, "var", SymbolType.Variable, 3);
-        addSymbolInLines(parsedTable, "subscript", SymbolType.Subscript, 4);
-        addSymbolInLines(parsedTable, "funko2", SymbolType.Function, 5);
-        addSymbolInLines(parsedTable, "subscriptValue", SymbolType.Subscript_Value, 6);
-        addSymbolInLines(parsedTable, "lookup", SymbolType.Lookup_Table, 7);
-        addSymbolInLines(parsedTable, "realityCheck", SymbolType.Reality_Check, 8);
-        addSymbolInLines(parsedTable, "funko3", SymbolType.Function, 9);
+        addSymbolInLines(parsedTable, "funko", SymbolType.FUNCTION, 1);
+        addSymbolInLines(parsedTable, "constant", SymbolType.CONSTANT, 2);
+        addSymbolInLines(parsedTable, "var", SymbolType.VARIABLE, 3);
+        addSymbolInLines(parsedTable, "subscript", SymbolType.SUBSCRIPT, 4);
+        addSymbolInLines(parsedTable, "funko2", SymbolType.FUNCTION, 5);
+        addSymbolInLines(parsedTable, "subscriptValue", SymbolType.SUBSCRIPT_VALUE, 6);
+        addSymbolInLines(parsedTable, "lookup", SymbolType.LOOKUP_TABLE, 7);
+        addSymbolInLines(parsedTable, "realityCheck", SymbolType.REALITY_CHECK, 8);
+        addSymbolInLines(parsedTable, "funko3", SymbolType.FUNCTION, 9);
 
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
@@ -199,9 +198,9 @@ public class TestSymbolNotDefinedInDictionaryCheck {
         SymbolNotDefinedInDictionaryCheck check = new SymbolNotDefinedInDictionaryCheck();
 
         SymbolTable parsedTable = new SymbolTable();
-        Symbol symbolNotInDB = new Symbol("invalid", SymbolType.Subscript_Value);
+        Symbol symbolNotInDB = new Symbol("invalid", SymbolType.SUBSCRIPT_VALUE);
         symbolNotInDB.addLine(1);
-        Symbol valid = new Symbol("valid", SymbolType.Subscript_Value);
+        Symbol valid = new Symbol("valid", SymbolType.SUBSCRIPT_VALUE);
         valid.addLine(2);
         parsedTable.addSymbol(symbolNotInDB);
         parsedTable.addSymbol(valid);

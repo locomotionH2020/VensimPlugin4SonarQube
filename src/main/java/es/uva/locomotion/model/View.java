@@ -3,7 +3,9 @@ package es.uva.locomotion.model;
 import es.uva.locomotion.model.category.Category;
 import es.uva.locomotion.model.symbol.Symbol;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class View extends IssuableAbs {
@@ -12,8 +14,8 @@ public class View extends IssuableAbs {
     private final Category category;
     private final Category subcategory;
 
-    private final Set<Symbol> primary_symbols;
-    private final Set<Symbol> shadow_symbols;
+    private final Set<Symbol> primarySymbols;
+    private final Set<Symbol> shadowSymbols;
 
     public View(Module module, Category category, Category subcategory) {
         super();
@@ -21,8 +23,8 @@ public class View extends IssuableAbs {
         this.module = module;
         this.category = category;
         this.subcategory = subcategory;
-        primary_symbols = new HashSet<>();
-        shadow_symbols = new HashSet<>();
+        primarySymbols = new HashSet<>();
+        shadowSymbols = new HashSet<>();
     }
 
     public View(Module module) {
@@ -50,28 +52,28 @@ public class View extends IssuableAbs {
 
     public Set<Symbol> getSymbols() {
         Set<Symbol> collection = new HashSet<>();
-        collection.addAll(primary_symbols);
-        collection.addAll(shadow_symbols);
+        collection.addAll(primarySymbols);
+        collection.addAll(shadowSymbols);
         return collection;
     }
 
-    public Set<Symbol> getPrimary_symbols() {
-        return primary_symbols;
+    public Set<Symbol> getPrimarySymbols() {
+        return primarySymbols;
     }
 
-    public Set<Symbol> getShadow_symbols() {
-        return shadow_symbols;
+    public Set<Symbol> getShadowSymbols() {
+        return shadowSymbols;
     }
 
     public void addPrimary(Symbol token) {
-        token.setPrimary_module(getModule());
+        token.setPrimaryModule(getModule());
         token.setCategory(getCategory());
-        primary_symbols.add(token);
+        primarySymbols.add(token);
     }
 
     public void addShadow(Symbol token) {
-        token.addShadow_module(getModule());
-        shadow_symbols.add(token);
+        token.addShadowModule(getModule());
+        shadowSymbols.add(token);
 
     }
 
@@ -80,15 +82,15 @@ public class View extends IssuableAbs {
     }
 
     public Symbol getSymbol(String token) {
-        return getSymbols().stream().filter((s) -> s.getToken().equals(token)).collect(Collectors.toList()).get(0);
+        return getSymbols().stream().filter(s -> s.getToken().equals(token)).collect(Collectors.toList()).get(0);
     }
 
     public boolean hasPrimary(String token) {
-        return getPrimary_symbols().stream().map(Symbol::getToken).collect(Collectors.toList()).contains(token);
+        return getPrimarySymbols().stream().map(Symbol::getToken).collect(Collectors.toList()).contains(token);
     }
 
     public boolean hasShadow(String token) {
-        return getShadow_symbols().stream().map(Symbol::getToken).collect(Collectors.toList()).contains(token);
+        return getShadowSymbols().stream().map(Symbol::getToken).collect(Collectors.toList()).contains(token);
     }
 
     @Override
@@ -108,8 +110,8 @@ public class View extends IssuableAbs {
     public String toString() {
         return "View{" +
                 "name='" + module + '\'' +
-                ", primary_symbols=" + primary_symbols +
-                ", shadow_symbols=" + shadow_symbols +
+                ", primary_symbols=" + primarySymbols +
+                ", shadow_symbols=" + shadowSymbols +
                 '}';
     }
 
@@ -139,7 +141,7 @@ public class View extends IssuableAbs {
         module.setAsInvalid(invalidReason);
         if (category != null) category.setAsInvalid(invalidReason);
         if (subcategory != null) subcategory.setAsInvalid(invalidReason);
-        primary_symbols.forEach((symbol) -> symbol.setAsInvalid(invalidReason));
-        shadow_symbols.forEach((symbol) -> symbol.setAsInvalid(invalidReason));
+        primarySymbols.forEach(symbol -> symbol.setAsInvalid(invalidReason));
+        shadowSymbols.forEach(symbol -> symbol.setAsInvalid(invalidReason));
     }
 }

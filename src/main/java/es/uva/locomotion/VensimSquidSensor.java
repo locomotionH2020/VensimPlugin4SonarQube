@@ -4,7 +4,6 @@ import es.uva.locomotion.plugin.VensimLanguage;
 import es.uva.locomotion.plugin.VensimRuleRepository;
 import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.rules.VensimCheck;
-import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.utilities.OutputFilesGenerator;
 import es.uva.locomotion.utilities.logs.LogConsolePrinter;
@@ -32,7 +31,7 @@ public class VensimSquidSensor implements Sensor {
 
 
     private static final String NAME = "Vensim Squid Sensor";
-
+    public static final String FALSE = "false";
 
 
     private final Checks<VensimCheck> checks;
@@ -61,13 +60,13 @@ public class VensimSquidSensor implements Sensor {
         String dictionaryService = sensorContext.config().get(DICTIONARY_SERVICE_PARAMETER).orElse("").trim();
         String dictionaryUsername = sensorContext.config().get(DICTIONARY_USERNAME_PARAMETER).orElse("").trim();
         String dictionaryPassword = sensorContext.config().get(DICTIONARY_PASSWORD_PARAMETER).orElse("").trim();
-        String strLogServerComms = sensorContext.config().get(DICTIONARY_LOG_SERVER_COMMUNICATIONS).orElse("false");
-        String strcreateGetDiffFile = sensorContext.config().get(CREATE_GET_DIFF_FILE).orElse("false");
+        String strLogServerComms = sensorContext.config().get(DICTIONARY_LOG_SERVER_COMMUNICATIONS).orElse(FALSE);
+        String strcreateGetDiffFile = sensorContext.config().get(CREATE_GET_DIFF_FILE).orElse(FALSE);
         String logFile = sensorContext.config().get(LOG_IN_FILE).orElse("");
         String auxiliaryFilesDirName = sensorContext.config().get(AUXILIARY_FILES_DIR_NAME).orElse("auxiliary_files");
 
-        boolean logServerComms = !"false".equals(strLogServerComms);
-        boolean createGetDiffFile = !"false".equals(strcreateGetDiffFile);
+        boolean logServerComms = !FALSE.equals(strLogServerComms);
+        boolean createGetDiffFile = !FALSE.equals(strcreateGetDiffFile);
 
         LogOutputMethod logMethod;
         if(logFile.isEmpty())

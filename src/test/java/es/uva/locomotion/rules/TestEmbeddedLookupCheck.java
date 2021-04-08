@@ -2,8 +2,8 @@ package es.uva.locomotion.rules;
 
 
 import com.ibm.icu.impl.Pair;
-import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.parser.visitors.EmbeddedLookupVisitor;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;

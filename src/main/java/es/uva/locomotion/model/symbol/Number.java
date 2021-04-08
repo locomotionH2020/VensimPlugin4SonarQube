@@ -1,6 +1,6 @@
 package es.uva.locomotion.model.symbol;
 
-import es.uva.locomotion.model.symbol.Symbol;
+import java.util.Objects;
 
 public class Number extends Symbol {
     private int ocurrences;
@@ -22,5 +22,19 @@ public class Number extends Symbol {
     public void addLine(int line) {
         super.addLine(line);
         occurs();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Number number = (Number) o;
+        return ocurrences == number.ocurrences;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), ocurrences);
     }
 }

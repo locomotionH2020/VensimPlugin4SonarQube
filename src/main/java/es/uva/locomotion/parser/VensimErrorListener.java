@@ -1,6 +1,8 @@
 package es.uva.locomotion.parser;
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 public class VensimErrorListener extends BaseErrorListener {

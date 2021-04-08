@@ -1,8 +1,6 @@
 package es.uva.locomotion.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public abstract class IssuableAbs implements Issuable{

@@ -1,8 +1,8 @@
 package es.uva.locomotion.rules;
 
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.plugin.VensimScanner;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import org.junit.Test;
 import org.sonar.api.batch.rule.Severity;
@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 
 import static es.uva.locomotion.rules.TestMagicNumberCheck.DEFAULT_MINIMUM_REPETITIONS;
 import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestIntegrationMagicNumberCheck {
 

@@ -3,8 +3,8 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
 
@@ -104,7 +104,7 @@ public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
         Symbol firstFoundValue = foundIndex.get(0);
         Set<Symbol> uniqueFoundIndexes = new HashSet<>(foundIndex);
 
-        if(firstFoundValue.getType()== SymbolType.Subscript){
+        if(firstFoundValue.getType()== SymbolType.SUBSCRIPT){
             if(uniqueFoundIndexes.size()==1) {
                 Set<String> dbValues = dbIndex.getDependencies().stream().map(Symbol::getToken).map(String::trim).collect(Collectors.toSet());
                 Set<String> foundValues = firstFoundValue.getDependencies().stream().map(Symbol::getToken).map(String::trim).collect(Collectors.toSet());

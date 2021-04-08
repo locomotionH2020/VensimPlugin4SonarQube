@@ -27,18 +27,16 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
 
     protected static final VensimLogger LOG = VensimLogger.getInstance();
 
-    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.Function, SymbolType.Subscript_Value);
+    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION, SymbolType.SUBSCRIPT_VALUE);
 
     @Override
     public void scan(VensimVisitorContext context) {
         SymbolTable parsedTable = context.getParsedSymbolTable();
 
         if (context.getDbdata() != null) {
-            if (context.getDbdata().getUnits() != null) {
                 Set<String> dbUnits = context.getDbdata().getUnits();
                 dbUnits.add("Dmnl");
                 checkSymbolsUnits(context, parsedTable, dbUnits);
-            }
         }
     }
 

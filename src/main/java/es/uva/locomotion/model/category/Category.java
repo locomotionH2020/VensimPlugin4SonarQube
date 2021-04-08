@@ -1,7 +1,6 @@
 package es.uva.locomotion.model.category;
 
 import es.uva.locomotion.model.Issuable;
-import es.uva.locomotion.model.IssuableAbs;
 
 import java.util.Set;
 

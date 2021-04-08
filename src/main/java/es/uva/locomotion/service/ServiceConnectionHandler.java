@@ -1,9 +1,9 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.utilities.logs.VensimLogger;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 
 import javax.json.*;
 import java.io.IOException;
@@ -49,12 +49,7 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
         HttpRequest request = requestBuilder.POST(HttpRequest.BodyPublishers.ofString(data.toString()))
                 .header("Content-Type", "application/json").build();
 
-        try {
-            return sendRequest(url, request);
-        } catch (InterruptedException | IOException e) {
-            LOG.serverError("The connection failed: " + e.getMessage());
-            throw new ConnectionFailedException(e);
-        }
+        return sendRequest(url, request);
     }
 
     private String sendGETRequest(String serviceUrl, String service, String token) {
@@ -79,25 +74,31 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
         }
         HttpRequest request = requestBuilder.GET().build();
 
-        try {
-            return sendRequest(url, request);
-        } catch (InterruptedException | IOException e) {
-            LOG.serverInfo("The connection failed: " + e.getMessage());
-            throw new ConnectionFailedException(e);
-        }
+        return sendRequest(url, request);
     }
 
-    private String sendRequest(URI url, HttpRequest request) throws IOException, InterruptedException {
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    private String sendRequest(URI url, HttpRequest request) {
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        String responseBody = response.body();
-        LOG.serverInfo("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
-        if (response.statusCode() == HttpURLConnection.HTTP_OK)
-            return responseBody;
-        else {
-            LOG.serverError("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
-            throw new ConnectionFailedException(new IllegalArgumentException("The status code of the response to "+ url.toString() +  " was: " + response.statusCode()));
+            String responseBody = response.body();
+            LOG.serverInfo("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
+            if (response.statusCode() == HttpURLConnection.HTTP_OK)
+                return responseBody;
+            else {
+                LOG.serverError("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
+                throw new ConnectionFailedException(new IllegalArgumentException("The status code of the response to " + url.toString() + " was: " + response.statusCode()));
+            }
+        } catch (IOException e) {
+            LOG.serverInfo("The connection failed: " + e.getMessage());
+            throw new ConnectionFailedException(e);
+        } catch (InterruptedException e) {
+            LOG.serverInfo("Interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            throw new ConnectionFailedException(e);
         }
+
+
     }
 
     public String authenticate(String serviceUrl, String user, String password) {

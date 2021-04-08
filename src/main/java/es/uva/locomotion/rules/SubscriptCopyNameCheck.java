@@ -49,7 +49,7 @@ public class SubscriptCopyNameCheck extends AbstractVensimCheck {
         SymbolTable table = context.getParsedSymbolTable();
 
         for (Symbol symbol : table.getSymbols()) {
-            if (symbol.getType() == SymbolType.Subscript) {
+            if (symbol.getType() == SymbolType.SUBSCRIPT) {
                 Subscript subscript = (Subscript) symbol;
                 if (subscript.isCopy() && !checkSubscriptNameFollowsConvention(subscript.getToken())) {
                     subscript.setAsInvalid(this.getClass().getSimpleName());

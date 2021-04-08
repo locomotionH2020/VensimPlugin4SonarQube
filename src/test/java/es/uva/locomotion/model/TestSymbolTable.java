@@ -1,7 +1,5 @@
 package es.uva.locomotion.model;
 
-import  static org.junit.Assert.*;
-
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
@@ -12,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
+import static org.junit.Assert.*;
 
 public class TestSymbolTable {
 

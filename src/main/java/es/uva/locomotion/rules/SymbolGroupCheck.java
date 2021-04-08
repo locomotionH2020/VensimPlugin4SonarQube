@@ -65,26 +65,34 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
         List<String> controlSymbols = getDefaultControlSymbols();
         for (Symbol symbol : table.getSymbols()) {
             if (checkGroupControl(symbol.getGroup())) {
-                if (!controlSymbols.contains(symbol.getToken())) {
-                    for (int line : symbol.getLines()) {
-
-                        symbol.setAsInvalid(this.getClass().getSimpleName());
-                        Issue issue = new Issue(this, line, "This symbol is declared in the group \"Control\"" +
-                                " but it does not belongs in it. Try repositioning its declaration to outside of this group");
-                        issue.setSeverity(Severity.MAJOR);
-                        addIssue(context, issue, symbol.isFiltered());
-                    }
-                }
+                symbolInControlGroup(context, controlSymbols, symbol);
             } else {
-                if (controlSymbols.contains(symbol.getToken())) {
-                    for (int line : symbol.getLines()) {
-                        symbol.setAsInvalid(this.getClass().getSimpleName());
-                        Issue issue = new Issue(this, line, "This symbol is not declared in the group \"Control\"" +
-                                " but it does belongs in it. Try repositioning its declaration to inside of this group");
-                        issue.setSeverity(Severity.MAJOR);
-                        addIssue(context, issue, symbol.isFiltered());
-                    }
-                }
+                symbolOutOfControlGroup(context, controlSymbols, symbol);
+            }
+        }
+    }
+
+    private void symbolOutOfControlGroup(VensimVisitorContext context, List<String> controlSymbols, Symbol symbol) {
+        if (controlSymbols.contains(symbol.getToken())) {
+            for (int line : symbol.getLines()) {
+                symbol.setAsInvalid(this.getClass().getSimpleName());
+                Issue issue = new Issue(this, line, "This symbol is not declared in the group \"Control\"" +
+                        " but it does belongs in it. Try repositioning its declaration to inside of this group");
+                issue.setSeverity(Severity.MAJOR);
+                addIssue(context, issue, symbol.isFiltered());
+            }
+        }
+    }
+
+    private void symbolInControlGroup(VensimVisitorContext context, List<String> controlSymbols, Symbol symbol) {
+        if (!controlSymbols.contains(symbol.getToken())) {
+            for (int line : symbol.getLines()) {
+
+                symbol.setAsInvalid(this.getClass().getSimpleName());
+                Issue issue = new Issue(this, line, "This symbol is declared in the group \"Control\"" +
+                        " but it does not belongs in it. Try repositioning its declaration to outside of this group");
+                issue.setSeverity(Severity.MAJOR);
+                addIssue(context, issue, symbol.isFiltered());
             }
         }
     }

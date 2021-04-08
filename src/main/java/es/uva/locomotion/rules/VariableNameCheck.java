@@ -2,11 +2,11 @@ package es.uva.locomotion.rules;
 
 
 import es.uva.locomotion.model.AcronymsList;
-import es.uva.locomotion.plugin.Issue;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
@@ -65,7 +65,7 @@ public class VariableNameCheck extends AbstractVensimCheck {
         SymbolTable table = context.getParsedSymbolTable();
         AcronymsList acronymsList = context.getDbAcronyms();
         for (Symbol symbol : table.getSymbols()) {
-            if (symbol.getType() == SymbolType.Variable && !"Time".equals(symbol.getToken()) && !checkVariableFollowsConvention(symbol.getToken())) {
+            if (symbol.getType() == SymbolType.VARIABLE && !"Time".equals(symbol.getToken()) && !checkVariableFollowsConvention(symbol.getToken())) {
 
                 boolean isOnlyAnAcronym = false;
                 String aronymsListMisingWarning = "";

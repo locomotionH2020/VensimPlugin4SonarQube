@@ -4,13 +4,14 @@ package es.uva.locomotion.testutilities;
 import es.uva.locomotion.VensimPlugin;
 import org.sonar.api.batch.rule.Severity;
 
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.*;
-import java.net.*;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

@@ -1,7 +1,6 @@
 package es.uva.locomotion.plugin;
 
 import es.uva.locomotion.rules.*;
-
 import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 
 

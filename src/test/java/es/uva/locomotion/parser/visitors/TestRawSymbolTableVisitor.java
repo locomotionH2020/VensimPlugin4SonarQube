@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
-
 import static org.junit.Assert.*;
 
 public class TestRawSymbolTableVisitor {
@@ -31,9 +30,9 @@ public class TestRawSymbolTableVisitor {
         Symbol option2 = table.getSymbol("OPTION2");
 
 
-        assertSymbol(subscriptName, SymbolType.Subscript, 2, new HashSet<>(Arrays.asList(option1, option2)));
-        assertSymbol(option1, SymbolType.Subscript_Value, 2, NO_DEPENDENCIES);
-        assertSymbol(option2, SymbolType.Subscript_Value, 3, NO_DEPENDENCIES);
+        assertSymbol(subscriptName, SymbolType.SUBSCRIPT, 2, new HashSet<>(Arrays.asList(option1, option2)));
+        assertSymbol(option1, SymbolType.SUBSCRIPT_VALUE, 2, NO_DEPENDENCIES);
+        assertSymbol(option2, SymbolType.SUBSCRIPT_VALUE, 3, NO_DEPENDENCIES);
         assertEquals("units", subscriptName.getUnits());
         assertEquals("comment", subscriptName.getComment());
         assertTrue(subscriptName.getIndexes().isEmpty());
@@ -66,7 +65,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol country = table.getSymbol("country");
-        assertSymbolType(country, SymbolType.Subscript);
+        assertSymbolType(country, SymbolType.SUBSCRIPT);
 
     }
 
@@ -83,7 +82,7 @@ public class TestRawSymbolTableVisitor {
         Symbol original = table.getSymbol("original");
 
         Symbol copy = table.getSymbol("copy");
-        assertSymbolType(copy, SymbolType.Subscript);
+        assertSymbolType(copy, SymbolType.SUBSCRIPT);
         assertSymbolDefinedOnlyIn(3, copy);
         assertEquals("units", copy.getUnits());
         assertEquals("comment", copy.getComment());
@@ -119,7 +118,7 @@ public class TestRawSymbolTableVisitor {
 
         for (int i = 15; i <= 45; i++) {
             Symbol value = table.getSymbol("AGE_" + i);
-            assertSymbolType(value, SymbolType.Subscript_Value);
+            assertSymbolType(value, SymbolType.SUBSCRIPT_VALUE);
             assertSymbolDefinedOnlyIn(1, value);
             assertTrue(subscript.getDependencies().contains(value));
         }
@@ -173,10 +172,10 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol xlsSubscript = table.getSymbol("xlsSubscript");
-        assertSymbolType(xlsSubscript, SymbolType.Subscript);
+        assertSymbolType(xlsSubscript, SymbolType.SUBSCRIPT);
 
         Symbol directSubscript = table.getSymbol("directSubscript");
-        assertSymbolType(directSubscript, SymbolType.Subscript);
+        assertSymbolType(directSubscript, SymbolType.SUBSCRIPT);
     }
 
 
@@ -189,7 +188,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myLookup = table.getSymbol("myLookup");
-        assertSymbol(myLookup, SymbolType.Lookup_Table, 2, NO_DEPENDENCIES);
+        assertSymbol(myLookup, SymbolType.LOOKUP_TABLE, 2, NO_DEPENDENCIES);
         assertEquals("units", myLookup.getUnits());
         assertEquals("comment", myLookup.getComment());
 
@@ -203,7 +202,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myLookup = table.getSymbol("myLookup");
-        assertSymbolType(myLookup, SymbolType.Lookup_Table);
+        assertSymbolType(myLookup, SymbolType.LOOKUP_TABLE);
     }
 
     @Test
@@ -215,10 +214,10 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol xlsLookup = table.getSymbol("testXLSLookup");
-        assertSymbolType(xlsLookup, SymbolType.Lookup_Table);
+        assertSymbolType(xlsLookup, SymbolType.LOOKUP_TABLE);
 
         Symbol directLookup = table.getSymbol("testDirectLookup");
-        assertSymbolType(directLookup, SymbolType.Lookup_Table);
+        assertSymbolType(directLookup, SymbolType.LOOKUP_TABLE);
     }
 
     @Test
@@ -231,7 +230,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myMacro = table.getSymbol("myMacro");
-        assertSymbolType(myMacro, SymbolType.Function);
+        assertSymbolType(myMacro, SymbolType.FUNCTION);
         assertEquals(Set.of(3, 4), myMacro.getLines());
         assertTrue(table.hasSymbol("supportValue"));
         assertTrue(myMacro.getIndexes().isEmpty());
@@ -264,7 +263,7 @@ public class TestRawSymbolTableVisitor {
 
 
         Symbol pi = table.getSymbol("PI");
-        assertSymbol(pi, SymbolType.Constant, 4, NO_DEPENDENCIES);
+        assertSymbol(pi, SymbolType.CONSTANT, 4, NO_DEPENDENCIES);
         assertEquals("units", pi.getUnits());
         assertEquals("comment", pi.getComment());
     }
@@ -276,7 +275,7 @@ public class TestRawSymbolTableVisitor {
 
 
         Symbol filename = table.getSymbol("filename");
-        assertSymbol(filename, SymbolType.Constant, 3, NO_DEPENDENCIES);
+        assertSymbol(filename, SymbolType.CONSTANT, 3, NO_DEPENDENCIES);
 
         assertEquals("units", filename.getUnits());
         assertEquals("comment", filename.getComment());
@@ -428,7 +427,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myCondition = table.getSymbol("myCondition");
-        assertSymbol(myCondition, SymbolType.Reality_Check, 6, NO_DEPENDENCIES);
+        assertSymbol(myCondition, SymbolType.REALITY_CHECK, 6, NO_DEPENDENCIES);
         assertEquals("comment", myCondition.getComment());
         assertEquals("units", myCondition.getUnits());
         assertTrue(myCondition.getIndexes().isEmpty());
@@ -442,7 +441,7 @@ public class TestRawSymbolTableVisitor {
         SymbolTable table = getRAWSymbolTableFromString(program);
 
         Symbol myTestInput = table.getSymbol("myTestInput");
-        assertSymbol(myTestInput, SymbolType.Reality_Check, 2, NO_DEPENDENCIES);
+        assertSymbol(myTestInput, SymbolType.REALITY_CHECK, 2, NO_DEPENDENCIES);
         assertEquals("comment", myTestInput.getComment());
         assertEquals("units", myTestInput.getUnits());
         assertTrue(myTestInput.getIndexes().isEmpty());

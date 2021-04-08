@@ -1,7 +1,9 @@
 package es.uva.locomotion.utilities;
 
-import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.ExcelRef;
 import es.uva.locomotion.model.Module;
+import es.uva.locomotion.model.View;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.category.Category;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
@@ -55,8 +57,8 @@ public class JsonSymbolTableBuilder {
         tableBuilder.add("file", file);
         tableBuilder.add("symbols", symbolTableToJson(table));
         tableBuilder.add("views", viewsToJson(viewTable.getViews()));
-        tableBuilder.add("modules", modulesToJson(viewTable.getModules()));
-        tableBuilder.add("categories", categoriesToJson(viewTable.getCategoriesAndSubcategories()));
+        tableBuilder.add(KEY_MODULES, modulesToJson(viewTable.getModules()));
+        tableBuilder.add(KEY_CATEGORIES, categoriesToJson(viewTable.getCategoriesAndSubcategories()));
 
         fileBuilder.add(tableBuilder);
     }
@@ -87,10 +89,10 @@ public class JsonSymbolTableBuilder {
             dependenciesBuilder.add(dependency.getToken());
         symbolBuilder.add(KEY_DEPENDENCIES, dependenciesBuilder);
 
-        symbolBuilder.add(KEY_PRIMARY_VIEW, symbol.getPrimary_module() == null ? "null" : symbol.getPrimary_module().getName());
+        symbolBuilder.add(KEY_PRIMARY_VIEW, symbol.getPrimaryModule() == null ? "null" : symbol.getPrimaryModule().getName());
 
         JsonArrayBuilder shadowBuilder = Json.createArrayBuilder();
-        for (Module module : symbol.getShadow_module())
+        for (Module module : symbol.getShadowModule())
             shadowBuilder.add(module.getName());
         symbolBuilder.add(KEY_SHADOW_VIEWS, shadowBuilder);
 
@@ -119,39 +121,43 @@ public class JsonSymbolTableBuilder {
         }
 
         if (!symbol.getExcel().isEmpty()) {
-            JsonArrayBuilder excelBuilder = Json.createArrayBuilder();
-
-            for (ExcelRef excel : symbol.getExcel()) {
-                JsonObjectBuilder fileBuilder = Json.createObjectBuilder();
-                fileBuilder.add(KEY_SHEET, excel.getSheet());
-                fileBuilder.add(KEY_FILENAME, excel.getFilename());
-                JsonArrayBuilder infoListBuilder = Json.createArrayBuilder();
-
-                for (Triple<List<String>, String, String> info : excel.getCellRangeInformation()) {
-                    JsonObjectBuilder infoBuilder = Json.createObjectBuilder();
-
-                    if (!info.a.isEmpty()) {
-                        JsonArrayBuilder indexBuilder = Json.createArrayBuilder();
-                        for (String indexName : info.a) {
-                            indexBuilder.add(indexName);
-                        }
-                        infoBuilder.add(KEY_INDEXES, indexBuilder);
-                    }
-                    infoBuilder.add(KEY_CELLRANGE, info.b);
-                    if (info.c != null)
-                        infoBuilder.add(KEY_SERIES, info.c);
-
-                    infoListBuilder.add(infoBuilder);
-                }
-                fileBuilder.add(KEY_INFO, infoListBuilder);
-
-
-                excelBuilder.add(fileBuilder);
-            }
-            symbolBuilder.add(KEY_EXCEL, excelBuilder);
+            symbolBuilder.add(KEY_EXCEL,  excelToJson(symbol));
         }
         return symbolBuilder.build();
 
+    }
+
+    private JsonArrayBuilder excelToJson(Symbol symbol) {
+        JsonArrayBuilder excelBuilder = Json.createArrayBuilder();
+
+        for (ExcelRef excel : symbol.getExcel()) {
+            JsonObjectBuilder fileExcelBuilder = Json.createObjectBuilder();
+            fileExcelBuilder.add(KEY_SHEET, excel.getSheet());
+            fileExcelBuilder.add(KEY_FILENAME, excel.getFilename());
+            JsonArrayBuilder infoListBuilder = Json.createArrayBuilder();
+
+            for (Triple<List<String>, String, String> info : excel.getCellRangeInformation()) {
+                JsonObjectBuilder infoBuilder = Json.createObjectBuilder();
+
+                if (!info.a.isEmpty()) {
+                    JsonArrayBuilder indexBuilder = Json.createArrayBuilder();
+                    for (String indexName : info.a) {
+                        indexBuilder.add(indexName);
+                    }
+                    infoBuilder.add(KEY_INDEXES, indexBuilder);
+                }
+                infoBuilder.add(KEY_CELLRANGE, info.b);
+                if (info.c != null)
+                    infoBuilder.add(KEY_SERIES, info.c);
+
+                infoListBuilder.add(infoBuilder);
+            }
+            fileExcelBuilder.add(KEY_INFO, infoListBuilder);
+
+
+            excelBuilder.add(fileExcelBuilder);
+        }
+        return excelBuilder;
     }
 
     private JsonArray viewsToJson(List<View> table) {

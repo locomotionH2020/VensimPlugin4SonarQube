@@ -64,6 +64,11 @@ public class SymbolTable {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(table);
+    }
+
+    @Override
     public String toString() {
         return "SymbolTable{" +
                 "table=" + table +

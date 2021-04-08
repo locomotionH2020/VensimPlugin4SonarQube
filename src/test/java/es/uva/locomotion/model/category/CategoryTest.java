@@ -1,6 +1,5 @@
 package es.uva.locomotion.model.category;
 
-import es.uva.locomotion.model.category.Category;
 import org.junit.Before;
 import org.junit.Test;
 

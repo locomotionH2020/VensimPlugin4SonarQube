@@ -1,13 +1,9 @@
 package es.uva.locomotion.model.category;
 
-import es.uva.locomotion.model.category.Category;
-import es.uva.locomotion.model.category.CategoryImpl;
-import es.uva.locomotion.model.category.CategoryMap;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.Assert.*;
 
@@ -64,5 +60,35 @@ public class CategoryMapTest {
         assertEquals(expected, cl.getCategoriesAndSubcategories());
     }
 
+    @Test
+    public void hasCategory() {
+        CategoryMap cl = new CategoryMap();
+        Category c = cl.createOrSelectCategory("categoryName");
+        Category subc = cl.addSubcategoryTo(c, "subcategoryName");
+        Category c2 =cl.createOrSelectCategory("categoryName2");
 
+        assertTrue(cl.hasCategory("categoryName"));
+        assertFalse(cl.hasCategory("otherName"));
+        assertFalse(cl.hasCategory("subcategoryName"));
+    }
+
+    @Test
+    public void getSubcategories() {
+        CategoryMap cl = new CategoryMap();
+        Category c = cl.createOrSelectCategory("categoryName");
+        Category subc = cl.addSubcategoryTo(c, "subcategoryName");
+        Category c2 =cl.createOrSelectCategory("categoryName2");
+
+        List<Category> expected = new ArrayList<>();
+        expected.add(subc);
+        assertEquals(expected, cl.getSubcategories());
+    }
+    @Test
+    public void equalTest() {
+        CategoryMap cl = new CategoryMap();
+        assertEquals(cl,cl);
+        assertNotEquals(null, cl);
+        assertFalse(cl.equals(4));
+
+    }
 }

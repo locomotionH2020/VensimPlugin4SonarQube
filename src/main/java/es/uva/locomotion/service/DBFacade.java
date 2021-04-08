@@ -1,6 +1,7 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.AcronymsList;
+import es.uva.locomotion.model.ExcelRef;
 import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.category.Category;
 import es.uva.locomotion.model.category.CategoryMap;
@@ -15,9 +16,7 @@ import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.antlr.v4.runtime.misc.Triple;
 
-
 import javax.json.*;
-
 import java.io.StringReader;
 import java.util.*;
 import java.util.function.Predicate;
@@ -55,11 +54,18 @@ public class DBFacade {
     public static final String KEY_SERIES = "series";
     public static final String KEY_INFO = "info";
     public static final String KEY_FILENAME = "filename";
+    public static final String MISSING = "Missing '";
+    public static final String FIELD = "' field.";
+    public static final String FROM_THE_DICTIONARY_SERVICE = "' from the dictionary service.";
+    public static final String EXPECTED_AN_ARRAY = "Expected an array.";
 
     protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
 
     protected static VensimLogger LOG = VensimLogger.getInstance();
 
+    private DBFacade() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static String getAuthenticationToken(String serviceUrl, String user, String password) {
         return handler.authenticate(serviceUrl, user, password);
@@ -77,7 +83,7 @@ public class DBFacade {
 
 
         if (!symbolsFound.containsKey(FIELD_SYMBOLS)) {
-            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_SYMBOLS + "' field.");
+            throw new ServiceResponseFormatNotValid(MISSING + FIELD_SYMBOLS + FIELD);
         }
 
         JsonArray symbols = symbolsFound.getJsonArray(FIELD_SYMBOLS);
@@ -145,7 +151,7 @@ public class DBFacade {
         for (String s : symbols)
             arrayBuilder.add(s);
 
-        jsonBuilder.add("symbols", arrayBuilder);
+        jsonBuilder.add(FIELD_SYMBOLS, arrayBuilder);
         return jsonBuilder.build();
     }
 
@@ -153,7 +159,7 @@ public class DBFacade {
         SymbolTable table = new SymbolTable();
 
         if (!symbolsFound.containsKey(FIELD_SYMBOLS)) {
-            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_SYMBOLS + "' field.", symbolsFound.toString());
+            throw new ServiceResponseFormatNotValid(MISSING + FIELD_SYMBOLS + FIELD, symbolsFound.toString());
         }
 
         JsonArray symbols = symbolsFound.getJsonArray(FIELD_SYMBOLS);
@@ -169,14 +175,14 @@ public class DBFacade {
 
     private static void validateJsonSymbol(JsonObject jsonSymbol) {
         if (!jsonSymbol.containsKey(FIELD_NAME)) {
-            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_NAME + "' field from a symbol.");
+            throw new ServiceResponseFormatNotValid(MISSING + FIELD_NAME + "' field from a symbol.");
         }
 
         String name = jsonSymbol.getString(FIELD_NAME);
         for (String field : REQUIRED_FIELDS_IN_SYMBOL) {
 
             if (!jsonSymbol.containsKey(field)) {
-                throw new ServiceResponseFormatNotValid("Missing '" + field + "' field in symbol '" + name + "'.");
+                throw new ServiceResponseFormatNotValid(MISSING + field + "' field in symbol '" + name + "'.");
             }
         }
     }
@@ -191,7 +197,7 @@ public class DBFacade {
             String name = jsonSymbol.getString(FIELD_NAME);
 
             if (table.hasSymbol(name)) {
-                LOG.info("Received duplicated symbol '" + name + "' from the dictionary service.");
+                LOG.info("Received duplicated symbol '" + name + FROM_THE_DICTIONARY_SERVICE);
                 continue;
             }
 
@@ -222,59 +228,70 @@ public class DBFacade {
             symbol.addIndexLine(indexes);
 
             JsonObject modules = jsonSymbol.getJsonObject(FIELD_SYMBOL_MODULES);
-            symbol.setPrimary_module(new Module(modules.getString(FIELD_SYMBOL_MODULES_MAIN)));
+            symbol.setPrimaryModule(new Module(modules.getString(FIELD_SYMBOL_MODULES_MAIN)));
 
             JsonArray secondaryModules = modules.getJsonArray(FIELD_SYMBOL_MODULES_SECONDARY);
             for (int i = 0; i < secondaryModules.size(); i++) {
                 String module = secondaryModules.getString(i);
-                symbol.addShadow_module(new Module(module));
+                symbol.addShadowModule(new Module(module));
             }
 
-            JsonArray excelJsonList = jsonSymbol.getJsonArray(KEY_EXCEL);
-            if (excelJsonList != null) {
-                List<ExcelRef> excelList = new ArrayList<>();
-                for (int i = 0; i < excelJsonList.size(); i++) {
-                    JsonObject excelJson = excelJsonList.getJsonObject(i);
-
-                    String sheet = excelJson.getString(KEY_SHEET);
-                    String filename = excelJson.getString(KEY_SHEET);
-                    ExcelRef excel = new ExcelRef(sheet, filename);
-
-                    JsonArray infoJsonList = excelJson.getJsonArray(KEY_INFO);
-                    for (int j = 0; j < infoJsonList.size(); j++) {
-                        JsonObject infoJson = infoJsonList.getJsonObject(j);
-
-                        JsonArray indexJson = infoJson.getJsonArray(KEY_INDEXES);
-                        List<String> indexList = null;
-                        if (indexJson != null) {
-                            indexList = new ArrayList<>();
-                            for (int k = 0; k < indexJson.size(); k++) {
-                                indexList.add(indexJson.getString(k));
-                            }
-                        }
-                        String cellRange = infoJson.getString(KEY_CELLRANGE);
-                        String series = infoJson.getString(KEY_SERIES);
-
-                        if (series == null) {
-                            excel.addCellRangeInformation(indexList, cellRange);
-                        } else {
-                            excel.addCellRangeInformation(indexList, cellRange, series);
-                        }
-                    }
-                    excelList.add(excel);
-                }
-                symbol.setExcel(excelList);
-            }
+            symbol.setExcel(loadExcelRef(jsonSymbol));
 
             table.addSymbol(symbol);
 
         }
     }
 
+    private static List<ExcelRef> loadExcelRef(JsonObject jsonSymbol) {
+        JsonArray excelJsonList = jsonSymbol.getJsonArray(KEY_EXCEL);
+        List<ExcelRef> excelList = new ArrayList<>();
+
+        if (excelJsonList != null) {
+            for (int i = 0; i < excelJsonList.size(); i++) {
+                JsonObject excelJson = excelJsonList.getJsonObject(i);
+
+                String sheet = excelJson.getString(KEY_SHEET);
+                String filename = excelJson.getString(KEY_SHEET);
+                ExcelRef excel = new ExcelRef(sheet, filename);
+
+                addRangeInfo(excelJson, excel);
+
+                excelList.add(excel);
+            }
+
+        }
+        return excelList;
+    }
+
+    private static void addRangeInfo(JsonObject excelJson, ExcelRef excel) {
+        JsonArray infoJsonList = excelJson.getJsonArray(KEY_INFO);
+        for (int j = 0; j < infoJsonList.size(); j++) {
+            JsonObject infoJson = infoJsonList.getJsonObject(j);
+
+            JsonArray indexJson = infoJson.getJsonArray(KEY_INDEXES);
+            List<String> indexList = null;
+            if (indexJson != null) {
+                indexList = new ArrayList<>();
+                for (int k = 0; k < indexJson.size(); k++) {
+                    indexList.add(indexJson.getString(k));
+                }
+            }
+            String cellRange = infoJson.getString(KEY_CELLRANGE);
+            String series = infoJson.getString(KEY_SERIES);
+
+            if (series == null) {
+                excel.addCellRangeInformation(indexList, cellRange);
+            } else {
+                excel.addCellRangeInformation(indexList, cellRange, series);
+            }
+        }
+    }
+
 
     public static void injectSymbols(String serviceUrl, List<Symbol> symbols, String module, String token) { //TODO .filter(symbol -> symbol.getCategory() != null)
-        List<Symbol> rawSymbols = symbols.stream().filter(symbol -> !List.of(SymbolType.Subscript_Value, SymbolType.Subscript,
-                SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION, SymbolType.Function).contains(symbol.getType())).collect(Collectors.toList());
+        List<Symbol> rawSymbols = symbols.stream().filter(symbol -> !List.of(SymbolType.SUBSCRIPT_VALUE, SymbolType.SUBSCRIPT,
+                SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION, SymbolType.FUNCTION).contains(symbol.getType())).collect(Collectors.toList());
 
         rawSymbols = rawSymbols.stream().filter(Symbol::isValid).filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
         rawSymbols.sort(Comparator.comparing(Symbol::getToken));
@@ -305,31 +322,7 @@ public class DBFacade {
                 JsonArrayBuilder excelBuilder = Json.createArrayBuilder();
 
                 for (ExcelRef excel : s.getExcel()) {
-                    JsonObjectBuilder fileBuilder = Json.createObjectBuilder();
-                    fileBuilder.add(KEY_SHEET, excel.getSheet());
-                    fileBuilder.add(KEY_FILENAME, excel.getFilename());
-                    JsonArrayBuilder infoListBuilder = Json.createArrayBuilder();
-
-                    for (Triple<List<String>, String, String> info : excel.getCellRangeInformation()) {
-                        JsonObjectBuilder infoBuilder = Json.createObjectBuilder();
-
-                        if (!info.a.isEmpty()) {
-                            JsonArrayBuilder indexBuilder = Json.createArrayBuilder();
-                            for (String indexName : info.a) {
-                                indexBuilder.add(indexName);
-                            }
-                            infoBuilder.add(KEY_INDEXES, indexBuilder);
-                        }
-                        infoBuilder.add(KEY_CELLRANGE, info.b);
-                        if (info.c != null)
-                            infoBuilder.add(KEY_SERIES, info.c);
-
-                        infoListBuilder.add(infoBuilder);
-                    }
-                    fileBuilder.add(KEY_INFO, infoListBuilder);
-
-
-                    excelBuilder.add(fileBuilder);
+                    excelBuilder.add(getExcelRefJson(excel));
                 }
                 jsonSymbol.add(KEY_EXCEL, excelBuilder);
             }
@@ -337,6 +330,34 @@ public class DBFacade {
         }
 
         return jsonSymbols.build();
+    }
+
+    private static JsonObjectBuilder getExcelRefJson( ExcelRef excel) {
+        JsonObjectBuilder fileBuilder = Json.createObjectBuilder();
+        fileBuilder.add(KEY_SHEET, excel.getSheet());
+        fileBuilder.add(KEY_FILENAME, excel.getFilename());
+        JsonArrayBuilder infoListBuilder = Json.createArrayBuilder();
+
+        for (Triple<List<String>, String, String> info : excel.getCellRangeInformation()) {
+            JsonObjectBuilder infoBuilder = Json.createObjectBuilder();
+
+            if (!info.a.isEmpty()) {
+                JsonArrayBuilder indexBuilder = Json.createArrayBuilder();
+                for (String indexName : info.a) {
+                    indexBuilder.add(indexName);
+                }
+                infoBuilder.add(KEY_INDEXES, indexBuilder);
+            }
+            infoBuilder.add(KEY_CELLRANGE, info.b);
+            if (info.c != null)
+                infoBuilder.add(KEY_SERIES, info.c);
+
+            infoListBuilder.add(infoBuilder);
+        }
+        fileBuilder.add(KEY_INFO, infoListBuilder);
+
+
+        return fileBuilder;
     }
 
 
@@ -352,7 +373,7 @@ public class DBFacade {
             JsonArray acronymsFound = jsonReader.readArray();
             return createAcronymListFromJson(acronymsFound);
         } catch (JsonException ex) {
-            throw new ServiceResponseFormatNotValid("Expected an array.", serviceResponse);
+            throw new ServiceResponseFormatNotValid(EXPECTED_AN_ARRAY, serviceResponse);
         } catch (ServiceResponseFormatNotValid ex) {
             ex.setServiceResponse(serviceResponse);
             throw ex;
@@ -370,7 +391,7 @@ public class DBFacade {
             } catch (ClassCastException e) {
                 throw new ServiceResponseFormatNotValid("Expected object inside array.");
             } catch (NullPointerException e) {
-                throw new ServiceResponseFormatNotValid("Missing '" + FIELD_NAME + "' field.");
+                throw new ServiceResponseFormatNotValid(MISSING + FIELD_NAME + FIELD);
             }
 
         }
@@ -410,7 +431,7 @@ public class DBFacade {
             String module = jsonValue.toString().replaceAll("\"", "");
 
             if (list.contains(module)) {
-                LOG.warn("Received duplicated module '" + module + "' from the dictionary service.");
+                LOG.warn("Received duplicated module '" + module + FROM_THE_DICTIONARY_SERVICE);
             }
             list.add(module);
 
@@ -434,7 +455,7 @@ public class DBFacade {
             }
         }
 
-        jsonTosend.add("modules", jsonModulesBuilder);
+        jsonTosend.add(FIELD_SYMBOL_MODULES, jsonModulesBuilder);
         if (alreadyAdded.size() > 0) {
             handler.injectModules(serviceUrl, jsonTosend.build(), token);
         } else {
@@ -453,7 +474,7 @@ public class DBFacade {
 
             return createCategoryListFromJson(categories);
         } catch (JsonException ex) {
-            throw new ServiceResponseFormatNotValid("Expected an array.", serviceResponse);
+            throw new ServiceResponseFormatNotValid(EXPECTED_AN_ARRAY, serviceResponse);
         } catch (ServiceResponseFormatNotValid ex) {
             ex.setServiceResponse(serviceResponse);
             throw ex;
@@ -474,7 +495,7 @@ public class DBFacade {
 
             name = jsonCategory.getString(FIELD_NAME);
             if (categoryMap.contains(name)) {
-                LOG.info("Received duplicated category '" + name + "' from the dictionary service.");
+                LOG.info("Received duplicated category '" + name + FROM_THE_DICTIONARY_SERVICE);
                 continue;
             }
             level = jsonCategory.getInt(FIELD_CATEGORY_LEVEL);
@@ -488,10 +509,10 @@ public class DBFacade {
                     throw new ServiceResponseFormatNotValid("'" + name + "' father's '" + super_categoryName + "' does not exists or it is a subcategory.");
                 }
                 Category super_category = categoryMap.createOrSelectCategory(super_categoryName);
-                Category category = categoryMap.addSubcategoryTo(super_category, name);
+                categoryMap.addSubcategoryTo(super_category, name);
 
             } else { //Category
-                Category category = categoryMap.createOrSelectCategory(name);
+                categoryMap.createOrSelectCategory(name);
             }
 
 
@@ -501,18 +522,18 @@ public class DBFacade {
 
     private static void validateJsonCategories(JsonObject jsonSymbol) {
         if (!jsonSymbol.containsKey(FIELD_NAME) || jsonSymbol.get(FIELD_NAME) == JsonValue.NULL) {
-            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_NAME + "' field from a category.");
+            throw new ServiceResponseFormatNotValid(MISSING + FIELD_NAME + "' field from a category.");
         }
 
         String name = jsonSymbol.getString(FIELD_NAME);
         if (!jsonSymbol.containsKey(FIELD_CATEGORY_LEVEL) || jsonSymbol.get(FIELD_CATEGORY_LEVEL) == JsonValue.NULL) {
-            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_CATEGORY_LEVEL + "' field in category '" + name + "'.");
+            throw new ServiceResponseFormatNotValid(MISSING + FIELD_CATEGORY_LEVEL + "' field in category '" + name + "'.");
         }
         int level = jsonSymbol.getInt(FIELD_CATEGORY_LEVEL);
 
         if (level == 2) {
             if (!jsonSymbol.containsKey(FIELD_CATEGORY_SUPER_CATEGORY) || jsonSymbol.get(FIELD_CATEGORY_SUPER_CATEGORY).toString().equals("\"null\"")) {
-                throw new ServiceResponseFormatNotValid("Missing '" + FIELD_CATEGORY_SUPER_CATEGORY + "' field in subcategory '" + name + "'.");
+                throw new ServiceResponseFormatNotValid(MISSING + FIELD_CATEGORY_SUPER_CATEGORY + "' field in subcategory '" + name + "'.");
             }
         } else {
             if (jsonSymbol.containsKey(FIELD_CATEGORY_SUPER_CATEGORY) && !jsonSymbol.get(FIELD_CATEGORY_SUPER_CATEGORY).toString().equals("\"null\"")) {
@@ -564,7 +585,7 @@ public class DBFacade {
             }
             return createUnitsListFromJson(unitsFound);
         } catch (JsonException ex) {
-            throw new ServiceResponseFormatNotValid("Expected an array.", serviceResponse);
+            throw new ServiceResponseFormatNotValid(EXPECTED_AN_ARRAY, serviceResponse);
         } catch (ServiceResponseFormatNotValid ex) {
             ex.setServiceResponse(serviceResponse);
             throw ex;
@@ -586,7 +607,7 @@ public class DBFacade {
 
             unit = jsonUnit.getString(FIELD_SYMBOL_UNITS);
             if (list.contains(unit)) {
-                LOG.warn("Received duplicated unit '" + unit + "' from the dictionary service."); //TODO quitar, no son únicas.
+                LOG.warn("Received duplicated unit '" + unit + FROM_THE_DICTIONARY_SERVICE); //TODO quitar, no son únicas.
                 continue;
             }
             list.add(unit);
@@ -597,18 +618,16 @@ public class DBFacade {
 
     private static void validateJsonUnits(JsonObject jsonSymbol) {
         if (!jsonSymbol.containsKey(FIELD_SYMBOL_UNITS) || jsonSymbol.get(FIELD_SYMBOL_UNITS) == JsonValue.NULL) {
-            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_SYMBOL_UNITS + "' field from a unit.");
+            throw new ServiceResponseFormatNotValid(MISSING + FIELD_SYMBOL_UNITS + "' field from a unit.");
         }
 
         String name = jsonSymbol.getString(FIELD_SYMBOL_UNITS);
         if (!jsonSymbol.containsKey(FIELD_UNITS_CONCEPTS) || jsonSymbol.get(FIELD_UNITS_CONCEPTS) == JsonValue.NULL) {
-            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_UNITS_CONCEPTS + "' field in category '" + name + "'.");
+            throw new ServiceResponseFormatNotValid(MISSING + FIELD_UNITS_CONCEPTS + "' field in category '" + name + "'.");
         }
     }
 
     public static SymbolTable getExistingIndexesFromDB(String serviceUrl, String token) {
-
-        String serviceResponse = handler.sendIndexesRequestToDictionaryService(serviceUrl, token);
         return createIndexTableFromJson(makeExistingIndexesCall(serviceUrl, token));
     }
 
@@ -621,7 +640,7 @@ public class DBFacade {
             return jsonReader.readArray();
 
         } catch (JsonException ex) {
-            throw new ServiceResponseFormatNotValid("Expected an array.", serviceResponse);
+            throw new ServiceResponseFormatNotValid(EXPECTED_AN_ARRAY, serviceResponse);
         } catch (ServiceResponseFormatNotValid ex) {
             ex.setServiceResponse(serviceResponse);
             throw ex;
@@ -652,14 +671,14 @@ public class DBFacade {
 
             String comment = jsonIndex.getString(FIELD_SYMBOL_COMMENT);
             index.setComment(comment);
-            index.setType(SymbolType.Subscript);
+            index.setType(SymbolType.SUBSCRIPT);
 
 
             JsonArray jsonValues = jsonIndex.getJsonArray(FIELD_INDEX_VALUES);
             for (int v = 0; v < jsonValues.size(); v++) {
                 String indexValue = jsonValues.getString(v);
                 Symbol valueSymbol = UtilityFunctions.getSymbolOrCreate(table, indexValue);
-                valueSymbol.setType(SymbolType.Subscript_Value);
+                valueSymbol.setType(SymbolType.SUBSCRIPT_VALUE);
                 index.addDependency(valueSymbol);
             }
 
@@ -668,13 +687,13 @@ public class DBFacade {
 
     private static void validateJsonIndex(JsonObject jsonIndex) {
         if (!jsonIndex.containsKey(FIELD_INDEX_NAME)) {
-            throw new ServiceResponseFormatNotValid("Missing '" + FIELD_INDEX_NAME + "' field from an index.");
+            throw new ServiceResponseFormatNotValid(MISSING + FIELD_INDEX_NAME + "' field from an index.");
         }
 
         String name = jsonIndex.getString(FIELD_INDEX_NAME);
         for (String field : REQUIRED_FIELDS_IN_INDEXES) {
             if (!jsonIndex.containsKey(field)) {
-                throw new ServiceResponseFormatNotValid("Missing '" + field + "' field in the index '" + name + "'.");
+                throw new ServiceResponseFormatNotValid(MISSING + field + "' field in the index '" + name + "'.");
             }
         }
     }
@@ -682,12 +701,12 @@ public class DBFacade {
 
     public static void injectIndexes(String serviceUrl, List<Symbol> rawIndexes, String token) {
 
-        List<Symbol> indexes = rawIndexes.stream().filter(symbol -> symbol.getType() == SymbolType.Subscript).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
+        List<Symbol> indexes = rawIndexes.stream().filter(symbol -> symbol.getType() == SymbolType.SUBSCRIPT).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
 
         JsonArray jsonIndexes = getInjectIndexesJson(indexes);
 
         JsonObjectBuilder jsonToSend = Json.createObjectBuilder();
-        jsonToSend.add("indexes", jsonIndexes);
+        jsonToSend.add(KEY_INDEXES, jsonIndexes);
         handler.injectIndexes(serviceUrl, jsonToSend.build(), token);
     }
 

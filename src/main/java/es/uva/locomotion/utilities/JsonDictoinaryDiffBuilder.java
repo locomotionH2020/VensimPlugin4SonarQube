@@ -1,7 +1,8 @@
 package es.uva.locomotion.utilities;
 
-import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.DataBaseRepresentation;
 import es.uva.locomotion.model.Module;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.category.Category;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
@@ -14,6 +15,9 @@ import java.util.stream.Collectors;
 public class JsonDictoinaryDiffBuilder {
 
 
+    public static final String MISSMATCHES = "missmatches";
+    public static final String NOT_FOUND_IN_DB = "not_found_in_DB";
+    public static final String NOT_FOUND_IN_LOCAL = "not_found_in_local";
     private final JsonArrayBuilder fileBuilder;
 
     public final static String KEY_COMMENT = "comment";
@@ -46,8 +50,8 @@ public class JsonDictoinaryDiffBuilder {
         tableBuilder.add("symbols", symbolTableDiffToJson(table, dbData.getDataBaseSymbols()));
         tableBuilder.add("indexes", indexesTableDiffToJson(table, dbData.getDataBaseSymbols()));
         tableBuilder.add("indexes_values", indexValuesTableDiffToJson(table, dbData.getDataBaseSymbols()));
-        tableBuilder.add("modules", modulesDiffToJson(viewTable.getModules(), dbData.getModules()));
-        tableBuilder.add("categories", categoriesDiffToJson(viewTable.getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories()));
+        tableBuilder.add(KEY_MODULES, modulesDiffToJson(viewTable.getModules(), dbData.getModules()));
+        tableBuilder.add(KEY_CATEGORIES, categoriesDiffToJson(viewTable.getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories()));
 
         fileBuilder.add(tableBuilder);
     }
@@ -57,7 +61,7 @@ public class JsonDictoinaryDiffBuilder {
         JsonObjectBuilder missmatchBuilder = Json.createObjectBuilder();
         JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
         JsonArrayBuilder missingDBBuilder = Json.createArrayBuilder();
-        List<SymbolType> ignore = Arrays.asList(SymbolType.Function, SymbolType.Subscript_Value, SymbolType.Subscript_Value);
+        List<SymbolType> ignore = Arrays.asList(SymbolType.FUNCTION, SymbolType.SUBSCRIPT_VALUE, SymbolType.SUBSCRIPT_VALUE);
         List<Symbol> localSymbols = symbolTable.getSymbols().stream().filter(symbol -> !ignore.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
 
 
@@ -79,9 +83,9 @@ public class JsonDictoinaryDiffBuilder {
         for (Symbol dbsymbol : DBSymbols) {
             missingLocalBuilder.add(dbsymbol.getToken());
         }
-        tableBuilder.add("missmatches", missmatchBuilder);
-        tableBuilder.add("not_found_in_DB", missingDBBuilder);
-        tableBuilder.add("not_found_in_local", missingLocalBuilder);
+        tableBuilder.add(MISSMATCHES, missmatchBuilder);
+        tableBuilder.add(NOT_FOUND_IN_DB, missingDBBuilder);
+        tableBuilder.add(NOT_FOUND_IN_LOCAL, missingLocalBuilder);
         return tableBuilder.build();
     }
 
@@ -91,7 +95,7 @@ public class JsonDictoinaryDiffBuilder {
         JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
         JsonArrayBuilder missingDBBuilder = Json.createArrayBuilder();
         int counter = 1;
-        List<SymbolType> select = Collections.singletonList(SymbolType.Subscript_Value);
+        List<SymbolType> select = Collections.singletonList(SymbolType.SUBSCRIPT_VALUE);
         List<Symbol> localSymbols = symbolTable.getSymbols().stream().filter(symbol -> select.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
 
 
@@ -113,9 +117,9 @@ public class JsonDictoinaryDiffBuilder {
         for (Symbol dbsymbol : DBSymbols) {
             missingLocalBuilder.add(dbsymbol.getToken());
         }
-        tableBuilder.add("missmatches", missmatchBuilder);
-        tableBuilder.add("not_found_in_DB", missingDBBuilder);
-        tableBuilder.add("not_found_in_local", missingLocalBuilder);
+        tableBuilder.add(MISSMATCHES, missmatchBuilder);
+        tableBuilder.add(NOT_FOUND_IN_DB, missingDBBuilder);
+        tableBuilder.add(NOT_FOUND_IN_LOCAL, missingLocalBuilder);
         return tableBuilder.build();
     }
 
@@ -125,7 +129,7 @@ public class JsonDictoinaryDiffBuilder {
         JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
         JsonArrayBuilder missingDBBuilder = Json.createArrayBuilder();
         int counter = 1;
-        List<SymbolType> select = Collections.singletonList(SymbolType.Subscript);
+        List<SymbolType> select = Collections.singletonList(SymbolType.SUBSCRIPT);
         List<Symbol> localSymbols = symbolTable.getSymbols().stream().filter(symbol -> select.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
 
 
@@ -147,53 +151,53 @@ public class JsonDictoinaryDiffBuilder {
         for (Symbol dbsymbol : DBSymbols) {
             missingLocalBuilder.add(dbsymbol.getToken());
         }
-        tableBuilder.add("missmatches", missmatchBuilder);
-        tableBuilder.add("not_found_in_DB", missingDBBuilder);
-        tableBuilder.add("not_found_in_local", missingLocalBuilder);
+        tableBuilder.add(MISSMATCHES, missmatchBuilder);
+        tableBuilder.add(NOT_FOUND_IN_DB, missingDBBuilder);
+        tableBuilder.add(NOT_FOUND_IN_LOCAL, missingLocalBuilder);
         return tableBuilder.build();
     }
 
     private JsonObject symbolDiffToJson(Symbol symbol, Symbol dbSymbol) {
         JsonObjectBuilder symbolBuilder = Json.createObjectBuilder();
 
-        if (symbol.getPrimary_module() != null && !symbol.getPrimary_module().equals(dbSymbol.getPrimary_module())) {
+        if (symbol.getPrimaryModule() != null && !symbol.getPrimaryModule().equals(dbSymbol.getPrimaryModule())) {
             JsonObjectBuilder primaryBuilder = Json.createObjectBuilder();
-            primaryBuilder.add(KEY_LOCAL, symbol.getPrimary_module().getName());
-            primaryBuilder.add(KEY_DICTIONARY, dbSymbol.getPrimary_module().getName());
+            primaryBuilder.add(KEY_LOCAL, symbol.getPrimaryModule().getName());
+            primaryBuilder.add(KEY_DICTIONARY, dbSymbol.getPrimaryModule().getName());
             symbolBuilder.add(KEY_PRIMARY_VIEW, primaryBuilder);
         }
 
-        if (!symbol.getShadow_module().equals(dbSymbol.getShadow_module())) {
+        if (!symbol.getShadowModule().equals(dbSymbol.getShadowModule())) {
 
             JsonObjectBuilder shadowBuilder = Json.createObjectBuilder();
 
             JsonArrayBuilder shadowLocalBuilder = Json.createArrayBuilder();
-            for (Module view : symbol.getShadow_module())
+            for (Module view : symbol.getShadowModule())
                 shadowLocalBuilder.add(view.getName());
             shadowBuilder.add(KEY_LOCAL, shadowLocalBuilder);
 
             JsonArrayBuilder shadowDBBuilder = Json.createArrayBuilder();
-            for (Module view : symbol.getShadow_module())
+            for (Module view : symbol.getShadowModule())
                 shadowDBBuilder.add(view.getName());
             shadowBuilder.add(KEY_DICTIONARY, shadowDBBuilder);
 
             symbolBuilder.add(KEY_SHADOW_VIEWS, shadowBuilder);
         }
-        if (!symbol.getShadow_module().equals(dbSymbol.getShadow_module())) {
+        if (!symbol.getShadowModule().equals(dbSymbol.getShadowModule())) {
 
             JsonObjectBuilder categoryBuilder = Json.createObjectBuilder();
             categoryBuilder.add(KEY_LOCAL, symbol.getCategory().getName());
             categoryBuilder.add(KEY_DICTIONARY, dbSymbol.getCategory().getName());
             symbolBuilder.add(KEY_CATEGORY, categoryBuilder);
         }
-        if (!symbol.getShadow_module().equals(dbSymbol.getShadow_module())) {
+        if (!symbol.getShadowModule().equals(dbSymbol.getShadowModule())) {
 
             JsonObjectBuilder unitsBuilder = Json.createObjectBuilder();
             unitsBuilder.add(KEY_LOCAL, symbol.getUnits());
             unitsBuilder.add(KEY_DICTIONARY, dbSymbol.getUnits());
             symbolBuilder.add(KEY_UNITS, unitsBuilder);
         }
-        if (!symbol.getShadow_module().equals(dbSymbol.getShadow_module())) {
+        if (!symbol.getShadowModule().equals(dbSymbol.getShadowModule())) {
 
             JsonObjectBuilder commentBuilder = Json.createObjectBuilder();
             commentBuilder.add(KEY_LOCAL, symbol.getComment());
@@ -222,8 +226,8 @@ public class JsonDictoinaryDiffBuilder {
             missingLocalBuilder.add(dbModule.getName());
         }
 
-        tableBuilder.add("not_found_in_DB", missingDBBuilder);
-        tableBuilder.add("not_found_in_local", missingLocalBuilder);
+        tableBuilder.add(NOT_FOUND_IN_DB, missingDBBuilder);
+        tableBuilder.add(NOT_FOUND_IN_LOCAL, missingLocalBuilder);
         return tableBuilder.build();
     }
 
@@ -262,9 +266,9 @@ public class JsonDictoinaryDiffBuilder {
             missingLocalBuilder.add(dbCategory.getWholeName());
         }
 
-        tableBuilder.add("missmatches", missmatchBuilder);
-        tableBuilder.add("not_found_in_DB", missingDBBuilder);
-        tableBuilder.add("not_found_in_local", missingLocalBuilder);
+        tableBuilder.add(MISSMATCHES, missmatchBuilder);
+        tableBuilder.add(NOT_FOUND_IN_DB, missingDBBuilder);
+        tableBuilder.add(NOT_FOUND_IN_LOCAL, missingLocalBuilder);
 
         return tableBuilder.build();
     }
@@ -282,7 +286,6 @@ public class JsonDictoinaryDiffBuilder {
         JsonObjectBuilder subcategoryBuilder = Json.createObjectBuilder();
 
         if (!category.getSubcategories().equals(dbCategory.getSubcategories())) {
-            JsonObjectBuilder superBuilder = Json.createObjectBuilder();
 
             JsonArrayBuilder subcategoriesLocalBuilder = Json.createArrayBuilder();
             for (Category subcategory : category.getSubcategories())

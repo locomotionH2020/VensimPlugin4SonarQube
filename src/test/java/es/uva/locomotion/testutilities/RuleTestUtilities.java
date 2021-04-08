@@ -2,12 +2,12 @@ package es.uva.locomotion.testutilities;
 
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.ModelParser;
-import es.uva.locomotion.service.ServiceController;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.plugin.VensimRuleRepository;
 import es.uva.locomotion.plugin.VensimScanner;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.rules.VensimCheck;
+import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.utilities.OutputFilesGenerator;
 import org.mockito.Mockito;
 import org.sonar.api.batch.rule.ActiveRules;
@@ -15,10 +15,8 @@ import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
 import org.sonar.api.batch.rule.internal.NewActiveRule;
-
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.rule.RuleKey;
-
 
 import java.io.File;
 import java.nio.file.Path;
@@ -26,10 +24,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import static org.junit.Assert.*;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getParseTreeFromString;
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getSymbolTableFromString;
+import static org.junit.Assert.*;
 
 public class RuleTestUtilities {
 
