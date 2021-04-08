@@ -18,7 +18,7 @@ import java.util.List;
 
 @Rule(key = EmbeddedLookupCheck.CHECK_KEY, name = EmbeddedLookupCheck.NAME, description = EmbeddedLookupCheck.HTML_DESCRIPTION)
 public class EmbeddedLookupCheck extends AbstractVensimCheck {
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "lookup-embedded";
     public static final String NAME = "EmbeddedLookupCheck";
@@ -50,7 +50,7 @@ public class EmbeddedLookupCheck extends AbstractVensimCheck {
         } catch (NumberFormatException ex) {
             // Empty catch block so that the error is logged if 'selectedRepetitions' is < 1 or if it isn't a number.
         }
-        LOG.unique("The rule " + NAME + " has an invalid configuration: The selected minimum size must be a number greater than 0.",
+        logger.unique("The rule " + NAME + " has an invalid configuration: The selected minimum size must be a number greater than 0.",
                 LoggingLevel.ERROR);
         return Integer.parseInt(DEFAULT_SIZE);
 

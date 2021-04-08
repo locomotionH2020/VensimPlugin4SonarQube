@@ -35,7 +35,7 @@ import static es.uva.locomotion.utilities.Constants.*;
 
 public class VensimScanner {
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     private final SensorContext context;
     private final Checks<VensimCheck> checks;
@@ -61,10 +61,9 @@ public class VensimScanner {
             try {
                 scanFile(vensimFile);
             } catch (Exception e) {
-                e.printStackTrace();
-                LOG.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.toString());
+                logger.error("Unable to analyze file '" + vensimFile.toString() + "' Error: " + e.toString());
                 for (StackTraceElement ele : e.getStackTrace()) {
-                    LOG.error(ele.toString());
+                    logger.error(ele.toString());
                 }
             }
         }
@@ -76,8 +75,8 @@ public class VensimScanner {
     }
 
 
-    protected ModelParser.FileContext getParseTree(String file_content) {
-        ModelLexer lexer = new ModelLexer(CharStreams.fromString(file_content));
+    protected ModelParser.FileContext getParseTree(String fileContent) {
+        ModelLexer lexer = new ModelLexer(CharStreams.fromString(fileContent));
         MultiChannelTokenStream tokens = new MultiChannelTokenStream(lexer);
 
         ModelParser parser = new ModelParser(tokens);
@@ -119,9 +118,9 @@ public class VensimScanner {
                 inyectToDictionary(table, viewTable, dbData);
             }
         } catch (IOException e) {
-            LOG.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
+            logger.error("Unable to analyze file '" + inputFile.filename() + "'. Error: " + e.getMessage());
         } catch (ParseCancellationException e) {
-            LOG.error("Unable to parse the file '" + inputFile.filename() + "'. Error: " + e.getLocalizedMessage());
+            logger.error("Unable to parse the file '" + inputFile.filename() + "'. Error: " + e.getLocalizedMessage());
         }
 
     }
@@ -130,13 +129,13 @@ public class VensimScanner {
         String moduleSeparator = context.config().get(MODULE_SEPARATOR).orElse("");
         String categorySeparator = context.config().get(CATEGORY_SEPARATOR).orElse("");
 
-        if (!moduleSeparator.isEmpty() && dbData.getModules() != null) {
+        if (!moduleSeparator.isEmpty() && !dbData.getModules().isEmpty()) {
             serviceController.injectNewModules(new HashSet<>(viewTable.getModules()), dbData.getModules());
             if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
                 serviceController.injectNewCategories(viewTable.getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
         }
-        if (dbData.getDataBaseSymbols() != null)
-            serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), new ArrayList<>(viewTable.getModules()), dbData.getDataBaseSymbols());
+        if (!dbData.getDataBaseSymbolTable().isEmpty())
+            serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), new ArrayList<>(viewTable.getModules()), dbData.getDataBaseSymbolTable());
     }
 
     private void filterSymbols(String viewPrefix, String moduleName, SymbolTable table) {
@@ -155,7 +154,7 @@ public class VensimScanner {
         ViewTable viewTable;
         if (!viewPrefix.isEmpty()) { //Support for viewPrefix
             viewTable = ViewTableUtility.getViewTable(table, root);
-            LOG.warn("vensim.view.prefix is deprecated, please use: vensim.view.module.name and vensim.view.module.separator");
+            logger.warn("vensim.view.prefix is deprecated, please use: vensim.view.module.name and vensim.view.module.separator");
         } else if (!moduleSeparator.isEmpty()) {
             if (!categorySeparator.isEmpty()) {
                 viewTable = ViewTableUtility.getViewTable(table, root, moduleSeparator, categorySeparator);
@@ -164,7 +163,7 @@ public class VensimScanner {
             }
         } else {
             if (!categorySeparator.isEmpty()) {
-                LOG.warn("vensim.view.category.separator is set, but not vensim.view.module.separator, ignoring category separator");
+                logger.warn("vensim.view.category.separator is set, but not vensim.view.module.separator, ignoring category separator");
             }
             viewTable = ViewTableUtility.getViewTable(table, root);
         }

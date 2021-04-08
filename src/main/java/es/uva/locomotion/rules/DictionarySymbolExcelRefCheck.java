@@ -16,7 +16,7 @@ import java.util.List;
 
 @Rule(key = DictionarySymbolExcelRefCheck.CHECK_KEY, name = DictionarySymbolExcelRefCheck.NAME, description = DictionarySymbolExcelRefCheck.HTML_DESCRIPTION)
 public class DictionarySymbolExcelRefCheck extends AbstractVensimCheck {
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "dictionary-symbol-excel-missmatch";
     public static final String NAME = "DictionarySymbolExcelRefCheck";

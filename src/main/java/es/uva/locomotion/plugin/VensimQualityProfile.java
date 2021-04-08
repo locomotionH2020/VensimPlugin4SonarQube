@@ -12,7 +12,7 @@ public final class VensimQualityProfile implements BuiltInQualityProfilesDefinit
         NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile("Vensim Rules", VensimLanguage.KEY);
         profile.setDefault(true);
 
-        String REPO_KEY = VensimRuleRepository.REPOSITORY_KEY;
+        final String REPO_KEY = VensimRuleRepository.REPOSITORY_KEY;
 
         profile.activateRule(REPO_KEY, SubscriptNameCheck.CHECK_KEY);
         profile.activateRule(REPO_KEY, SubscriptCopyNameCheck.CHECK_KEY);

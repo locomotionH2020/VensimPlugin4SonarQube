@@ -27,7 +27,7 @@ public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
             "</p>";
     public static final String NAME = "DictionaryIndextMismatch" ;
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     @Override
     public void scan(VensimVisitorContext context) {
@@ -69,7 +69,7 @@ public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
         try{
             return !tryToMatchIndexes(foundIndexes, dbIndexes);
         }catch (IllegalStateException ex){
-            LOG.info("The symbol '" + foundSymbol.getToken() + "' is indexed by a subscript and a subscript value in the same column.");
+            logger.info("The symbol '" + foundSymbol.getToken() + "' is indexed by a subscript and a subscript value in the same column.");
             return false;
         }
 

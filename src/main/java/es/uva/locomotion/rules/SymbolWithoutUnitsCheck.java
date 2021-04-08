@@ -31,7 +31,7 @@ public class SymbolWithoutUnitsCheck extends AbstractVensimCheck{
 
     public static final String NAME = "SymbolWithoutUnits" ;
 
-    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION,SymbolType.SUBSCRIPT_VALUE,SymbolType.SUBSCRIPT);
+    private static final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION,SymbolType.SUBSCRIPT_VALUE,SymbolType.SUBSCRIPT);
 
     @Override
     public void scan(VensimVisitorContext context) {

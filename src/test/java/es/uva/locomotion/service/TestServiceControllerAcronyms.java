@@ -1,6 +1,7 @@
 package es.uva.locomotion.service;
 
 import es.uva.locomotion.model.AcronymsList;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.utilities.exceptions.ConnectionFailedException;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
@@ -45,11 +46,11 @@ public class TestServiceControllerAcronyms {
     public void testGetAcronymsDictionaryInvalidServiceUrlMissingProtocol() {
         ServiceController controller = getAuthenticatedServiceController("www.myextremelyepicservice.com");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new AcronymsList(), actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.ERROR);
     }
@@ -58,12 +59,12 @@ public class TestServiceControllerAcronyms {
     public void testGetAcronymsDictionaryInvalidServiceUrlInvalidFormat() {
         ServiceController controller = getAuthenticatedServiceController("http://\\$*^");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new AcronymsList(), actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.ERROR);
     }
@@ -72,11 +73,11 @@ public class TestServiceControllerAcronyms {
     public void testGetAcronymsDictionaryInvalidServiceUrlInvalidProtocol() {
         ServiceController controller = getAuthenticatedServiceController("smtp://address:password@coolmail.com");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new AcronymsList(), actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.ERROR);
     }
@@ -85,11 +86,11 @@ public class TestServiceControllerAcronyms {
     public void testGetAcronymsDictionaryMissingServiceEmptyUrl() {
         ServiceController controller = getAuthenticatedServiceController("");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new AcronymsList(), actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.INFO);
     }
@@ -98,11 +99,11 @@ public class TestServiceControllerAcronyms {
     public void testGetAcronymsDictionaryMissingServiceNullUrl() {
         ServiceController controller = getAuthenticatedServiceController(null);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new AcronymsList(), actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.INFO);
     }
@@ -115,11 +116,11 @@ public class TestServiceControllerAcronyms {
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new AcronymsList(), actualValue);
         verify(logger).unique("The dictionary service was unreachable.\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.ERROR);
 
@@ -130,10 +131,10 @@ public class TestServiceControllerAcronyms {
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("[1,2,3]");
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new AcronymsList(), actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected object inside array.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \nVariable name check may cause false positives without acronyms.");
 
@@ -146,11 +147,11 @@ public class TestServiceControllerAcronyms {
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new AcronymsList(), actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected an array.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Variable name check may cause false positives without acronyms.");
@@ -163,11 +164,11 @@ public class TestServiceControllerAcronyms {
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new AcronymsList(), actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Missing 'name' field.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Variable name check may cause false positives without acronyms.");
@@ -180,7 +181,7 @@ public class TestServiceControllerAcronyms {
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         controller.getAcronymsFromDb();
         controller.getAcronymsFromDb();

@@ -37,7 +37,7 @@ public class TestVensimScanner {
     public void testScannerLogMessageParseException() throws Exception {
 
         VensimLogger logger = mock(VensimLogger.class);
-        VensimScanner.LOG = logger;
+        VensimScanner.logger = logger;
         InputFile inputFile = Mockito.mock(InputFile.class);
         when(inputFile.contents()).thenReturn("This isn't a vensim model");
         when(inputFile.filename()).thenReturn("notAVensimModelParser.mdl");
@@ -91,7 +91,7 @@ public class TestVensimScanner {
 
 
         OutputFilesGenerator builder = Mockito.mock(OutputFilesGenerator.class);
-        VensimScanner.LOG = logger;
+        VensimScanner.logger = logger;
         InputFile fileBefore = Mockito.mock(InputFile.class);
         InputFile wrongFile = Mockito.mock(InputFile.class);
         InputFile fileAfter = Mockito.mock(InputFile.class);

@@ -15,7 +15,7 @@ public class ViewTableUtility {
         throw new IllegalStateException("Utility class");
     }
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     public static ViewTable getViewTable(SymbolTable table, ModelParser.FileContext context, String moduleSeparator, String categorySeparator) {
         ViewTableVisitor generator = ViewTableVisitor.createViewTableVisitor(moduleSeparator, categorySeparator);

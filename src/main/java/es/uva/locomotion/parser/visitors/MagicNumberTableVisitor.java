@@ -15,7 +15,7 @@ import static es.uva.locomotion.utilities.UtilityFunctions.stringToInt;
 
 public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     private NumberTable numberTable;
 
@@ -35,9 +35,9 @@ public class MagicNumberTableVisitor extends ModelParserBaseVisitor<Void> {
     public Void visitLhs(ModelParser.LhsContext ctx) {
 
         if (symbols == null) {
-            LOG.unique("Symbol table unassigned in MagicNumberVisitor", LoggingLevel.INFO);
+            logger.unique("Symbol table unassigned in MagicNumberVisitor", LoggingLevel.INFO);
         } else if (!symbols.hasSymbol(ctx.Id().getText())) {
-            LOG.error("Found symbol \"" + ctx.Id().getText() + "\" that is not in the symbol table");
+            logger.error("Found symbol \"" + ctx.Id().getText() + "\" that is not in the symbol table");
 
         } else {
             Symbol symbol = symbols.getSymbol(ctx.Id().getText());

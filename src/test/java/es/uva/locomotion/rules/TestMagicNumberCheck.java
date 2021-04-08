@@ -519,7 +519,7 @@ public class TestMagicNumberCheck {
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        MagicNumberCheck.LOG = logger;
+        MagicNumberCheck.logger = logger;
 
         check.repetitions =  "F";
         check.scan(context);
@@ -538,7 +538,7 @@ public class TestMagicNumberCheck {
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        MagicNumberCheck.LOG = logger;
+        MagicNumberCheck.logger = logger;
 
         check.repetitions =  "0";
         check.scan(context);
@@ -558,7 +558,7 @@ public class TestMagicNumberCheck {
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        MagicNumberCheck.LOG = logger;
+        MagicNumberCheck.logger = logger;
 
         check.repetitions =  "-1";
         check.scan(context);
@@ -577,7 +577,7 @@ public class TestMagicNumberCheck {
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        MagicNumberCheck.LOG = logger;
+        MagicNumberCheck.logger = logger;
 
         check.repetitions =  "-1";
         check.scan(context);

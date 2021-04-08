@@ -51,7 +51,7 @@ public class VensimVisitorContext {
 
     public SymbolTable getDbSymbolTable(){
 
-        return dbData != null ? dbData.getDataBaseSymbols() : null;
+        return dbData != null ? dbData.getDataBaseSymbolTable() : null;
     }
     public AcronymsList getDbAcronyms(){
         return dbData != null ? dbData.getAcronyms() : null;

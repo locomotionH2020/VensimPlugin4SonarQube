@@ -24,7 +24,7 @@ public class Constants {
 
     public static final String DICTIONARY_SERVICE_PARAMETER = "vensim.dictionary.service";
     public static final String DICTIONARY_USERNAME_PARAMETER =  "vensim.dictionary.username";
-    public static final String DICTIONARY_PASSWORD_PARAMETER = "vensim.dictionary.password";
+    public static final String DICTIONARY_CREDENTIAL_PARAMETER = "vensim.dictionary.password";
     public static final String DICTIONARY_LOG_SERVER_COMMUNICATIONS = "vensim.log.serverMessages";
     public static final String LOG_IN_FILE = "vensim.log.file";
     public static final String VIEW_PREFIX = "vensim.view.prefix";

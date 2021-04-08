@@ -39,8 +39,8 @@ public class DBFacade {
     public static final String FIELD_SYMBOL_UNITS = "unit";
     public static final String FIELD_UNITS_CONCEPTS = "concepts";
 
-    public static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_NAME, FIELD_SYMBOL_TYPE_RECIEVE, FIELD_SYMBOL_COMMENT, FIELD_SYMBOL_CATEGORY, FIELD_SYMBOL_INDEXES, FIELD_SYMBOL_MODULES, FIELD_SYMBOL_UNITS);
-    public static final List<String> REQUIRED_FIELDS_IN_INDEXES = List.of(FIELD_INDEX_NAME, FIELD_INDEX_VALUES, FIELD_SYMBOL_COMMENT);
+    private static final List<String> REQUIRED_FIELDS_IN_SYMBOL = List.of(FIELD_NAME, FIELD_SYMBOL_TYPE_RECIEVE, FIELD_SYMBOL_COMMENT, FIELD_SYMBOL_CATEGORY, FIELD_SYMBOL_INDEXES, FIELD_SYMBOL_MODULES, FIELD_SYMBOL_UNITS);
+    private static final List<String> REQUIRED_FIELDS_IN_INDEXES = List.of(FIELD_INDEX_NAME, FIELD_INDEX_VALUES, FIELD_SYMBOL_COMMENT);
     private static final String FIELD_SYMBOL_MODULES_MAIN = "main";
     private static final String FIELD_SYMBOL_MODULES_SECONDARY = "secondary";
     private static final String FIELD_CATEGORY_LEVEL = "level";
@@ -61,7 +61,7 @@ public class DBFacade {
 
     protected static ServiceConnectionHandler handler = new ServiceConnectionHandler();
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     private DBFacade() {
         throw new IllegalStateException("Utility class");
@@ -197,7 +197,7 @@ public class DBFacade {
             String name = jsonSymbol.getString(FIELD_NAME);
 
             if (table.hasSymbol(name)) {
-                LOG.info("Received duplicated symbol '" + name + FROM_THE_DICTIONARY_SERVICE);
+                logger.info("Received duplicated symbol '" + name + FROM_THE_DICTIONARY_SERVICE);
                 continue;
             }
 
@@ -402,7 +402,7 @@ public class DBFacade {
         String serviceResponse = handler.sendModuleRequestToDictionaryService(serviceUrl, token);
 
         if (serviceResponse == null)
-            return null;
+            return Collections.emptySet();
 
         try (JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse))) {
 
@@ -423,7 +423,6 @@ public class DBFacade {
 
     private static Set<String> createModulesListFromJson(JsonArray modulesFound) {
         Set<String> list = new HashSet<>();
-        JsonObject acronym;
         for (JsonValue jsonValue : modulesFound) {
             if (jsonValue.getValueType() != JsonValue.ValueType.STRING) {
                 throw new ServiceResponseFormatNotValid("Format error '" + jsonValue + "' is not a module name.");
@@ -431,7 +430,7 @@ public class DBFacade {
             String module = jsonValue.toString().replaceAll("\"", "");
 
             if (list.contains(module)) {
-                LOG.warn("Received duplicated module '" + module + FROM_THE_DICTIONARY_SERVICE);
+                logger.warn("Received duplicated module '" + module + FROM_THE_DICTIONARY_SERVICE);
             }
             list.add(module);
 
@@ -451,15 +450,15 @@ public class DBFacade {
                 jsonModulesBuilder.add(st);
                 alreadyAdded.add(st);
             } else {
-                LOG.warn("Received duplicated module '" + st + "' to inject to the dictionary service.");
+                logger.warn("Received duplicated module '" + st + "' to inject to the dictionary service.");
             }
         }
 
         jsonTosend.add(FIELD_SYMBOL_MODULES, jsonModulesBuilder);
-        if (alreadyAdded.size() > 0) {
+        if (!alreadyAdded.isEmpty()) {
             handler.injectModules(serviceUrl, jsonTosend.build(), token);
         } else {
-            LOG.warn("Module list to inject is empty.");
+            logger.warn("Module list to inject is empty.");
         }
     }
 
@@ -495,21 +494,21 @@ public class DBFacade {
 
             name = jsonCategory.getString(FIELD_NAME);
             if (categoryMap.contains(name)) {
-                LOG.info("Received duplicated category '" + name + FROM_THE_DICTIONARY_SERVICE);
+                logger.info("Received duplicated category '" + name + FROM_THE_DICTIONARY_SERVICE);
                 continue;
             }
             level = jsonCategory.getInt(FIELD_CATEGORY_LEVEL);
 
 
             if (level == 2) { //Subcategory
-                String super_categoryName;
-                super_categoryName = jsonCategory.getString(FIELD_CATEGORY_SUPER_CATEGORY);
+                String superCategoryName;
+                superCategoryName = jsonCategory.getString(FIELD_CATEGORY_SUPER_CATEGORY);
 
-                if (!categoryMap.contains(super_categoryName)) {
-                    throw new ServiceResponseFormatNotValid("'" + name + "' father's '" + super_categoryName + "' does not exists or it is a subcategory.");
+                if (!categoryMap.contains(superCategoryName)) {
+                    throw new ServiceResponseFormatNotValid("'" + name + "' father's '" + superCategoryName + "' does not exists or it is a subcategory.");
                 }
-                Category super_category = categoryMap.createOrSelectCategory(super_categoryName);
-                categoryMap.addSubcategoryTo(super_category, name);
+                Category superCategory = categoryMap.createOrSelectCategory(superCategoryName);
+                categoryMap.addSubcategoryTo(superCategory, name);
 
             } else { //Category
                 categoryMap.createOrSelectCategory(name);
@@ -574,7 +573,7 @@ public class DBFacade {
         String serviceResponse = handler.sendUnitsRequestToDictionaryService(serviceUrl, token);
 
         if (serviceResponse == null)
-            return null;
+            return new HashSet<>();
 
         try (JsonReader jsonReader = Json.createReader(new StringReader(serviceResponse))) {
 
@@ -596,7 +595,6 @@ public class DBFacade {
     private static Set<String> createUnitsListFromJson(JsonArray unitsFound) {
 
         Set<String> list = new HashSet<>();
-        JsonObject acronym;
         for (int s = 0; s < unitsFound.size(); s++) {
             if (unitsFound.get(s).getValueType() != JsonValue.ValueType.OBJECT) {
                 throw new ServiceResponseFormatNotValid("Recived '" + unitsFound.get(s) + "' that is not a unit json object.");
@@ -607,7 +605,7 @@ public class DBFacade {
 
             unit = jsonUnit.getString(FIELD_SYMBOL_UNITS);
             if (list.contains(unit)) {
-                LOG.warn("Received duplicated unit '" + unit + FROM_THE_DICTIONARY_SERVICE); //TODO quitar, no son únicas.
+                logger.warn("Received duplicated unit '" + unit + FROM_THE_DICTIONARY_SERVICE); //TODO quitar, no son únicas.
                 continue;
             }
             list.add(unit);

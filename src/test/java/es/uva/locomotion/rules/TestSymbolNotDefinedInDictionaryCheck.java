@@ -60,7 +60,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
     public void testDbHasExtraSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         Symbol symbol = new Symbol("foo");
         dbTable.addSymbol(symbol);
 
@@ -77,7 +77,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
     public void testCheckWithMultipleSymbolsWithoutIssues() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
         addSymbolInLines(parsedTable, "var1", SymbolType.CONSTANT, 1, 2, 3);
@@ -101,7 +101,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
     public void testCheckWithMultipleSymbolsWithIssues() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
         dbTable.addSymbol(new Symbol("var1"));
@@ -144,7 +144,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
     public void testRuleIgnoresFunctions() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
 
@@ -174,7 +174,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
     public void testControllerIgnoresDefaultSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
 
@@ -207,7 +207,7 @@ public class TestSymbolNotDefinedInDictionaryCheck {
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         dbTable.addSymbol(new Symbol("valid"));
 
 

@@ -1,5 +1,6 @@
 package es.uva.locomotion.service;
 
+import es.uva.locomotion.model.AcronymsList;
 import es.uva.locomotion.model.category.Category;
 import es.uva.locomotion.model.category.CategoryMap;
 import es.uva.locomotion.testutilities.ServiceTestUtilities;
@@ -49,11 +50,11 @@ public class TestServiceControllerCategories {
     public void testGetCategoriesDictionaryInvalidServiceUrlMissingProtocol() {
         ServiceController controller = getAuthenticatedServiceController("www.falseservice.com");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new CategoryMap(), actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.ERROR);
     }
@@ -62,12 +63,12 @@ public class TestServiceControllerCategories {
     public void testGetCategoriesDictionaryInvalidServiceUrlInvalidFormat() {
         ServiceController controller = getAuthenticatedServiceController("http://\\$*^");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new CategoryMap(), actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.ERROR);
     }
@@ -76,11 +77,11 @@ public class TestServiceControllerCategories {
     public void testGetCategoriesDictionaryInvalidServiceUrlInvalidProtocol() {
         ServiceController controller = getAuthenticatedServiceController("smtp://address:password@coolmail.com");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new CategoryMap(), actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.ERROR);
     }
@@ -89,11 +90,11 @@ public class TestServiceControllerCategories {
     public void testGetCategoriesDictionaryMissingServiceEmptyUrl() {
         ServiceController controller = getAuthenticatedServiceController("");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new CategoryMap(), actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.INFO);
     }
@@ -102,11 +103,11 @@ public class TestServiceControllerCategories {
     public void testGetCategoriesDictionaryMissingServiceNullUrl() {
         ServiceController controller = getAuthenticatedServiceController(null);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new CategoryMap(), actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.INFO);
     }
@@ -119,11 +120,11 @@ public class TestServiceControllerCategories {
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new CategoryMap(), actualValue);
         verify(logger).unique("The dictionary service was unreachable.\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.ERROR);
 
@@ -134,10 +135,10 @@ public class TestServiceControllerCategories {
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{'name':'Juan'}");
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new CategoryMap(), actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected an array. Dictionary response: {'name':'Juan'}.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new categories can't be done without the categories from the dictionary.");
@@ -151,11 +152,11 @@ public class TestServiceControllerCategories {
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertNull(actualValue);
+        Assert.assertEquals(new CategoryMap(), actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Missing 'name' field from a category. Dictionary response: [{\"category\":\"foo\"}].\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new categories can't be done without the categories from the dictionary.");
@@ -168,7 +169,7 @@ public class TestServiceControllerCategories {
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         controller.getCategoriesFromDb();
         controller.getCategoriesFromDb();
@@ -191,7 +192,7 @@ public class TestServiceControllerCategories {
     public void testInjectNewCategoriesNullDbCategoryList() {
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
 
         CategoryMap list = new CategoryMap();
@@ -209,7 +210,7 @@ public class TestServiceControllerCategories {
     public void testInjectNewCategoriesOnlyIncludesNewAndValidCategories() {
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap foundList = new CategoryMap();
 
@@ -245,7 +246,7 @@ public class TestServiceControllerCategories {
     public void testInjectNewCategoriesNoneInjected() {
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns("{}");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap foundList = new CategoryMap();
 
@@ -267,7 +268,7 @@ public class TestServiceControllerCategories {
     @Test
     public void testInjectNewCategoriesEmptyService() {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         ServiceController controller = getAuthenticatedServiceController("");
 
@@ -284,7 +285,7 @@ public class TestServiceControllerCategories {
     @Test
     public void testInjectNewCategoriesNullService() {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         ServiceController controller = getAuthenticatedServiceController(null);
 
@@ -305,7 +306,7 @@ public class TestServiceControllerCategories {
 
         ServiceController controller = getAuthenticatedServiceController("http://localhost");
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         CategoryMap foundList = new CategoryMap();
         Category c1 = foundList.createOrSelectCategory("Category_1");
@@ -320,7 +321,7 @@ public class TestServiceControllerCategories {
     @Test
     public void testInjectNewCategoriesMissingServiceProtocol() {
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        ServiceController.LOG = logger;
+        ServiceController.logger = logger;
 
         ServiceController controller = getAuthenticatedServiceController("www.google.com");
 

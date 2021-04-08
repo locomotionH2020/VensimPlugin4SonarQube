@@ -26,7 +26,7 @@ public class TestDictionaryTypeMismatchCheck {
     public void testIssue() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
         GeneralTestUtilities.addSymbolInLines(dbTable, "var", SymbolType.SUBSCRIPT);
@@ -52,7 +52,7 @@ public class TestDictionaryTypeMismatchCheck {
     public void testIssueInDifferentSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
         GeneralTestUtilities.addSymbolInLines(dbTable, "var", SymbolType.VARIABLE);
@@ -120,7 +120,7 @@ public class TestDictionaryTypeMismatchCheck {
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         dbTable.addSymbol(new Symbol("var", SymbolType.REALITY_CHECK));
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
@@ -147,7 +147,7 @@ public class TestDictionaryTypeMismatchCheck {
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
 
         addSymbolInLines(dbTable, "function", SymbolType.VARIABLE);
         addSymbolInLines(dbTable, "constant", SymbolType.VARIABLE);
@@ -171,7 +171,7 @@ public class TestDictionaryTypeMismatchCheck {
     public void testRuleIgnoresDefaultSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
 
@@ -203,7 +203,7 @@ public class TestDictionaryTypeMismatchCheck {
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         dbTable.addSymbol(new Symbol("var", SymbolType.REALITY_CHECK));
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);

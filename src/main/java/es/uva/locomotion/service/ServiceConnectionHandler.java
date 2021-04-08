@@ -15,7 +15,7 @@ import java.net.http.HttpResponse;
 
 public class ServiceConnectionHandler { //TODO eso podría ser solo dos funciones casi
 
-    protected final VensimLogger LOG = VensimLogger.getInstance();
+    protected final VensimLogger logger = VensimLogger.getInstance();
     protected HttpClient client;
 
     public ServiceConnectionHandler() {
@@ -41,7 +41,7 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
         try {
             url = URI.create(serviceUrl);
             url = url.resolve(service);
-            LOG.serverInfo("Sending POST request to: " + url.toString() + " with data: \n" + data);
+            logger.serverInfo("Sending POST request to: " + url.toString() + " with data: \n" + data);
             requestBuilder.uri(url);
         } catch (IllegalArgumentException ex) {
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
@@ -67,7 +67,7 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
         try {
             url = URI.create(serviceUrl);
             url = url.resolve(service);
-            LOG.serverInfo("Sending GET request to: " + url.toString());
+            logger.serverInfo("Sending GET request to: " + url.toString());
             requestBuilder.uri(url);
         } catch (IllegalArgumentException ex) {
             throw new InvalidServiceUrlException("The format of the serviceUrl is invalid or isn't http/https");
@@ -82,18 +82,18 @@ public class ServiceConnectionHandler { //TODO eso podría ser solo dos funcione
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             String responseBody = response.body();
-            LOG.serverInfo("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
+            logger.serverInfo("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
             if (response.statusCode() == HttpURLConnection.HTTP_OK)
                 return responseBody;
             else {
-                LOG.serverError("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
+                logger.serverError("The response of the server to the request to " + url.toString() + " was HTTP" + +response.statusCode() + ": \n" + responseBody);
                 throw new ConnectionFailedException(new IllegalArgumentException("The status code of the response to " + url.toString() + " was: " + response.statusCode()));
             }
         } catch (IOException e) {
-            LOG.serverInfo("The connection failed: " + e.getMessage());
+            logger.serverInfo("The connection failed: " + e.getMessage());
             throw new ConnectionFailedException(e);
         } catch (InterruptedException e) {
-            LOG.serverInfo("Interrupted: " + e.getMessage());
+            logger.serverInfo("Interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
             throw new ConnectionFailedException(e);
         }

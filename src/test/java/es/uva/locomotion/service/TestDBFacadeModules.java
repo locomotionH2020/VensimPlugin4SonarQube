@@ -99,7 +99,7 @@ public class TestDBFacadeModules {
 
         String jsonDbList = "{\"modules\":[\"Module\",\"Another\",\"Module\"]}";
         VensimLogger logger = mock(VensimLogger.class);
-        DBFacade.LOG = logger;
+        DBFacade.logger = logger;
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
 
@@ -182,7 +182,7 @@ public class TestDBFacadeModules {
         ServiceConnectionHandler handler = Mockito.mock(ServiceConnectionHandler.class);
         DBFacade.handler = handler;
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        DBFacade.LOG = logger;
+        DBFacade.logger = logger;
 
         List<String> modules = new ArrayList<>();
         modules.add("Module1");
@@ -202,7 +202,7 @@ public class TestDBFacadeModules {
         ServiceConnectionHandler handler = Mockito.mock(ServiceConnectionHandler.class);
         DBFacade.handler = handler;
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        DBFacade.LOG = logger;
+        DBFacade.logger = logger;
 
         List<String> modules = new ArrayList<>();
 

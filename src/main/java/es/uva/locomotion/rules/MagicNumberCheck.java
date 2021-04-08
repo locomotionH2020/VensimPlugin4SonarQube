@@ -46,7 +46,7 @@ public class MagicNumberCheck extends AbstractVensimCheck {
 
     public static final String DEFAULT_REPETITIONS = "3";
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     @RuleProperty(
             key = "minimum-repetitions",
@@ -103,7 +103,7 @@ public class MagicNumberCheck extends AbstractVensimCheck {
         }catch (NumberFormatException ex){
             // Empty catch block so that the error is logged if 'selectedRepetitions' is < 1 or if it isn't a number.
         }
-        LOG.unique( "The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 0.",
+        logger.unique( "The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 0.",
                 LoggingLevel.ERROR);
         return Integer.parseInt(DEFAULT_REPETITIONS);
 

@@ -101,7 +101,7 @@ public class TestDBFacadeUnits {
 
         String jsonDbList = "[{\"concepts\":\"Primary Energy\",\"id\":1,\"unit\":\"EJ\"},{\"concepts\":\"Electricity\",\"id\":2,\"unit\":\"TWh\"},{\"concepts\":\"Primary Energy\",\"id\":1,\"unit\":\"EJ\"}]";
         VensimLogger logger = mock(VensimLogger.class);
-        DBFacade.LOG = logger;
+        DBFacade.logger = logger;
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
 

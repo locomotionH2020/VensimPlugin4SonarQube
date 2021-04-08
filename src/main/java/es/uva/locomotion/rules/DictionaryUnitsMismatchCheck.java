@@ -19,7 +19,7 @@ public class DictionaryUnitsMismatchCheck extends AbstractVensimCheck{
             "If the symbol found in the file doesn't have units the rule is ignored.<br> " +
             "The symbols predefined by Vensim (FINAL TIME, TIME STEP, etc), subscript values and functions are ignored (except lookups)</p>";
     public static final String NAME = "DictionaryUnitsMismatch" ;
-    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION,SymbolType.SUBSCRIPT_VALUE);
+    private static final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION,SymbolType.SUBSCRIPT_VALUE);
 
     @Override
     public void scan(VensimVisitorContext context) {

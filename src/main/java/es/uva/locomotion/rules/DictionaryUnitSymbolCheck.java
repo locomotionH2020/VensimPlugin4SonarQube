@@ -25,9 +25,9 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
 
     public static final String NAME = "DictionaryUnitSymbolCheck";
 
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
 
-    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION, SymbolType.SUBSCRIPT_VALUE);
+    private static final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION, SymbolType.SUBSCRIPT_VALUE);
 
     @Override
     public void scan(VensimVisitorContext context) {

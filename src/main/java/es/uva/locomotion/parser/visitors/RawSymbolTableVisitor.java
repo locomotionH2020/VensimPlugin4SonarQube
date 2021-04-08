@@ -22,7 +22,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
 
     public static final String REMOVE_QUOTES = "^'|'$";
     private SymbolTable table;
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
     private static final Pattern sequencePattern = Pattern.compile("(.*?)(\\d+)");
     private static final List<String> excelFunctions = List.of("GET_DIRECT_CONSTANTS", "GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA");
     private static final List<String> excelData = List.of("GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA");
@@ -206,7 +206,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
         try {
             return parseSubscriptSequence(ctx);
         } catch (IllegalArgumentException ex) {
-            LOG.info(ex.getMessage() + "\nThe in-between values of the range will be ignored.");
+            logger.info(ex.getMessage() + "\nThe in-between values of the range will be ignored.");
             Symbol firstSymbol = getSubscriptOrCreate(table, ctx.Id(0).getSymbol().getText(), false);
             Symbol secondSymbol = getSubscriptOrCreate(table, ctx.Id(1).getSymbol().getText(), false);
 

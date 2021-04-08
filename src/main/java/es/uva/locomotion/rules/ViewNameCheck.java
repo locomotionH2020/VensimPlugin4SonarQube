@@ -19,7 +19,7 @@ import static es.uva.locomotion.utilities.Constants.*;
 
 @Rule(key = ViewNameCheck.CHECK_KEY, name = ViewNameCheck.NAME, description = ViewNameCheck.HTML_DESCRIPTION)
 public class ViewNameCheck extends AbstractVensimCheck {
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "view-name-convention";
     public static final String NAME = "ViewNameCheck";
@@ -47,14 +47,14 @@ public class ViewNameCheck extends AbstractVensimCheck {
             key = "view-name-regexp",
             defaultValue = DEFAULT_REGEXP,
             description = "The regexp definition of a module/category of a view name (without the separators)")
-    public final String regexp = DEFAULT_REGEXP;
+    public static final String REGEXP = DEFAULT_REGEXP;
 
     private String getRegexp() {
         try {
-            Pattern.compile(regexp);
-            return regexp;
+            Pattern.compile(REGEXP);
+            return REGEXP;
         } catch (PatternSyntaxException exception) {
-            LOG.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
+            logger.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);
             return DEFAULT_REGEXP;
         }
@@ -89,9 +89,7 @@ public class ViewNameCheck extends AbstractVensimCheck {
 
         if (view.getCategory() != null && !view.getCategory().getName().matches(getRegexp()))
             return true;
-        if (view.getSubcategory() != null && !view.getSubcategory().getName().matches(getRegexp()))
-            return true;
-        return false;
+        return view.getSubcategory() != null && !view.getSubcategory().getName().matches(getRegexp());
     }
 
 

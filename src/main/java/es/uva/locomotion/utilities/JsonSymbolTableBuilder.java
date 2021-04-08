@@ -21,9 +21,9 @@ public class JsonSymbolTableBuilder {
 
     private final JsonArrayBuilder fileBuilder;
 
-    public final static String KEY_COMMENT = "comment";
-    public final static String KEY_UNITS = "units";
-    public final static String KEY_DEPENDENCIES = "dependencies";
+    public static final String KEY_COMMENT = "comment";
+    public static final String KEY_UNITS = "units";
+    public static final String KEY_DEPENDENCIES = "dependencies";
     public static final String KEY_LINES = "lines";
     public static final String KEY_TYPE = "type";
     public static final String KEY_PRIMARY_VIEW = "primary";

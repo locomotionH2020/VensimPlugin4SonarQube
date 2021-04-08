@@ -291,7 +291,7 @@ public class TestDBFacadeSymbols {
                 "{\"name\":\"var\",\"unit\":\"other units\", \"definition\":\"other comment\", \"category\":\"\",\"modules\":[], \"programmingSymbolType\":\"CONSTANT\",\"indexes\":[]}], " +
                 "\"indexes\":[]}";
         VensimLogger logger = mock(VensimLogger.class);
-        DBFacade.LOG = logger;
+        DBFacade.logger = logger;
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
 

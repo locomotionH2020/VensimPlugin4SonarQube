@@ -20,7 +20,7 @@ public class DataBaseRepresentation {
         units = null;
     }
 
-    public SymbolTable getDataBaseSymbols() {
+    public SymbolTable getDataBaseSymbolTable() {
         return dataBaseSymbols;
     }
 
@@ -46,6 +46,10 @@ public class DataBaseRepresentation {
     }
 
     public Set<Module> getModules() {
+        if(modules == null) {
+            return new HashSet<>();
+        }
+
         return new HashSet<>(modules);//TODO si no hay diccionario peta.
     }
 

@@ -179,7 +179,7 @@ public class TestEmbeddedLookupVisitor {
         symbolTable.addSymbol(symbol1);
 
         VensimLogger logger = mock(VensimLogger.class);
-        EmbeddedLookupVisitor.LOG = logger;
+        EmbeddedLookupVisitor.logger = logger;
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -200,7 +200,7 @@ public class TestEmbeddedLookupVisitor {
 
 
         VensimLogger logger = mock(VensimLogger.class);
-        EmbeddedLookupVisitor.LOG = logger;
+        EmbeddedLookupVisitor.logger = logger;
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -217,7 +217,7 @@ public class TestEmbeddedLookupVisitor {
                 "~ |\n";
 
         VensimLogger logger = mock(VensimLogger.class);
-        EmbeddedLookupVisitor.LOG = logger;
+        EmbeddedLookupVisitor.logger = logger;
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         visitor.setSymbols(null);

@@ -75,4 +75,8 @@ public class SymbolTable {
                 '}';
     }
 
+    public boolean isEmpty(){
+        return getSymbols().isEmpty();
+    }
+
 }

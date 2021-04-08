@@ -103,15 +103,11 @@ public class SymbolTableGenerator {
             if (dependency.getType() == SymbolType.FUNCTION) {
                 if (IMPURE_FUNCTIONS.contains(dependency.getToken())) {
                     symbol.setType(SymbolType.VARIABLE);
-                    break;
                 }else if(lookupGeneratorFunctions.contains(dependency.getToken())){
                     symbol.setType(SymbolType.LOOKUP_TABLE);
                 }
-
             }else if (dependency.getType() == SymbolType.VARIABLE) {
                 symbol.setType(SymbolType.VARIABLE);
-
-                break;
             }else if(dependency.getType() == SymbolType.UNDETERMINED || dependency.getType() == SymbolType.UNDETERMINED_FUNCTION) {
                 undeterminedDependency = true;
             }

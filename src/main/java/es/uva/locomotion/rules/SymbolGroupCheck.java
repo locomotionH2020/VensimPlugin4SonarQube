@@ -18,7 +18,7 @@ import java.util.regex.PatternSyntaxException;
 
 @Rule(key = SymbolGroupCheck.CHECK_KEY, name = SymbolGroupCheck.NAME, description = SymbolGroupCheck.HTML_DESCRIPTION)
 public class SymbolGroupCheck extends AbstractVensimCheck {
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "symbol-control-group";
     public static final String NAME = "SymbolGroupCheck";
@@ -53,7 +53,7 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
         try {
             return Arrays.asList(symbols.split(";"));
         } catch (PatternSyntaxException exception) {
-            LOG.unique("The rule " + NAME + " has an invalid configuration: The selected list of symbols is invalid. Error: " + exception.getDescription(),
+            logger.unique("The rule " + NAME + " has an invalid configuration: The selected list of symbols is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);
             return Arrays.asList(DEFAULT_CONTROL_SYMBOLS.split(";"));
         }

@@ -19,7 +19,7 @@ public class ViewTableVisitor extends ModelParserBaseVisitor<Object> {
     private String moduleSeparator;
     private String categorySeparator;
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     private static final int SYMBOL_PRIVATE_ID = 10;
 

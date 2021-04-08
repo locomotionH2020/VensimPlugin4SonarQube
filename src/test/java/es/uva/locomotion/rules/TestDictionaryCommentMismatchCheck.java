@@ -34,7 +34,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("Doesn't match");
-        dbTable.getDataBaseSymbols().addSymbol(dbVar);
+        dbTable.getDataBaseSymbolTable().addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
 
@@ -64,7 +64,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("comment");
-        dbTable.getDataBaseSymbols().addSymbol(dbVar);
+        dbTable.getDataBaseSymbolTable().addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
 
@@ -89,7 +89,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("    Some comment    ");
-        dbTable.getDataBaseSymbols().addSymbol(dbVar);
+        dbTable.getDataBaseSymbolTable().addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
 
@@ -118,11 +118,11 @@ public class TestDictionaryCommentMismatchCheck {
         valid1.setComment("Same comment");
         valid2.setComment("Same comment");
 
-        Symbol dbVar = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbols(), "var", SymbolType.VARIABLE);
-        Symbol dbValid = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbols(), "valid1", SymbolType.VARIABLE);
-        Symbol dbVar2 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbols(), "var2", SymbolType.VARIABLE, 3);
-        Symbol dbValid2 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbols(), "valid2", SymbolType.VARIABLE);
-        Symbol dbVar3 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbols(), "var3", SymbolType.VARIABLE);
+        Symbol dbVar = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbolTable(), "var", SymbolType.VARIABLE);
+        Symbol dbValid = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbolTable(), "valid1", SymbolType.VARIABLE);
+        Symbol dbVar2 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbolTable(), "var2", SymbolType.VARIABLE, 3);
+        Symbol dbValid2 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbolTable(), "valid2", SymbolType.VARIABLE);
+        Symbol dbVar3 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbolTable(), "var3", SymbolType.VARIABLE);
 
         dbVar.setComment("mismatch");
         dbVar2.setComment("mismatch");
@@ -169,7 +169,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("Some comment");
-        dbTable.getDataBaseSymbols().addSymbol(dbVar);
+        dbTable.getDataBaseSymbolTable().addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null, new SymbolTable(), new ViewTable(), null, dbTable);
 
@@ -193,7 +193,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("Doesn't match");
-        dbTable.getDataBaseSymbols().addSymbol(dbVar);
+        dbTable.getDataBaseSymbolTable().addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
 
@@ -239,7 +239,7 @@ public class TestDictionaryCommentMismatchCheck {
         List<Symbol> dbSymbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         dbSymbols.forEach(symbol -> {
             symbol.setComment("DB comment");
-            dbTable.getDataBaseSymbols().addSymbol(symbol);
+            dbTable.getDataBaseSymbolTable().addSymbol(symbol);
         });
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
@@ -265,7 +265,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         addSymbolInLines(dbTable, "function", SymbolType.VARIABLE);
         addSymbolInLines(dbTable, "constant", SymbolType.VARIABLE);
         addSymbolInLines(dbTable, "var", SymbolType.VARIABLE);

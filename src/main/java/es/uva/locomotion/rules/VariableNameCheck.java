@@ -19,7 +19,7 @@ import java.util.regex.PatternSyntaxException;
 
 @Rule(key = VariableNameCheck.CHECK_KEY, name = VariableNameCheck.NAME, description = VariableNameCheck.HTML_DESCRIPTION)
 public class VariableNameCheck extends AbstractVensimCheck {
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "variable-name-convention";
     public static final String NAME = "VariableNameCheck";
@@ -47,14 +47,14 @@ public class VariableNameCheck extends AbstractVensimCheck {
             key = "variable-name-regexp",
             defaultValue = DEFAULT_REGEXP,
             description = "The regexp definition of a variable symbol name.")
-    public final String regexp = DEFAULT_REGEXP;
+    public static final String REGEXP = DEFAULT_REGEXP;
 
     private String getRegexp() {
         try {
-            Pattern.compile(regexp);
-            return regexp;
+            Pattern.compile(REGEXP);
+            return REGEXP;
         } catch (PatternSyntaxException exception) {
-            LOG.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
+            logger.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);
             return DEFAULT_REGEXP;
         }
@@ -92,11 +92,11 @@ public class VariableNameCheck extends AbstractVensimCheck {
     }
 
     private  boolean checkIfVariableHaveAnAcronym(String name, List<String> acronyms){
-        String trimmed_name = name;
+        String trimmedName = name;
         for(String acr : acronyms){
-            if(trimmed_name.matches(".*(^|_|\")"+acr+"($|_|\").*"))
-                trimmed_name = trimmed_name.replace(acr, acr.toLowerCase());
+            if(trimmedName.matches(".*(^|_|\")"+acr+"($|_|\").*"))
+                trimmedName = trimmedName.replace(acr, acr.toLowerCase());
         }
-        return  checkVariableFollowsConvention(trimmed_name);
+        return  checkVariableFollowsConvention(trimmedName);
     }
 }

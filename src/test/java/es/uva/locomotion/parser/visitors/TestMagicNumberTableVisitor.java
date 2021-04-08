@@ -1631,7 +1631,7 @@ public class TestMagicNumberTableVisitor {
         SymbolTable.addSymbol(Symbol1);
 
         VensimLogger logger = mock(VensimLogger.class);
-        MagicNumberTableVisitor.LOG = logger;
+        MagicNumberTableVisitor.logger = logger;
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -1650,7 +1650,7 @@ public class TestMagicNumberTableVisitor {
 
 
         VensimLogger logger = mock(VensimLogger.class);
-        MagicNumberTableVisitor.LOG = logger;
+        MagicNumberTableVisitor.logger = logger;
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -1665,7 +1665,7 @@ public class TestMagicNumberTableVisitor {
         String program = "A = 3*3*3*3*3~~|";
 
         VensimLogger logger = mock(VensimLogger.class);
-        MagicNumberTableVisitor.LOG = logger;
+        MagicNumberTableVisitor.logger = logger;
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         visitor.setSymbols(null);

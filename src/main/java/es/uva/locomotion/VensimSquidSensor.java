@@ -59,7 +59,7 @@ public class VensimSquidSensor implements Sensor {
 
         String dictionaryService = sensorContext.config().get(DICTIONARY_SERVICE_PARAMETER).orElse("").trim();
         String dictionaryUsername = sensorContext.config().get(DICTIONARY_USERNAME_PARAMETER).orElse("").trim();
-        String dictionaryPassword = sensorContext.config().get(DICTIONARY_PASSWORD_PARAMETER).orElse("").trim();
+        String dictionaryPassword = sensorContext.config().get(DICTIONARY_CREDENTIAL_PARAMETER).orElse("").trim();
         String strLogServerComms = sensorContext.config().get(DICTIONARY_LOG_SERVER_COMMUNICATIONS).orElse(FALSE);
         String strcreateGetDiffFile = sensorContext.config().get(CREATE_GET_DIFF_FILE).orElse(FALSE);
         String logFile = sensorContext.config().get(LOG_IN_FILE).orElse("");

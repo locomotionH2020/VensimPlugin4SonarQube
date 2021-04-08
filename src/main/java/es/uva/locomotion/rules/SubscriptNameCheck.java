@@ -40,20 +40,20 @@ public class SubscriptNameCheck extends AbstractVensimCheck {
 
     public static final String NAME = "SubscriptNameCheck";
 
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
     public static final String DEFAULT_REGEXP = "([A-Z0-9]+_)+I";
     @RuleProperty(
             key = "subscript-name-regexp",
             defaultValue = DEFAULT_REGEXP,
             description = "The regexp definition of a subscript name.")
-    public final String regexp = DEFAULT_REGEXP;
+    public static final String REGEXP = DEFAULT_REGEXP;
 
     private String getRegexp() {
         try {
-            Pattern.compile(regexp);
-            return regexp;
+            Pattern.compile(REGEXP);
+            return REGEXP;
         } catch (PatternSyntaxException exception) {
-            LOG.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
+            logger.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);
             return DEFAULT_REGEXP;
         }

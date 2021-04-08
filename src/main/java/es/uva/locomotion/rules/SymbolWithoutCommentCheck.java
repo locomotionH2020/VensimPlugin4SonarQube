@@ -31,7 +31,7 @@ public class SymbolWithoutCommentCheck extends AbstractVensimCheck{
 
     public static final String NAME = "SymbolWithoutComment" ;
 
-    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION,SymbolType.SUBSCRIPT_VALUE);
+    private static final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION,SymbolType.SUBSCRIPT_VALUE);
 
     @Override
     public void scan(VensimVisitorContext context) {
