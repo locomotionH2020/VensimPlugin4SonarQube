@@ -41,7 +41,7 @@ public class SubcategoryDuplicatedCheck extends AbstractVensimCheck {
             if (categoryList.stream().anyMatch(subcat -> subcat.getName().equals(actual.getName()))) {
                 actual.setAsInvalid(this.getClass().getSimpleName());
                 for (int line : actual.getLines()) {
-                    Issue issue = new Issue(this, line, "The subcategory '" + actual.getName() + "' already exists in the model in the category:'" + categoryList.stream().filter(subcat -> subcat.getName().equals(actual.getName())).findFirst().get().getName() + "', this can not happen.");
+                    Issue issue = new Issue(this, line, "The subcategory '" + actual.getName() + "' already exists in the model in the category: '" + categoryList.stream().filter(subcat -> subcat.getName().equals(actual.getName())).findFirst().get().getName() + "', this can not happen.");
                     addIssue(context, issue, false);
                 }
             }
