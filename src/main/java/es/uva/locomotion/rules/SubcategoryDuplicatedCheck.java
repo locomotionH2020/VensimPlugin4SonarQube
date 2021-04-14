@@ -18,7 +18,18 @@ public class SubcategoryDuplicatedCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "subcategory_duplicated";
     public static final String NAME = "SubcategoryDuplicatedCheck";
     public static final String HTML_DESCRIPTION = "" +
-            "<p>TODO</p>\n";
+            "<p>This rule checks that all subcategories are unique, there can not be two subcategories with the same"+
+            " name even though they belong to diferent categories." +
+            "<h2>Noncompliant Code Examples</h2>\n" +
+            "<pre>\n" +
+            "*energy.consumption-land\n\n" +
+            "*energy.generation-land\n\n" +
+            "</pre>\n" +
+            "<h2>Compliant Solution</h2>\n" +
+            "<pre>\n" +
+            "*energy.consumption-land\n\n" +
+            "*energy.generation-terra\n\n" +
+            "</pre>\n";
 
 
     @Override

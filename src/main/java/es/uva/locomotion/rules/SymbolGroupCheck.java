@@ -22,23 +22,28 @@ public class SymbolGroupCheck extends AbstractVensimCheck {
 
     public static final String CHECK_KEY = "symbol-control-group";
     public static final String NAME = "SymbolGroupCheck";
-    public static final String HTML_DESCRIPTION = "" + //TODO
-            "<p>This rule checks that variables follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+\"</p>\n" +
-            "<ul>" +
-            "   <li>The name must be in lower case.</li>\n" +
-            "   <li>Each word must be separated by ONE underscore.</li>\n" +
-            "   <li>The name shouldn't contain non-english characters.</li>\n" +
-            "   <li>The name shouldn't start with a number</li>" +
-            "</ul>" +
+    public static final String HTML_DESCRIPTION = "" +
+            "<p>This rule checks that symbols that are not used for control are not decalred in the control zone and vice versa. \n" +
+            "The default control symbols are: TIME STEP, INITIAL TIME, FINAL TIME, SAVEPER" +
             "<h2>Noncompliant Code Examples</h2>\n" +
             "<pre>\n" +
-            "ENERGY_REQUIRED\n" +
-            "2019fuel_emissions\n" +
+            "TIME_STEP = 0.1 ~~| \n" +
+            "********************************************************\n" +
+            ".Control\n" +
+            "********************************************************\n" +
+            "Simulation Control Parameters\n" +
+            "|\n" +
+            "varialbe = TIME_STEP ~~|\n" +
             "</pre>\n" +
             "<h2>Compliant Solution</h2>\n" +
             "<pre>\n" +
-            "energy_required\n" +
-            "fuel_emissions_2019\n" +
+            "varialbe = TIME_STEP ~~|\n" +
+            "********************************************************\n" +
+            ".Control\n" +
+            "********************************************************\n" +
+            "Simulation Control Parameters\n" +
+            "|\n" +
+            "TIME_STEP = 0.1 ~~| \n" +
             "</pre>\n";
 
     public static final String DEFAULT_CONTROL_SYMBOLS = "TIME STEP;INITIAL TIME;FINAL TIME;SAVEPER";

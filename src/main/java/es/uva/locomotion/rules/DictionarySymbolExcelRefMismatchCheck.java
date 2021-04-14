@@ -14,14 +14,16 @@ import org.sonar.check.Rule;
 import java.util.List;
 
 
-@Rule(key = DictionarySymbolExcelRefCheck.CHECK_KEY, name = DictionarySymbolExcelRefCheck.NAME, description = DictionarySymbolExcelRefCheck.HTML_DESCRIPTION)
-public class DictionarySymbolExcelRefCheck extends AbstractVensimCheck {
+@Rule(key = DictionarySymbolExcelRefMismatchCheck.CHECK_KEY, name = DictionarySymbolExcelRefMismatchCheck.NAME, description = DictionarySymbolExcelRefMismatchCheck.HTML_DESCRIPTION)
+public class DictionarySymbolExcelRefMismatchCheck extends AbstractVensimCheck {
     protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "dictionary-symbol-excel-missmatch";
     public static final String NAME = "DictionarySymbolExcelRefCheck";
-    public static final String HTML_DESCRIPTION = "" + //TODO
-            "<p>TODO</p>\n";
+    public static final String HTML_DESCRIPTION ="" +
+            "<p>This rule checks that all the symbols in the file that have a reference to an excel file have the same reference as the symbols stored in the database. " +
+            "If the symbol found in the file doesn't have a comment the rule is ignored.<br> " +
+            "The symbols predefined by Vensim (FINAL TIME, TIME STEP, etc) and functions are ignored (except lookups)</p>";
 
 
     @Override

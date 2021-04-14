@@ -24,7 +24,8 @@ public class VariableNameCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "variable-name-convention";
     public static final String NAME = "VariableNameCheck";
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that variables follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+\"</p>\n" +
+            "<p>This rule checks that variables follow the name convention.The default regular expression is \"([a-z0-9]+_)*[a-z0-9]+\"</p>\n" +
+            "but it can be changed using custom quality profiles. \n The rest of this descriptions assumes the default regular expression is being used. \n" +
             "<ul>" +
             "   <li>The name must be in lower case.</li>\n" +
             "   <li>Each word must be separated by ONE underscore.</li>\n" +
@@ -79,7 +80,7 @@ public class VariableNameCheck extends AbstractVensimCheck {
                     symbol.setAsInvalid(this.getClass().getSimpleName());
 
                     for (int line : symbol.getLines()) {
-                        Issue issue = new Issue(this, line, "The variable '" + symbol.getToken() + "' doesn't follow the naming convention." + aronymsListMisingWarning);
+                        Issue issue = new Issue(this, line, "The variable '" + symbol.getToken() + "' doesn't follow the naming convention. Regular expression: " + getRegexp() + ". " + aronymsListMisingWarning);
                         addIssue(context, issue, symbol.isFiltered());
                     }
                 }

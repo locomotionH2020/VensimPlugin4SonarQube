@@ -24,22 +24,18 @@ public class ViewNameCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "view-name-convention";
     public static final String NAME = "ViewNameCheck";
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that variables follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+\"</p>\n" +
-            "<ul>" +
-            "   <li>The name must be in lower case.</li>\n" +
-            "   <li>Each word must be separated by ONE underscore.</li>\n" +
-            "   <li>The name shouldn't contain non-english characters.</li>\n" +
-            "   <li>The name shouldn't start with a number</li>" +
-            "</ul>" +
+            "<p>This rule checks that views follow the name convention. The default regular expression is \"([a-z0-9]+)*[a-z0-9]+\"</p>\n" +
+            "but it can be changed using custom quality profiles.\n The default separators are: \".\" for module/category and \"-\" for category/subcategory. \n" +
+            "but it can be changed in sonarscanner properties file.\n The rest of this descriptions assumes the default regular expression is being used. \n" +
             "<h2>Noncompliant Code Examples</h2>\n" +
             "<pre>\n" +
-            "ENERGY_REQUIRED\n" +
-            "2019fuel_emissions\n" +
+            "*energy|share_RES_vs_TFEC\n\n" +
+            "*energy.share.RES-vs-TFEC\n\n" +
             "</pre>\n" +
             "<h2>Compliant Solution</h2>\n" +
             "<pre>\n" +
-            "energy_required\n" +
-            "fuel_emissions_2019\n" +
+            "*energy.share_RES_vs_TFEC\n\n" +
+            "*energy.share_RES_vs_TFEC-general\n\n" +
             "</pre>\n";
 
     public static final String DEFAULT_REGEXP = "([a-z0-9]+)*[a-z0-9]+";
@@ -73,7 +69,7 @@ public class ViewNameCheck extends AbstractVensimCheck {
             if (generateIssue(view)) {
                 view.setAsInvalid(this.getClass().getSimpleName());
                 for (int line : view.getLines()) {
-                    Issue issue = new Issue(this, line, "The view '" + view.getIdentifier() + "' deos not follow the naming convention, it should use the Module separator: \"" + moduleSeparator + "\" and the Category separator \"" + categorySeparator + "\".");
+                    Issue issue = new Issue(this, line, "The view '" + view.getIdentifier() + "' deos not follow the naming convention, it should use the Module separator: \"" + moduleSeparator + "\" and the Category separator \"" + categorySeparator + "\". Regular expression: " + getRegexp());
 
                     boolean generateIssue = moduleName.equals("") || view.getModule().getName().contains(moduleName);
                     addIssue(context, issue, !generateIssue);

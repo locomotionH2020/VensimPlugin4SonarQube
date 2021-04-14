@@ -19,7 +19,8 @@ import java.util.regex.PatternSyntaxException;
 public class SubscriptValueNameCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "subscript-value-name-convention" ;
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that all the subscript values follow the name convention and match the regular expression \"([A-Z0-9]+_)*[A-Z0-9]+\"</p>\n" +
+            "<p>This rule checks that subscript values follow the name convention.The default regular expression is \"([A-Z0-9]+_)*[A-Z0-9]+\"</p>\n" +
+            "but it can be changed using custom quality profiles. \n The rest of this descriptions assumes the default regular expression is being used. \n" +
             "<ul>" +
             "   <li>The name must be in upper case (subscript values are constants).</li>\n" +
             "   <li>Each word must be separated by ONE underscore.</li>\n" +
@@ -66,7 +67,7 @@ public class SubscriptValueNameCheck extends AbstractVensimCheck {
                 symbol.setAsInvalid(this.getClass().getSimpleName());
 
                 for(int line: symbol.getLines()) {
-                    Issue issue = new Issue(this, line,"The subscript value '" + symbol.getToken() + "' doesn't follow the naming convention");
+                    Issue issue = new Issue(this, line,"The subscript value '" + symbol.getToken() + "' doesn't follow the naming convention. Regular expression: "+ getRegexp());
                     addIssue(context,issue,symbol.isFiltered());
                 }
             }

@@ -19,7 +19,8 @@ public class ConstantNameCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "constant-name-convention";
     public static final String NAME = "ConstantNameCheck";
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that constants follow the name convention and match the regular expression \"([A-Z0-9]+_)*[A-Z0-9]+\"</p>\n" +
+            "<p>This rule checks that constants follow the name convention.The default regular expression is \"([A-Z0-9]+_)*[A-Z0-9]+\"</p>\n" +
+            "but it can be changed using custom quality profiles. \n The rest of this descriptions assumes the default regular expression is being used. \n" +
             "<ul>" +
             "   <li>The name must be in upper case.</li>\n" +
             "   <li>Each word must be separated by ONE underscore.</li>\n" +
@@ -69,7 +70,7 @@ public class ConstantNameCheck extends AbstractVensimCheck {
                 symbol.setAsInvalid(this.getClass().getSimpleName());
 
                 for (int line : symbol.getLines()) {
-                    Issue issue = new Issue(this, line, "The constant '" + symbol.getToken() + "' doesn't follow the naming convention.");
+                    Issue issue = new Issue(this, line, "The constant '" + symbol.getToken() + "' doesn't follow the naming convention. Regular expression: " + getRegexp());
                     addIssue(context, issue, symbol.isFiltered());
 
                 }
