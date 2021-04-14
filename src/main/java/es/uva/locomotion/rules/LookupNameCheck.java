@@ -1,11 +1,11 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.plugin.Issue;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
@@ -19,7 +19,8 @@ public class LookupNameCheck extends AbstractVensimCheck{
     public static final String CHECK_KEY = "lookup-name-convention" ;
 
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that lookups follow the naming convention and match the regular expression: \"([a-z0-9]+_)*[a-z0-9]+_lt\"</p>\n" +
+            "<p>This rule checks that lookups follow the naming convention.The default regular expression is \"([a-z0-9]+_)*[a-z0-9]+_lt\"</p>\n" +
+            "but it can be changed using custom quality profiles. \n The rest of this descriptions assumes the default regular expression is being used. \n" +
             "<ul>" +
             "   <li>Name must be in lower case (lookups are functions).</li>\n" +
             "   <li>Each word must be separated by ONE underscore.</li>\n" +
@@ -43,7 +44,7 @@ public class LookupNameCheck extends AbstractVensimCheck{
 
     public static final String NAME = "LookupNameCheck" ;
 
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
     public static final String DEFAULT_REGEXP = "([a-z0-9]+_)*[a-z0-9]+_lt";
     @RuleProperty(
             key = "lookup-name-regexp",
@@ -56,7 +57,7 @@ public class LookupNameCheck extends AbstractVensimCheck{
             Pattern.compile(regexp);
             return regexp;
         } catch (PatternSyntaxException exception) {
-            LOG.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
+            logger.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);
             return DEFAULT_REGEXP;
         }
@@ -68,11 +69,11 @@ public class LookupNameCheck extends AbstractVensimCheck{
         SymbolTable table = context.getParsedSymbolTable();
 
         for(Symbol symbol:table.getSymbols()){
-            if(symbol.getType()== SymbolType.Lookup_Table && !checkLookupFollowsConvention(symbol.getToken())){
-                symbol.setAsInvalid(this.getClass());
+            if(symbol.getType()== SymbolType.LOOKUP_TABLE && !checkLookupFollowsConvention(symbol.getToken())){
+                symbol.setAsInvalid(this.getClass().getSimpleName());
 
-                for(int line: symbol.getDefinitionLines()) {
-                    Issue issue = new Issue(this, line, "The lookup '" + symbol.getToken() + "' doesn't follow the naming convention");
+                for(int line: symbol.getLines()) {
+                    Issue issue = new Issue(this, line, "The lookup '" + symbol.getToken() + "' doesn't follow the naming convention. Regula expression: " + getRegexp());
                     addIssue(context,issue,symbol.isFiltered());
 
                 }
@@ -83,6 +84,6 @@ public class LookupNameCheck extends AbstractVensimCheck{
     }
 
     private boolean checkLookupFollowsConvention(String name) {
-        return name.matches(regexp);
+        return name.matches(getRegexp());
     }
 }

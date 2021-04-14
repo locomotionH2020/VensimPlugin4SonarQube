@@ -1,21 +1,29 @@
 package es.uva.locomotion.testutilities;
 
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.ViewTable;
-import es.uva.locomotion.parser.*;
+import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
+import es.uva.locomotion.parser.ModelLexer;
+import es.uva.locomotion.parser.ModelParser;
+import es.uva.locomotion.parser.MultiChannelTokenStream;
+import es.uva.locomotion.parser.VensimErrorListener;
 import es.uva.locomotion.parser.visitors.RawSymbolTableVisitor;
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.parser.visitors.ViewTableVisitor;
 import es.uva.locomotion.plugin.Issue;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.utilities.SymbolTableGenerator;
 import es.uva.locomotion.utilities.UtilityFunctions;
 import org.antlr.v4.runtime.CharStreams;
 
-import javax.json.*;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -81,21 +89,26 @@ public class GeneralTestUtilities {
         return visitor.getSymbolTable(root);
     }
 
-    public static ViewTable getViewTableFromString(String content) {
+    public static ViewTable getViewTableFromString(String content, SymbolTable symbolTable ) {
         ModelParser.FileContext root = getParseTreeFromString(content);
         ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor();
+        visitor.setSymbolTable( symbolTable);
         return visitor.getViewTable(root);
     }
 
-    public static ViewTable getViewTableFromString(String content, String moduleSeparator, String categorySeparator) {
+    public static ViewTable getViewTableFromString(String content, SymbolTable symbolTable, String moduleSeparator, String categorySeparator) {
         ModelParser.FileContext root = getParseTreeFromString(content);
         ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator, categorySeparator);
+        visitor.setSymbolTable( symbolTable);
+
         return visitor.getViewTable(root);
     }
 
-    public static ViewTable getViewTableFromString(String content, String moduleSeparator) {
+    public static ViewTable getViewTableFromString(String content, SymbolTable symbolTable, String moduleSeparator) {
         ModelParser.FileContext root = getParseTreeFromString(content);
         ViewTableVisitor visitor = ViewTableVisitor.createViewTableVisitor(moduleSeparator);
+        visitor.setSymbolTable( symbolTable);
+
         return visitor.getViewTable(root);
     }
 
@@ -133,9 +146,9 @@ public class GeneralTestUtilities {
     }
 
     public static void assertSymbolDefinedOnlyIn(int expectedLine, Symbol symbol) {
-        assertEquals("The symbol is defined in several lines" + symbol.getDefinitionLines(), 1, symbol.getDefinitionLines().size());
+        assertEquals("The symbol is defined in several lines" + symbol.getLines(), 1, symbol.getLines().size());
 
-        int line = symbol.getDefinitionLines().iterator().next();
+        int line = symbol.getLines().iterator().next();
         assertEquals("Symbol '" + symbol.getToken() + "' expected at line " + expectedLine + " found at: " + line,
                 expectedLine, line);
 
@@ -158,20 +171,24 @@ public class GeneralTestUtilities {
         return symbolSet;
     }
 
-    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, String prymary_module, List<String> shadow_modules, String group, int... lines) {
+    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, String prymary_module, List<String> shadow_modules, String group, String category, int... lines) {
         Symbol symbol = new Symbol(token);
         if (type != null)
             symbol.setType(type);
 
         for (int line : lines)
-            symbol.addDefinitionLine(line);
+            symbol.addLine(line);
         symbol.setGroup(group);
-        symbol.setPrimary_module(prymary_module);
+        symbol.setPrimaryModule(new Module(prymary_module));
+        symbol.setCategory(Category.create(category));
         for (String shadow : shadow_modules) {
-            symbol.addShadow_view(shadow);
+            symbol.addShadowModule(new Module(shadow));
         }
         table.addSymbol(symbol);
         return symbol;
+    }
+    public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, String prymary_module, List<String> shadow_modules, String group, int... lines) {
+        return  addSymbolInLines(table,token,type,prymary_module,  shadow_modules,group,"", lines);
     }
     public static Symbol addSymbolInLines(SymbolTable table, String token, SymbolType type, String primary_module, int... lines) {
         return addSymbolInLines(table, token, type, primary_module, new ArrayList<>(), null, lines);
@@ -190,15 +207,15 @@ public class GeneralTestUtilities {
 
     public static Symbol createSubscript(SymbolTable table, String subscriptName, String... values) {
 
-        Symbol subscript = new Symbol(subscriptName, SymbolType.Subscript);
+        Symbol subscript = new Symbol(subscriptName, SymbolType.SUBSCRIPT);
 
         for (String value : values) {
             Symbol valueSymbol = UtilityFunctions.getSymbolOrCreate(table, value);
 
-            if (valueSymbol.getType() != SymbolType.Subscript_Value && valueSymbol.getType() != SymbolType.UNDETERMINED)
+            if (valueSymbol.getType() != SymbolType.SUBSCRIPT_VALUE && valueSymbol.getType() != SymbolType.UNDETERMINED)
                 throw new IllegalStateException("The table already contains a symbol named '" + value + "' that isn't a Subscript_Value");
 
-            valueSymbol.setType(SymbolType.Subscript_Value);
+            valueSymbol.setType(SymbolType.SUBSCRIPT_VALUE);
             subscript.addDependency(valueSymbol);
         }
 

@@ -1,7 +1,7 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.model.Category;
-import es.uva.locomotion.model.CategoryMap;
+import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.category.CategoryMap;
 import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
@@ -34,15 +34,10 @@ public class TestDBFacadeCategories {
     public void testGetCategoriesParsedJson() {
         CategoryMap dbTable = new CategoryMap();
 
-        Category category1 = new Category("category1");
-        Category category2 = new Category("category2");
-        Category subcategory1 = new Category("subcategory1");
-        Category subcategory2 = new Category("subcategory2");
-        category2.addSubcategory(subcategory1);
-        category2.addSubcategory(subcategory2);
-
-        dbTable.add(category1);
-        dbTable.add(category2);
+        Category category1 = dbTable.createOrSelectCategory("category1");
+        Category category2 = dbTable.createOrSelectCategory("category2");
+        Category subcategory1 = dbTable.addSubcategoryTo(category2,"subcategory1");
+        Category subcategory2 =dbTable.addSubcategoryTo(category2,"subcategory2");
 
         String jsonDbTable = "[{\"name\":\"category1\",\"level\":1,\"super_category\":\"null\"}," +
                 "{\"name\":\"category2\",\"level\":1,\"super_category\":\"null\"}," +
@@ -248,8 +243,7 @@ public class TestDBFacadeCategories {
 
         CategoryMap catmap = new CategoryMap();
 
-        Category category = new Category("category1");
-        catmap.add(category);
+        Category category = catmap.createOrSelectCategory("category1");
         JsonReader jsonReader = Json.createReader(new StringReader("[{\"name\":\"category1\",\"level\":1,\"super_category\":\"null\"}]"));
         JsonArray object = jsonReader.readArray();
         jsonReader.close();
@@ -265,10 +259,8 @@ public class TestDBFacadeCategories {
 
         CategoryMap catmap = new CategoryMap();
 
-        Category category = new Category("category1");
-        Category subcategory = new Category("subcategory1");
-        category.addSubcategory(subcategory);
-        catmap.add(category);
+        Category category = catmap.createOrSelectCategory("category1");
+        Category subcategory = catmap.addSubcategoryTo(category, "subcategory1");
         JsonReader jsonReader = Json.createReader(new StringReader("[{\"name\":\"category1\",\"level\":1,\"super_category\":\"null\"}," +
                                         "{\"name\":\"subcategory1\",\"level\":2,\"super_category\":\"category1\"}]"));
         JsonArray object = jsonReader.readArray();

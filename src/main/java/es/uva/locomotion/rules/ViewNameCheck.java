@@ -1,7 +1,8 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.View;
+import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
@@ -10,7 +11,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -19,34 +19,30 @@ import static es.uva.locomotion.utilities.Constants.*;
 
 @Rule(key = ViewNameCheck.CHECK_KEY, name = ViewNameCheck.NAME, description = ViewNameCheck.HTML_DESCRIPTION)
 public class ViewNameCheck extends AbstractVensimCheck {
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "view-name-convention";
     public static final String NAME = "ViewNameCheck";
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that variables follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+\"</p>\n" +
-            "<ul>" +
-            "   <li>The name must be in lower case.</li>\n" +
-            "   <li>Each word must be separated by ONE underscore.</li>\n" +
-            "   <li>The name shouldn't contain non-english characters.</li>\n" +
-            "   <li>The name shouldn't start with a number</li>" +
-            "</ul>" +
+            "<p>This rule checks that views follow the name convention. The default regular expression is \"([a-z0-9]+)*[a-z0-9]+\"</p>\n" +
+            "but it can be changed using custom quality profiles.\n The default separators are: \".\" for module/category and \"-\" for category/subcategory. \n" +
+            "but it can be changed in sonarscanner properties file.\n The rest of this descriptions assumes the default regular expression is being used. \n" +
             "<h2>Noncompliant Code Examples</h2>\n" +
             "<pre>\n" +
-            "ENERGY_REQUIRED\n" +
-            "2019fuel_emissions\n" +
+            "*energy|share_RES_vs_TFEC\n\n" +
+            "*energy.share.RES-vs-TFEC\n\n" +
             "</pre>\n" +
             "<h2>Compliant Solution</h2>\n" +
             "<pre>\n" +
-            "energy_required\n" +
-            "fuel_emissions_2019\n" +
+            "*energy.share_RES_vs_TFEC\n\n" +
+            "*energy.share_RES_vs_TFEC-general\n\n" +
             "</pre>\n";
 
-    public static final String DEFAULT_REGEXP = "([a-z0-9]+_)*[a-z0-9]+";
+    public static final String DEFAULT_REGEXP = "([a-z0-9]+)*[a-z0-9]+";
     @RuleProperty(
-            key = "variable-name-regexp",
+            key = "view-name-regexp",
             defaultValue = DEFAULT_REGEXP,
-            description = "The regexp definition of a variable symbol name.")
+            description = "The regexp definition of a module/category of a view name (without the separators)")
     public final String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {
@@ -54,7 +50,7 @@ public class ViewNameCheck extends AbstractVensimCheck {
             Pattern.compile(regexp);
             return regexp;
         } catch (PatternSyntaxException exception) {
-            LOG.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
+            logger.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);
             return DEFAULT_REGEXP;
         }
@@ -70,15 +66,26 @@ public class ViewNameCheck extends AbstractVensimCheck {
         String moduleSeparator = sensorContext.config().get(MODULE_SEPARATOR).orElse("");
         String categorySeparator = sensorContext.config().get(CATEGORY_SEPARATOR).orElse("");
         for (View view : table.getViews()) {
-            if (!view.isValid()) {
-                int line = view.getLine();
-                Issue issue = new Issue(this, line, "The view '" + view.getIdentifier() + "' deos not follow the naming convention, it should use the Module separator: \"" + moduleSeparator + "\" and the Category separator \"" + categorySeparator + "\".");
+            if (generateIssue(view)) {
+                view.setAsInvalid(this.getClass().getSimpleName());
+                for (int line : view.getLines()) {
+                    Issue issue = new Issue(this, line, "The view '" + view.getIdentifier() + "' deos not follow the naming convention. Module separator: \"" + moduleSeparator + "\". Category separator \"" + categorySeparator + "\". Regular expression: " + getRegexp());
 
-                boolean generateIssue = moduleName.equals("") || view.getModule().contains(moduleName);
-                addIssue(context, issue, !generateIssue);
+                    boolean generateIssue = moduleName.equals("") || view.getModule().getName().contains(moduleName);
+                    addIssue(context, issue, !generateIssue);
+                }
             }
 
         }
+    }
+
+    private boolean generateIssue(View view) {
+        if (view.getModule() == null || !view.getModule().getName().matches(getRegexp()))
+            return true;
+
+        if (view.getCategory() != null && !view.getCategory().getName().matches(getRegexp()))
+            return true;
+        return view.getSubcategory() != null && !view.getSubcategory().getName().matches(getRegexp());
     }
 
 

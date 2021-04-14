@@ -1,9 +1,7 @@
 package es.uva.locomotion.parser;
 
 
-import static org.junit.Assert.*;
-
-import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.junit.Test;
@@ -11,6 +9,8 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TestGrammar {
 
@@ -273,6 +273,6 @@ public class TestGrammar {
                 "10,2,Demand by sector FD,1586,885,40,20,3,3,0,0,0,0,0,0\n" +
                 "///---\\\\\\\n";
 
-        getViewTableFromString(program);
+        getViewTableFromString(program, new SymbolTable());
     }
 }

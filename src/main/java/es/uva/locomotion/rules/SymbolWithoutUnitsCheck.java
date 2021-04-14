@@ -1,11 +1,11 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
-import es.uva.locomotion.plugin.Issue;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import org.sonar.check.Rule;
 
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class SymbolWithoutUnitsCheck extends AbstractVensimCheck{
 
     public static final String NAME = "SymbolWithoutUnits" ;
 
-    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.Function,SymbolType.Subscript_Value,SymbolType.Subscript);
+    private static final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION,SymbolType.SUBSCRIPT_VALUE,SymbolType.SUBSCRIPT);
 
     @Override
     public void scan(VensimVisitorContext context) {
@@ -39,9 +39,9 @@ public class SymbolWithoutUnitsCheck extends AbstractVensimCheck{
 
         for(Symbol symbol: table.getSymbols()){
             if(!IGNORED_TYPES.contains(symbol.getType()) && symbol.getUnits().isBlank()){
-                symbol.setAsInvalid(this.getClass());
+                symbol.setAsInvalid(this.getClass().getSimpleName());
 
-                for(int line: symbol.getDefinitionLines()) {
+                for(int line: symbol.getLines()) {
                     Issue issue = new Issue(this,line,"The symbol '"+ symbol.getToken() + "' should have units.");
                     addIssue(context,issue,symbol.isFiltered());
                 }

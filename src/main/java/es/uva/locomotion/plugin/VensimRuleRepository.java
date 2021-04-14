@@ -36,12 +36,15 @@ public class VensimRuleRepository implements RulesDefinition{
     public static Iterable<Class> getChecks(){
         HashSet<Class> set = new HashSet<>();
         set.add(SubscriptNameCheck.class);
+        set.add(SubscriptCopyNameCheck.class);
         set.add(SubscriptValueNameCheck.class);
         set.add(LookupNameCheck.class);
         set.add(VariableNameCheck.class);
         set.add(ViewNameCheck.class);
+        set.add(SubcategoryDuplicatedCheck.class);
         set.add(EmbeddedLookupCheck.class);
         set.add(SymbolGroupCheck.class);
+        set.add(DictionarySymbolExcelRefMismatchCheck.class);
         set.add(ConstantNameCheck.class);
         set.add(RealityCheckNameRule.class);
         set.add(MagicNumberCheck.class);

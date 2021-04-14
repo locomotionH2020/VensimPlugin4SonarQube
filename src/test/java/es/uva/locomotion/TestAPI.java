@@ -1,23 +1,28 @@
 package es.uva.locomotion;
 
-import static org.junit.Assert.*;
-
 import es.uva.locomotion.rules.*;
-import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import es.uva.locomotion.testutilities.APIUtilities;
+import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.sonar.api.batch.rule.Severity;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.json.*;
 
 import static es.uva.locomotion.testutilities.APIUtilities.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class TestAPI {
 
 

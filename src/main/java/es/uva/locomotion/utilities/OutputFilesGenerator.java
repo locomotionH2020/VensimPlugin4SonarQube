@@ -1,18 +1,20 @@
 package es.uva.locomotion.utilities;
 
-import es.uva.locomotion.model.*;
+import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
-import javax.json.*;
+import javax.json.Json;
+import javax.json.JsonWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.nio.file.Path;
-import java.util.List;
 
 public class OutputFilesGenerator {
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     private JsonSymbolTableBuilder symbolsJson;
     private JsonDictoinaryDiffBuilder diffJson;
@@ -26,7 +28,7 @@ public class OutputFilesGenerator {
 
     public void generateFiles(Path resume) {
         try {
-            LOG.info("Generating output files at: '" + resume.toAbsolutePath() + "'");
+            logger.info("Generating output files at: '" + resume.toAbsolutePath() + "'");
             File directory =resume.toFile();
             if (! directory.exists()){
                 directory.mkdir();
@@ -43,13 +45,18 @@ public class OutputFilesGenerator {
                 writer.close();
             }
         } catch (FileNotFoundException e) {
-            LOG.error("Unable to create symbolTable.json. Error: '" + e.getMessage() +"'");
+            logger.error("Unable to create symbolTable.json. Error: '" + e.getMessage() +"'");
         }
     }
 
     public void addTables(String filename, SymbolTable table, ViewTable viewTable, DataBaseRepresentation dbData) {
         symbolsJson.addTables(filename, table, viewTable);
         if (generateGetDiff)
-            diffJson.addTables(filename, table, viewTable, dbData);
+            if(dbData.getDataBaseSymbolTable().isEmpty()){
+                logger.warn("Trying to create diff with dictionary, but unable to recieve data from it.");
+                generateGetDiff = false;
+            }else {
+                diffJson.addTables(filename, table, viewTable, dbData);
+            }
     }
 }

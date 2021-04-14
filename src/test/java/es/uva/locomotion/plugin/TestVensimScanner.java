@@ -1,11 +1,10 @@
 package es.uva.locomotion.plugin;
 
 
-import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.testutilities.RuleTestUtilities;
-import es.uva.locomotion.rules.VensimCheck;
-import es.uva.locomotion.utilities.JsonSymbolTableBuilder;
 import es.uva.locomotion.utilities.OutputFilesGenerator;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.Before;
@@ -19,13 +18,12 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.measure.NewMeasure;
 import org.sonar.api.config.Configuration;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static es.uva.locomotion.testutilities.GeneralTestUtilities.*;
+import static es.uva.locomotion.testutilities.GeneralTestUtilities.loadFile;
 import static org.mockito.Mockito.*;
 
 public class TestVensimScanner {
@@ -39,7 +37,7 @@ public class TestVensimScanner {
     public void testScannerLogMessageParseException() throws Exception {
 
         VensimLogger logger = mock(VensimLogger.class);
-        VensimScanner.LOG = logger;
+        VensimScanner.logger = logger;
         InputFile inputFile = Mockito.mock(InputFile.class);
         when(inputFile.contents()).thenReturn("This isn't a vensim model");
         when(inputFile.filename()).thenReturn("notAVensimModelParser.mdl");
@@ -70,6 +68,7 @@ public class TestVensimScanner {
         ServiceController controller = mock(ServiceController.class);
         when(controller.isAuthenticated()).thenReturn(true);
         when(controller.getSymbolsFromDb(any())).thenReturn(mock(SymbolTable.class));
+        when(context.config().get(anyString())).thenReturn(Optional.of("true"));
 
 
         VensimScanner scanner = spy(new VensimScanner(context, checks, builder, controller));
@@ -92,7 +91,7 @@ public class TestVensimScanner {
 
 
         OutputFilesGenerator builder = Mockito.mock(OutputFilesGenerator.class);
-        VensimScanner.LOG = logger;
+        VensimScanner.logger = logger;
         InputFile fileBefore = Mockito.mock(InputFile.class);
         InputFile wrongFile = Mockito.mock(InputFile.class);
         InputFile fileAfter = Mockito.mock(InputFile.class);

@@ -20,11 +20,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package es.uva.locomotion.parser;
 
-import static java.util.Arrays.copyOf;
-
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenSource;
+
+import static java.util.Arrays.copyOf;
 
 public class MultiChannelTokenStream extends BufferedTokenStream {
 

@@ -3,8 +3,8 @@ package es.uva.locomotion.parser.visitors;
 
 import es.uva.locomotion.model.AcronymsList;
 import es.uva.locomotion.model.DataBaseRepresentation;
-import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.plugin.Issue;
 import org.sonar.api.batch.sensor.SensorContext;
@@ -51,7 +51,7 @@ public class VensimVisitorContext {
 
     public SymbolTable getDbSymbolTable(){
 
-        return dbData != null ? dbData.getDataBaseSymbols() : null;
+        return dbData != null ? dbData.getDataBaseSymbolTable() : null;
     }
     public AcronymsList getDbAcronyms(){
         return dbData != null ? dbData.getAcronyms() : null;

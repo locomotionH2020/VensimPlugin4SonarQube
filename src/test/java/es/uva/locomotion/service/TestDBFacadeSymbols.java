@@ -1,8 +1,10 @@
 package es.uva.locomotion.service;
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.Module;
+import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.testutilities.ServiceTestUtilities;
 import es.uva.locomotion.utilities.exceptions.EmptyServiceException;
 import es.uva.locomotion.utilities.exceptions.InvalidServiceUrlException;
@@ -13,7 +15,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.IOException;
@@ -21,13 +22,12 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.TestCase.*;
-import static org.mockito.Mockito.*;
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.*;
 
 public class TestDBFacadeSymbols {
 
@@ -41,36 +41,36 @@ public class TestDBFacadeSymbols {
         SymbolTable dbTable = new SymbolTable();
 
         Symbol index1 = new Symbol("index1");
-        index1.setType(SymbolType.Subscript);
+        index1.setType(SymbolType.SUBSCRIPT);
         index1.setComment("index1 comment");
         dbTable.addSymbol(index1);
         Symbol index2 = new Symbol("index2");
-        index2.setType(SymbolType.Subscript);
+        index2.setType(SymbolType.SUBSCRIPT);
         dbTable.addSymbol(index2);
 
         Symbol foo = new Symbol("foo");
         foo.setUnits("foo unit");
         foo.setComment("foo comment");
-        foo.setPrimary_module("module 1");
-        foo.setCategory("foo category");
-        foo.addShadow_view("module 2");
-        foo.setType(SymbolType.Constant);
+        foo.setPrimaryModule(new Module("module 1"));
+        foo.setCategory(Category.create("foo category"));
+        foo.addShadowModule(new Module("module 2"));
+        foo.setType(SymbolType.CONSTANT);
         dbTable.addSymbol(foo);
 
         Symbol var = new Symbol("var");
         var.setUnits("var unit");
         var.setComment("var comment");
-        var.setPrimary_module("module 3");
-        var.setCategory("var category");
-        var.addShadow_view("module 4");
+        var.setPrimaryModule(new Module("module 3"));
+        var.setCategory(Category.create("var category"));
+        var.addShadowModule(new Module("module 4"));
         var.addIndexLine(List.of(index1, index2));
-        var.setType(SymbolType.Variable);
+        var.setType(SymbolType.VARIABLE);
         dbTable.addSymbol(var);
 
         String jsonDbTable = "{\"symbols\":[" +
                 "{\"name\":\"foo\", \"category\":\"foo category\", \"modules\":{\"main\":\"module 1\", \"secondary\":[\"module 2\"]}," +
-                "\"programmingSymbolType\": \"Constant\",\"indexes\":[], \"definition\": \"foo comment\", \"unit\":\"foo unit\"}," +
-                "{\"name\":\"var\",\"programmingSymbolType\":\"Variable\",\"unit\":\"var unit\", \"definition\":\"var comment\", \"modules\":{\"main\":\"module 3\", \"secondary\":[\"module 4\"]}, \"category\":\"var category\",\"indexes\":[\"index1\",\"index2\"]}" +
+                "\"programmingSymbolType\": \"CONSTANT\",\"indexes\":[], \"definition\": \"foo comment\", \"unit\":\"foo unit\"}," +
+                "{\"name\":\"var\",\"programmingSymbolType\":\"VARIABLE\",\"unit\":\"var unit\", \"definition\":\"var comment\", \"modules\":{\"main\":\"module 3\", \"secondary\":[\"module 4\"]}, \"category\":\"var category\",\"indexes\":[\"index1\",\"index2\"]}" +
                 "]}";
 
         String jsonIndexDbTable =   "[{\"indexName\":\"index1\", \"values\":[],\"definition\":\"index1 comment\"}," +
@@ -85,9 +85,9 @@ public class TestDBFacadeSymbols {
     public void testGetSymbolsLoadIndexValues() {
         SymbolTable dbTable = new SymbolTable();
 
-        Symbol index = new Symbol("index", SymbolType.Subscript);
-        Symbol first_value = new Symbol("first value", SymbolType.Subscript_Value);
-        Symbol second_value = new Symbol("second value", SymbolType.Subscript_Value);
+        Symbol index = new Symbol("index", SymbolType.SUBSCRIPT);
+        Symbol first_value = new Symbol("first value", SymbolType.SUBSCRIPT_VALUE);
+        Symbol second_value = new Symbol("second value", SymbolType.SUBSCRIPT_VALUE);
         index.addDependency(first_value);
         index.addDependency(second_value);
 
@@ -114,16 +114,16 @@ public class TestDBFacadeSymbols {
         Symbol foo = new Symbol("foo");
         foo.setUnits("foo unit");
         foo.setComment("foo comment");
-        foo.setPrimary_module("module 1");
-        foo.setCategory("foo category");
-        foo.addShadow_view("module 2");
-        foo.setType(SymbolType.Constant);
+        foo.setPrimaryModule(new Module("module 1"));
+        foo.setCategory(Category.create("foo category"));
+        foo.addShadowModule(new Module("module 2"));
+        foo.setType(SymbolType.CONSTANT);
         dbTable.addSymbol(foo);
 
 
         String jsonDbTable = "{\"symbols\":[" +
                 "{\"name\":\"foo\", \"category\":\"foo category\", \"modules\":{\"main\":\"module 1\", \"secondary\":[ \"module 2\"]}," +
-                "\"programmingSymbolType\": \"Constant\",\"indexes\":[], \"definition\": \"foo comment\", \"unit\":\"foo unit\"}]," +
+                "\"programmingSymbolType\": \"CONSTANT\",\"indexes\":[], \"definition\": \"foo comment\", \"unit\":\"foo unit\"}]," +
                 "\"indexes\":[]}";
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
@@ -181,7 +181,7 @@ public class TestDBFacadeSymbols {
     @Test
     public void testGetSymbolsUnexpectedFormatSymbolDoesntHaveNameKey() {
         String jsonDbTable = "{\"symbols\":[" +
-                "{\"definition\":\"var comment\",\"unit\":\"\",\"category\":\"\",\"modules\":[],\"programmingSymbolType\":\"Constant\",\"indexes\":[]}]," +
+                "{\"definition\":\"var comment\",\"unit\":\"\",\"category\":\"\",\"modules\":[],\"programmingSymbolType\":\"CONSTANT\",\"indexes\":[]}]," +
                 "\"indexes\":[]}";
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable, "[]");
@@ -194,7 +194,7 @@ public class TestDBFacadeSymbols {
     @Test
     public void testGetSymbolsUnexpectedFormatSymbolDoesntHaveDefinitionKey() {
         String jsonDbTable = "{\"symbols\":[" +
-                "{\"name\":\"var\",\"unit\":\"\",\"category\":\"\",\"modules\":[],\"programmingSymbolType\":\"Constant\",\"indexes\":[]}]," +
+                "{\"name\":\"var\",\"unit\":\"\",\"category\":\"\",\"modules\":[],\"programmingSymbolType\":\"CONSTANT\",\"indexes\":[]}]," +
                 "\"indexes\":[]}";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable, "[]");
 
@@ -207,7 +207,7 @@ public class TestDBFacadeSymbols {
     @Test
     public void testGetSymbolsUnexpectedFormatDoesntHaveUnitKey() {
         String jsonDbTable = "{\"symbols\":[" +
-                "{\"name\":\"var\",\"definition\":\"var comment\",\"category\":\"\",\"modules\":[],\"programmingSymbolType\":\"Constant\",\"indexes\":[]}]," +
+                "{\"name\":\"var\",\"definition\":\"var comment\",\"category\":\"\",\"modules\":[],\"programmingSymbolType\":\"CONSTANT\",\"indexes\":[]}]," +
 
                 "\"indexes\":[]}";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
@@ -221,7 +221,7 @@ public class TestDBFacadeSymbols {
     @Test
     public void testGetSymbolsUnexpectedFormatDoesntHaveCategoryKey() {
         String jsonDbTable = "{\"symbols\":[" +
-                "{\"name\":\"var\",\"unit\":\"\",\"definition\":\"first comment\",\"modules\":[],\"programmingSymbolType\":\"Constant\",\"indexes\":[]}]," +
+                "{\"name\":\"var\",\"unit\":\"\",\"definition\":\"first comment\",\"modules\":[],\"programmingSymbolType\":\"CONSTANT\",\"indexes\":[]}]," +
                 "\"indexes\":[]}";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
@@ -234,7 +234,7 @@ public class TestDBFacadeSymbols {
     @Test
     public void testGetSymbolsUnexpectedFormatDoesntHaveModulesKey() {
         String jsonDbTable = "{\"symbols\":[" +
-                "{\"name\":\"var\",\"unit\":\"\",\"definition\":\"first comment\",\"category\":\"\",\"programmingSymbolType\":\"Constant\",\"indexes\":[]}]," +
+                "{\"name\":\"var\",\"unit\":\"\",\"definition\":\"first comment\",\"category\":\"\",\"programmingSymbolType\":\"CONSTANT\",\"indexes\":[]}]," +
                 "\"indexes\":[]}";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
@@ -260,7 +260,7 @@ public class TestDBFacadeSymbols {
     @Test
     public void testGetSymbolsUnexpectedFormatDoesntHaveSymbolIndexesKey() {
         String jsonDbTable = "{\"symbols\":[" +
-                "{\"name\":\"var\",\"unit\":\"\",\"definition\":\"first comment\",\"category\":\"\",\"modules\":[],\"programmingSymbolType\":\"Constant\"}]," +
+                "{\"name\":\"var\",\"unit\":\"\",\"definition\":\"first comment\",\"category\":\"\",\"modules\":[],\"programmingSymbolType\":\"CONSTANT\"}]," +
                 "\"indexes\":[]}";
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
@@ -287,11 +287,11 @@ public class TestDBFacadeSymbols {
     public void testGetSymbolsResponseJsonContainsDuplicatedSymbols() {
 
         String jsonDbTable = "{\"symbols\":[" +
-                "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\", \"category\":\"\",\"modules\":{\"main\":\"foo\", \"secondary\":[]}, \"programmingSymbolType\":\"Constant\",\"indexes\":[]}, " +
-                "{\"name\":\"var\",\"unit\":\"other units\", \"definition\":\"other comment\", \"category\":\"\",\"modules\":[], \"programmingSymbolType\":\"Constant\",\"indexes\":[]}], " +
+                "{\"name\":\"var\",\"unit\":\"\", \"definition\":\"first comment\", \"category\":\"\",\"modules\":{\"main\":\"foo\", \"secondary\":[]}, \"programmingSymbolType\":\"CONSTANT\",\"indexes\":[]}, " +
+                "{\"name\":\"var\",\"unit\":\"other units\", \"definition\":\"other comment\", \"category\":\"\",\"modules\":[], \"programmingSymbolType\":\"CONSTANT\",\"indexes\":[]}], " +
                 "\"indexes\":[]}";
         VensimLogger logger = mock(VensimLogger.class);
-        DBFacade.LOG = logger;
+        DBFacade.logger = logger;
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbTable);
 
 
@@ -392,10 +392,10 @@ public class TestDBFacadeSymbols {
 
         List<Symbol> symbols = new ArrayList<>();
 
-        Symbol constant = new Symbol("    constant     ", SymbolType.Constant);
+        Symbol constant = new Symbol("    constant     ", SymbolType.CONSTANT);
         constant.setUnits("          constant units           ");
         constant.setComment("            constant comment         ");
-        constant.setCategory("           constant category      ");
+        constant.setCategory(Category.create("           constant category      "));
         constant.addIndexLine(List.of(mock(Symbol.class)));
 
         symbols.add(constant);
@@ -415,9 +415,9 @@ public class TestDBFacadeSymbols {
 
         List<Symbol> symbols = new ArrayList<>();
 
-        Symbol subscript = new Symbol("    subscript     ", SymbolType.Subscript);
-        subscript.addDependency(new Symbol("           value1         ", SymbolType.Subscript_Value));
-        subscript.addDependency(new Symbol("           value2          ", SymbolType.Subscript_Value));
+        Symbol subscript = new Symbol("    subscript     ", SymbolType.SUBSCRIPT);
+        subscript.addDependency(new Symbol("           value1         ", SymbolType.SUBSCRIPT_VALUE));
+        subscript.addDependency(new Symbol("           value2          ", SymbolType.SUBSCRIPT_VALUE));
 
         symbols.add(subscript);
 
@@ -435,7 +435,7 @@ public class TestDBFacadeSymbols {
         DBFacade.handler = handler;
 
         List<Symbol> symbols = new ArrayList<>();
-        symbols.add(new Symbol("value", SymbolType.Subscript_Value));
+        symbols.add(new Symbol("value", SymbolType.SUBSCRIPT_VALUE));
 
         JsonReader jsonReader = Json.createReader(new StringReader("{\"indexes\":[]}"));
         JsonObject object = jsonReader.readObject();
@@ -451,9 +451,13 @@ public class TestDBFacadeSymbols {
         DBFacade.handler = handler;
 
         List<Symbol> symbols = new ArrayList<>();
-        symbols.add(new Symbol("variable", SymbolType.Variable));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"variable\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Variable\"}], \"module\" : \"module\"}"));
+        Symbol s = new Symbol("variable", SymbolType.VARIABLE);
+        s.setCategory(Category.create("name"));
+
+        symbols.add(s);
+
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"variable\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Variable\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -467,7 +471,7 @@ public class TestDBFacadeSymbols {
         DBFacade.handler = handler;
 
         List<Symbol> symbols = new ArrayList<>();
-        symbols.add(new Symbol("function", SymbolType.Function));
+        symbols.add(new Symbol("function", SymbolType.FUNCTION));
 
         JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
@@ -483,9 +487,11 @@ public class TestDBFacadeSymbols {
         DBFacade.handler = handler;
 
         List<Symbol> symbols = new ArrayList<>();
-        symbols.add(new Symbol("reality check", SymbolType.Reality_Check));
+        Symbol s = new Symbol("reality check", SymbolType.REALITY_CHECK);
+        s.setCategory(Category.create("name"));
+        symbols.add(s);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"reality check\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Reality_Check\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"reality check\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Reality_check\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -499,9 +505,11 @@ public class TestDBFacadeSymbols {
         DBFacade.handler = handler;
 
         List<Symbol> symbols = new ArrayList<>();
-        symbols.add(new Symbol("lookup table", SymbolType.Lookup_Table));
+        Symbol s = new Symbol("lookup table", SymbolType.LOOKUP_TABLE);
+        s.setCategory(Category.create("name"));
+        symbols.add(s);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"lookup table\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Lookup_Table\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"lookup table\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Lookup_table\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
@@ -516,9 +524,11 @@ public class TestDBFacadeSymbols {
         DBFacade.handler = handler;
 
         List<Symbol> symbols = new ArrayList<>();
-        symbols.add(new Symbol("switch", SymbolType.Switches));
+        Symbol s = new Symbol("switch", SymbolType.SWITCHES);
+        s.setCategory(Category.create("name"));
+        symbols.add(s);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"switch\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"\",\"programmingsymboltype\":\"Switches\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"switch\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Switches\"}], \"module\" : \"module\"}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 

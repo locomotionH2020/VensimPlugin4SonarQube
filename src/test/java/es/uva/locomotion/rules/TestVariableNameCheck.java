@@ -1,8 +1,13 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.*;
-import es.uva.locomotion.plugin.VensimScanner;
+import es.uva.locomotion.model.AcronymsList;
+import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.VensimScanner;
 import org.junit.Test;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
@@ -137,10 +142,10 @@ public class TestVariableNameCheck {
         VariableNameCheck check = new VariableNameCheck();
 
         SymbolTable table = new SymbolTable();
-        Symbol invalid = new Symbol("INVALID", SymbolType.Variable);
-        invalid.addDefinitionLine(1);
-        Symbol valid = new Symbol("valid", SymbolType.Variable);
-        valid.addDefinitionLine(2);
+        Symbol invalid = new Symbol("INVALID", SymbolType.VARIABLE);
+        invalid.addLine(1);
+        Symbol valid = new Symbol("valid", SymbolType.VARIABLE);
+        valid.addLine(2);
         table.addSymbol(invalid);
         table.addSymbol(valid);
 
@@ -154,7 +159,7 @@ public class TestVariableNameCheck {
     @Test
     public void testAcronymInVariableStart(){
         SymbolTable parsedTable = new SymbolTable();
-        addSymbolInLines(parsedTable,"ACR_var",SymbolType.Variable,1);
+        addSymbolInLines(parsedTable,"ACR_var",SymbolType.VARIABLE,1);
 
         for(Symbol s:parsedTable.getSymbols())
             s.setComment("Parsed Comment");
@@ -174,7 +179,7 @@ public class TestVariableNameCheck {
     @Test
     public void testAcronymInVariableMiddle(){
         SymbolTable parsedTable = new SymbolTable();
-        addSymbolInLines(parsedTable,"var_ACR_var",SymbolType.Variable,1);
+        addSymbolInLines(parsedTable,"var_ACR_var",SymbolType.VARIABLE,1);
 
         for(Symbol s:parsedTable.getSymbols())
             s.setComment("Parsed Comment");
@@ -193,7 +198,7 @@ public class TestVariableNameCheck {
     @Test
     public void testAcronymInVariableEnd(){
         SymbolTable parsedTable = new SymbolTable();
-        addSymbolInLines(parsedTable,"var_ACR",SymbolType.Variable,1);
+        addSymbolInLines(parsedTable,"var_ACR",SymbolType.VARIABLE,1);
 
         for(Symbol s:parsedTable.getSymbols())
             s.setComment("Parsed Comment");
@@ -213,7 +218,7 @@ public class TestVariableNameCheck {
     @Test
     public void testAcronymInVariableOnly(){
         SymbolTable parsedTable = new SymbolTable();
-        addSymbolInLines(parsedTable,"ACR",SymbolType.Variable,1);
+        addSymbolInLines(parsedTable,"ACR",SymbolType.VARIABLE,1);
 
         for(Symbol s:parsedTable.getSymbols())
             s.setComment("Parsed Comment");
@@ -232,7 +237,7 @@ public class TestVariableNameCheck {
     @Test
     public void testAcronymInVariableMultiple(){
         SymbolTable parsedTable = new SymbolTable();
-        addSymbolInLines(parsedTable,"ACR_H2O_var_CO2",SymbolType.Variable,1);
+        addSymbolInLines(parsedTable,"ACR_H2O_var_CO2",SymbolType.VARIABLE,1);
 
         for(Symbol s:parsedTable.getSymbols())
             s.setComment("Parsed Comment");
@@ -254,8 +259,8 @@ public class TestVariableNameCheck {
     @Test
     public void testAcronymInVariableWithBadName(){
         SymbolTable parsedTable = new SymbolTable();
-        addSymbolInLines(parsedTable,"ACRT_var",SymbolType.Variable,1);
-        addSymbolInLines(parsedTable,"TACR_var",SymbolType.Variable,2);
+        addSymbolInLines(parsedTable,"ACRT_var",SymbolType.VARIABLE,1);
+        addSymbolInLines(parsedTable,"TACR_var",SymbolType.VARIABLE,2);
 
         for(Symbol s:parsedTable.getSymbols())
             s.setComment("Parsed Comment");

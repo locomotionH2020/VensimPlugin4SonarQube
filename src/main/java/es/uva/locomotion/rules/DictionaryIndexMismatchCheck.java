@@ -1,10 +1,10 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
-import es.uva.locomotion.plugin.Issue;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
 
@@ -27,7 +27,7 @@ public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
             "</p>";
     public static final String NAME = "DictionaryIndextMismatch" ;
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     @Override
     public void scan(VensimVisitorContext context) {
@@ -41,9 +41,9 @@ public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
     private void checkSymbolsIndexes(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
-                foundSymbol.setAsInvalid(this.getClass());
+                foundSymbol.setAsInvalid(this.getClass().getSimpleName());
 
-                for(int line: foundSymbol.getDefinitionLines()) {
+                for(int line: foundSymbol.getLines()) {
                     List<List<String>> foundTxt = foundSymbol.getIndexes().stream().map(list -> list.stream().map(Symbol::getToken).collect(Collectors.toList())).collect(Collectors.toList());
                     Symbol dbSymbol = dbTable.getSymbol(foundSymbol.getToken().trim());
                     List<String> dbTxt = dbSymbol.getIndexes().stream().map(list -> list.get(0).getToken()).collect(Collectors.toList());
@@ -69,7 +69,7 @@ public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
         try{
             return !tryToMatchIndexes(foundIndexes, dbIndexes);
         }catch (IllegalStateException ex){
-            LOG.info("The symbol '" + foundSymbol.getToken() + "' is indexed by a subscript and a subscript value in the same column.");
+            logger.info("The symbol '" + foundSymbol.getToken() + "' is indexed by a subscript and a subscript value in the same column.");
             return false;
         }
 
@@ -104,7 +104,7 @@ public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
         Symbol firstFoundValue = foundIndex.get(0);
         Set<Symbol> uniqueFoundIndexes = new HashSet<>(foundIndex);
 
-        if(firstFoundValue.getType()== SymbolType.Subscript){
+        if(firstFoundValue.getType()== SymbolType.SUBSCRIPT){
             if(uniqueFoundIndexes.size()==1) {
                 Set<String> dbValues = dbIndex.getDependencies().stream().map(Symbol::getToken).map(String::trim).collect(Collectors.toSet());
                 Set<String> foundValues = firstFoundValue.getDependencies().stream().map(Symbol::getToken).map(String::trim).collect(Collectors.toSet());

@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.IOException;
@@ -19,7 +18,9 @@ import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -35,7 +36,7 @@ public class TestDBFacadeModules {
     @Test
     public void testGetModulesParsedJson() {
 
-        List<String> expected = new ArrayList<>();
+        Set<String> expected = new HashSet<>();
 
         expected.add("AnotherModule");
         expected.add("Module1");
@@ -46,7 +47,7 @@ public class TestDBFacadeModules {
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
 
-        List<String> obtainedList = DBFacade.getExistingModulesFromDB("","token");
+        Set<String> obtainedList = DBFacade.getExistingModulesFromDB("","token");
         assertEquals(expected, obtainedList);
     }
 
@@ -58,9 +59,9 @@ public class TestDBFacadeModules {
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
-        List<String> obtainedList = DBFacade.getExistingModulesFromDB("", "token");
+        Set<String> obtainedList = DBFacade.getExistingModulesFromDB("", "token");
 
-        assertEquals(new ArrayList<>(), obtainedList);
+        assertEquals(new HashSet<>(), obtainedList);
     }
 
 
@@ -98,7 +99,7 @@ public class TestDBFacadeModules {
 
         String jsonDbList = "{\"modules\":[\"Module\",\"Another\",\"Module\"]}";
         VensimLogger logger = mock(VensimLogger.class);
-        DBFacade.LOG = logger;
+        DBFacade.logger = logger;
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
 
@@ -181,7 +182,7 @@ public class TestDBFacadeModules {
         ServiceConnectionHandler handler = Mockito.mock(ServiceConnectionHandler.class);
         DBFacade.handler = handler;
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        DBFacade.LOG = logger;
+        DBFacade.logger = logger;
 
         List<String> modules = new ArrayList<>();
         modules.add("Module1");
@@ -201,7 +202,7 @@ public class TestDBFacadeModules {
         ServiceConnectionHandler handler = Mockito.mock(ServiceConnectionHandler.class);
         DBFacade.handler = handler;
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        DBFacade.LOG = logger;
+        DBFacade.logger = logger;
 
         List<String> modules = new ArrayList<>();
 

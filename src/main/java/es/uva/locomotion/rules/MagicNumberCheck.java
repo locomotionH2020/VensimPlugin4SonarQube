@@ -1,10 +1,11 @@
 package es.uva.locomotion.rules;
 
+import es.uva.locomotion.model.symbol.Number;
+import es.uva.locomotion.model.symbol.NumberTable;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
-import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -45,11 +46,7 @@ public class MagicNumberCheck extends AbstractVensimCheck {
 
     public static final String DEFAULT_REPETITIONS = "3";
 
-    protected static VensimLogger LOG = VensimLogger.getInstance();
-
-    public MagicNumberCheck(){
-    }
-
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     @RuleProperty(
             key = "minimum-repetitions",
@@ -65,14 +62,13 @@ public class MagicNumberCheck extends AbstractVensimCheck {
         SymbolTable symbolTable = context.getParsedSymbolTable();
         visitor.setSymbols(symbolTable);
 
-        SymbolTable numberTable = visitor.getSymbolTable(context.getRootNode());
+        NumberTable numberTable = visitor.getNumberTable(context.getRootNode());
 
         int minimumRepetitions = getMinimumRepetitions();
 
-        for(Symbol symbol: numberTable.getSymbols()){
+        for(Number symbol: numberTable.getNumbers()){
             if(!numberIsIgnored(symbol.getToken())) {
-                int foundRepetitions = symbol.getDefinitionLines().size();
-
+                int foundRepetitions = symbol.getOcurrences();
                 if(foundRepetitions>=1){
 
                     Severity issueSeverity;
@@ -82,10 +78,10 @@ public class MagicNumberCheck extends AbstractVensimCheck {
                         issueSeverity = Severity.MAJOR;
 
 
-                    for (int line : symbol.getDefinitionLines()) {
+                    for (int line : symbol.getLines()) {
 
                         Issue issue = new Issue(this, line, "The number " + symbol.getToken() + " is repeated " +
-                                symbol.getDefinitionLines().size() + " times. Consider replacing it by a constant");
+                                symbol.getOcurrences() + " times. Consider replacing it by a constant");
                         issue.setSeverity(issueSeverity);
                         addIssue(context,issue,symbol.isFiltered());
 
@@ -107,7 +103,7 @@ public class MagicNumberCheck extends AbstractVensimCheck {
         }catch (NumberFormatException ex){
             // Empty catch block so that the error is logged if 'selectedRepetitions' is < 1 or if it isn't a number.
         }
-        LOG.unique( "The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 0.",
+        logger.unique( "The rule " + NAME + " has an invalid configuration: The selected minimum repetitions must be a number greater than 0.",
                 LoggingLevel.ERROR);
         return Integer.parseInt(DEFAULT_REPETITIONS);
 

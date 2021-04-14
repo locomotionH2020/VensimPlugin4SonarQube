@@ -1,9 +1,13 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.*;
-import es.uva.locomotion.plugin.Issue;
+import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import es.uva.locomotion.utilities.Constants;
 import org.junit.Test;
@@ -11,8 +15,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.addSymbolInLines;
+import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
 import static org.junit.Assert.*;
 
 public class TestDictionaryTypeMismatchCheck {
@@ -22,11 +26,11 @@ public class TestDictionaryTypeMismatchCheck {
     public void testIssue() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
-        GeneralTestUtilities.addSymbolInLines(dbTable, "var", SymbolType.Subscript);
-        Symbol parsedVar = addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1, 2, 3);
+        GeneralTestUtilities.addSymbolInLines(dbTable, "var", SymbolType.SUBSCRIPT);
+        Symbol parsedVar = addSymbolInLines(parsedTable, "var", SymbolType.VARIABLE, 1, 2, 3);
 
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
@@ -41,30 +45,30 @@ public class TestDictionaryTypeMismatchCheck {
 
         assertFalse(parsedVar.isValid());
         for (Issue issue : context.getIssues())
-            assertEquals("The symbol 'var' has type 'Variable' but the dictionary has 'Subscript'.", issue.getMessage());
+            assertEquals("The symbol 'var' has type 'VARIABLE' but the dictionary has 'SUBSCRIPT'.", issue.getMessage());
     }
 
     @Test
     public void testIssueInDifferentSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
-        GeneralTestUtilities.addSymbolInLines(dbTable, "var", SymbolType.Variable);
-        addSymbolInLines(parsedTable, "var", SymbolType.Reality_Check, 1);
+        GeneralTestUtilities.addSymbolInLines(dbTable, "var", SymbolType.VARIABLE);
+        addSymbolInLines(parsedTable, "var", SymbolType.REALITY_CHECK, 1);
 
-        GeneralTestUtilities.addSymbolInLines(dbTable, "valid", SymbolType.Constant);
-        Symbol valid = addSymbolInLines(parsedTable, "valid", SymbolType.Constant, 2);
+        GeneralTestUtilities.addSymbolInLines(dbTable, "valid", SymbolType.CONSTANT);
+        Symbol valid = addSymbolInLines(parsedTable, "valid", SymbolType.CONSTANT, 2);
 
-        GeneralTestUtilities.addSymbolInLines(dbTable, "var2", SymbolType.Reality_Check);
-        GeneralTestUtilities.addSymbolInLines(parsedTable, "var2", SymbolType.Subscript_Value, 3);
+        GeneralTestUtilities.addSymbolInLines(dbTable, "var2", SymbolType.REALITY_CHECK);
+        GeneralTestUtilities.addSymbolInLines(parsedTable, "var2", SymbolType.SUBSCRIPT_VALUE, 3);
 
-        GeneralTestUtilities.addSymbolInLines(dbTable, "valid2", SymbolType.Subscript_Value);
-        GeneralTestUtilities.addSymbolInLines(parsedTable, "valid2", SymbolType.Subscript_Value, 4);
+        GeneralTestUtilities.addSymbolInLines(dbTable, "valid2", SymbolType.SUBSCRIPT_VALUE);
+        GeneralTestUtilities.addSymbolInLines(parsedTable, "valid2", SymbolType.SUBSCRIPT_VALUE, 4);
 
-        GeneralTestUtilities.addSymbolInLines(dbTable, "var3", SymbolType.Lookup_Table);
-        GeneralTestUtilities.addSymbolInLines(parsedTable, "var3", SymbolType.Subscript, 5);
+        GeneralTestUtilities.addSymbolInLines(dbTable, "var3", SymbolType.LOOKUP_TABLE);
+        GeneralTestUtilities.addSymbolInLines(parsedTable, "var3", SymbolType.SUBSCRIPT, 5);
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
@@ -82,7 +86,7 @@ public class TestDictionaryTypeMismatchCheck {
     public void testIgnoresSymbolsThatArentInTheDictionary() {
         SymbolTable parsedTable = new SymbolTable();
 
-        GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1, 2, 3);
+        GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.VARIABLE, 1, 2, 3);
 
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, new DataBaseRepresentation());
@@ -97,7 +101,7 @@ public class TestDictionaryTypeMismatchCheck {
     public void testRuleIsIgnoredIfDbTableIsNull() {
         SymbolTable parsedTable = new SymbolTable();
 
-        GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.Variable, 1, 2, 3);
+        GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.VARIABLE, 1, 2, 3);
 
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, null);
@@ -112,12 +116,12 @@ public class TestDictionaryTypeMismatchCheck {
     @Test
     public void testRuleIsIgnoredIfSymbolDoenstHaveDefinitionLine() {
         SymbolTable parsedTable = new SymbolTable();
-        parsedTable.addSymbol(new Symbol("var", SymbolType.Subscript));
+        parsedTable.addSymbol(new Symbol("var", SymbolType.SUBSCRIPT));
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
-        dbTable.addSymbol(new Symbol("var", SymbolType.Reality_Check));
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        dbTable.addSymbol(new Symbol("var", SymbolType.REALITY_CHECK));
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 
@@ -133,25 +137,25 @@ public class TestDictionaryTypeMismatchCheck {
     public void testRuleIgnoresFunctions() {
 
         SymbolTable parsedTable = new SymbolTable();
-        addSymbolInLines(parsedTable, "function", SymbolType.Function, 1);
-        addSymbolInLines(parsedTable, "constant", SymbolType.Constant, 2);
-        addSymbolInLines(parsedTable, "var", SymbolType.Variable, 3);
-        addSymbolInLines(parsedTable, "subscript", SymbolType.Subscript, 4);
-        addSymbolInLines(parsedTable, "subscriptValue", SymbolType.Subscript_Value, 5);
-        addSymbolInLines(parsedTable, "lookup", SymbolType.Lookup_Table, 6);
-        addSymbolInLines(parsedTable, "realityCheck", SymbolType.Reality_Check, 7);
+        addSymbolInLines(parsedTable, "function", SymbolType.FUNCTION, 1);
+        addSymbolInLines(parsedTable, "constant", SymbolType.CONSTANT, 2);
+        addSymbolInLines(parsedTable, "var", SymbolType.VARIABLE, 3);
+        addSymbolInLines(parsedTable, "subscript", SymbolType.SUBSCRIPT, 4);
+        addSymbolInLines(parsedTable, "subscriptValue", SymbolType.SUBSCRIPT_VALUE, 5);
+        addSymbolInLines(parsedTable, "lookup", SymbolType.LOOKUP_TABLE, 6);
+        addSymbolInLines(parsedTable, "realityCheck", SymbolType.REALITY_CHECK, 7);
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
 
-        addSymbolInLines(dbTable, "function", SymbolType.Variable);
-        addSymbolInLines(dbTable, "constant", SymbolType.Variable);
-        addSymbolInLines(dbTable, "var", SymbolType.Constant);
-        addSymbolInLines(dbTable, "subscript", SymbolType.Variable);
-        addSymbolInLines(dbTable, "subscriptValue", SymbolType.Variable);
-        addSymbolInLines(dbTable, "lookup", SymbolType.Variable);
-        addSymbolInLines(dbTable, "realityCheck", SymbolType.Variable);
+        addSymbolInLines(dbTable, "function", SymbolType.VARIABLE);
+        addSymbolInLines(dbTable, "constant", SymbolType.VARIABLE);
+        addSymbolInLines(dbTable, "var", SymbolType.CONSTANT);
+        addSymbolInLines(dbTable, "subscript", SymbolType.VARIABLE);
+        addSymbolInLines(dbTable, "subscriptValue", SymbolType.VARIABLE);
+        addSymbolInLines(dbTable, "lookup", SymbolType.VARIABLE);
+        addSymbolInLines(dbTable, "realityCheck", SymbolType.VARIABLE);
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
         DictionaryTypeMismatchCheck check = new DictionaryTypeMismatchCheck();
@@ -167,20 +171,20 @@ public class TestDictionaryTypeMismatchCheck {
     public void testRuleIgnoresDefaultSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
 
         List<Symbol> parsedSymbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         parsedSymbols.forEach(symbol -> {
-            symbol.addDefinitionLine(1);
-            symbol.setType(SymbolType.Variable);
+            symbol.addLine(1);
+            symbol.setType(SymbolType.VARIABLE);
             parsedTable.addSymbol(symbol);
         });
 
         List<Symbol> dbSymbols = Constants.DEFAULT_VENSIM_SYMBOLS.stream().map(Symbol::new).collect(Collectors.toList());
         dbSymbols.forEach(symbol -> {
-            symbol.setType(SymbolType.Constant);
+            symbol.setType(SymbolType.CONSTANT);
             dbTable.addSymbol(symbol);
         });
 
@@ -199,8 +203,8 @@ public class TestDictionaryTypeMismatchCheck {
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
         dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbols();
-        dbTable.addSymbol(new Symbol("var", SymbolType.Reality_Check));
+        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        dbTable.addSymbol(new Symbol("var", SymbolType.REALITY_CHECK));
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbData);
 

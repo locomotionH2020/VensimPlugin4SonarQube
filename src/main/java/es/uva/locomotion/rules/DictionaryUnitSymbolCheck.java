@@ -1,9 +1,9 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
@@ -12,6 +12,7 @@ import org.sonar.check.Rule;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Rule(key = DictionaryUnitSymbolCheck.CHECK_KEY, name = DictionaryUnitSymbolCheck.NAME, description = DictionaryUnitSymbolCheck.HTML_DESCRIPTION)
@@ -24,29 +25,27 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
 
     public static final String NAME = "DictionaryUnitSymbolCheck";
 
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
 
-    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.Function, SymbolType.Subscript_Value);
+    private static final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION, SymbolType.SUBSCRIPT_VALUE);
 
     @Override
     public void scan(VensimVisitorContext context) {
         SymbolTable parsedTable = context.getParsedSymbolTable();
 
         if (context.getDbdata() != null) {
-            if (context.getDbdata().getUnits() != null) {
-                List<String> dbUnits = context.getDbdata().getUnits();
+                Set<String> dbUnits = context.getDbdata().getUnits();
                 dbUnits.add("Dmnl");
                 checkSymbolsUnits(context, parsedTable, dbUnits);
-            }
         }
     }
 
-    private void checkSymbolsUnits(VensimVisitorContext context, SymbolTable parsedTable, List<String> dbUnits) {
+    private void checkSymbolsUnits(VensimVisitorContext context, SymbolTable parsedTable, Set<String> dbUnits) {
         for (Symbol foundSymbol : parsedTable.getSymbols()) {
             if (raisesIssue(foundSymbol, dbUnits)) {
-                foundSymbol.setAsInvalid(this.getClass());
+                foundSymbol.setAsInvalid(this.getClass().getSimpleName());
 
-                for (int line : foundSymbol.getDefinitionLines()) {
+                for (int line : foundSymbol.getLines()) {
                     Issue issue = new Issue(this, line, "The symbol '" + foundSymbol.getToken() + "' has '" + foundSymbol.getUnits().trim() + "' as units, but they don't exists in the dictionary, permited units are: " + dbUnits + ".");
                     addIssue(context, issue, foundSymbol.isFiltered());
 
@@ -55,7 +54,7 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
         }
     }
 
-    private boolean raisesIssue(Symbol foundSymbol, List<String> dbUnits) {
+    private boolean raisesIssue(Symbol foundSymbol, Set<String> dbUnits) {
         if (symbolIsIgnored(foundSymbol))
             return false;
 

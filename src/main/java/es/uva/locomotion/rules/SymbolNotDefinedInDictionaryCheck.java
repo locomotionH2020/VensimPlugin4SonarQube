@@ -1,10 +1,10 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
-import es.uva.locomotion.plugin.Issue;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
 
@@ -33,7 +33,7 @@ public class SymbolNotDefinedInDictionaryCheck extends AbstractVensimCheck {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(!symbolIsIgnored(foundSymbol) && !dbTable.hasSymbol(foundSymbol.getToken())){
 
-                for(int line: foundSymbol.getDefinitionLines()) {
+                for(int line: foundSymbol.getLines()) {
                     Issue issue = new Issue(this, line,"The symbol '" + foundSymbol.getToken() +"' isn't defined in the database.");
                     addIssue(context,issue,foundSymbol.isFiltered());
                 }
@@ -44,7 +44,7 @@ public class SymbolNotDefinedInDictionaryCheck extends AbstractVensimCheck {
 
     private boolean symbolIsIgnored(Symbol symbol){
 
-        return symbol.getType()== SymbolType.Function || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
+        return symbol.getType()== SymbolType.FUNCTION || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
 
     }
 }

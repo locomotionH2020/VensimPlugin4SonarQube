@@ -1,8 +1,8 @@
 package es.uva.locomotion.utilities;
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import org.junit.Test;
 
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getSymbolTableFromString;
@@ -39,22 +39,23 @@ public class TestViewTableUtility {
                         "///---\\\\\\\n";
 
         SymbolTable symbolTable = getSymbolTableFromString(program);
-        ViewTable viewTable = getViewTableFromString(program, "|", ".");
-        ViewTableUtility.addViews(symbolTable, viewTable);
+        ViewTable viewTable = getViewTableFromString(program, symbolTable, "|", ".");
 
         Symbol s = symbolTable.getSymbol(VARIABLE_1_EQ);
-        assertEquals(VIEW_NAME, s.getPrimary_module());
-        assertEquals(0, s.getShadow_module().size());
+        assertEquals(VIEW_NAME, s.getPrimaryModule().getName());
+
+        assertEquals(0, s.getShadowModule().size());
 
         s = symbolTable.getSymbol(VARIABLE_2_EQ);
-        assertTrue(s.getPrimary_module().isBlank());
-        assertEquals(VIEW_NAME, s.getShadow_module().get(0));
-        assertEquals(1, s.getShadow_module().size());
+
+        assertNull(s.getPrimaryModule());
+        assertEquals(VIEW_NAME, s.getShadowModule().get(0).getName());
+        assertEquals(1, s.getShadowModule().size());
 
         s = symbolTable.getSymbol(VARIABLE_3_EQ);
 
-        assertTrue(s.getPrimary_module().isBlank());
-        assertEquals(0, s.getShadow_module().size());
+        assertNull(s.getPrimaryModule());
+        assertEquals(0, s.getShadowModule().size());
     }
 
     @Test
@@ -88,9 +89,7 @@ public class TestViewTableUtility {
                         "///---\\\\\\\n";
         //Filter first view
         SymbolTable symbolTable = getSymbolTableFromString(program);
-        ViewTable viewTable = getViewTableFromString(program, "|", ".");
-        ViewTableUtility.addViews(symbolTable, viewTable);
-
+        ViewTable viewTable = getViewTableFromString(program, symbolTable,"|", ".");
         ViewTableUtility.filterPrefix(symbolTable, VIEW_NAME);
         Symbol s = symbolTable.getSymbol(VARIABLE_1_EQ);
         assertFalse(s.isFiltered());
@@ -101,8 +100,7 @@ public class TestViewTableUtility {
 
         //Filter "Filter"
         symbolTable = getSymbolTableFromString(program);
-        viewTable = getViewTableFromString(program, "|", ".");
-        ViewTableUtility.addViews(symbolTable, viewTable);
+        viewTable = getViewTableFromString(program, symbolTable,"|", ".");
 
         ViewTableUtility.filterPrefix(symbolTable, "Filter");
         s = symbolTable.getSymbol(VARIABLE_1_EQ);
@@ -114,8 +112,7 @@ public class TestViewTableUtility {
 
         //Filter last view
         symbolTable = getSymbolTableFromString(program);
-        viewTable = getViewTableFromString(program);
-        ViewTableUtility.addViews(symbolTable, viewTable);
+        viewTable = getViewTableFromString(program,symbolTable);
 
         ViewTableUtility.filterPrefix(symbolTable, "None");
         s = symbolTable.getSymbol(VARIABLE_1_EQ);
@@ -127,8 +124,7 @@ public class TestViewTableUtility {
 
         //Filter Second view
         symbolTable = getSymbolTableFromString(program);
-        viewTable = getViewTableFromString(program, "|", ".");
-        ViewTableUtility.addViews(symbolTable, viewTable);
+        viewTable = getViewTableFromString(program, symbolTable, "|", ".");
 
         ViewTableUtility.filterPrefix(symbolTable, "All");
         s = symbolTable.getSymbol(VARIABLE_1_EQ);

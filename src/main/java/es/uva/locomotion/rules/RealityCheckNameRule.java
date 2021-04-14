@@ -1,10 +1,10 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.plugin.Issue;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
@@ -19,7 +19,8 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
     public static final String CHECK_KEY = "reality-check-name-convention";
     public static final String NAME = "RealityCheckNameRule" ;
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that reality checks follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+_test\"</p>\n" +
+            "<p>This rule checks that reality checks follow the name convention.The default regular expression is \"([a-z0-9]+_)*[a-z0-9]+_check\"</p>\n" +
+            "but it can be changed using custom quality profiles. \n The rest of this descriptions assumes the default regular expression is being used. \n" +
             "<ul>" +
             "   <li>The name must be in upper case.</li>\n" +
             "   <li>The name must have the suffix _check</li>\n"+
@@ -38,7 +39,7 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
             "temperature_not_negative_check\n"+
             "</pre>\n";
 
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
     public static final String DEFAULT_REGEXP = "([a-z0-9]+_)*[a-z0-9]+_check";
     @RuleProperty(
             key = "reality-check-name-regexp",
@@ -51,7 +52,7 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
             Pattern.compile(regexp);
             return regexp;
         } catch (PatternSyntaxException exception) {
-            LOG.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
+            logger.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);
             return DEFAULT_REGEXP;
         }
@@ -63,11 +64,11 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
 
 
         for(Symbol symbol:table.getSymbols()){
-            if(symbol.getType()== SymbolType.Reality_Check && !checkRealityCheckFollowsConvention(symbol.getToken())){
-                symbol.setAsInvalid(this.getClass());
+            if(symbol.getType()== SymbolType.REALITY_CHECK && !checkRealityCheckFollowsConvention(symbol.getToken())){
+                symbol.setAsInvalid(this.getClass().getSimpleName());
 
-                for(int line: symbol.getDefinitionLines()) {
-                    Issue issue = new Issue(this,line,"The reality check '" + symbol.getToken() + "' doesn't follow the naming convention.");
+                for(int line: symbol.getLines()) {
+                    Issue issue = new Issue(this,line,"The reality check '" + symbol.getToken() + "' doesn't follow the naming convention. Regular expression: " + getRegexp());
                     addIssue(context,issue,symbol.isFiltered());
 
                 }

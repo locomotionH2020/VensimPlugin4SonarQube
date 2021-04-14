@@ -1,8 +1,8 @@
 package es.uva.locomotion.rules;
 
+import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.plugin.VensimScanner;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;
 import org.junit.Test;
 import org.sonar.api.batch.rule.Severity;
@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 
 import static es.uva.locomotion.rules.TestMagicNumberCheck.DEFAULT_MINIMUM_REPETITIONS;
 import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestIntegrationMagicNumberCheck {
 
@@ -45,7 +46,7 @@ public class TestIntegrationMagicNumberCheck {
 
     @Test
     public void testNumberRepeatsMinimumMinusOne(){
-        String program = "A = 3 * 4 ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS -1);
+        String program = "A = 3 * 4\n ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS -1);
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         VensimScanner scanner = getScanner();
@@ -76,11 +77,30 @@ public class TestIntegrationMagicNumberCheck {
             assertEquals(1,issue.getLine());
         }
 
+        assertEquals(1,issues.size());
+
+        assertHasIssueInLines(visitorContext,MagicNumberCheck.class,1);
+    }
+    @Test
+    public void testNumberRepeatedInTheDifferentLineCounts(){
+        String program = "A = " + "3 * \n".repeat(DEFAULT_MINIMUM_REPETITIONS -1) + "3~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+
+        scanner.checkIssues(visitorContext);
+
+        List<Issue> issues = GeneralTestUtilities.getIssuesFromType(visitorContext,MagicNumberCheck.class);
+
+        for(Issue issue: issues) {
+            assertEquals(MagicNumberCheck.class, issue.getCheck().getClass());
+        }
+
         assertEquals(DEFAULT_MINIMUM_REPETITIONS,issues.size());
 
         assertHasIssueInLines(visitorContext,MagicNumberCheck.class,1);
     }
-
     @Test
     public void testConstantDirectAssignsDoesntCountEquation(){
         String program = "A = 3 ~~|".repeat(DEFAULT_MINIMUM_REPETITIONS);

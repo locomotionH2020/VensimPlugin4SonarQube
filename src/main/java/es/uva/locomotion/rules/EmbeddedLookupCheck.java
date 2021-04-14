@@ -2,12 +2,9 @@ package es.uva.locomotion.rules;
 
 
 import com.ibm.icu.impl.Pair;
-import es.uva.locomotion.model.AcronymsList;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.parser.visitors.EmbeddedLookupVisitor;
-import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
@@ -17,12 +14,11 @@ import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 
 import java.util.List;
-import java.util.Map;
 
 
 @Rule(key = EmbeddedLookupCheck.CHECK_KEY, name = EmbeddedLookupCheck.NAME, description = EmbeddedLookupCheck.HTML_DESCRIPTION)
 public class EmbeddedLookupCheck extends AbstractVensimCheck {
-    protected static final VensimLogger LOG = VensimLogger.getInstance();
+    protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "lookup-embedded";
     public static final String NAME = "EmbeddedLookupCheck";
@@ -54,7 +50,7 @@ public class EmbeddedLookupCheck extends AbstractVensimCheck {
         } catch (NumberFormatException ex) {
             // Empty catch block so that the error is logged if 'selectedRepetitions' is < 1 or if it isn't a number.
         }
-        LOG.unique("The rule " + NAME + " has an invalid configuration: The selected minimum size must be a number greater than 0.",
+        logger.unique("The rule " + NAME + " has an invalid configuration: The selected minimum size must be a number greater than 0.",
                 LoggingLevel.ERROR);
         return Integer.parseInt(DEFAULT_SIZE);
 
@@ -85,8 +81,8 @@ public class EmbeddedLookupCheck extends AbstractVensimCheck {
                 else
                     issueSeverity = Severity.MAJOR;
 
-                for (int line : lookup.getDefinitionLines()) {
-                    lookup.setAsInvalid(this.getClass());
+                for (int line : lookup.getLines()) {
+                    lookup.setAsInvalid(this.getClass().getSimpleName());
 
                     Issue issue = new Issue(this, line, "This lookup have " + foundRepetitions + " embedded" +
                             " data points. Consider replacing it by an external excel.");

@@ -1,10 +1,10 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
-import es.uva.locomotion.plugin.Issue;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
 
@@ -30,10 +30,10 @@ public class DictionaryCommentMismatchCheck extends AbstractVensimCheck {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
 
-                foundSymbol.setAsInvalid(this.getClass());
+                foundSymbol.setAsInvalid(this.getClass().getSimpleName());
                 String expectedComment = dbTable.getSymbol(foundSymbol.getToken()).getComment().trim();
 
-                for(int line: foundSymbol.getDefinitionLines()) {
+                for(int line: foundSymbol.getLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has a comment '"+foundSymbol.getComment().trim() + "' but the dictionary has '"+ expectedComment + "'." );
                     addIssue(context,issue,foundSymbol.isFiltered());
 
@@ -56,6 +56,6 @@ public class DictionaryCommentMismatchCheck extends AbstractVensimCheck {
     }
 
     private boolean symbolIsIgnored(Symbol symbol){
-        return symbol.getType()== SymbolType.Function || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
+        return symbol.getType()== SymbolType.FUNCTION || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
     }
 }

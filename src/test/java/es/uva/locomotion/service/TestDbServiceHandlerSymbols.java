@@ -16,7 +16,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getJsonObjectFromList;
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.*;

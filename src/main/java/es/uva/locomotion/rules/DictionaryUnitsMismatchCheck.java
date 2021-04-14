@@ -1,10 +1,10 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
-import es.uva.locomotion.plugin.Issue;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
 
@@ -19,7 +19,7 @@ public class DictionaryUnitsMismatchCheck extends AbstractVensimCheck{
             "If the symbol found in the file doesn't have units the rule is ignored.<br> " +
             "The symbols predefined by Vensim (FINAL TIME, TIME STEP, etc), subscript values and functions are ignored (except lookups)</p>";
     public static final String NAME = "DictionaryUnitsMismatch" ;
-    private final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.Function,SymbolType.Subscript_Value);
+    private static final List<SymbolType> IGNORED_TYPES = Arrays.asList(SymbolType.FUNCTION,SymbolType.SUBSCRIPT_VALUE);
 
     @Override
     public void scan(VensimVisitorContext context) {
@@ -33,10 +33,10 @@ public class DictionaryUnitsMismatchCheck extends AbstractVensimCheck{
     private void checkSymbolsUnits(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
-                foundSymbol.setAsInvalid(this.getClass());
+                foundSymbol.setAsInvalid(this.getClass().getSimpleName());
 
                 String expectedUnits = dbTable.getSymbol(foundSymbol.getToken()).getUnits().trim();
-                for(int line: foundSymbol.getDefinitionLines()) {
+                for(int line: foundSymbol.getLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has '"+foundSymbol.getUnits().trim() + "' as units but the dictionary has '"+ expectedUnits + "'." );
                     addIssue(context,issue,foundSymbol.isFiltered());
 

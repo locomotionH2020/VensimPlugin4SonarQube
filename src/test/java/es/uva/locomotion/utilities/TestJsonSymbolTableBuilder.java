@@ -1,15 +1,14 @@
 package es.uva.locomotion.utilities;
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import org.junit.Test;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -89,7 +88,7 @@ public class TestJsonSymbolTableBuilder {
 
         SymbolTable table = new SymbolTable();
         Symbol symbol = table.addSymbol(new Symbol("var"));
-        symbol.addDefinitionLine(line);
+        symbol.addLine(line);
 
         builder.addTables("file",table, new ViewTable());
         JsonArray output = builder.build();
@@ -103,14 +102,14 @@ public class TestJsonSymbolTableBuilder {
         JsonSymbolTableBuilder builder = new JsonSymbolTableBuilder();
 
         SymbolTable table = new SymbolTable();
-        Symbol symbol = table.addSymbol(new Symbol("scenario1",SymbolType.Subscript_Value));
+        Symbol symbol = table.addSymbol(new Symbol("scenario1",SymbolType.SUBSCRIPT_VALUE));
 
         builder.addTables("file",table, new ViewTable());
         JsonObject file = builder.build().getJsonObject(0);
 
         String type = file.getJsonObject("symbols").getJsonObject("scenario1").getString(JsonSymbolTableBuilder.KEY_TYPE);
 
-        assertEquals("Subscript_Value",type);
+        assertEquals("SUBSCRIPT_VALUE",type);
 
     }
 

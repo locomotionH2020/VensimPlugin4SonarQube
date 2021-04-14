@@ -1,14 +1,12 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
 import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.symbol.Number;
+import es.uva.locomotion.model.symbol.NumberTable;
 import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
-import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
-import static org.junit.Assert.*;
-
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.BeforeClass;
@@ -19,7 +17,9 @@ import org.sonar.api.batch.rule.Severity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
+import static es.uva.locomotion.testutilities.RuleTestUtilities.assertHasIssueInLines;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class TestMagicNumberCheck {
@@ -28,11 +28,11 @@ public class TestMagicNumberCheck {
 
 
 
-    public MagicNumberCheck getMagicNumberCheckWithTable(VensimVisitorContext context, SymbolTable table){
+    public MagicNumberCheck getMagicNumberCheckWithTable(VensimVisitorContext context, NumberTable table){
         MagicNumberCheck check = spy(new MagicNumberCheck());
         check.repetitions = String.valueOf(DEFAULT_MINIMUM_REPETITIONS);
         MagicNumberTableVisitor visitor = Mockito.mock(MagicNumberTableVisitor.class);
-        when(visitor.getSymbolTable(context.getRootNode())).thenReturn(table);
+        when(visitor.getNumberTable(context.getRootNode())).thenReturn(table);
 
         doCallRealMethod().when(check).scan(any());
         when(check.getVisitor()).thenReturn(visitor);
@@ -48,12 +48,12 @@ public class TestMagicNumberCheck {
     @Test
     public void testRepetitionsEqualsTheMinimumParameterAreMajor(){
 
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -73,12 +73,12 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testRepetitionsBiggerThanMinimumParameterAreMajor(){
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS+1; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -95,12 +95,12 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testRepetitionsLowerThanMinimumParameterAreInfo(){
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -114,8 +114,8 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testWithNumberNotDefined(){
-        SymbolTable table = new SymbolTable();
-        table.addSymbol(new Symbol("51"));
+        NumberTable table = new NumberTable();
+        table.addNumber(new Number("51"));
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -126,13 +126,12 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testCountsRepetitionsInSameLine(){
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            symbol.addDefinitionLine(10);
-
+            Number.addLine(10);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         check.scan(context);
@@ -147,20 +146,20 @@ public class TestMagicNumberCheck {
 
      @Test
     public void testTableWithBothTypesOfIssues(){
-         SymbolTable table = new SymbolTable();
+         NumberTable table = new NumberTable();
          VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-         Symbol magicNumber = table.addSymbol(new Symbol("51"));
+         Number magicNumber = table.addNumber(new Number("51"));
          for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-             magicNumber.addDefinitionLine(10);
-         magicNumber.addDefinitionLine(1);
+             magicNumber.addLine(10);
+         magicNumber.addLine(1);
 
-         Symbol normalNumber1 = table.addSymbol(new Symbol("70"));
+         Number normalNumber1 = table.addNumber(new Number("70"));
          for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
-             normalNumber1.addDefinitionLine(10);
+             normalNumber1.addLine(10);
 
-         Symbol normalNumber2 = table.addSymbol(new Symbol("3.1415"));
-         normalNumber2.addDefinitionLine(1);
+         Number normalNumber2 = table.addNumber(new Number("3.1415"));
+         normalNumber2.addLine(1);
 
 
          MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -170,7 +169,7 @@ public class TestMagicNumberCheck {
          List<Issue> majorIssues = context.getIssues().stream().filter(issue -> issue.getSeverity() == Severity.MAJOR).collect(Collectors.toList());
          List<Issue> infoIssues = context.getIssues().stream().filter(issue -> issue.getSeverity() == Severity.INFO).collect(Collectors.toList());
 
-         assertEquals(DEFAULT_MINIMUM_REPETITIONS+1,majorIssues.size());
+         assertEquals(2,majorIssues.size());
          for(Issue issue:majorIssues)
              assertEquals("The number 51 is repeated " + (DEFAULT_MINIMUM_REPETITIONS + 1) + " times. Consider replacing it by a constant", issue.getMessage());
          for(Issue issue:infoIssues) {
@@ -186,10 +185,10 @@ public class TestMagicNumberCheck {
 
      @Test
      public void testZerosAreIgnored(){
-        SymbolTable table = new SymbolTable();
-        Symbol magicNumber = new Symbol("0");
+        NumberTable table = new NumberTable();
+        Number magicNumber = new Number("0");
         for(int i=0; i<DEFAULT_MINIMUM_REPETITIONS+4;i++){
-            magicNumber.addDefinitionLine(3);
+            magicNumber.addLine(3);
         }
 
          VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
@@ -203,10 +202,10 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testOnesAreIgnored(){
-        SymbolTable table = new SymbolTable();
-        Symbol magicNumber = new Symbol("1");
+        NumberTable table = new NumberTable();
+        Number magicNumber = new Number("1");
         for(int i=0; i<DEFAULT_MINIMUM_REPETITIONS+4;i++){
-            magicNumber.addDefinitionLine(3);
+            magicNumber.addLine(3);
         }
 
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
@@ -220,10 +219,10 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testOneHundredsAreIgnored(){
-        SymbolTable table = new SymbolTable();
-        Symbol magicNumber = new Symbol("100");
+        NumberTable table = new NumberTable();
+        Number magicNumber = new Number("100");
         for(int i=0; i<DEFAULT_MINIMUM_REPETITIONS+4;i++){
-            magicNumber.addDefinitionLine(3);
+            magicNumber.addLine(3);
         }
 
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
@@ -237,10 +236,10 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testMinusOnesAreIgnored(){
-        SymbolTable table = new SymbolTable();
-        Symbol magicNumber = new Symbol("-1");
+        NumberTable table = new NumberTable();
+        Number magicNumber = new Number("-1");
         for(int i=0; i<DEFAULT_MINIMUM_REPETITIONS+4;i++){
-            magicNumber.addDefinitionLine(3);
+            magicNumber.addLine(3);
         }
 
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
@@ -256,12 +255,12 @@ public class TestMagicNumberCheck {
     public void  testDifferentNumberOfMinimumRepetitionsMagicNumber(){
        final int REPETITIONS = 9;
 
-         SymbolTable table = new SymbolTable();
+         NumberTable table = new NumberTable();
          VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-         Symbol symbol = table.addSymbol(new Symbol("51"));
+         Number Number = table.addNumber(new Number("51"));
          for(int i = 0; i< REPETITIONS; i++)
-             symbol.addDefinitionLine(i);
+             Number.addLine(i);
 
 
          MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -281,12 +280,12 @@ public class TestMagicNumberCheck {
      public void testDifferentMinimumRepetitionsNotAMagicNumber(){
          final int REPETITIONS = 9;
 
-         SymbolTable table = new SymbolTable();
+         NumberTable table = new NumberTable();
          VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-         Symbol symbol = table.addSymbol(new Symbol("51"));
+         Number Number = table.addNumber(new Number("51"));
          for(int i = 0; i< REPETITIONS-1; i++)
-             symbol.addDefinitionLine(i);
+             Number.addLine(i);
 
 
          MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -301,12 +300,12 @@ public class TestMagicNumberCheck {
     @Test
     public void testZeroAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
 
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -325,12 +324,12 @@ public class TestMagicNumberCheck {
     @Test
     public void testZeroAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
 
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -349,16 +348,16 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testOneAsMinimumRepetitionsOnlyCreatesMajorIssues(){
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
-        symbol.addDefinitionLine(1);
-        symbol.addDefinitionLine(2);
+        Number Number = table.addNumber(new Number("51"));
+        Number.addLine(1);
+        Number.addLine(2);
 
-        Symbol symbol2 = new Symbol("52");
-        symbol2.addDefinitionLine(3);
-        table.addSymbol(symbol2);
+        Number Number2 = new Number("52");
+        Number2.addLine(3);
+        table.addNumber(Number2);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -375,12 +374,12 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testNegativeNumberAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -399,12 +398,12 @@ public class TestMagicNumberCheck {
     @Test
     public void testNegativeNumberAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
 
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -421,12 +420,12 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testEmptyStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -445,12 +444,12 @@ public class TestMagicNumberCheck {
     @Test
     public void testEmptyStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
 
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -467,12 +466,12 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsMagic(){
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -491,12 +490,12 @@ public class TestMagicNumberCheck {
     @Test
     public void testStringAsMinimumRepetitionsCountsAsDefaultRepetitionsAndIsntMagic(){
 
-        SymbolTable table = new SymbolTable();
+        NumberTable table = new NumberTable();
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
-        Symbol symbol = table.addSymbol(new Symbol("51"));
+        Number Number = table.addNumber(new Number("51"));
         for(int i = 0; i< DEFAULT_MINIMUM_REPETITIONS-1; i++)
-            symbol.addDefinitionLine(i);
+            Number.addLine(i);
 
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
@@ -513,14 +512,14 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsAString(){
-        SymbolTable table = new SymbolTable();
-        table.addSymbol(new Symbol("1"));
-        table.addSymbol(new Symbol("2"));
+        NumberTable table = new NumberTable();
+        table.addNumber(new Number("1"));
+        table.addNumber(new Number("2"));
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        MagicNumberCheck.LOG = logger;
+        MagicNumberCheck.logger = logger;
 
         check.repetitions =  "F";
         check.scan(context);
@@ -532,14 +531,14 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsZero(){
-        SymbolTable table = new SymbolTable();
-        table.addSymbol(new Symbol("1"));
-        table.addSymbol(new Symbol("2"));
+        NumberTable table = new NumberTable();
+        table.addNumber(new Number("1"));
+        table.addNumber(new Number("2"));
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        MagicNumberCheck.LOG = logger;
+        MagicNumberCheck.logger = logger;
 
         check.repetitions =  "0";
         check.scan(context);
@@ -552,14 +551,14 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testWarningIsLoggedIfMinimumRepetitionsIsNegative(){
-        SymbolTable table = new SymbolTable();
-        table.addSymbol(new Symbol("1"));
-        table.addSymbol(new Symbol("2"));
+        NumberTable table = new NumberTable();
+        table.addNumber(new Number("1"));
+        table.addNumber(new Number("2"));
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        MagicNumberCheck.LOG = logger;
+        MagicNumberCheck.logger = logger;
 
         check.repetitions =  "-1";
         check.scan(context);
@@ -571,14 +570,14 @@ public class TestMagicNumberCheck {
 
     @Test
     public void testWarningsDueToPropertyErrorsAreLoggedOnlyOnce(){
-        SymbolTable table = new SymbolTable();
-        table.addSymbol(new Symbol("1"));
-        table.addSymbol(new Symbol("2"));
+        NumberTable table = new NumberTable();
+        table.addNumber(new Number("1"));
+        table.addNumber(new Number("2"));
         VensimVisitorContext context = new VensimVisitorContext(null,null, new ViewTable(), null, null);
 
         MagicNumberCheck check = getMagicNumberCheckWithTable(context,table);
         VensimLogger logger = Mockito.mock(VensimLogger.class);
-        MagicNumberCheck.LOG = logger;
+        MagicNumberCheck.logger = logger;
 
         check.repetitions =  "-1";
         check.scan(context);

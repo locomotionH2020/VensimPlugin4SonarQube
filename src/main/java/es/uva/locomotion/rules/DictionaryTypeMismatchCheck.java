@@ -1,10 +1,10 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
-import es.uva.locomotion.plugin.Issue;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
 
@@ -30,10 +30,10 @@ public class DictionaryTypeMismatchCheck extends AbstractVensimCheck {
     private void checkSymbolsType(VensimVisitorContext context, SymbolTable parsedTable, SymbolTable dbTable) {
         for(Symbol foundSymbol: parsedTable.getSymbols()){
             if(raisesIssue(foundSymbol,dbTable)){
-                foundSymbol.setAsInvalid(this.getClass());
+                foundSymbol.setAsInvalid(this.getClass().getSimpleName());
 
                 SymbolType expectedType = dbTable.getSymbol(foundSymbol.getToken()).getType();
-                for(int line: foundSymbol.getDefinitionLines()) {
+                for(int line: foundSymbol.getLines()) {
                     Issue issue = new Issue(this, line,"The symbol '"+ foundSymbol.getToken() + "' has type '"+foundSymbol.getType() + "' but the dictionary has '"+ expectedType + "'." );
                     addIssue(context,issue,foundSymbol.isFiltered());
                 }
@@ -55,6 +55,6 @@ public class DictionaryTypeMismatchCheck extends AbstractVensimCheck {
     }
 
     private boolean symbolIsIgnored(Symbol symbol){
-        return symbol.getType()== SymbolType.Function || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
+        return symbol.getType()== SymbolType.FUNCTION || Constants.DEFAULT_VENSIM_SYMBOLS.contains(symbol.getToken().trim());
     }
 }

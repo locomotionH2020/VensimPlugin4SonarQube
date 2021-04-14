@@ -7,18 +7,13 @@ import es.uva.locomotion.utilities.exceptions.ServiceResponseFormatNotValid;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.After;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -34,7 +29,7 @@ public class TestDBFacadeUnits {
     @Test
     public void testGetUnitsParsedJson() {
 
-        List<String> expected = new ArrayList<>();
+        Set<String> expected = new HashSet<>();
 
         expected.add("AnotherUnit");
         expected.add("Unit1");
@@ -45,7 +40,7 @@ public class TestDBFacadeUnits {
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
 
-        List<String> obtainedList = DBFacade.getExistingUnitsFromDB("","token");
+        Set<String> obtainedList = DBFacade.getExistingUnitsFromDB("","token");
         assertEquals(expected, obtainedList);
     }
 
@@ -57,9 +52,9 @@ public class TestDBFacadeUnits {
 
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
-        List<String> obtainedList = DBFacade.getExistingUnitsFromDB("", "token");
+        Set<String> obtainedList = DBFacade.getExistingUnitsFromDB("", "token");
 
-        assertEquals(new ArrayList<>(), obtainedList);
+        assertEquals(new HashSet<>(), obtainedList);
     }
 
 
@@ -106,7 +101,7 @@ public class TestDBFacadeUnits {
 
         String jsonDbList = "[{\"concepts\":\"Primary Energy\",\"id\":1,\"unit\":\"EJ\"},{\"concepts\":\"Electricity\",\"id\":2,\"unit\":\"TWh\"},{\"concepts\":\"Primary Energy\",\"id\":1,\"unit\":\"EJ\"}]";
         VensimLogger logger = mock(VensimLogger.class);
-        DBFacade.LOG = logger;
+        DBFacade.logger = logger;
         DBFacade.handler = ServiceTestUtilities.getMockDbServiceHandlerThatReturns(jsonDbList);
 
 

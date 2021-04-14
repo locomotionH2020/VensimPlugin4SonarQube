@@ -1,18 +1,18 @@
 package es.uva.locomotion.parser.visitors;
 
 import com.ibm.icu.impl.Pair;
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.junit.Before;
 import org.junit.Test;
-import org.sonar.api.internal.apachecommons.lang.StringUtils;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.getVisitorContextFromString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -39,7 +39,7 @@ public class TestEmbeddedLookupVisitor {
 
         assertEquals(2, (int)list.get(0).second);
 
-        assertEquals(Collections.singletonList(1), list.get(0).first.getDefinitionLines());
+        assertEquals(Set.of(1), list.get(0).first.getLines());
 
     }
 
@@ -58,7 +58,7 @@ public class TestEmbeddedLookupVisitor {
         assertEquals(2, (int)list.get(0).second);
 
 
-        assertEquals(Collections.singletonList(1), list.get(0).first.getDefinitionLines());
+        assertEquals(Set.of(1), list.get(0).first.getLines());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class TestEmbeddedLookupVisitor {
         assertEquals(2, (int)list.get(0).second);
 
 
-        assertEquals(List.of(1), list.get(0).first.getDefinitionLines());
+        assertEquals(Set.of(1), list.get(0).first.getLines());
     }
     @Test
     public void testValidSingle() {
@@ -93,7 +93,7 @@ public class TestEmbeddedLookupVisitor {
         assertEquals(1, (int)list.get(0).second);
 
 
-        assertEquals(List.of(1), list.get(0).first.getDefinitionLines());
+        assertEquals(Set.of(1), list.get(0).first.getLines());
     }
     @Test
     public void testValidMultipleLookups() {
@@ -112,7 +112,7 @@ public class TestEmbeddedLookupVisitor {
         assertEquals(1, (int)list.get(0).second);
 
 
-        assertEquals(List.of(4), list.get(1).first.getDefinitionLines());
+        assertEquals(Set.of(4), list.get(1).first.getLines());
     }
     @Test
     public void testValidNumberMixMultipleLookups() {
@@ -132,7 +132,7 @@ public class TestEmbeddedLookupVisitor {
         assertEquals(1, (int)list.get(0).second);
         assertEquals(10, (int)list.get(1).second);
 
-        assertEquals(List.of(4), list.get(1).first.getDefinitionLines());
+        assertEquals(Set.of(4), list.get(1).first.getLines());
     }
     @Test
     public void testValidNumberMultipleLines() {
@@ -148,7 +148,7 @@ public class TestEmbeddedLookupVisitor {
 
         assertEquals(10, (int)list.get(0).second);
 
-        assertEquals(List.of(1), list.get(0).first.getDefinitionLines());
+        assertEquals(Set.of(1), list.get(0).first.getLines());
     }
 
     @Test
@@ -179,7 +179,7 @@ public class TestEmbeddedLookupVisitor {
         symbolTable.addSymbol(symbol1);
 
         VensimLogger logger = mock(VensimLogger.class);
-        EmbeddedLookupVisitor.LOG = logger;
+        EmbeddedLookupVisitor.logger = logger;
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -200,7 +200,7 @@ public class TestEmbeddedLookupVisitor {
 
 
         VensimLogger logger = mock(VensimLogger.class);
-        EmbeddedLookupVisitor.LOG = logger;
+        EmbeddedLookupVisitor.logger = logger;
 
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
@@ -217,7 +217,7 @@ public class TestEmbeddedLookupVisitor {
                 "~ |\n";
 
         VensimLogger logger = mock(VensimLogger.class);
-        EmbeddedLookupVisitor.LOG = logger;
+        EmbeddedLookupVisitor.logger = logger;
 
         VensimVisitorContext visitorContext = getVisitorContextFromString(program);
         visitor.setSymbols(null);

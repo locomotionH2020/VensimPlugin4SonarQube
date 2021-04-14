@@ -1,12 +1,12 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.Symbol;
-import es.uva.locomotion.model.SymbolTable;
-import es.uva.locomotion.model.SymbolType;
 import es.uva.locomotion.model.ViewTable;
-import es.uva.locomotion.plugin.VensimScanner;
+import es.uva.locomotion.model.symbol.Symbol;
+import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.plugin.VensimScanner;
 import org.junit.Test;
 
 import static es.uva.locomotion.testutilities.RuleTestUtilities.*;
@@ -210,10 +210,10 @@ public class TestLookupNameCheck {
         LookupNameCheck check = new LookupNameCheck();
 
         SymbolTable table = new SymbolTable();
-        Symbol invalid = new Symbol("invalid", SymbolType.Lookup_Table);
-        invalid.addDefinitionLine(1);
-        Symbol valid = new Symbol("valid_lt", SymbolType.Lookup_Table);
-        valid.addDefinitionLine(2);
+        Symbol invalid = new Symbol("invalid", SymbolType.LOOKUP_TABLE);
+        invalid.addLine(1);
+        Symbol valid = new Symbol("valid_lt", SymbolType.LOOKUP_TABLE);
+        valid.addLine(2);
         table.addSymbol(invalid);
         table.addSymbol(valid);
 

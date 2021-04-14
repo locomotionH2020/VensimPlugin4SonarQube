@@ -1,4 +1,4 @@
-package es.uva.locomotion.model;
+package es.uva.locomotion.model.symbol;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 public class SymbolTable {
 
 
-    private final Map<String, Symbol> table;
+    protected Map<String, Symbol> table;
 
     public SymbolTable() {
         this.table = new HashMap<>();
@@ -14,13 +14,8 @@ public class SymbolTable {
 
 
     public Symbol getSymbol(String token){
-        if(table.containsKey(token)) {
-            return table.get(token);
-        }else
-            throw new IllegalArgumentException("Token " + token + " not found");
+        return table.getOrDefault(token, null);
     }
-
-
 
     public Collection<Symbol> getSymbols(){
         List<Symbol> symbols =  new ArrayList<>(table.values());
@@ -57,8 +52,7 @@ public class SymbolTable {
         if(!hasSymbol(symbol))
             throw new IllegalArgumentException("The symbol:  "+ symbol+ " is not in the Table.");
 
-        Symbol symbol1 = table.remove(symbol);
-        return symbol1;
+        return table.remove(symbol);
     }
 
     @Override
@@ -70,10 +64,19 @@ public class SymbolTable {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(table);
+    }
+
+    @Override
     public String toString() {
         return "SymbolTable{" +
                 "table=" + table +
                 '}';
+    }
+
+    public boolean isEmpty(){
+        return getSymbols().isEmpty();
     }
 
 }
