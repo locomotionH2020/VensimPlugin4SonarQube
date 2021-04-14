@@ -69,7 +69,7 @@ public class ViewNameCheck extends AbstractVensimCheck {
             if (generateIssue(view)) {
                 view.setAsInvalid(this.getClass().getSimpleName());
                 for (int line : view.getLines()) {
-                    Issue issue = new Issue(this, line, "The view '" + view.getIdentifier() + "' deos not follow the naming convention, it should use the Module separator: \"" + moduleSeparator + "\" and the Category separator \"" + categorySeparator + "\". Regular expression: " + getRegexp());
+                    Issue issue = new Issue(this, line, "The view '" + view.getIdentifier() + "' deos not follow the naming convention. Module separator: \"" + moduleSeparator + "\". Category separator \"" + categorySeparator + "\". Regular expression: " + getRegexp());
 
                     boolean generateIssue = moduleName.equals("") || view.getModule().getName().contains(moduleName);
                     addIssue(context, issue, !generateIssue);

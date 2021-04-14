@@ -18,7 +18,7 @@ public class SubcategoryDuplicatedCheck extends AbstractVensimCheck {
     public static final String CHECK_KEY = "subcategory_duplicated";
     public static final String NAME = "SubcategoryDuplicatedCheck";
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that all subcategories are unique, there can not be two subcategories with the same"+
+            "<p>This rule checks that all subcategories are unique, there can not be two subcategories with the same" +
             " name even though they belong to diferent categories." +
             "<h2>Noncompliant Code Examples</h2>\n" +
             "<pre>\n" +
@@ -41,7 +41,7 @@ public class SubcategoryDuplicatedCheck extends AbstractVensimCheck {
             if (categoryList.stream().anyMatch(subcat -> subcat.getName().equals(actual.getName()))) {
                 actual.setAsInvalid(this.getClass().getSimpleName());
                 for (int line : actual.getLines()) {
-                    Issue issue = new Issue(this, line, "The subcategory '" + actual.getName() + " already exists in the model in another category, this can not happen.");
+                    Issue issue = new Issue(this, line, "The subcategory '" + actual.getName() + "' already exists in the model in the category:'" + categoryList.stream().filter(subcat -> subcat.getName().equals(actual.getName())).findFirst().get().getName() + "', this can not happen.");
                     addIssue(context, issue, false);
                 }
             }
