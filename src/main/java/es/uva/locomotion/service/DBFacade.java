@@ -213,7 +213,7 @@ public class DBFacade {
 
             String type = jsonSymbol.getString(FIELD_SYMBOL_TYPE_RECIEVE);
             try {
-                symbol.setType(SymbolType.valueOf(type));
+                symbol.setType(type != null && !type.isBlank() ? SymbolType.valueOf( type.toUpperCase()): SymbolType.UNDETERMINED);
             } catch (IllegalArgumentException ex) {
                 throw new ServiceResponseFormatNotValid("The symbol '" + name + "' has an unknown programming type: '" + type + "'");
             }
@@ -317,7 +317,7 @@ public class DBFacade {
             jsonSymbol.add(FIELD_SYMBOL_COMMENT, s.getComment().trim());
             jsonSymbol.add(FIELD_INJECTION_IS_INDEXED, String.valueOf(!s.getIndexes().isEmpty()).toLowerCase());
             jsonSymbol.add(FIELD_SYMBOL_CATEGORY, s.getCategory().getName().trim());
-            jsonSymbol.add(FIELD_SYMBOL_TYPE_SEND, s.getType().toString());
+            jsonSymbol.add(FIELD_SYMBOL_TYPE_SEND,  s.getType().toString().charAt(0) + s.getType().toString().substring(1).toLowerCase());
             if (!s.getExcel().isEmpty()) {
                 JsonArrayBuilder excelBuilder = Json.createArrayBuilder();
 

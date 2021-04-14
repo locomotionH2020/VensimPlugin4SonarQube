@@ -22,6 +22,7 @@ import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
+import org.sonar.api.internal.apachecommons.io.output.ClosedOutputStream;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.rule.RuleKey;
 
@@ -126,6 +127,9 @@ public class VensimScanner {
     }
 
     private void inyectToDictionary(SymbolTable table, ViewTable viewTable, DataBaseRepresentation dbData) {
+        logger.error(table.toString());
+        logger.error(viewTable.toString());
+        logger.error(dbData.toString());
         String moduleSeparator = context.config().get(MODULE_SEPARATOR).orElse("");
         String categorySeparator = context.config().get(CATEGORY_SEPARATOR).orElse("");
 

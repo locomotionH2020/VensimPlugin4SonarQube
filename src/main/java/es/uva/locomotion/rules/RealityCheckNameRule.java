@@ -19,7 +19,7 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
     public static final String CHECK_KEY = "reality-check-name-convention";
     public static final String NAME = "RealityCheckNameRule" ;
     public static final String HTML_DESCRIPTION = "" +
-            "<p>This rule checks that reality checks follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+_test\"</p>\n" +
+            "<p>This rule checks that reality checks follow the name convention and match the regular expression \"([a-z0-9]+_)*[a-z0-9]+_check\"</p>\n" +
             "<ul>" +
             "   <li>The name must be in upper case.</li>\n" +
             "   <li>The name must have the suffix _check</li>\n"+
@@ -44,12 +44,12 @@ public class RealityCheckNameRule extends AbstractVensimCheck {
             key = "reality-check-name-regexp",
             defaultValue = DEFAULT_REGEXP,
             description = "The regexp definition of a reality check name.")
-    public static final String REGEXP = DEFAULT_REGEXP;
+    public final String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {
         try {
-            Pattern.compile(REGEXP);
-            return REGEXP;
+            Pattern.compile(regexp);
+            return regexp;
         } catch (PatternSyntaxException exception) {
             logger.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);

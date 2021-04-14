@@ -47,12 +47,12 @@ public class ViewNameCheck extends AbstractVensimCheck {
             key = "view-name-regexp",
             defaultValue = DEFAULT_REGEXP,
             description = "The regexp definition of a module/category of a view name (without the separators)")
-    public static final String REGEXP = DEFAULT_REGEXP;
+    public final String regexp = DEFAULT_REGEXP;
 
     private String getRegexp() {
         try {
-            Pattern.compile(REGEXP);
-            return REGEXP;
+            Pattern.compile(regexp);
+            return regexp;
         } catch (PatternSyntaxException exception) {
             logger.unique("The rule " + NAME + " has an invalid configuration: The selected regexp is invalid. Error: " + exception.getDescription(),
                     LoggingLevel.ERROR);
