@@ -23,6 +23,7 @@ public class Symbol extends IssuableAbs {
     private final List<Module> shadowModule;
     private String group;
     private List<ExcelRef> excel;
+    private DelayedType isDelayed;
 
     private boolean isFiltered;
 
@@ -40,6 +41,7 @@ public class Symbol extends IssuableAbs {
         shadowModule = new ArrayList<>();
         group = "";
         excel = new ArrayList<>();
+        isDelayed = DelayedType.NOT_DELAYED;
 
     }
 
@@ -243,6 +245,14 @@ public class Symbol extends IssuableAbs {
         }
     }
 
+    public DelayedType isDelayed() {
+        return isDelayed;
+    }
+
+    public void setDelayed(DelayedType delayed) {
+        isDelayed = delayed;
+    }
+
     @Override
     public boolean isValid() {
         if (category != null && !category.isValid()) {
@@ -253,4 +263,5 @@ public class Symbol extends IssuableAbs {
         }
         return super.isValid();
     }
+
 }

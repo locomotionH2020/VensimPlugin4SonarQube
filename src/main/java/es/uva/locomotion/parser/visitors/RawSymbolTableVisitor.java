@@ -1,10 +1,7 @@
 package es.uva.locomotion.parser.visitors;
 
 import es.uva.locomotion.model.ExcelRef;
-import es.uva.locomotion.model.symbol.Subscript;
-import es.uva.locomotion.model.symbol.Symbol;
-import es.uva.locomotion.model.symbol.SymbolTable;
-import es.uva.locomotion.model.symbol.SymbolType;
+import es.uva.locomotion.model.symbol.*;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.parser.ModelParserBaseVisitor;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -13,9 +10,12 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static es.uva.locomotion.utilities.Constants.*;
 
 
 public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
@@ -24,8 +24,6 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     private SymbolTable table;
     protected static final VensimLogger logger = VensimLogger.getInstance();
     private static final Pattern sequencePattern = Pattern.compile("(.*?)(\\d+)");
-    private static final List<String> excelFunctions = List.of("GET_DIRECT_CONSTANTS", "GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA");
-    private static final List<String> excelData = List.of("GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA");
     private String actualGroup;
     private Symbol actualSymbol;
     private List<String> actualIndex;
@@ -54,17 +52,18 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
             return table.addSymbol(symbol);
         }
     }
+
     private Subscript getSubscriptOrCreate(SymbolTable table, String token, boolean isCopy) {
 
         if (table.hasSymbol(token)) {
             Symbol s = table.getSymbol(token);
-            return (Subscript)s;
-        }
-        else {
+            return (Subscript) s;
+        } else {
             Subscript symbol = new Subscript(token, isCopy);
-            return (Subscript)table.addSymbol(symbol);
+            return (Subscript) table.addSymbol(symbol);
         }
     }
+
     @Override
     public String visitGroup(ModelParser.GroupContext ctx) {
         actualGroup = ctx.name.getText();
@@ -353,25 +352,42 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
             call.setType(SymbolType.UNDETERMINED_FUNCTION);
         }
 
-        if(excelFunctions.contains(token)){
+        if (EXCEL_FUNCTIONS.contains(token)) {
 
             List<String> exprs = ctx.exprList().expr().stream().map(ModelParser.ExprContext::getText).collect(Collectors.toList());
 
             String filename = exprs.get(0).replaceAll(REMOVE_QUOTES, "");
             String sheet = exprs.get(1).replaceAll(REMOVE_QUOTES, "");
-            ExcelRef excel =  actualSymbol.getExcelOrCreate(filename, sheet);
+            ExcelRef excel = actualSymbol.getExcelOrCreate(filename, sheet);
 
-            if (excelData.contains(token)) {
+            if (EXCEL_DATA.contains(token)) {
                 String seriesCellRange = exprs.get(2).replaceAll(REMOVE_QUOTES, "");
                 String cellRange = exprs.get(3).replaceAll(REMOVE_QUOTES, "");
                 excel.addCellRangeInformation(actualIndex, cellRange, seriesCellRange);
 
-            }else{
+            } else {
                 String cellRange = exprs.get(2).replaceAll(REMOVE_QUOTES, "");
                 excel.addCellRangeInformation(actualIndex, cellRange);
             }
 
         }
+
+        if (VENSIM_DYNAMIC_FUNCTIONS.contains(token)) {
+
+            actualSymbol.setDelayed(DelayedType.DELAYED);
+
+            ModelParser.ExprContext secondArgument = ctx.exprList().expr(1);
+            if (secondArgument instanceof ModelParser.SignExprContext) { //Only if the delay is TIME STEP, the delay type is TIME_STEP_DELAYED.
+                ModelParser.ExprAllowSignContext signedType = ((ModelParser.SignExprContext) secondArgument).exprAllowSign();
+                if (signedType instanceof ModelParser.VarContext) {
+                    String tokenOfArgument = ((ModelParser.VarContext) signedType).Id().getSymbol().getText();
+                    if(tokenOfArgument.equals("TIME_STEP")){
+                        actualSymbol.setDelayed(DelayedType.TIME_STEP_DELAYED);
+                    }
+                }
+            }
+        }
+
         List<Symbol> symbols;
         if (ctx.exprList() != null)
             symbols = (List<Symbol>) visit(ctx.exprList());
@@ -514,11 +530,11 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
         id.setGroup(actualGroup);
         List<Symbol> indexes = null;
         if (ctx.indexes != null) {
-           indexes = visitSubscript(ctx.indexes);
+            indexes = visitSubscript(ctx.indexes);
             id.addIndexLine(indexes);
             actualIndex = indexes.stream().map(Symbol::getToken).collect(Collectors.toList());
 
-        }else{
+        } else {
             actualIndex = new ArrayList<>();
         }
         actualSymbol = id;
