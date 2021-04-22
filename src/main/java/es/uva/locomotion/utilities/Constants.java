@@ -18,12 +18,12 @@ public class Constants {
             "RANDOM POISSON","RANDOM TRIANGULAR","RANDOM UNIFORM","RANDOM WEIBULL");
 
     // This symbols are defined by default in every Vensim file
-    public static final List<String> DEFAULT_VENSIM_SYMBOLS= Arrays.asList("TIME", "FINAL_TIME", "INITIAL_TIME", "SAVEPER", "TIME_STEP");
+    public static final List<String> DEFAULT_VENSIM_SYMBOLS= Arrays.asList("TIME", "FINAL_TIME", "FINAL TIME", "INITIAL_TIME", "INITIAL TIME", "SAVEPER", "TIME_STEP", "TIME STEP");
 
     public static final List<String> EXCEL_FUNCTIONS = List.of("GET_DIRECT_CONSTANTS", "GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA");
     public static final List<String> EXCEL_DATA = List.of("GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA");
 
-    public static final List<String> VENSIM_DYNAMIC_FUNCTIONS = Arrays.asList("DELAY_BATCH", "DELAY-CONVEYOR", "DELAY_FIXED", "DELAY_INFORMATION", "DELAY_MATRIAL", "DELAY_N", "DELAY_PROFILE", "DELAYP", "DELAY1", "DELAY3", "SMOOTH" , "SMOOTH3", "SMOOTH_N");
+    public static final List<String> VENSIM_DYNAMIC_FUNCTIONS = Arrays.asList("DELAY_BATCH", "DELAY BATCH", "DELAY_CONVEYOR","DELAY CONVERTOR", "DELAY_FIXED","DELAY FIXED", "DELAY_INFORMATION","DELAY INFORMATION", "DELAY_MATERIAL","DELAY MATERIAL", "DELAY_N", "DELAY N", "DELAY_PROFILE", "DELAY PROFILE", "DELAYP", "DELAY1", "DELAY3", "SMOOTH" , "SMOOTH3", "SMOOTH_N", "SMOOTH N");
 
     public static  final List<String> IGNORED_MAGIC_NUMBERS = Arrays.asList("0","1","100","-1");
 
