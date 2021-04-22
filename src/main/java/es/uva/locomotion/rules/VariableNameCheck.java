@@ -2,6 +2,7 @@ package es.uva.locomotion.rules;
 
 
 import es.uva.locomotion.model.AcronymsList;
+import es.uva.locomotion.model.symbol.DelayedType;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
@@ -15,6 +16,7 @@ import org.sonar.check.RuleProperty;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 
 @Rule(key = VariableNameCheck.CHECK_KEY, name = VariableNameCheck.NAME, description = VariableNameCheck.HTML_DESCRIPTION)
@@ -65,7 +67,9 @@ public class VariableNameCheck extends AbstractVensimCheck {
     public void scan(VensimVisitorContext context) {
         SymbolTable table = context.getParsedSymbolTable();
         AcronymsList acronymsList = context.getDbAcronyms();
-        for (Symbol symbol : table.getSymbols()) {
+        List<Symbol> notDelayedSymbols = table.getSymbols().stream().filter((symbol) -> symbol.isDelayed() == DelayedType.NOT_DELAYED).collect(Collectors.toList());
+
+        for (Symbol symbol : notDelayedSymbols) {
             if (symbol.getType() == SymbolType.VARIABLE && !"Time".equals(symbol.getToken()) && !checkVariableFollowsConvention(symbol.getToken())) {
 
                 boolean isOnlyAnAcronym = false;
