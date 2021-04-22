@@ -24,6 +24,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
     private SymbolTable table;
     protected static final VensimLogger logger = VensimLogger.getInstance();
     private static final Pattern sequencePattern = Pattern.compile("(.*?)(\\d+)");
+    private static final List<String> TIME_STEP_TOKEN = List.of("TIME_STEP", "TIME STEP");
     private String actualGroup;
     private Symbol actualSymbol;
     private List<String> actualIndex;
@@ -381,7 +382,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
                 ModelParser.ExprAllowSignContext signedType = ((ModelParser.SignExprContext) secondArgument).exprAllowSign();
                 if (signedType instanceof ModelParser.VarContext) {
                     String tokenOfArgument = ((ModelParser.VarContext) signedType).Id().getSymbol().getText();
-                    if(tokenOfArgument.equals("TIME_STEP")){
+                    if(TIME_STEP_TOKEN.contains(tokenOfArgument)){
                         actualSymbol.setDelayed(DelayedType.TIME_STEP_DELAYED);
                     }
                 }
