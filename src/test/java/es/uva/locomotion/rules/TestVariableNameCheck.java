@@ -276,4 +276,19 @@ public class TestVariableNameCheck {
         check.scan(context);
         assertHasIssueInLines(context,VariableNameCheck.class,1,2);
     }
+
+    @Test
+    public void testIgnoreDelayedVariables() {
+
+        String program = "delayed_Expected_consumption_2020= SMOOTH(1,1,1) ~~|\n" +
+                "delayed_TS_Expected_consumption_2020 = SMOOTH(1,TIME_STEP,1) ~~|";
+
+        VensimVisitorContext visitorContext = getVisitorContextFromString(program);
+        VensimScanner scanner = getScanner();
+
+        scanner.checkIssues(visitorContext);
+
+        assertDoesntHaveIssueOfType(visitorContext,VariableNameCheck.class);
+
+    }
 }
