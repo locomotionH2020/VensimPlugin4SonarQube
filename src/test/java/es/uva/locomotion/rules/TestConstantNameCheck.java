@@ -148,10 +148,10 @@ public class TestConstantNameCheck {
 
     @Test
     public void testRuleIgnoresDefaultSymbols(){
-        String program = "FINAL TIME  = 100 ~ ~|\n"+
-                "INITIAL TIME  = 0  ~ ~|\n"+
-                "SAVEPER =  TIME STEP ~ ~|\n"+
-                "TIME STEP  = 1 ~ ~|";
+        String program = "FINAL_TIME  = 100 ~ ~|\n"+
+                "INITIAL_TIME  = 0  ~ ~|\n"+
+                "SAVEPER =  TIME_STEP ~ ~|\n"+
+                "TIME_STEP  = 1 ~ ~|";
 
 
 
