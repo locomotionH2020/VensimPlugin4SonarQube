@@ -45,7 +45,7 @@ public class DBFacade {
     private static final String FIELD_SYMBOL_MODULES_SECONDARY = "secondary";
     private static final String FIELD_CATEGORY_LEVEL = "level";
     private static final String FIELD_CATEGORY_SUPER_CATEGORY = "super_category";
-    private static final String FIELD_MODULE = "module";
+    private static final String FIELD_MODULE = "moduleName";
 
     public static final String KEY_INDEXES = "indexes";
     public static final String KEY_EXCEL = "excels";
@@ -301,7 +301,6 @@ public class DBFacade {
         JsonObjectBuilder requestBuilder = Json.createObjectBuilder();
 
         requestBuilder.add(FIELD_SYMBOLS, jsonSymbols);
-        requestBuilder.add(FIELD_MODULE, module);
         handler.injectSymbols(serviceUrl, requestBuilder.build(), token);
     }
 
@@ -317,6 +316,7 @@ public class DBFacade {
             jsonSymbol.add(FIELD_SYMBOL_COMMENT, s.getComment().trim());
             jsonSymbol.add(FIELD_INJECTION_IS_INDEXED, String.valueOf(!s.getIndexes().isEmpty()).toLowerCase());
             jsonSymbol.add(FIELD_SYMBOL_CATEGORY, s.getCategory().getName().trim());
+            jsonSymbol.add(FIELD_MODULE, s.getPrimaryModule().getName().trim());
             jsonSymbol.add(FIELD_SYMBOL_TYPE_SEND,  s.getType().toString().charAt(0) + s.getType().toString().substring(1).toLowerCase());
             if (!s.getExcel().isEmpty()) {
                 JsonArrayBuilder excelBuilder = Json.createArrayBuilder();
