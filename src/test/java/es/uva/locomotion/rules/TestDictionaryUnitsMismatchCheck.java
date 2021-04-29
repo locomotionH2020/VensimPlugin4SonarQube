@@ -23,8 +23,8 @@ public class TestDictionaryUnitsMismatchCheck {
     @Test
     public void testIssue() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -106,8 +106,8 @@ public class TestDictionaryUnitsMismatchCheck {
     @Test
     public void testIssueInDifferentSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol var = GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.VARIABLE, 1);
@@ -271,8 +271,8 @@ public class TestDictionaryUnitsMismatchCheck {
             s.setUnits("Parsed units");
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
 
         addSymbolInLines(dbTable, "function", SymbolType.VARIABLE);
         addSymbolInLines(dbTable, "constant", SymbolType.VARIABLE);

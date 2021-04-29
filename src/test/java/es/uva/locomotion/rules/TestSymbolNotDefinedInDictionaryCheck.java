@@ -100,8 +100,8 @@ public class TestSymbolNotDefinedInDictionaryCheck {
     @Test
     public void testCheckWithMultipleSymbolsWithIssues() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         SymbolTable parsedTable = new SymbolTable();
 
         dbTable.addSymbol(new Symbol("var1"));

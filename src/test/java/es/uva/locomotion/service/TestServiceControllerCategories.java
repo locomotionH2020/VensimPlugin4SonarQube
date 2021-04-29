@@ -54,7 +54,7 @@ public class TestServiceControllerCategories {
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertEquals(new CategoryMap(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.ERROR);
     }
@@ -68,7 +68,7 @@ public class TestServiceControllerCategories {
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
 
-        Assert.assertEquals(new CategoryMap(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.ERROR);
     }
@@ -81,7 +81,7 @@ public class TestServiceControllerCategories {
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertEquals(new CategoryMap(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.ERROR);
     }
@@ -94,7 +94,7 @@ public class TestServiceControllerCategories {
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertEquals(new CategoryMap(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.INFO);
     }
@@ -107,7 +107,7 @@ public class TestServiceControllerCategories {
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertEquals(new CategoryMap(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.INFO);
     }
@@ -124,7 +124,7 @@ public class TestServiceControllerCategories {
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertEquals(new CategoryMap(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The dictionary service was unreachable.\n" +
                 "Injection of new categories can't be done without the categories from the dictionary.", LoggingLevel.ERROR);
 
@@ -138,7 +138,7 @@ public class TestServiceControllerCategories {
         ServiceController.logger = logger;
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
-        Assert.assertEquals(new CategoryMap(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected an array. Dictionary response: {'name':'Juan'}.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new categories can't be done without the categories from the dictionary.");
@@ -156,7 +156,7 @@ public class TestServiceControllerCategories {
 
         CategoryMap actualValue = controller.getCategoriesFromDb();
 
-        Assert.assertEquals(new CategoryMap(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Missing 'name' field from a category. Dictionary response: [{\"category\":\"foo\"}].\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new categories can't be done without the categories from the dictionary.");
@@ -262,7 +262,7 @@ public class TestServiceControllerCategories {
         ServiceController controller = getAuthenticatedServiceController("https://localhost");
         controller.injectNewCategories(foundList.getCategoriesAndSubcategories(), dbList.getCategoriesAndSubcategories());
 
-        verify(logger, never()).info(any());
+        verify(logger, times(1)).info("No new categories to inject");
     }
 
     @Test

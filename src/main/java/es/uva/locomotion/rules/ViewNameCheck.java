@@ -38,7 +38,7 @@ public class ViewNameCheck extends AbstractVensimCheck {
             "*energy.share_RES_vs_TFEC-general\n\n" +
             "</pre>\n";
 
-    public static final String DEFAULT_REGEXP = "([a-z0-9]+)*[a-z0-9]+";
+    public static final String DEFAULT_REGEXP = "([a-zA-Z0-9_]+)*[a-zA-Z0-9]+";
     @RuleProperty(
             key = "view-name-regexp",
             defaultValue = DEFAULT_REGEXP,
@@ -67,7 +67,7 @@ public class ViewNameCheck extends AbstractVensimCheck {
         String categorySeparator = sensorContext.config().get(CATEGORY_SEPARATOR).orElse("");
         for (View view : table.getViews()) {
             if (generateIssue(view)) {
-                view.setAsInvalid(this.getClass().getSimpleName());
+                invalidateView(view);
                 for (int line : view.getLines()) {
                     Issue issue = new Issue(this, line, "The view '" + view.getIdentifier() + "' deos not follow the naming convention. Module separator: \"" + moduleSeparator + "\". Category separator \"" + categorySeparator + "\". Regular expression: " + getRegexp());
 
@@ -83,10 +83,22 @@ public class ViewNameCheck extends AbstractVensimCheck {
         if (view.getModule() == null || !view.getModule().getName().matches(getRegexp()))
             return true;
 
-        if (view.getCategory() != null && !view.getCategory().getName().matches(getRegexp()))
+        if (view.getCategory() == null || !view.getCategory().getName().matches(getRegexp()))
             return true;
         return view.getSubcategory() != null && !view.getSubcategory().getName().matches(getRegexp());
     }
+    private void invalidateView(View view){
+        view.setAsInvalid(this.getClass().getSimpleName());
 
+        if (view.getModule() != null && !view.getModule().getName().matches(getRegexp())){
+            view.getModule().setAsInvalid(this.getClass().getSimpleName());
+        }
+        if (view.getCategory() != null && !view.getCategory().getName().matches(getRegexp())){
+            view.getCategory().setAsInvalid(this.getClass().getSimpleName());
+        }
+        if (view.getSubcategory() != null && !view.getSubcategory().getName().matches(getRegexp())){
+            view.getSubcategory().setAsInvalid(this.getClass().getSimpleName());
+        }
+    }
 
 }

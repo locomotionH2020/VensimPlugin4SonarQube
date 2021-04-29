@@ -1,8 +1,12 @@
 package es.uva.locomotion.plugin;
 
 import es.uva.locomotion.model.DataBaseRepresentation;
+import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.ViewTable;
+import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
+import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.ModelLexer;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.parser.MultiChannelTokenStream;
@@ -22,7 +26,6 @@ import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
-import org.sonar.api.internal.apachecommons.io.output.ClosedOutputStream;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.rule.RuleKey;
 
@@ -31,6 +34,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static es.uva.locomotion.utilities.Constants.*;
 
@@ -115,6 +120,7 @@ public class VensimScanner {
             int lines = content.split("[\r\n]+").length;
             context.<Integer>newMeasure().forMetric(CoreMetrics.NCLOC).on(inputFile).withValue(lines).save();
 
+
             if (needToInject && serviceController.isAuthenticated()) {
                 inyectToDictionary(table, viewTable, dbData);
             }
@@ -127,19 +133,37 @@ public class VensimScanner {
     }
 
     private void inyectToDictionary(SymbolTable table, ViewTable viewTable, DataBaseRepresentation dbData) {
-        logger.error(table.toString());
-        logger.error(viewTable.toString());
-        logger.error(dbData.toString());
         String moduleSeparator = context.config().get(MODULE_SEPARATOR).orElse("");
         String categorySeparator = context.config().get(CATEGORY_SEPARATOR).orElse("");
 
-        if (!moduleSeparator.isEmpty() && !dbData.getModules().isEmpty()) {
+        String injectModels = context.config().get(INJECT_MODELS).orElse("true");
+        boolean needToInjectModels = injectModels.equals("true");
+        String injectCategories = context.config().get(INJECT_CATEGORIES).orElse("true");
+        boolean needToInjectCategories = injectCategories.equals("true");
+        String injectSymbols = context.config().get(INJECT_SYMBOLS).orElse("true");
+        boolean needToInjectSymbols = injectSymbols.equals("true");
+
+        if (needToInjectModels && !moduleSeparator.isEmpty() && dbData.getModules() != null) {
             serviceController.injectNewModules(new HashSet<>(viewTable.getModules()), dbData.getModules());
-            if (!categorySeparator.isEmpty() && dbData.getCategories() != null)
-                serviceController.injectNewCategories(viewTable.getCategoriesAndSubcategories(), dbData.getCategories().getCategoriesAndSubcategories());
         }
-        if (!dbData.getDataBaseSymbolTable().isEmpty())
-            serviceController.injectNewSymbols(new ArrayList<>(table.getSymbols()), new ArrayList<>(viewTable.getModules()), dbData.getDataBaseSymbolTable());
+        if (needToInjectCategories && !categorySeparator.isEmpty() && dbData.getCategoriesMap() != null) {
+            serviceController.injectNewCategories(viewTable.getCategoriesAndSubcategories(), dbData.getCategoriesMap().getCategoriesAndSubcategories());
+        }
+        if (needToInjectSymbols && dbData.getDataBaseSymbolTable() != null) {
+            //If moduels and/or categories are not injected, symbols related with them need to be removed from injection.
+            List<Symbol> symbolsToInject = new ArrayList<>(table.getSymbols());
+            if (!needToInjectModels) {
+                Set<Module> dbModules = dbData.getModules();
+                symbolsToInject = symbolsToInject.stream().filter(symbol -> dbModules.contains(symbol.getPrimaryModule()) || symbol.getType().equals(SymbolType.SUBSCRIPT)
+                ).collect(Collectors.toList());
+            }
+            if (!needToInjectCategories) {
+                List<Category> dbCategories = dbData.getCategoriesMap().getCategoriesAndSubcategories();
+                symbolsToInject = symbolsToInject.stream().filter(symbol -> dbCategories.contains(symbol.getCategory())  || symbol.getType().equals(SymbolType.SUBSCRIPT)
+                ).collect(Collectors.toList());
+            }
+            serviceController.injectNewSymbols(symbolsToInject, new ArrayList<>(viewTable.getModules()), dbData.getDataBaseSymbolTable());
+        }
     }
 
     private void filterSymbols(String viewPrefix, String moduleName, SymbolTable table) {

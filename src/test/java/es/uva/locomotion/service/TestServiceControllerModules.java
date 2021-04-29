@@ -54,7 +54,7 @@ public class TestServiceControllerModules {
 
         Set<Module> actualValue = controller.getModulesFromDb();
 
-        Assert.assertEquals(Collections.emptySet(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Injection of new modules can't be done without the modules from the dictionary.", LoggingLevel.ERROR);
     }
@@ -68,7 +68,7 @@ public class TestServiceControllerModules {
         Set<Module> actualValue = controller.getModulesFromDb();
 
 
-        Assert.assertEquals(Collections.emptySet(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Injection of new modules can't be done without the modules from the dictionary.", LoggingLevel.ERROR);
     }
@@ -81,7 +81,7 @@ public class TestServiceControllerModules {
 
         Set<Module> actualValue = controller.getModulesFromDb();
 
-        Assert.assertEquals(Collections.emptySet(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Injection of new modules can't be done without the modules from the dictionary.", LoggingLevel.ERROR);
     }
@@ -94,7 +94,7 @@ public class TestServiceControllerModules {
 
          Set<Module> actualValue = controller.getModulesFromDb();
 
-        Assert.assertEquals(Collections.emptySet(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "Injection of new modules can't be done without the modules from the dictionary.", LoggingLevel.INFO);
     }
@@ -107,7 +107,7 @@ public class TestServiceControllerModules {
 
          Set<Module> actualValue = controller.getModulesFromDb();
 
-        Assert.assertEquals(Collections.emptySet(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "Injection of new modules can't be done without the modules from the dictionary.", LoggingLevel.INFO);
     }
@@ -124,7 +124,7 @@ public class TestServiceControllerModules {
 
          Set<Module> actualValue = controller.getModulesFromDb();
 
-        Assert.assertEquals(Collections.emptySet(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The dictionary service was unreachable.\n" +
                 "Injection of new modules can't be done without the modules from the dictionary.", LoggingLevel.ERROR);
 
@@ -138,7 +138,7 @@ public class TestServiceControllerModules {
         ServiceController.logger = logger;
 
          Set<Module> actualValue = controller.getModulesFromDb();
-        Assert.assertEquals(Collections.emptySet(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected an object. Dictionary response: [{\"name\":\"Juan\"}].\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new modules can't be done without the modules from the dictionary.");
@@ -156,7 +156,7 @@ public class TestServiceControllerModules {
 
          Set<Module> actualValue = controller.getModulesFromDb();
 
-        Assert.assertEquals(Collections.emptySet(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. \"modules\" key not found in object. Dictionary response: {\"notTheKey\":\"foo\"}.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Injection of new modules can't be done without the modules from the dictionary.");
@@ -261,7 +261,7 @@ public class TestServiceControllerModules {
         controller.injectNewModules(new HashSet<>(foundList), dbList);
 
 
-        verify(logger, never()).info(any());
+        verify(logger, times(1)).info("No new modules to inject");
     }
     @Test
     public void testInjectNewModulesEmptyService() {

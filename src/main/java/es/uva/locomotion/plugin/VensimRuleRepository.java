@@ -42,7 +42,7 @@ public class VensimRuleRepository implements RulesDefinition{
         set.add(VariableNameCheck.class);
         set.add(DelayedNameCheck.class);
         set.add(ViewNameCheck.class);
-        set.add(SubcategoryDuplicatedCheck.class);
+        set.add(CategoryDuplicatedCheck.class);
         set.add(EmbeddedLookupCheck.class);
         set.add(SymbolGroupCheck.class);
         set.add(DictionarySymbolExcelRefMismatchCheck.class);

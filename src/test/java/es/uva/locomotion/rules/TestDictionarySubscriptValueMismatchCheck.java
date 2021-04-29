@@ -17,8 +17,9 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testOneUnexpectedValue(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
+
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
@@ -51,9 +52,8 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testTwoUnexpectedValues(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);
@@ -280,7 +280,6 @@ public class TestDictionarySubscriptValueMismatchCheck {
     @Test
     public void testDictonaryDoesntContainSubscript(){
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedSubscript = new Symbol("subscript", SymbolType.SUBSCRIPT);

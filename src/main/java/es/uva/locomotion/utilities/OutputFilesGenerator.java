@@ -52,7 +52,7 @@ public class OutputFilesGenerator {
     public void addTables(String filename, SymbolTable table, ViewTable viewTable, DataBaseRepresentation dbData) {
         symbolsJson.addTables(filename, table, viewTable);
         if (generateGetDiff)
-            if(dbData.getDataBaseSymbolTable() == null || dbData.getDataBaseSymbolTable().isEmpty()){
+            if(dbData.getDataBaseSymbolTable() == null){
                 logger.warn("Trying to create diff with dictionary, but unable to recieve data from it.");
                 generateGetDiff = false;
             }else {

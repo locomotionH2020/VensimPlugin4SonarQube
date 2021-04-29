@@ -74,27 +74,40 @@ public class ViewTableVisitor extends ModelParserBaseVisitor<Object> {
         if (moduleSeparator != null) {
             String[] aux = viewName.split(Pattern.quote(moduleSeparator));
 
-            if (aux.length != 2) {
+            if (aux.length == 1) {
                 module = viewName;
-            } else {
+                actualView = table.createOrSelectView(module);
+            } else if(aux.length == 2 ) {
                 module = aux[0];
                 category = aux[1];
                 String categoryAndSubcategory = aux[1];
 
-                if (categorySeparator != null) {
+                if (categorySeparator != null) { // Tiene categoría y subcategoría
                     aux = categoryAndSubcategory.split(Pattern.quote(categorySeparator));
                     if (aux.length == 2) {
                         category = aux[0];
                         subcategory = aux[1];
-                    } else {
+                        actualView = table.createOrSelectView(module, category, subcategory);
+                    } else if (aux.length == 1) { //Solo tiene categoría, no subcategoría
                         category = categoryAndSubcategory;
+                        actualView = table.createOrSelectView(module, category);
+                    } else{ //No concuerda con la sintaxis
+                        category = categoryAndSubcategory;
+                        actualView = table.createOrSelectView(module, category, null);
                     }
 
+                }else{
+                    actualView = table.createOrSelectView(module, null);
                 }
+            }else{
+                actualView = table.createOrSelectView(module, null);
+
             }
+        }else{
+            actualView = table.createOrSelectView(module);
         }
 
-        actualView = table.createOrSelectView(module, category, subcategory);
+
         actualView.addLine(line);
         return super.visitViewName(ctx);
     }

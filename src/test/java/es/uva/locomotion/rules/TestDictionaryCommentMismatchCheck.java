@@ -23,7 +23,8 @@ public class TestDictionaryCommentMismatchCheck {
     @Test
     public void testIssue() {
         DataBaseRepresentation dbTable = new DataBaseRepresentation();
-        dbTable.setDataBaseSymbols(new SymbolTable());
+        SymbolTable dbSymbolTable = new SymbolTable();
+        dbTable.setDataBaseSymbols(dbSymbolTable);
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol parsedVar = new Symbol("var");
@@ -34,7 +35,7 @@ public class TestDictionaryCommentMismatchCheck {
 
         Symbol dbVar = new Symbol("var");
         dbVar.setComment("Doesn't match");
-        dbTable.getDataBaseSymbolTable().addSymbol(dbVar);
+        dbSymbolTable.addSymbol(dbVar);
 
         VensimVisitorContext context = new VensimVisitorContext(null, parsedTable, new ViewTable(), null, dbTable);
 
@@ -103,7 +104,8 @@ public class TestDictionaryCommentMismatchCheck {
     @Test
     public void testIssueInDifferentSymbols() {
         DataBaseRepresentation dbTable = new DataBaseRepresentation();
-        dbTable.setDataBaseSymbols(new SymbolTable());
+        SymbolTable dbSymbolTable = new SymbolTable();
+        dbTable.setDataBaseSymbols(dbSymbolTable);
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol var = GeneralTestUtilities.addSymbolInLines(parsedTable, "var", SymbolType.VARIABLE, 1);
@@ -118,11 +120,11 @@ public class TestDictionaryCommentMismatchCheck {
         valid1.setComment("Same comment");
         valid2.setComment("Same comment");
 
-        Symbol dbVar = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbolTable(), "var", SymbolType.VARIABLE);
-        Symbol dbValid = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbolTable(), "valid1", SymbolType.VARIABLE);
-        Symbol dbVar2 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbolTable(), "var2", SymbolType.VARIABLE, 3);
-        Symbol dbValid2 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbolTable(), "valid2", SymbolType.VARIABLE);
-        Symbol dbVar3 = GeneralTestUtilities.addSymbolInLines(dbTable.getDataBaseSymbolTable(), "var3", SymbolType.VARIABLE);
+        Symbol dbVar = GeneralTestUtilities.addSymbolInLines(dbSymbolTable, "var", SymbolType.VARIABLE);
+        Symbol dbValid = GeneralTestUtilities.addSymbolInLines(dbSymbolTable, "valid1", SymbolType.VARIABLE);
+        Symbol dbVar2 = GeneralTestUtilities.addSymbolInLines(dbSymbolTable, "var2", SymbolType.VARIABLE, 3);
+        Symbol dbValid2 = GeneralTestUtilities.addSymbolInLines(dbSymbolTable, "valid2", SymbolType.VARIABLE);
+        Symbol dbVar3 = GeneralTestUtilities.addSymbolInLines(dbSymbolTable, "var3", SymbolType.VARIABLE);
 
         dbVar.setComment("mismatch");
         dbVar2.setComment("mismatch");
@@ -264,8 +266,8 @@ public class TestDictionaryCommentMismatchCheck {
             s.setComment("Parsed Comment");
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         addSymbolInLines(dbTable, "function", SymbolType.VARIABLE);
         addSymbolInLines(dbTable, "constant", SymbolType.VARIABLE);
         addSymbolInLines(dbTable, "var", SymbolType.VARIABLE);

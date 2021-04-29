@@ -5,11 +5,13 @@ import es.uva.locomotion.model.ExcelRef;
 import es.uva.locomotion.model.IssuableAbs;
 import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 
+import java.awt.desktop.SystemEventListener;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Symbol extends IssuableAbs {
+public class Symbol extends IssuableAbs implements Comparable<Symbol> {
 
 
     private final String token;
@@ -112,37 +114,57 @@ public class Symbol extends IssuableAbs {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !Symbol.class.isAssignableFrom(o.getClass())) return false;
         Symbol symbol = (Symbol) o;
         return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && Objects.equals(dependencies, symbol.dependencies) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primaryModule, symbol.primaryModule) && Objects.equals(shadowModule, symbol.shadowModule) && Objects.equals(group, symbol.group) && Objects.equals(excel, symbol.excel);
     }
 
+    protected static VensimLogger logger = VensimLogger.getInstance();
 
     public boolean dbEquals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+
+        if (o == null ||!Symbol.class.isAssignableFrom(o.getClass())) return false;
+
         Symbol symbol = (Symbol) o;
+        if(type == symbol.type && type == SymbolType.SUBSCRIPT_VALUE){
+            return token.equals(symbol.token);
+        }else if(type == symbol.type && type == SymbolType.SUBSCRIPT){
+            List<Symbol> localDependencies = getDependencies().stream().sorted().collect(Collectors.toList());
+            List<Symbol> otherDependencies = symbol.getDependencies().stream().sorted().collect(Collectors.toList());
+            int i = 0;
+            while (i < localDependencies.size()) {
+                if (!localDependencies.get(i).dbEquals(otherDependencies.get(i))) {
+                   return false;
+                }
+                i++;
+            }
+
+            return token.equals(symbol.token)  && Objects.equals(comment, symbol.comment);
+        }
+
         return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primaryModule, symbol.primaryModule) && Objects.equals(shadowModule, symbol.shadowModule);
     }
-
 
 
     @Override
     public String toString() {
         return "Symbol{" +
-                "token='" + token + '\'' +
+                "isValid=" + isValid +
+                ", invalidReason='" + invalidReason + '\'' +
+                ", lines=" + lines +
+                ", token='" + token + '\'' +
                 ", indexes=" + indexes +
                 ", units='" + units + '\'' +
                 ", comment='" + comment + '\'' +
                 ", dependencies=" + dependencies.stream().map(Symbol::getToken).collect(Collectors.toList()) +
                 ", type=" + type +
-                ", category='" + category + '\'' +
-                ", primary_module='" + getPrimaryModule() + '\'' +
-                ", shadow_module=" + getShadowModule() +
+                ", category=" + category +
+                ", primaryModule=" + primaryModule +
+                ", shadowModule=" + shadowModule +
                 ", group='" + group + '\'' +
                 ", excel=" + excel +
-                ", isValid=" + isValid +
-                ", invalidReason=" + invalidReason +
+                ", isDelayed=" + isDelayed +
                 ", isFiltered=" + isFiltered +
                 '}';
     }
@@ -264,4 +286,8 @@ public class Symbol extends IssuableAbs {
         return super.isValid();
     }
 
+    @Override
+    public int compareTo(Symbol o) {
+        return getToken().compareTo(o.getToken());
+    }
 }

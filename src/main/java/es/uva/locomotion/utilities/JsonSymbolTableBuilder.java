@@ -202,7 +202,7 @@ public class JsonSymbolTableBuilder {
                 lines.add(line);
 
             moduleBuilder.add(KEY_LINES, lines);
-
+            tableBuilder.add(moduleBuilder);
         }
         return tableBuilder.build();
     }

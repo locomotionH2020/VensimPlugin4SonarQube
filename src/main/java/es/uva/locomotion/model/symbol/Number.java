@@ -34,6 +34,16 @@ public class Number extends Symbol {
     }
 
     @Override
+    public String toString() {
+        return "Number{" +
+                "isValid=" + isValid +
+                ", invalidReason='" + invalidReason + '\'' +
+                ", lines=" + lines +
+                ", ocurrences=" + ocurrences +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), ocurrences);
     }

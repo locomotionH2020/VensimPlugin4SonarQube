@@ -39,4 +39,7 @@ public class Constants {
     public static final String CREATE_GET_DIFF_FILE = "vensim.dictionary.getDiff";
     public static final String AUXILIARY_FILES_DIR_NAME = "vensim.auxiliaryFiles.directoryName";
     public static final String INJECT = "vensim.dictionary.inject";
+    public static final String INJECT_MODELS = "vensim.dictionary.inject.modules";
+    public static final String INJECT_CATEGORIES = "vensim.dictionary.inject.categories";
+    public static final String INJECT_SYMBOLS = "vensim.dictionary.inject.symbols";
 }

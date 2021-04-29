@@ -21,7 +21,7 @@ public class DataBaseRepresentation {
     }
 
     public SymbolTable getDataBaseSymbolTable() {
-        return dataBaseSymbols;
+        return dataBaseSymbols != null ? new SymbolTable(dataBaseSymbols) : null;
     }
 
 
@@ -37,7 +37,7 @@ public class DataBaseRepresentation {
         this.acronyms = acronyms;
     }
 
-    public CategoryMap getCategories() {
+    public CategoryMap getCategoriesMap() {
         return categories;
     }
 

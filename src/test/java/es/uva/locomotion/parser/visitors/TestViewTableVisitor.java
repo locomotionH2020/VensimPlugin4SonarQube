@@ -144,8 +144,8 @@ public class TestViewTableVisitor {
         assertTrue(table.getModules().contains(new Module("ModuleName")));
         assertTrue(table.getModules().contains(new Module("ModuleName2")));
 
-        assertNotNull(table.getCategory("CategoryName"));
-        assertNotNull(table.getCategory("CategoryName2-SubCategoryName"));
+        assertNull(table.getCategory("CategoryName"));
+        assertNull(table.getCategory("CategoryName2-SubCategoryName"));
 
     }
 }

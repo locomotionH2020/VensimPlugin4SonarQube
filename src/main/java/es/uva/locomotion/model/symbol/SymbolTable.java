@@ -11,6 +11,9 @@ public class SymbolTable {
     public SymbolTable() {
         this.table = new HashMap<>();
     }
+    public SymbolTable(SymbolTable symbolTable) {
+        this.table = symbolTable.table != null ? new  HashMap<>(symbolTable.table) : null;
+    }
 
 
     public Symbol getSymbol(String token){

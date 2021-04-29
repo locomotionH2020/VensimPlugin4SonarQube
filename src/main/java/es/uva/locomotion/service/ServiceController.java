@@ -81,20 +81,20 @@ public class ServiceController {
             return DBFacade.getExistingSymbolsAndIndexesFromDB(dictionaryService, symbolsFound, token);
         } catch (InvalidServiceUrlException ex) {
             logger.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            return new SymbolTable();
+            return null;
         } catch (EmptyServiceException ex) {
             logger.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.INFO);
-            return  new SymbolTable();
+            return null;
         } catch (ConnectionFailedException ex) {
             logger.unique(SERVICE_UNREACHABLE_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            return  new SymbolTable();
+            return null;
         } catch (ServiceResponseFormatNotValid ex) {
             logMessage = INVALID_RESPONSE + ex.getMessage() + "\n" +
                     GENERATE_LOGS +
                     RULES_DISABLED_MESSAGE;
 
             logger.error(logMessage);
-            return  new SymbolTable();
+            return null;
         }
     }
 
@@ -107,20 +107,20 @@ public class ServiceController {
             return DBFacade.getExistingAcronymsFromDB(dictionaryService, token);
         } catch (InvalidServiceUrlException ex) {
             logger.unique(INVALID_URL_MESSAGE + ACRONYMS_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            return new AcronymsList();
+            return null;
         } catch (EmptyServiceException ex) {
             logger.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + ACRONYMS_DISABLED_MESSAGE, LoggingLevel.INFO);
-            return new AcronymsList();
+            return null;
         } catch (ConnectionFailedException ex) {
             logger.unique(SERVICE_UNREACHABLE_MESSAGE + ACRONYMS_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            return new AcronymsList();
+            return null;
         } catch (ServiceResponseFormatNotValid ex) {
             logMessage = INVALID_RESPONSE + ex.getMessage() + "\n" +
                     GENERATE_LOGS +
                     ACRONYMS_DISABLED_MESSAGE;
 
             logger.error(logMessage);
-            return new AcronymsList();
+            return null;
         }
 
     }
@@ -141,6 +141,8 @@ public class ServiceController {
         validModules = validModules.stream().filter(Module::isValid).collect(Collectors.toList());
         if (!filteredSymbols.isEmpty()) {
             inyectSymbols(validModules, filteredSymbols);
+        } else {
+            logger.info("No new symbols to inject");
         }
 
         inyectNewIndexes(foundSymbols, dbSymbolTable);
@@ -153,12 +155,23 @@ public class ServiceController {
         List<Symbol> validIndexes = indexes.stream().filter(Symbol::isValid).collect(Collectors.toList());
         List<Symbol> filteredindexes = validIndexes.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
         List<Symbol> indexesToSend = new ArrayList<>();
+
         for (Symbol index : filteredindexes) {
             if (dbSymbolTable.hasSymbol(index.getToken().trim())) {
                 Symbol dbIndex = dbSymbolTable.getSymbol(index.getToken());
-                if (!index.getDependencies().equals(dbIndex.getDependencies())) {
-                    indexesToSend.add(index);
+
+                List<Symbol> localDependencies = index.getDependencies().stream().sorted().collect(Collectors.toList());
+                List<Symbol> dbDependencies = dbIndex.getDependencies().stream().sorted().collect(Collectors.toList());
+                Boolean toSend = false;
+                int i = 0;
+                while (i < localDependencies.size() && !toSend) {
+                    if (!localDependencies.get(i).dbEquals(dbDependencies.get(i))) {
+                        indexesToSend.add(index);
+                        toSend = true;
+                    }
+                    i++;
                 }
+
             } else {
                 indexesToSend.add(index);
             }
@@ -166,14 +179,17 @@ public class ServiceController {
         if (!indexesToSend.isEmpty()) {
             inyectIndexes(indexesToSend);
 
+        } else {
+            logger.info("No new indexes to inject");
         }
     }
 
     private void inyectIndexes(List<Symbol> indexesToSend) {
         try {
-            DBFacade.injectIndexes(dictionaryService, indexesToSend, token);
             List<String> tokensInjected = indexesToSend.stream().sorted(Comparator.comparing(Symbol::getToken)).map(Symbol::getToken).collect(Collectors.toList());
             logger.info("Injected indexes: " + tokensInjected);
+
+            DBFacade.injectIndexes(dictionaryService, indexesToSend, token);
 
 
         } catch (InvalidServiceUrlException ex) {
@@ -190,9 +206,12 @@ public class ServiceController {
             for (Module module : validModules) {
                 List<Symbol> symbolsToInject = filteredSymbols.stream().filter(symbol -> symbol.getPrimaryModule() != null && symbol.getPrimaryModule().equals(module)).collect(Collectors.toList());
                 if (!symbolsToInject.isEmpty()) {
-                    DBFacade.injectSymbols(dictionaryService, symbolsToInject, module.getName(), token);
+
                     List<String> tokensInjected = symbolsToInject.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
                     logger.info("Injected symbols in module \"" + module.getName() + "\": " + tokensInjected);
+
+                    DBFacade.injectSymbols(dictionaryService, symbolsToInject, module.getName(), token);
+
                 }
             }
 
@@ -227,20 +246,20 @@ public class ServiceController {
             return DBFacade.getExistingModulesFromDB(dictionaryService, token).stream().map(Module::new).collect(Collectors.toSet());
         } catch (InvalidServiceUrlException ex) {
             logger.unique(INVALID_URL_MESSAGE + MODULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            return new HashSet<>();
+            return null;
         } catch (EmptyServiceException ex) {
             logger.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + MODULES_DISABLED_MESSAGE, LoggingLevel.INFO);
-            return new HashSet<>();
+            return null;
         } catch (ConnectionFailedException ex) {
             logger.unique(SERVICE_UNREACHABLE_MESSAGE + MODULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            return new HashSet<>();
+            return null;
         } catch (ServiceResponseFormatNotValid ex) {
             logMessage = INVALID_RESPONSE + ex.getMessage() + DICTIONARY_RESPONSE + ex.getServiceResponse() + ".\n" +
                     GENERATE_LOGS +
                     MODULES_DISABLED_MESSAGE;
 
             logger.error(logMessage);
-            return new HashSet<>();
+            return null;
         }
 
     }
@@ -254,20 +273,20 @@ public class ServiceController {
             return DBFacade.getExistingCategoriesFromDB(dictionaryService, token);
         } catch (InvalidServiceUrlException ex) {
             logger.unique(INVALID_URL_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            return new CategoryMap();
+            return null;
         } catch (EmptyServiceException ex) {
             logger.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.INFO);
-            return new CategoryMap();
+            return null;
         } catch (ConnectionFailedException ex) {
             logger.unique(SERVICE_UNREACHABLE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            return new CategoryMap();
+            return null;
         } catch (ServiceResponseFormatNotValid ex) {
             logMessage = INVALID_RESPONSE + ex.getMessage() + DICTIONARY_RESPONSE + ex.getServiceResponse() + ".\n" +
                     GENERATE_LOGS +
                     CATEGORIES_DISABLED_MESSAGE;
 
             logger.error(logMessage);
-            return new CategoryMap();
+            return null;
         }
     }
 
@@ -288,9 +307,12 @@ public class ServiceController {
 
         if (!newCategories.isEmpty()) {
             try {
-                DBFacade.injectCategories(dictionaryService, newCategories, token);
+
                 List<String> tokensInjected = newCategories.stream().map(Category::getWholeName).sorted(String::compareTo).collect(Collectors.toList());
                 logger.info("Injected categories: " + tokensInjected);
+
+                DBFacade.injectCategories(dictionaryService, newCategories, token);
+
 
             } catch (InvalidServiceUrlException ex) {
                 logger.unique(INVALID_URL_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
@@ -300,6 +322,8 @@ public class ServiceController {
                 logger.unique(SERVICE_UNREACHABLE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
             }
 
+        } else {
+            logger.info("No new categories to inject");
         }
 
 
@@ -321,9 +345,12 @@ public class ServiceController {
 
         if (!newModules.isEmpty()) {
             try {
-                DBFacade.injectModules(dictionaryService, newModules, token);
+
                 List<String> tokensInjected = newModules.stream().sorted(String::compareTo).collect(Collectors.toList());
                 logger.info("Injected modules: " + tokensInjected);
+
+
+                DBFacade.injectModules(dictionaryService, newModules, token);
 
             } catch (InvalidServiceUrlException ex) {
                 logger.unique(INVALID_URL_MESSAGE + INJECTION_WAS_NOT_SUCCESFUL, LoggingLevel.ERROR);
@@ -333,6 +360,8 @@ public class ServiceController {
                 logger.unique(SERVICE_UNREACHABLE_MESSAGE + INJECTION_WAS_NOT_SUCCESFUL, LoggingLevel.ERROR);
             }
 
+        } else {
+            logger.info("No new modules to inject");
         }
 
     }

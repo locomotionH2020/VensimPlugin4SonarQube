@@ -98,7 +98,7 @@ public class TestServiceControllerSymbols {
 
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
-        Assert.assertEquals(new SymbolTable(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.ERROR);
     }
@@ -112,7 +112,7 @@ public class TestServiceControllerSymbols {
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
 
-        Assert.assertEquals(new SymbolTable(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.ERROR);
     }
@@ -125,7 +125,7 @@ public class TestServiceControllerSymbols {
 
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
-        Assert.assertEquals(new SymbolTable(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.ERROR);
     }
@@ -138,7 +138,7 @@ public class TestServiceControllerSymbols {
 
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
-        Assert.assertEquals(new SymbolTable(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.INFO);
     }
@@ -151,7 +151,7 @@ public class TestServiceControllerSymbols {
 
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
-        Assert.assertEquals(new SymbolTable(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.INFO);
     }
@@ -168,7 +168,7 @@ public class TestServiceControllerSymbols {
 
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
-        Assert.assertEquals(new SymbolTable(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The dictionary service was unreachable.\n" +
                 "The rules that require the data from the dictionary service will be skipped.", LoggingLevel.ERROR);
 
@@ -182,7 +182,7 @@ public class TestServiceControllerSymbols {
         ServiceController.logger = logger;
 
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
-        Assert.assertEquals(new SymbolTable(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected an object.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \nThe rules that require the data from the dictionary service will be skipped.");
 
@@ -199,7 +199,7 @@ public class TestServiceControllerSymbols {
 
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
-        Assert.assertEquals(new SymbolTable(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected an object.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "The rules that require the data from the dictionary service will be skipped.");
@@ -216,7 +216,7 @@ public class TestServiceControllerSymbols {
 
         SymbolTable actualValue = controller.getSymbolsFromDb(new ArrayList<>());
 
-        Assert.assertEquals(new SymbolTable(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Missing 'symbols' field.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "The rules that require the data from the dictionary service will be skipped.");
@@ -260,7 +260,7 @@ public class TestServiceControllerSymbols {
         controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), List.of( new Module(MODULE)), new SymbolTable());
 
 
-        verify(logger, never()).info(anyString());
+        verify(logger, times(1)).info("No new symbols to inject");
         verify(DBFacade.handler, never()).injectSymbols(any(), any(), any());
     }
 
@@ -300,7 +300,7 @@ public class TestServiceControllerSymbols {
         controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), List.of(new Module(MODULE)), new SymbolTable());
 
 
-        verify(logger, never()).info(anyString());
+        verify(logger, times(1)).info("No new symbols to inject");
         verify(DBFacade.handler, never()).injectSymbols(any(), any(), any());
 
     }
@@ -423,7 +423,7 @@ public class TestServiceControllerSymbols {
         controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(new Module(MODULE)), new SymbolTable());
 
 
-        verify(logger, never()).info(anyString());
+        verify(logger, times(1)).info("No new symbols to inject");
         verify(DBFacade.handler, never()).injectSymbols(any(), any(), any());
     }
 }

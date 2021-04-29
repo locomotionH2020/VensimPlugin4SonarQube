@@ -31,6 +31,18 @@ sonar.sources=.
 #-(Default: false)
 #vensim.dictionary.inject=true
 
+#-If false, prevents injection of new modules (and it's primary symbols).
+#-(Default: true)
+#vensim.dictionary.inject.modules=false
+
+#-If false, prevents injection of new categories (and it's symbols).
+#-(Default: true)
+#vensim.dictionary.inject.categories=false
+
+#-If false, prevents injection of new symbols.
+#-(Default: true)
+#vensim.dictionary.inject.symbols=false
+
 ############################################################################
 # Views and filter properties                                              #
 ############################################################################

@@ -179,8 +179,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testMatchesValuesAndNotTheSubscriptName_DifferentValuesSameName() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbScenario = GeneralTestUtilities.createSubscript(dbTable, "SCENARIO", "SCENARIO_1", "SCENARIO_2");
@@ -236,8 +236,8 @@ public class TestDictionaryIndexMismatchCheck {
     public void testIssue() {
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbScenario = GeneralTestUtilities.createSubscript(dbTable, "SCENARIO", "SCENARIO_1", "SCENARIO_2");
@@ -276,8 +276,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testNoIndexesInDictionary() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbVar = new Symbol("var", SymbolType.VARIABLE);
@@ -372,8 +372,8 @@ public class TestDictionaryIndexMismatchCheck {
     @Test
     public void testSubscriptWithoutValuesInDictionary() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         SymbolTable parsedTable = new SymbolTable();
 
         Symbol dbVar = new Symbol("var", SymbolType.VARIABLE);
@@ -486,8 +486,8 @@ public class TestDictionaryIndexMismatchCheck {
     public void testIndexIsBothSubscriptAndValue() {
         SymbolTable parsedTable = new SymbolTable();
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
 
         VensimLogger logger = mock(VensimLogger.class);
         DictionaryIndexMismatchCheck.logger = logger;
@@ -535,8 +535,8 @@ public class TestDictionaryIndexMismatchCheck {
     public void testDictionaryIndexesAreConsumed() {
         SymbolTable parsedTable = new SymbolTable();
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
 
         Symbol subscript = GeneralTestUtilities.createSubscript(parsedTable, "SUBSCRIPT", "S1");
 
@@ -648,8 +648,8 @@ public class TestDictionaryIndexMismatchCheck {
     public void testIssuesInMultipleSymbols() {
         SymbolTable parsedTable = new SymbolTable();
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
 
         Symbol subscript = GeneralTestUtilities.createSubscript(parsedTable, "SUBSCRIPT", "S1");
 

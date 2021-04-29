@@ -25,6 +25,7 @@ public class Module extends IssuableAbs implements Comparable<Module> {
         Module module = (Module) o;
         return name.equals(module.name);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(name);
@@ -34,6 +35,7 @@ public class Module extends IssuableAbs implements Comparable<Module> {
     public String toString() {
         return "Module{" +
                 "name='" + name + '\'' +
+                (invalidReason != null ? ("invalidReason='" + invalidReason + '\'') : "") +
                 '}';
     }
 

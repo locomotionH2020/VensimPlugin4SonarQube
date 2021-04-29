@@ -50,7 +50,7 @@ public class TestServiceControllerAcronyms {
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertEquals(new AcronymsList(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.ERROR);
     }
@@ -64,7 +64,7 @@ public class TestServiceControllerAcronyms {
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
 
-        Assert.assertEquals(new AcronymsList(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.ERROR);
     }
@@ -77,7 +77,7 @@ public class TestServiceControllerAcronyms {
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertEquals(new AcronymsList(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The url of the dictionary service is invalid (Missing protocol http:// or https://, invalid format or invalid protocol)\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.ERROR);
     }
@@ -90,7 +90,7 @@ public class TestServiceControllerAcronyms {
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertEquals(new AcronymsList(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.INFO);
     }
@@ -103,7 +103,7 @@ public class TestServiceControllerAcronyms {
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertEquals(new AcronymsList(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("Missing dictionary service parameter.\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.INFO);
     }
@@ -120,7 +120,7 @@ public class TestServiceControllerAcronyms {
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertEquals(new AcronymsList(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).unique("The dictionary service was unreachable.\n" +
                 "Variable name check may cause false positives without acronyms.", LoggingLevel.ERROR);
 
@@ -134,7 +134,7 @@ public class TestServiceControllerAcronyms {
         ServiceController.logger = logger;
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
-        Assert.assertEquals(new AcronymsList(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected object inside array.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \nVariable name check may cause false positives without acronyms.");
 
@@ -151,7 +151,7 @@ public class TestServiceControllerAcronyms {
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertEquals(new AcronymsList(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Expected an array.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Variable name check may cause false positives without acronyms.");
@@ -168,7 +168,7 @@ public class TestServiceControllerAcronyms {
 
         AcronymsList actualValue = controller.getAcronymsFromDb();
 
-        Assert.assertEquals(new AcronymsList(), actualValue);
+        Assert.assertNull(actualValue);
         verify(logger).error("The response of the dictionary service wasn't valid. Missing 'name' field.\n" +
                 "To see the response use the analysis parameter: -Dvensim.logServerMessages=true \n" +
                 "Variable name check may cause false positives without acronyms.");

@@ -112,10 +112,6 @@ public class JsonDictoinaryDiffBuilderTest {
                 "            \"Local\": \"sameCategory\",\n" +
                 "            \"Dictionary\": \"sameCategoryDiff\"\n" +
                 "          },\n" +
-                "          \"units\": {\n" +
-                "            \"Local\": \"\",\n" +
-                "            \"Dictionary\": \"\"\n" +
-                "          },\n" +
                 "          \"comment\": {\n" +
                 "            \"Local\": \"Comment\",\n" +
                 "            \"Dictionary\": \"CommentDiff\"\n" +
@@ -131,7 +127,6 @@ public class JsonDictoinaryDiffBuilderTest {
                 "      \"missmatches\": {},\n" +
                 "      \"not_found_in_DB\": [],\n" +
                 "      \"not_found_in_local\": [\n" +
-                "        \"symbolNameDB\"\n" +
                 "      ]\n" +
                 "    },\n" +
                 "    \"indexes_values\": {\n" +
@@ -140,7 +135,6 @@ public class JsonDictoinaryDiffBuilderTest {
                 "        \"symbolNameLocal\"\n" +
                 "      ],\n" +
                 "      \"not_found_in_local\": [\n" +
-                "        \"symbolNameDB\"\n" +
                 "      ]\n" +
                 "    },\n" +
                 "    \"modules\": {\n" +

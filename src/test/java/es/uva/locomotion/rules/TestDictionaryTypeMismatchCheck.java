@@ -25,8 +25,8 @@ public class TestDictionaryTypeMismatchCheck {
     @Test
     public void testIssue() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         SymbolTable parsedTable = new SymbolTable();
 
         GeneralTestUtilities.addSymbolInLines(dbTable, "var", SymbolType.SUBSCRIPT);
@@ -51,8 +51,8 @@ public class TestDictionaryTypeMismatchCheck {
     @Test
     public void testIssueInDifferentSymbols() {
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
         SymbolTable parsedTable = new SymbolTable();
 
         GeneralTestUtilities.addSymbolInLines(dbTable, "var", SymbolType.VARIABLE);
@@ -146,8 +146,8 @@ public class TestDictionaryTypeMismatchCheck {
         addSymbolInLines(parsedTable, "realityCheck", SymbolType.REALITY_CHECK, 7);
 
         DataBaseRepresentation dbData = new DataBaseRepresentation();
-        dbData.setDataBaseSymbols(new SymbolTable());
-        SymbolTable dbTable = dbData.getDataBaseSymbolTable();
+        SymbolTable dbTable = new SymbolTable();
+        dbData.setDataBaseSymbols(dbTable);
 
         addSymbolInLines(dbTable, "function", SymbolType.VARIABLE);
         addSymbolInLines(dbTable, "constant", SymbolType.VARIABLE);

@@ -5,6 +5,7 @@ import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.parser.visitors.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
+import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the subscripts in the file have the same values or a subset of values as the subscripts of the database.";
     public static final String NAME = "DictionarySubscriptValueMismatch" ;
+    protected static final VensimLogger logger = VensimLogger.getInstance();
 
 
     @Override
@@ -55,7 +57,6 @@ public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
     private boolean raisesIssue(Symbol foundSymbol, SymbolTable dbTable) {
         if(foundSymbol.getType() != SymbolType.SUBSCRIPT)
             return false;
-
         if(!dbTable.hasSymbol(foundSymbol.getToken()))
             return false;
 
@@ -63,6 +64,7 @@ public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
 
         if( dbSymbol.getType()!= SymbolType.SUBSCRIPT)
             return false;
+
         return !getUnexpectedSymbols(foundSymbol, dbTable).isEmpty();
 
 

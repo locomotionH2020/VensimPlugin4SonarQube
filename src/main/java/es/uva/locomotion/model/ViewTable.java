@@ -49,7 +49,7 @@ public class ViewTable {
         table.put(name, view);
     }
 
-    public View createOrSelectView(String moduleName, String categoryName, String subcategoryName) {
+    private View createOrSelectViewPrivate(String moduleName, String categoryName, String subcategoryName){
         String identifier = View.generateIdentifier(moduleName, categoryName, subcategoryName);
         if (hasView(identifier)) {
             return getView(identifier);
@@ -66,18 +66,22 @@ public class ViewTable {
                 }
             }
             View newView = new View(module, category, subcategory);
-            addModule(module);
             addView(newView);
             return newView;
         }
     }
+    public View createOrSelectView(String moduleName, String categoryName, String subcategoryName) {
+        if(moduleName != null && categoryName != null && subcategoryName != null) createOrSelectModule(moduleName);
+        return createOrSelectViewPrivate(moduleName, categoryName, subcategoryName);
+    }
 
     public View createOrSelectView(String module, String category) {
-        return createOrSelectView(module, category, null);
+        if(module != null && category != null) createOrSelectModule(module);
+        return createOrSelectViewPrivate(module, category, null);
     }
 
     public View createOrSelectView(String module) {
-        return createOrSelectView(module, null, null);
+        return createOrSelectViewPrivate(module, null, null);
     }
 
 
