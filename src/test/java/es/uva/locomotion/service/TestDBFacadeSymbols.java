@@ -396,15 +396,16 @@ public class TestDBFacadeSymbols {
         constant.setUnits("          constant units           ");
         constant.setComment("            constant comment         ");
         constant.setCategory(Category.create("           constant category      "));
+        constant.setPrimaryModule(new Module("module"));
         constant.addIndexLine(List.of(mock(Symbol.class)));
 
         symbols.add(constant);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"constant\",\"unit\":\"constant units\",\"definition\":\"constant comment\",\"isIndexed\":\"true\",\"category\":\"constant category\",\"programmingsymboltype\":\"Constant\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"constant\",\"unit\":\"constant units\",\"definition\":\"constant comment\",\"isIndexed\":\"true\",\"category\":\"constant category\",\"programmingsymboltype\":\"Constant\", \"moduleName\" : \"module\"}]}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", symbols,"module", "token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -454,14 +455,14 @@ public class TestDBFacadeSymbols {
 
         Symbol s = new Symbol("variable", SymbolType.VARIABLE);
         s.setCategory(Category.create("name"));
-
+        s.setPrimaryModule(new Module("module"));
         symbols.add(s);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"variable\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Variable\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"variable\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Variable\", \"moduleName\" : \"module\"}]}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -473,11 +474,11 @@ public class TestDBFacadeSymbols {
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(new Symbol("function", SymbolType.FUNCTION));
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": []}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -489,13 +490,14 @@ public class TestDBFacadeSymbols {
         List<Symbol> symbols = new ArrayList<>();
         Symbol s = new Symbol("reality check", SymbolType.REALITY_CHECK);
         s.setCategory(Category.create("name"));
+        s.setPrimaryModule(new Module("myModule"));
         symbols.add(s);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"reality check\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Reality_check\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"reality check\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Reality_check\", \"moduleName\" : \"myModule\"}]}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -507,13 +509,14 @@ public class TestDBFacadeSymbols {
         List<Symbol> symbols = new ArrayList<>();
         Symbol s = new Symbol("lookup table", SymbolType.LOOKUP_TABLE);
         s.setCategory(Category.create("name"));
+        s.setPrimaryModule(new Module("module"));
         symbols.add(s);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"lookup table\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Lookup_table\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"lookup table\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Lookup_table\", \"moduleName\" : \"module\"}]}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 
@@ -526,13 +529,14 @@ public class TestDBFacadeSymbols {
         List<Symbol> symbols = new ArrayList<>();
         Symbol s = new Symbol("switch", SymbolType.SWITCHES);
         s.setCategory(Category.create("name"));
+        s.setPrimaryModule(new Module("module"));
         symbols.add(s);
 
-        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"switch\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Switches\"}], \"module\" : \"module\"}"));
+        JsonReader jsonReader = Json.createReader(new StringReader("{\"symbols\": [{\"name\":\"switch\",\"unit\":\"\",\"definition\":\"\",\"isIndexed\":\"false\",\"category\":\"name\",\"programmingsymboltype\":\"Switches\", \"moduleName\" : \"module\"}]}"));
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
 
-        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "module","token");
+        DBFacade.injectSymbols("http://www.gaagle.com", symbols, "token");
         verify(handler).injectSymbols("http://www.gaagle.com", object, "token");
     }
 

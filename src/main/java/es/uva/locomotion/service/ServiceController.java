@@ -210,7 +210,7 @@ public class ServiceController {
                     List<String> tokensInjected = symbolsToInject.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
                     logger.info("Injected symbols in module \"" + module.getName() + "\": " + tokensInjected);
 
-                    DBFacade.injectSymbols(dictionaryService, symbolsToInject, module.getName(), token);
+                    DBFacade.injectSymbols(dictionaryService, symbolsToInject, token);
 
                 }
             }

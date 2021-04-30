@@ -103,7 +103,7 @@ public class DBFacade {
     }
 
     public static void injectSymbolsAndIndexes(String serviceUrl, List<Symbol> rawSymbols, List<Symbol> rawIndexes, String module, String token) {
-        injectSymbols(serviceUrl, rawSymbols, module, token);
+        injectSymbols(serviceUrl, rawSymbols, token);
         injectIndexes(serviceUrl, rawIndexes, token);
     }
 
@@ -289,7 +289,7 @@ public class DBFacade {
     }
 
 
-    public static void injectSymbols(String serviceUrl, List<Symbol> symbols, String module, String token) { //TODO .filter(symbol -> symbol.getCategory() != null)
+    public static void injectSymbols(String serviceUrl, List<Symbol> symbols, String token) {
         List<Symbol> rawSymbols = symbols.stream().filter(symbol -> !List.of(SymbolType.SUBSCRIPT_VALUE, SymbolType.SUBSCRIPT,
                 SymbolType.UNDETERMINED, SymbolType.UNDETERMINED_FUNCTION, SymbolType.FUNCTION).contains(symbol.getType())).collect(Collectors.toList());
 
