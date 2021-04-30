@@ -32,6 +32,7 @@ public class OutputFilesGenerator {
             File directory = resume.toFile();
 
             if (directory.exists()) {
+
                 Path symbolFile = resume.toAbsolutePath().resolve("symbolTable.json");
                 JsonWriter writer = Json.createWriter(new FileOutputStream(symbolFile.toFile()));
                 writer.writeArray(symbolsJson.build());

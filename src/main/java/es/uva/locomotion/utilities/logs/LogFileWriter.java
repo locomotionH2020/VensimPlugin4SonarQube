@@ -1,14 +1,16 @@
 package es.uva.locomotion.utilities.logs;
 
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class LogFileWriter implements LogOutputMethod {
 
     private final FileWriter writer;
 
-    public LogFileWriter(String fileName) throws IOException {
-        writer = new FileWriter(fileName);
+    public LogFileWriter(Path fileName) throws IOException {
+        writer = new FileWriter(fileName.toFile());
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 writer.close();

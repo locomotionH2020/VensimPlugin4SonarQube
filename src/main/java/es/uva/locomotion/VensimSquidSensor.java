@@ -20,6 +20,7 @@ import org.sonar.api.batch.sensor.SensorDescriptor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +77,9 @@ public class VensimSquidSensor implements Sensor {
             logMethod = new LogConsolePrinter();
         else {
             try {
-                logMethod = new LogFileWriter( Paths.get(auxiliaryFilesDirName + "/" + logFile.trim()).toString());
+                Path dir = Paths.get(auxiliaryFilesDirName);
+                Path logFilePath = dir.toAbsolutePath().resolve(logFile.trim());
+                logMethod = new LogFileWriter(logFilePath);
             } catch (IOException e) {
                 logMethod = new LogConsolePrinter();
                 VensimLogger logger = VensimLogger.getInstance();
