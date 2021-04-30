@@ -107,6 +107,10 @@ public class VensimScanner {
 
             ViewTable viewTable = getViewTable(root, table);
 
+            if(!moduleName.isEmpty()){
+                viewTable.setModules(Set.of(new Module(moduleName)));
+            }
+
             DataBaseRepresentation dbData = getDataBaseRepresentation(table);
 
             filterSymbols(viewPrefix, moduleName, table);
@@ -175,15 +179,11 @@ public class VensimScanner {
     }
 
     private ViewTable getViewTable(ModelParser.FileContext root, SymbolTable table) {
-        String viewPrefix = context.config().get(VIEW_PREFIX).orElse("");
         String moduleSeparator = context.config().get(MODULE_SEPARATOR).orElse("");
         String categorySeparator = context.config().get(CATEGORY_SEPARATOR).orElse("");
 
         ViewTable viewTable;
-        if (!viewPrefix.isEmpty()) { //Support for viewPrefix
-            viewTable = ViewTableUtility.getViewTable(table, root);
-            logger.warn("vensim.view.prefix is deprecated, please use: vensim.view.module.name and vensim.view.module.separator");
-        } else if (!moduleSeparator.isEmpty()) {
+        if (!moduleSeparator.isEmpty()) {
             if (!categorySeparator.isEmpty()) {
                 viewTable = ViewTableUtility.getViewTable(table, root, moduleSeparator, categorySeparator);
             } else {

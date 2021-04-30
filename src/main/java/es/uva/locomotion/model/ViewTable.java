@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 public class ViewTable {
     private final Map<String, View> table;
-    private final Set<Module> modulesList;
+    private Set<Module> modulesList;
     private final CategoryMap categoriesList;
 
 
@@ -21,6 +21,10 @@ public class ViewTable {
 
     public Set<Module> getModules() {
         return modulesList;
+    }
+
+    public void setModules(Set<Module> modulesList) {
+        this.modulesList = modulesList;
     }
 
 
@@ -49,7 +53,7 @@ public class ViewTable {
         table.put(name, view);
     }
 
-    private View createOrSelectViewPrivate(String moduleName, String categoryName, String subcategoryName){
+    private View createOrSelectViewPrivate(String moduleName, String categoryName, String subcategoryName) {
         String identifier = View.generateIdentifier(moduleName, categoryName, subcategoryName);
         if (hasView(identifier)) {
             return getView(identifier);
@@ -70,13 +74,14 @@ public class ViewTable {
             return newView;
         }
     }
+
     public View createOrSelectView(String moduleName, String categoryName, String subcategoryName) {
-        if(moduleName != null && categoryName != null && subcategoryName != null) createOrSelectModule(moduleName);
+        if (moduleName != null && categoryName != null && subcategoryName != null) createOrSelectModule(moduleName);
         return createOrSelectViewPrivate(moduleName, categoryName, subcategoryName);
     }
 
     public View createOrSelectView(String module, String category) {
-        if(module != null && category != null) createOrSelectModule(module);
+        if (module != null && category != null) createOrSelectModule(module);
         return createOrSelectViewPrivate(module, category, null);
     }
 
