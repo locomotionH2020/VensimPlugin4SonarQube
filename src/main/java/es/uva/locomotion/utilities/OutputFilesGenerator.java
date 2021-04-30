@@ -29,33 +29,35 @@ public class OutputFilesGenerator {
     public void generateFiles(Path resume) {
         try {
             logger.info("Generating output files at: '" + resume.toAbsolutePath() + "'");
-            File directory =resume.toFile();
-            if (! directory.exists()){
-                directory.mkdir();
-            }
-            Path symbolFile = resume.toAbsolutePath().resolve("symbolTable.json");
-            JsonWriter writer = Json.createWriter(new FileOutputStream(symbolFile.toFile()));
-            writer.writeArray(symbolsJson.build());
-            writer.close();
+            File directory = resume.toFile();
 
-            if (generateGetDiff) {
-                Path dictionaryDiffFile = resume.toAbsolutePath().resolve("dictionaryDiff.json");
-                writer = Json.createWriter(new FileOutputStream(dictionaryDiffFile.toFile()));
-                writer.writeArray(diffJson.build());
+            if (directory.exists()) {
+                Path symbolFile = resume.toAbsolutePath().resolve("symbolTable.json");
+                JsonWriter writer = Json.createWriter(new FileOutputStream(symbolFile.toFile()));
+                writer.writeArray(symbolsJson.build());
                 writer.close();
+
+                if (generateGetDiff) {
+                    Path dictionaryDiffFile = resume.toAbsolutePath().resolve("dictionaryDiff.json");
+                    writer = Json.createWriter(new FileOutputStream(dictionaryDiffFile.toFile()));
+                    writer.writeArray(diffJson.build());
+                    writer.close();
+                }
+            }else{
+                logger.error("Failed to load output directory: " + directory.getAbsolutePath());
             }
         } catch (FileNotFoundException e) {
-            logger.error("Unable to create symbolTable.json. Error: '" + e.getMessage() +"'");
+            logger.error("Unable to create output data. Error: '" + e.getMessage() + "'");
         }
     }
 
     public void addTables(String filename, SymbolTable table, ViewTable viewTable, DataBaseRepresentation dbData) {
         symbolsJson.addTables(filename, table, viewTable);
         if (generateGetDiff)
-            if(dbData.getDataBaseSymbolTable() == null){
+            if (dbData.getDataBaseSymbolTable() == null) {
                 logger.warn("Trying to create diff with dictionary, but unable to recieve data from it.");
                 generateGetDiff = false;
-            }else {
+            } else {
                 diffJson.addTables(filename, table, viewTable, dbData);
             }
     }

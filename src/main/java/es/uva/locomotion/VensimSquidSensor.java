@@ -18,6 +18,7 @@ import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -65,11 +66,13 @@ public class VensimSquidSensor implements Sensor {
         String logFile = sensorContext.config().get(LOG_IN_FILE).orElse("");
         String auxiliaryFilesDirName = sensorContext.config().get(AUXILIARY_FILES_DIR_NAME).orElse("auxiliary_files");
 
+        Paths.get(auxiliaryFilesDirName).toFile().mkdirs();
+
         boolean logServerComms = !FALSE.equals(strLogServerComms);
         boolean createGetDiffFile = !FALSE.equals(strcreateGetDiffFile);
 
         LogOutputMethod logMethod;
-        if(logFile.isEmpty())
+        if (logFile.isEmpty())
             logMethod = new LogConsolePrinter();
         else {
             try {
