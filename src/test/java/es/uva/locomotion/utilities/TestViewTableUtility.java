@@ -5,6 +5,8 @@ import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getSymbolTableFromString;
 import static es.uva.locomotion.testutilities.GeneralTestUtilities.getViewTableFromString;
 import static junit.framework.TestCase.assertEquals;
@@ -15,12 +17,12 @@ public class TestViewTableUtility {
     public static final String VARIABLE_1_EQ = "VARIABLE_1_name";
     public static final String VARIABLE_2_EQ = "VARIABLE_2_name";
     public static final String VARIABLE_3_EQ = "VARIABLE_3_name";
-    public static final String VARIABLE_1_VIEW = "VARIABLE_1 name";
+    public static final String VARIABLE_1_VIEW = "VARIABLE_1_name";
     public static final String VARIABLE_2_VIEW = "VARIABLE 2 name";
     public static final String VARIABLE_3_VIEW = "VARIABLE 3 name";
     public static final String VIEW_NAME = "Filter_Intro";
     public static final String VIEW_NAME_2 = "All_Another name";
-    public static final String VIEW_NAME_3 = "Filter_A view";
+    public static final String VIEW_NAME_3 = "Filter_A_view";
     public static final String VIEW_NAME_4 = "None_Last view";
     public static final String CATEGORY = "category";
 
@@ -49,7 +51,7 @@ public class TestViewTableUtility {
         s = symbolTable.getSymbol(VARIABLE_2_EQ);
 
         assertNull(s.getPrimaryModule());
-        assertEquals(VIEW_NAME, s.getShadowModule().get(0).getName());
+        assertEquals(VIEW_NAME, new ArrayList<>(s.getShadowModule()).get(0).getName());
         assertEquals(1, s.getShadowModule().size());
 
         s = symbolTable.getSymbol(VARIABLE_3_EQ);

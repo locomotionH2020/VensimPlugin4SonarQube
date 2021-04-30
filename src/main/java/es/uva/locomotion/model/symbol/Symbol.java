@@ -22,7 +22,7 @@ public class Symbol extends IssuableAbs implements Comparable<Symbol> {
     private SymbolType type;
     private Category category;
     private Module primaryModule;
-    private final List<Module> shadowModule;
+    private final Set<Module> shadowModule;
     private String group;
     private List<ExcelRef> excel;
     private DelayedType isDelayed;
@@ -40,7 +40,7 @@ public class Symbol extends IssuableAbs implements Comparable<Symbol> {
         category = null;
         indexes = new ArrayList<>();
         primaryModule = null;
-        shadowModule = new ArrayList<>();
+        shadowModule = new HashSet<>();
         group = "";
         excel = new ArrayList<>();
         isDelayed = DelayedType.NOT_DELAYED;
@@ -224,7 +224,7 @@ public class Symbol extends IssuableAbs implements Comparable<Symbol> {
         this.primaryModule = primaryModule;
     }
 
-    public List<Module> getShadowModule() {
+    public Set<Module> getShadowModule() {
         return shadowModule;
     }
 

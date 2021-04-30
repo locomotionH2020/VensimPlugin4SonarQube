@@ -146,16 +146,18 @@ public class JsonDictoinaryDiffBuilderTest {
                 "      ]\n" +
                 "    },\n" +
                 "    \"categories\": {\n" +
-                "      \"missmatches\": {},\n" +
-                "      \"not_found_in_DB\": [\n" +
-                "        \"categoryLocal\",\n" +
-                "        \"categoryLocal.subcategoryLocal\",\n" +
+                "      \"missmatches\": {" +
+                "\"categoryAnother.subcategorySame\"\n:" +
                 "        {\n" +
                 "          \"super\": {\n" +
                 "            \"Local\": \"categoryAnother\",\n" +
                 "            \"Dictionary\": \"categorySame\"\n" +
                 "          }\n" +
-                "        },\n" +
+                "        }\n" +
+                "},\n" +
+                "      \"not_found_in_DB\": [\n" +
+                "        \"categoryLocal\",\n" +
+                "        \"categoryLocal.subcategoryLocal\",\n" +
                 "        \"categorySame.subcategorySameLocal\"\n" +
                 "      ],\n" +
                 "      \"not_found_in_local\": [\n" +

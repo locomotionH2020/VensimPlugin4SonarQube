@@ -20,8 +20,8 @@ public class Constants {
     // This symbols are defined by default in every Vensim file
     public static final List<String> DEFAULT_VENSIM_SYMBOLS= Arrays.asList("TIME", "FINAL_TIME", "FINAL TIME", "INITIAL_TIME", "INITIAL TIME", "SAVEPER", "TIME_STEP", "TIME STEP");
 
-    public static final List<String> EXCEL_FUNCTIONS = List.of("GET_DIRECT_CONSTANTS", "GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA");
-    public static final List<String> EXCEL_DATA = List.of("GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA");
+    public static final List<String> EXCEL_FUNCTIONS = List.of("GET_DIRECT_CONSTANTS", "GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA","GET DIRECT CONSTANTS", "GET DIRECT LOOKUPS", "GET DIRECT DATA");
+    public static final List<String> EXCEL_DATA = List.of("GET_DIRECT_LOOKUPS", "GET_DIRECT_DATA", "GET DIRECT LOOKUPS", "GET DIRECT DATA");
 
     public static final List<String> VENSIM_DYNAMIC_FUNCTIONS = Arrays.asList("DELAY_BATCH", "DELAY BATCH", "DELAY_CONVEYOR","DELAY CONVERTOR", "DELAY_FIXED","DELAY FIXED", "DELAY_INFORMATION","DELAY INFORMATION", "DELAY_MATERIAL","DELAY MATERIAL", "DELAY_N", "DELAY N", "DELAY_PROFILE", "DELAY PROFILE", "DELAYP", "DELAY1", "DELAY3", "SMOOTH" , "SMOOTH3", "SMOOTH_N", "SMOOTH N");
 

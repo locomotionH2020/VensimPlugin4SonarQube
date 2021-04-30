@@ -84,7 +84,8 @@ public class JsonDictoinaryDiffBuilder {
                 }
                 dbTable.removeSymbol(symbol.getToken());
             } else {
-                missingDBBuilder.add(symbol.getToken());
+                if(symbol.isValid())
+                    missingDBBuilder.add(symbol.getToken());
             }
         }
 
@@ -117,7 +118,8 @@ public class JsonDictoinaryDiffBuilder {
                 }
                 dbTable.removeSymbol(symbol.getToken());
             } else {
-                missingDBBuilder.add(symbol.getToken());
+                if(symbol.isValid())
+                    missingDBBuilder.add(symbol.getToken());
             }
         }
 
@@ -150,7 +152,8 @@ public class JsonDictoinaryDiffBuilder {
                 }
                 dbTable.removeSymbol(symbol.getToken());
             } else {
-                missingDBBuilder.add(symbol.getToken());
+                if(symbol.isValid())
+                    missingDBBuilder.add(symbol.getToken());
             }
         }
 
@@ -168,14 +171,14 @@ public class JsonDictoinaryDiffBuilder {
     private JsonObject symbolDiffToJson(Symbol symbol, Symbol dbSymbol) {
         JsonObjectBuilder symbolBuilder = Json.createObjectBuilder();
 
-        if (symbol.getPrimaryModule() != null&& dbSymbol.getPrimaryModule() != null && !symbol.getPrimaryModule().equals(dbSymbol.getPrimaryModule())) {
+        if (symbol.getPrimaryModule() != null && dbSymbol.getPrimaryModule() != null && !symbol.getPrimaryModule().equals(dbSymbol.getPrimaryModule())) {
             JsonObjectBuilder primaryBuilder = Json.createObjectBuilder();
             primaryBuilder.add(KEY_LOCAL, symbol.getPrimaryModule().getName());
             primaryBuilder.add(KEY_DICTIONARY, dbSymbol.getPrimaryModule().getName());
             symbolBuilder.add(KEY_PRIMARY_VIEW, primaryBuilder);
         }
 
-        if (symbol.getShadowModule() != null&& dbSymbol.getShadowModule() != null && !symbol.getShadowModule().equals(dbSymbol.getShadowModule())) {
+        if (symbol.getShadowModule() != null && dbSymbol.getShadowModule() != null && !symbol.getShadowModule().equals(dbSymbol.getShadowModule())) {
 
             JsonObjectBuilder shadowBuilder = Json.createObjectBuilder();
 
@@ -191,21 +194,21 @@ public class JsonDictoinaryDiffBuilder {
 
             symbolBuilder.add(KEY_SHADOW_VIEWS, shadowBuilder);
         }
-        if (symbol.getCategory() != null&& dbSymbol.getCategory() != null &&!symbol.getCategory().equals(dbSymbol.getCategory())) {
+        if (symbol.getCategory() != null && dbSymbol.getCategory() != null && !symbol.getCategory().equals(dbSymbol.getCategory())) {
 
             JsonObjectBuilder categoryBuilder = Json.createObjectBuilder();
             categoryBuilder.add(KEY_LOCAL, symbol.getCategory().getName());
             categoryBuilder.add(KEY_DICTIONARY, dbSymbol.getCategory().getName());
             symbolBuilder.add(KEY_CATEGORY, categoryBuilder);
         }
-        if (symbol.getUnits() != null&& dbSymbol.getUnits() != null &&!symbol.getUnits().equals(dbSymbol.getUnits())) {
+        if (symbol.getUnits() != null && dbSymbol.getUnits() != null && !symbol.getUnits().equals(dbSymbol.getUnits())) {
 
             JsonObjectBuilder unitsBuilder = Json.createObjectBuilder();
             unitsBuilder.add(KEY_LOCAL, symbol.getUnits());
             unitsBuilder.add(KEY_DICTIONARY, dbSymbol.getUnits());
             symbolBuilder.add(KEY_UNITS, unitsBuilder);
         }
-        if (symbol.getComment() != null&& dbSymbol.getComment() != null &&!symbol.getComment().equals(dbSymbol.getComment())) {
+        if (symbol.getComment() != null && dbSymbol.getComment() != null && !symbol.getComment().equals(dbSymbol.getComment())) {
 
             JsonObjectBuilder commentBuilder = Json.createObjectBuilder();
             commentBuilder.add(KEY_LOCAL, symbol.getComment());
@@ -218,6 +221,7 @@ public class JsonDictoinaryDiffBuilder {
     }
 
     private JsonObject modulesDiffToJson(Set<Module> modules, Set<Module> dbModules) {
+        modules = modules.stream().filter(Module::isValid).collect(Collectors.toSet());
         JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
         JsonArrayBuilder missingDBBuilder = Json.createArrayBuilder();
 
@@ -241,6 +245,8 @@ public class JsonDictoinaryDiffBuilder {
     }
 
     private JsonObject categoriesDiffToJson(List<Category> categories, List<Category> dbCategories) {
+        categories = categories.stream().filter(Category::isValid).collect(Collectors.toList());
+
         JsonObjectBuilder tableBuilder = Json.createObjectBuilder();
         JsonObjectBuilder missmatchBuilder = Json.createObjectBuilder();
         JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
@@ -255,7 +261,7 @@ public class JsonDictoinaryDiffBuilder {
             for (Category dbCategory : dbCategoryCopy) {
                 if (dbCategory.getName().equals(category.getName())) {
                     if (!dbCategory.equals(category)) {
-                        missingDBBuilder.add(categoryDiffToJson(category, dbCategory));
+                        missmatchBuilder.add(category.getWholeName(), categoryDiffToJson(category, dbCategory));
                     }
                     dbCategories.remove(category);
                     categoryInDb = true;
@@ -285,12 +291,12 @@ public class JsonDictoinaryDiffBuilder {
     private JsonObject categoryDiffToJson(Category category, Category dbCategory) {
         JsonObjectBuilder categoryBuilder = Json.createObjectBuilder();
 
-        if(category.getSuperCategory() != null && dbCategory.getSuperCategory() == null){
+        if (category.getSuperCategory() != null && dbCategory.getSuperCategory() == null) {
             JsonObjectBuilder missmatchBuilder = Json.createObjectBuilder();
             missmatchBuilder.add(KEY_LOCAL, category.getSuperCategory() == null ? "Subcategory" : "Category");
             missmatchBuilder.add(KEY_DICTIONARY, dbCategory.getSuperCategory() == null ? "Subcategory" : "Category");
             categoryBuilder.add("Missmatch", missmatchBuilder);
-        }else {
+        } else {
             if (category.getSuperCategory() != null && dbCategory.getSuperCategory() != null && !category.getSuperCategory().getName().equals(dbCategory.getSuperCategory().getName())) {
                 JsonObjectBuilder superBuilder = Json.createObjectBuilder();
                 superBuilder.add(KEY_LOCAL, category.getSuperCategory().getName());

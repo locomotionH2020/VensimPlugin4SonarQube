@@ -119,8 +119,14 @@ public class ViewTableVisitor extends ModelParserBaseVisitor<Object> {
         if (internalId == SYMBOL_PRIVATE_ID) {
             int objectType = Integer.parseInt(ctx.bits.getText());
             String token = ctx.name.getText();
-            String underScoreToken = token.replace(" ", "_");
+            String underScoreToken = token.replace("_", " ");
+            String whitespaceScoreToken = token.replace(" ", "_");
             Symbol actualSymbol = symbolTable.getSymbol(underScoreToken);
+            if(actualSymbol == null)
+                actualSymbol = symbolTable.getSymbol(token);
+            if(actualSymbol == null)
+                actualSymbol = symbolTable.getSymbol(whitespaceScoreToken);
+            
             if (actualSymbol != null) {
                 if (isEven(objectType)) {
                     actualView.addShadow(actualSymbol);

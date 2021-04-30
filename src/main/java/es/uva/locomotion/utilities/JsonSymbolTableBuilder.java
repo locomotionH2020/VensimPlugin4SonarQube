@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.misc.Triple;
 
 import javax.json.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -113,11 +114,11 @@ public class JsonSymbolTableBuilder {
 
             JsonArrayBuilder indexBuilder = Json.createArrayBuilder();
 
-            for(String index : indexes){
+            for(String index : new HashSet<>(indexes)){
                 indexBuilder.add(index);
             }
 
-            symbolBuilder.add(KEY_INDEXES, indexBuilder); //TODO salen duplicados.
+            symbolBuilder.add(KEY_INDEXES, indexBuilder);
         }
 
         if (!symbol.getExcel().isEmpty()) {
