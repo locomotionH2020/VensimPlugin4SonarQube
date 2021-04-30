@@ -98,11 +98,11 @@ public class CategoryImpl extends IssuableAbs implements Comparable<Category>, C
         if (o == null || getClass() != o.getClass()) return false;
         CategoryImpl category = (CategoryImpl) o;
         if (superCategory != null && category.getSuperCategory() != null) {
-            return superCategory.getName().equals(category.superCategory.getName()) && name.equals(category.name);
+            return superCategory.getName().equalsIgnoreCase(category.superCategory.getName()) && name.equalsIgnoreCase(category.name);
         } else if (superCategory != null ^ category.getSuperCategory() != null) {
             return false; // ^ is XOR operand
         } else {
-            return name.equals(category.name);
+            return name.equalsIgnoreCase(category.name);
         }
     }
 
