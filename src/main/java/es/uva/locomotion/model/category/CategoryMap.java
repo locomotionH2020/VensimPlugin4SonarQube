@@ -36,7 +36,7 @@ public class CategoryMap {
     public Category addSubcategoryTo(String category, String subcategory) {
         CategoryImpl categoryImpl;
         if (getCategory(category) == null) {
-            throw new IllegalArgumentException("No existe la categoría");
+            throw new IllegalArgumentException("Category not found");
         } else {
             categoryImpl = (CategoryImpl) getCategory(category);
         }

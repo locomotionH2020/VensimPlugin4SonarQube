@@ -1,6 +1,6 @@
 package es.uva.locomotion.utilities;
 
-import es.uva.locomotion.model.ExcelRef;
+import es.uva.locomotion.model.symbol.ExcelRef;
 import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.View;
 import es.uva.locomotion.model.ViewTable;

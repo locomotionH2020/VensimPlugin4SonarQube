@@ -3,13 +3,13 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
 
 @Rule(key = DictionaryTypeMismatchCheck.CHECK_KEY, name = DictionaryTypeMismatchCheck.NAME, description = DictionaryTypeMismatchCheck.HTML_DESCRIPTION)
-public class DictionaryTypeMismatchCheck extends AbstractVensimCheck {
+public class DictionaryTypeMismatchCheck extends VensimCheck {
 
     public static final String CHECK_KEY = "symbol-type-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +

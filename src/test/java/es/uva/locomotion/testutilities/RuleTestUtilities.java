@@ -2,7 +2,7 @@ package es.uva.locomotion.testutilities;
 
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.parser.ModelParser;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.plugin.VensimRuleRepository;
 import es.uva.locomotion.plugin.VensimScanner;

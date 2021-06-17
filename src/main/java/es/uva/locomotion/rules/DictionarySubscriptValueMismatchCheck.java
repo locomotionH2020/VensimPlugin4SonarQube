@@ -3,7 +3,7 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Rule(key = DictionarySubscriptValueMismatchCheck.CHECK_KEY, name = DictionarySubscriptValueMismatchCheck.NAME, description = DictionarySubscriptValueMismatchCheck.HTML_DESCRIPTION)
-public class DictionarySubscriptValueMismatchCheck extends AbstractVensimCheck{
+public class DictionarySubscriptValueMismatchCheck extends VensimCheck{
 
     public static final String CHECK_KEY = "symbol-subscript-value-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +

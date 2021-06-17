@@ -1,6 +1,7 @@
 package es.uva.locomotion.service;
 
 import es.uva.locomotion.model.AcronymsList;
+import es.uva.locomotion.model.Issuable;
 import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.category.Category;
 import es.uva.locomotion.model.category.CategoryMap;
@@ -125,22 +126,24 @@ public class ServiceController {
 
     }
 
-    public void injectNewSymbols(List<Symbol> foundSymbols, List<Module> validModules, SymbolTable dbSymbolTable) {
+    public void injectNewSymbols(List<Symbol> foundSymbols, List<Module> modules, SymbolTable dbSymbolTable) {
         if (dbSymbolTable == null)
             return;
 
         if (!isAuthenticated())
             throw new NotAuthenticatedException();
 
-        List<Symbol> newSymbols = foundSymbols.stream().filter(symbol -> !dbSymbolTable.hasSymbol(symbol.getToken().trim()) && hasToFetchSymbolFromDB(symbol))
+        List<Module> validModules = modules.stream().filter(Module::isValid).collect(Collectors.toList());
+
+        List<Symbol> newSymbols = foundSymbols.stream()
+                .filter(symbol -> !dbSymbolTable.hasSymbol(symbol.getToken().trim()) && hasToFetchSymbolFromDB(symbol))
+                .filter(Symbol::isValid)
+                .filter(Predicate.not(Symbol::isFiltered))
+                .filter(symbol -> symbol.getPrimaryModule() != null && validModules.contains(symbol.getPrimaryModule()))
                 .collect(Collectors.toList());
 
-        List<Symbol> validSymbols = newSymbols.stream().filter(Symbol::isValid).collect(Collectors.toList());
-        List<Symbol> filteredSymbols = validSymbols.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
-
-        validModules = validModules.stream().filter(Module::isValid).collect(Collectors.toList());
-        if (!filteredSymbols.isEmpty()) {
-            inyectSymbols(validModules, filteredSymbols);
+        if (!newSymbols.isEmpty()) {
+            inyectSymbols(validModules, newSymbols);
         } else {
             logger.info("No new symbols to inject");
         }
@@ -151,9 +154,12 @@ public class ServiceController {
 
     private void inyectNewIndexes(List<Symbol> foundSymbols, SymbolTable dbSymbolTable) {
         //Index does not have module.
-        List<Symbol> indexes = foundSymbols.stream().filter(symbol -> symbol.getType() == SymbolType.SUBSCRIPT).collect(Collectors.toList());
-        List<Symbol> validIndexes = indexes.stream().filter(Symbol::isValid).collect(Collectors.toList());
-        List<Symbol> filteredindexes = validIndexes.stream().filter(Predicate.not(Symbol::isFiltered)).collect(Collectors.toList());
+        List<Symbol> filteredindexes = foundSymbols.stream()
+                .filter(symbol -> symbol.getType() == SymbolType.SUBSCRIPT)
+                .filter(Symbol::isValid)
+                .filter(subscript -> subscript.getDependencies().stream().allMatch(Issuable::isValid))
+                .filter(Predicate.not(Symbol::isFiltered))
+                .collect(Collectors.toList());
         List<Symbol> indexesToSend = new ArrayList<>();
 
         for (Symbol index : filteredindexes) {
@@ -162,7 +168,7 @@ public class ServiceController {
 
                 List<Symbol> localDependencies = index.getDependencies().stream().sorted().collect(Collectors.toList());
                 List<Symbol> dbDependencies = dbIndex.getDependencies().stream().sorted().collect(Collectors.toList());
-                Boolean toSend = false;
+                boolean toSend = false;
                 int i = 0;
                 while (i < localDependencies.size() && !toSend) {
                     if (!localDependencies.get(i).dbEquals(dbDependencies.get(i))) {
@@ -203,17 +209,15 @@ public class ServiceController {
 
     private void inyectSymbols(List<Module> validModules, List<Symbol> filteredSymbols) {
         try {
-            for (Module module : validModules) {
-                List<Symbol> symbolsToInject = filteredSymbols.stream().filter(symbol -> symbol.getPrimaryModule() != null && symbol.getPrimaryModule().equals(module)).collect(Collectors.toList());
-                if (!symbolsToInject.isEmpty()) {
+            if (!filteredSymbols.isEmpty()) {
 
-                    List<String> tokensInjected = symbolsToInject.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
-                    logger.info("Injected symbols in module \"" + module.getName() + "\": " + tokensInjected);
+                List<String> tokensInjected = filteredSymbols.stream().map(Symbol::getToken).sorted(String::compareTo).collect(Collectors.toList());
+                logger.info("Injected symbols: " + tokensInjected);
 
-                    DBFacade.injectSymbols(dictionaryService, symbolsToInject, token);
+                DBFacade.injectSymbols(dictionaryService, filteredSymbols, token);
 
-                }
             }
+
 
         } catch (InvalidServiceUrlException ex) {
             logger.unique(INVALID_URL_MESSAGE + RULES_DISABLED_MESSAGE, LoggingLevel.ERROR);
@@ -264,71 +268,6 @@ public class ServiceController {
 
     }
 
-    public CategoryMap getCategoriesFromDb() {
-        if (!isAuthenticated())
-            throw new NotAuthenticatedException();
-
-        String logMessage;
-        try {
-            return DBFacade.getExistingCategoriesFromDB(dictionaryService, token);
-        } catch (InvalidServiceUrlException ex) {
-            logger.unique(INVALID_URL_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            return null;
-        } catch (EmptyServiceException ex) {
-            logger.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.INFO);
-            return null;
-        } catch (ConnectionFailedException ex) {
-            logger.unique(SERVICE_UNREACHABLE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            return null;
-        } catch (ServiceResponseFormatNotValid ex) {
-            logMessage = INVALID_RESPONSE + ex.getMessage() + DICTIONARY_RESPONSE + ex.getServiceResponse() + ".\n" +
-                    GENERATE_LOGS +
-                    CATEGORIES_DISABLED_MESSAGE;
-
-            logger.error(logMessage);
-            return null;
-        }
-    }
-
-    public void injectNewCategories(List<Category> categoriesFound, List<Category> dbCategories) {
-        if (dbCategories == null)
-            return;
-
-        if (!isAuthenticated())
-            throw new NotAuthenticatedException();
-
-        List<Category> categories = new ArrayList<>(categoriesFound);
-
-        categories = categories.stream().filter(Category::isValid)
-                .collect(Collectors.toList());
-
-        List<Category> newCategories = categories.stream().filter(category -> !dbCategories.contains(category))
-                .collect(Collectors.toList());
-
-        if (!newCategories.isEmpty()) {
-            try {
-
-                List<String> tokensInjected = newCategories.stream().map(Category::getWholeName).sorted(String::compareTo).collect(Collectors.toList());
-                logger.info("Injected categories: " + tokensInjected);
-
-                DBFacade.injectCategories(dictionaryService, newCategories, token);
-
-
-            } catch (InvalidServiceUrlException ex) {
-                logger.unique(INVALID_URL_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            } catch (EmptyServiceException ex) {
-                logger.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.INFO);
-            } catch (ConnectionFailedException ex) {
-                logger.unique(SERVICE_UNREACHABLE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
-            }
-
-        } else {
-            logger.info("No new categories to inject");
-        }
-
-
-    }
-
     public void injectNewModules(Set<Module> modulesList, Set<Module> dbModules) {
         if (dbModules == null)
             return;
@@ -365,6 +304,70 @@ public class ServiceController {
         }
 
     }
+
+
+    public CategoryMap getCategoriesFromDb() {
+        if (!isAuthenticated())
+            throw new NotAuthenticatedException();
+
+        String logMessage;
+        try {
+            return DBFacade.getExistingCategoriesFromDB(dictionaryService, token);
+        } catch (InvalidServiceUrlException ex) {
+            logger.unique(INVALID_URL_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+            return null;
+        } catch (EmptyServiceException ex) {
+            logger.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.INFO);
+            return null;
+        } catch (ConnectionFailedException ex) {
+            logger.unique(SERVICE_UNREACHABLE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+            return null;
+        } catch (ServiceResponseFormatNotValid ex) {
+            logMessage = INVALID_RESPONSE + ex.getMessage() + DICTIONARY_RESPONSE + ex.getServiceResponse() + ".\n" +
+                    GENERATE_LOGS +
+                    CATEGORIES_DISABLED_MESSAGE;
+
+            logger.error(logMessage);
+            return null;
+        }
+    }
+
+    public void injectNewCategories(List<Category> categoriesFound, List<Category> dbCategories) {
+        if (dbCategories == null)
+            return;
+
+        if (!isAuthenticated())
+            throw new NotAuthenticatedException();
+
+        List<Category> newCategories = categoriesFound.stream()
+                .filter(Category::isValid)
+                .filter(category -> !dbCategories.contains(category))
+                .collect(Collectors.toList());
+
+        if (!newCategories.isEmpty()) {
+            try {
+
+                List<String> tokensInjected = newCategories.stream().map(Category::getWholeName).sorted(String::compareTo).collect(Collectors.toList());
+                logger.info("Injected categories: " + tokensInjected);
+
+                DBFacade.injectCategories(dictionaryService, newCategories, token);
+
+
+            } catch (InvalidServiceUrlException ex) {
+                logger.unique(INVALID_URL_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+            } catch (EmptyServiceException ex) {
+                logger.unique(MISSING_DICTIONARY_SERVICE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.INFO);
+            } catch (ConnectionFailedException ex) {
+                logger.unique(SERVICE_UNREACHABLE_MESSAGE + CATEGORIES_DISABLED_MESSAGE, LoggingLevel.ERROR);
+            }
+
+        } else {
+            logger.info("No new categories to inject");
+        }
+
+
+    }
+
 
     public Set<String> getUnitsFromDb() {
         if (!isAuthenticated())

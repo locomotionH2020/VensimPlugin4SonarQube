@@ -5,7 +5,7 @@ import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.symbol.Number;
 import es.uva.locomotion.model.symbol.NumberTable;
 import es.uva.locomotion.parser.visitors.MagicNumberTableVisitor;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;

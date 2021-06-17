@@ -5,7 +5,7 @@ import com.ibm.icu.impl.Pair;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.parser.visitors.EmbeddedLookupVisitor;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -17,7 +17,7 @@ import java.util.List;
 
 
 @Rule(key = EmbeddedLookupCheck.CHECK_KEY, name = EmbeddedLookupCheck.NAME, description = EmbeddedLookupCheck.HTML_DESCRIPTION)
-public class EmbeddedLookupCheck extends AbstractVensimCheck {
+public class EmbeddedLookupCheck extends VensimCheck {
     protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "lookup-embedded";

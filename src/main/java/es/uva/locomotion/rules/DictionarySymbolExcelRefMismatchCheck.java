@@ -1,11 +1,11 @@
 package es.uva.locomotion.rules;
 
 
-import es.uva.locomotion.model.ExcelRef;
+import es.uva.locomotion.model.symbol.ExcelRef;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Rule(key = DictionarySymbolExcelRefMismatchCheck.CHECK_KEY, name = DictionarySymbolExcelRefMismatchCheck.NAME, description = DictionarySymbolExcelRefMismatchCheck.HTML_DESCRIPTION)
-public class DictionarySymbolExcelRefMismatchCheck extends AbstractVensimCheck {
+public class DictionarySymbolExcelRefMismatchCheck extends VensimCheck {
     protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "dictionary-symbol-excel-missmatch";

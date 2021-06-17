@@ -3,7 +3,7 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Rule(key = DictionaryUnitsMismatchCheck.CHECK_KEY, name = DictionaryUnitsMismatchCheck.NAME, description = DictionaryUnitsMismatchCheck.HTML_DESCRIPTION)
-public class DictionaryUnitsMismatchCheck extends AbstractVensimCheck{
+public class DictionaryUnitsMismatchCheck extends VensimCheck{
     public static final String CHECK_KEY = "symbol-units-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the symbols in the file have the same units as the symbols stored in the database. " +

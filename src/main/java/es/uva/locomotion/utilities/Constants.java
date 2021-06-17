@@ -25,7 +25,6 @@ public class Constants {
 
     public static final List<String> VENSIM_DYNAMIC_FUNCTIONS = Arrays.asList("DELAY_BATCH", "DELAY BATCH", "DELAY_CONVEYOR","DELAY CONVERTOR", "DELAY_FIXED","DELAY FIXED", "DELAY_INFORMATION","DELAY INFORMATION", "DELAY_MATERIAL","DELAY MATERIAL", "DELAY_N", "DELAY N", "DELAY_PROFILE", "DELAY PROFILE", "DELAYP", "DELAY1", "DELAY3", "SMOOTH" , "SMOOTH3", "SMOOTH_N", "SMOOTH N");
 
-    public static  final List<String> IGNORED_MAGIC_NUMBERS = Arrays.asList("0","1","100","-1");
 
     public static final String DICTIONARY_SERVICE_PARAMETER = "vensim.dictionary.service";
     public static final String DICTIONARY_USERNAME_PARAMETER =  "vensim.dictionary.username";

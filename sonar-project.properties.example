@@ -5,6 +5,9 @@
 #-Set the URL of the sonarqube instance.
 sonar.host.url=https://sonarqube-locomotion.infor.uva.es
 
+#-Set the credentials for the sonarqube instance.
+sonar.login=
+
 #-Set the name of the project that will apear in sonaqube.
 sonar.projectKey=Project Name
 

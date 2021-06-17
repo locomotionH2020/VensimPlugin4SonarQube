@@ -1,7 +1,7 @@
 package es.uva.locomotion.service;
 
 import es.uva.locomotion.model.AcronymsList;
-import es.uva.locomotion.model.ExcelRef;
+import es.uva.locomotion.model.symbol.ExcelRef;
 import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.category.Category;
 import es.uva.locomotion.model.category.CategoryMap;

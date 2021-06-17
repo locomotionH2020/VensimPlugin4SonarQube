@@ -1,6 +1,7 @@
 package es.uva.locomotion.parser.visitors;
 
 import com.ibm.icu.impl.Pair;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.utilities.logs.LoggingLevel;

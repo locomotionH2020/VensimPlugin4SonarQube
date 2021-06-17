@@ -5,7 +5,7 @@ import es.uva.locomotion.model.symbol.Subscript;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -17,7 +17,7 @@ import java.util.regex.PatternSyntaxException;
 
 
 @Rule(key = SubscriptNameCheck.CHECK_KEY, name = SubscriptNameCheck.NAME, description = SubscriptNameCheck.HTML_DESCRIPTION)
-public class SubscriptNameCheck extends AbstractVensimCheck {
+public class SubscriptNameCheck extends VensimCheck {
     public static final String CHECK_KEY = "subscript-convention";
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that subscripts follow the name convention.The default regular expression is \"([A-Z0-9]+_)+I\"</p>\n" +

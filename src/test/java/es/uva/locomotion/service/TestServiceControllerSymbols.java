@@ -257,7 +257,7 @@ public class TestServiceControllerSymbols {
 
 
         ServiceController controller = getAuthenticatedServiceController("https://something");
-        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), List.of( new Module(MODULE)), new SymbolTable());
+        controller.injectNewSymbols(new ArrayList<>(table.getSymbols()), List.of(new Module(MODULE)),new SymbolTable());
 
 
         verify(logger, times(1)).info("No new symbols to inject");
@@ -333,7 +333,7 @@ public class TestServiceControllerSymbols {
         controller.injectNewSymbols(new ArrayList<>(foundTable.getSymbols()), List.of(new Module(MODULE)), dbTable);
 
 
-        verify(logger, times(1)).info("Injected symbols in module \"module\": [constant, lookup table, reality check, subscript, swtich, variable]");
+        verify(logger, times(1)).info("Injected symbols: [constant, lookup table, reality check, subscript, swtich, variable]");
     }
 
     @Test

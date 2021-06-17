@@ -1,6 +1,6 @@
 package es.uva.locomotion.parser.visitors;
 
-import es.uva.locomotion.model.ExcelRef;
+import es.uva.locomotion.model.symbol.ExcelRef;
 import es.uva.locomotion.model.symbol.*;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.parser.ModelParserBaseVisitor;
@@ -10,7 +10,6 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -512,7 +511,7 @@ public class RawSymbolTableVisitor extends ModelParserBaseVisitor<Object> {
 
         Symbol symbol = (Symbol) symbolObj;
 
-        String comment = ctx.unitsDoc().comment.getText().substring(1).replace("\\", "").replace("\n", "").replace("\t", "");
+        String comment = ctx.unitsDoc().comment.getText().substring(1).replace("\\", "").replace("\n", "").replace("\t", "").replace("\r", "");
         String units = ctx.unitsDoc().units.getText().substring(1);
 
         if (!comment.isBlank())

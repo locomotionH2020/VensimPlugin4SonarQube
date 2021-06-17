@@ -3,13 +3,13 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import org.sonar.check.Rule;
 
 @Rule(key = DictionaryCommentMismatchCheck.CHECK_KEY, name = DictionaryCommentMismatchCheck.NAME, description = DictionaryCommentMismatchCheck.HTML_DESCRIPTION)
-public class DictionaryCommentMismatchCheck extends AbstractVensimCheck {
+public class DictionaryCommentMismatchCheck extends VensimCheck {
     public static final String CHECK_KEY = "symbol-comment-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the symbols in the file have the same comment as the symbols stored in the database. " +

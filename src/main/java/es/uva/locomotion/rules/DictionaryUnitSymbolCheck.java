@@ -4,7 +4,7 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.Constants;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Rule(key = DictionaryUnitSymbolCheck.CHECK_KEY, name = DictionaryUnitSymbolCheck.NAME, description = DictionaryUnitSymbolCheck.HTML_DESCRIPTION)
-public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
+public class DictionaryUnitSymbolCheck extends VensimCheck {
     public static final String CHECK_KEY = "unit-convention-dictionary";
 
     public static final String HTML_DESCRIPTION = "" +
@@ -56,9 +56,6 @@ public class DictionaryUnitSymbolCheck extends AbstractVensimCheck {
 
     private boolean raisesIssue(Symbol foundSymbol, Set<String> dbUnits) {
         if (symbolIsIgnored(foundSymbol))
-            return false;
-
-        if (dbUnits.contains(foundSymbol.getToken()))
             return false;
 
         String fileUnits = foundSymbol.getUnits();

@@ -1,6 +1,6 @@
 package es.uva.locomotion.rules;
 
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.plugin.VensimScanner;
 import es.uva.locomotion.testutilities.GeneralTestUtilities;

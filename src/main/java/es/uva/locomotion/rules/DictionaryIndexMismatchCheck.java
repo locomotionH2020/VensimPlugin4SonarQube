@@ -3,7 +3,7 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 
 @Rule(key = DictionaryIndexMismatchCheck.CHECK_KEY, name = DictionaryIndexMismatchCheck.NAME, description = DictionaryIndexMismatchCheck.HTML_DESCRIPTION)
-public class DictionaryIndexMismatchCheck extends AbstractVensimCheck{
+public class DictionaryIndexMismatchCheck extends VensimCheck{
     public static final String CHECK_KEY = "symbol-index-mismatch-db" ;
     public static final String HTML_DESCRIPTION = "" +
             "<p>This rule checks that all the symbols in the file have at least a subset of the indexes stored in the database.\n " +

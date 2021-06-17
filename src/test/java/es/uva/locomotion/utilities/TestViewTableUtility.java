@@ -92,31 +92,32 @@ public class TestViewTableUtility {
         //Filter first view
         SymbolTable symbolTable = getSymbolTableFromString(program);
         ViewTable viewTable = getViewTableFromString(program, symbolTable,"|", ".");
-        ViewTableUtility.filterPrefix(symbolTable, VIEW_NAME);
+        ViewTableUtility.filterModule(symbolTable, VIEW_NAME);
         Symbol s = symbolTable.getSymbol(VARIABLE_1_EQ);
         assertFalse(s.isFiltered());
         s = symbolTable.getSymbol(VARIABLE_2_EQ);
         assertTrue(s.isFiltered());
         s = symbolTable.getSymbol(VARIABLE_3_EQ);
-        assertFalse(s.isFiltered());
+        assertTrue(s.isFiltered());
 
         //Filter "Filter"
         symbolTable = getSymbolTableFromString(program);
         viewTable = getViewTableFromString(program, symbolTable,"|", ".");
 
-        ViewTableUtility.filterPrefix(symbolTable, "Filter");
+        ViewTableUtility.filterModule(symbolTable, "Filter_intro");
+
         s = symbolTable.getSymbol(VARIABLE_1_EQ);
         assertFalse(s.isFiltered());
         s = symbolTable.getSymbol(VARIABLE_2_EQ);
-        assertFalse(s.isFiltered());
+        assertTrue(s.isFiltered());
         s = symbolTable.getSymbol(VARIABLE_3_EQ);
-        assertFalse(s.isFiltered());
+        assertTrue(s.isFiltered());
 
         //Filter last view
         symbolTable = getSymbolTableFromString(program);
         viewTable = getViewTableFromString(program,symbolTable);
 
-        ViewTableUtility.filterPrefix(symbolTable, "None");
+        ViewTableUtility.filterModule(symbolTable, "None");
         s = symbolTable.getSymbol(VARIABLE_1_EQ);
         assertTrue(s.isFiltered());
         s = symbolTable.getSymbol(VARIABLE_2_EQ);
@@ -128,13 +129,14 @@ public class TestViewTableUtility {
         symbolTable = getSymbolTableFromString(program);
         viewTable = getViewTableFromString(program, symbolTable, "|", ".");
 
-        ViewTableUtility.filterPrefix(symbolTable, "All");
+        ViewTableUtility.filterModule(symbolTable, "All_Another name");
+
         s = symbolTable.getSymbol(VARIABLE_1_EQ);
-        assertFalse(s.isFiltered());
+        assertTrue(s.isFiltered());
         s = symbolTable.getSymbol(VARIABLE_2_EQ);
         assertFalse(s.isFiltered());
         s = symbolTable.getSymbol(VARIABLE_3_EQ);
-        assertFalse(s.isFiltered());
+        assertTrue(s.isFiltered());
 
     }
 }

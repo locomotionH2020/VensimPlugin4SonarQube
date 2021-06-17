@@ -1,5 +1,6 @@
 package es.uva.locomotion.parser.visitors;
 
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.model.symbol.Number;
 import es.uva.locomotion.model.symbol.NumberTable;
 import es.uva.locomotion.model.symbol.Symbol;

@@ -35,7 +35,6 @@ public class EmbeddedLookupVisitor extends ModelParserBaseVisitor<Void> {
 
         if (symbols == null) {
             logger.unique("Symbol table unassigned in EmbeddedLookupVisitor", LoggingLevel.INFO);
-
         }
         else if (!symbols.hasSymbol(ctx.Id().getText())) {
             logger.error("Found symbol \"" + ctx.Id().getText() + "\" that is not in the symbol table");
@@ -45,7 +44,6 @@ public class EmbeddedLookupVisitor extends ModelParserBaseVisitor<Void> {
             isSymbolFiltered = symbol.isFiltered();
         }
         return null;
-
     }
 
     public List<Pair<Symbol, Integer>> getSymbolTable(ModelParser.FileContext context) {

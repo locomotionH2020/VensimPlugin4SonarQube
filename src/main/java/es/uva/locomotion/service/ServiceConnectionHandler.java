@@ -13,7 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class ServiceConnectionHandler { //TODO eso podría ser solo dos funciones casi
+public class ServiceConnectionHandler {
 
     protected final VensimLogger logger = VensimLogger.getInstance();
     protected HttpClient client;

@@ -6,7 +6,7 @@ import es.uva.locomotion.model.symbol.DelayedType;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.LoggingLevel;
 import es.uva.locomotion.utilities.logs.VensimLogger;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 
 @Rule(key = VariableNameCheck.CHECK_KEY, name = VariableNameCheck.NAME, description = VariableNameCheck.HTML_DESCRIPTION)
-public class VariableNameCheck extends AbstractVensimCheck {
+public class VariableNameCheck extends VensimCheck {
     protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "variable-name-convention";

@@ -11,7 +11,7 @@ import es.uva.locomotion.utilities.logs.VensimLogger;
 
 public class ViewTableUtility {
 
-    private ViewTableUtility(){
+    private ViewTableUtility() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -23,14 +23,14 @@ public class ViewTableUtility {
         return generator.getViewTable(context);
     }
 
-    public static ViewTable getViewTable(SymbolTable table,ModelParser.FileContext context, String moduleSeparator) {
+    public static ViewTable getViewTable(SymbolTable table, ModelParser.FileContext context, String moduleSeparator) {
         ViewTableVisitor generator = ViewTableVisitor.createViewTableVisitor(moduleSeparator);
         generator.setSymbolTable(table);
 
         return generator.getViewTable(context);
     }
 
-    public static ViewTable getViewTable(SymbolTable table,ModelParser.FileContext context) {
+    public static ViewTable getViewTable(SymbolTable table, ModelParser.FileContext context) {
         ViewTableVisitor generator = ViewTableVisitor.createViewTableVisitor();
         generator.setSymbolTable(table);
 
@@ -38,18 +38,10 @@ public class ViewTableUtility {
     }
 
 
-
-    public static void filterPrefix(SymbolTable table, String viewPrefix) {
+    public static void filterModule(SymbolTable table, String moduleName) {
         for (Symbol symbol : table.getSymbols()) {
-
-            boolean filtered = true;
-            for (Module viewName : symbol.getViews()) {
-                if (viewName.getName().startsWith(viewPrefix)) {
-                    filtered = false;
-                    break;
-                }
-            }
-            symbol.setFiltered(filtered);
+            boolean filter = symbol.getPrimaryModule() == null || !symbol.getPrimaryModule().getName().equalsIgnoreCase(moduleName);
+            symbol.setFiltered(filter);
         }
     }
 }

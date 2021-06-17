@@ -1,13 +1,11 @@
 package es.uva.locomotion.model.symbol;
 
 
-import es.uva.locomotion.model.ExcelRef;
 import es.uva.locomotion.model.IssuableAbs;
 import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.category.Category;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 
-import java.awt.desktop.SystemEventListener;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -143,7 +141,7 @@ public class Symbol extends IssuableAbs implements Comparable<Symbol> {
             return token.equals(symbol.token)  && Objects.equals(comment, symbol.comment);
         }
 
-        return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primaryModule, symbol.primaryModule) && Objects.equals(shadowModule, symbol.shadowModule);
+        return token.equals(symbol.token) && Objects.equals(indexes, symbol.indexes) && Objects.equals(units, symbol.units) && Objects.equals(comment, symbol.comment) && type == symbol.type && Objects.equals(category, symbol.category) && Objects.equals(primaryModule, symbol.primaryModule) && Objects.equals(shadowModule, symbol.shadowModule) && Objects.equals(excel, symbol.excel);
     }
 
 
@@ -232,7 +230,7 @@ public class Symbol extends IssuableAbs implements Comparable<Symbol> {
         shadowModule.add(module);
     }
 
-    public List<Module> getViews() {
+    public List<Module> getModules() {
         List<Module> list = new ArrayList<>(getShadowModule());
         if (getPrimaryModule() != null)
             list.add(getPrimaryModule());

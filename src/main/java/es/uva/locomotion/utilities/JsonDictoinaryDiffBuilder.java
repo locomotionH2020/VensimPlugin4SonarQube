@@ -4,10 +4,12 @@ import es.uva.locomotion.model.DataBaseRepresentation;
 import es.uva.locomotion.model.Module;
 import es.uva.locomotion.model.ViewTable;
 import es.uva.locomotion.model.category.Category;
+import es.uva.locomotion.model.symbol.ExcelRef;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
 import es.uva.locomotion.utilities.logs.VensimLogger;
+import org.antlr.v4.runtime.misc.Triple;
 
 import javax.json.*;
 import java.util.*;
@@ -39,6 +41,13 @@ public class JsonDictoinaryDiffBuilder {
     public static final String KEY_GROUP = "group";
     public static final String KEY_LOCAL = "Local";
     public static final String KEY_DICTIONARY = "Dictionary";
+    public static final String KEY_INDEXES = "indexes";
+    public static final String KEY_EXCEL = "excels";
+    public static final String KEY_SHEET = "sheet";
+    public static final String KEY_CELLRANGE = "cellrange";
+    public static final String KEY_SERIES = "series";
+    public static final String KEY_INFO = "info";
+    public static final String KEY_FILENAME = "filename";
 
     protected static final VensimLogger logger = VensimLogger.getInstance();
 
@@ -71,8 +80,8 @@ public class JsonDictoinaryDiffBuilder {
         JsonObjectBuilder missmatchBuilder = Json.createObjectBuilder();
         JsonArrayBuilder missingLocalBuilder = Json.createArrayBuilder();
         JsonArrayBuilder missingDBBuilder = Json.createArrayBuilder();
-        List<SymbolType> ignore = Arrays.asList(SymbolType.FUNCTION, SymbolType.SUBSCRIPT, SymbolType.SUBSCRIPT_VALUE);
-        List<Symbol> localSymbols = symbolTable.getSymbols().stream().filter(symbol -> !ignore.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
+        List<SymbolType> ignoreTypes = Arrays.asList(SymbolType.FUNCTION, SymbolType.SUBSCRIPT, SymbolType.SUBSCRIPT_VALUE);
+        List<Symbol> localSymbols = symbolTable.getSymbols().stream().filter(symbol -> !ignoreTypes.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
 
         for (Symbol symbol : localSymbols) {
 
@@ -89,7 +98,7 @@ public class JsonDictoinaryDiffBuilder {
             }
         }
 
-        List<Symbol> dbSymbols = dbTable.getSymbols().stream().filter(symbol -> !ignore.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
+        List<Symbol> dbSymbols = dbTable.getSymbols().stream().filter(symbol -> !ignoreTypes.contains(symbol.getType())).sorted(Comparator.comparing(Symbol::getToken)).collect(Collectors.toList());
 
         for (Symbol dbsymbol : dbSymbols) {
             missingLocalBuilder.add(dbsymbol.getToken());
@@ -215,6 +224,24 @@ public class JsonDictoinaryDiffBuilder {
             commentBuilder.add(KEY_DICTIONARY, dbSymbol.getComment());
             symbolBuilder.add(KEY_COMMENT, commentBuilder);
         }
+        if (symbol.getExcel() != null && dbSymbol.getExcel() != null && !symbol.getExcel().equals(dbSymbol.getExcel())) {
+
+            JsonArrayBuilder localList = Json.createArrayBuilder();
+            JsonArrayBuilder remoteList = Json.createArrayBuilder();
+
+            for(ExcelRef excel : dbSymbol.getExcel()){
+                localList.add(getExcelRefJson(excel));
+            }
+            for(ExcelRef excel : symbol.getExcel()){
+                remoteList.add(getExcelRefJson(excel));
+            }
+
+            JsonObjectBuilder excelBuilder = Json.createObjectBuilder();
+
+            excelBuilder.add(KEY_LOCAL, localList);
+            excelBuilder.add(KEY_DICTIONARY, remoteList);
+            symbolBuilder.add(KEY_EXCEL, excelBuilder);
+        }
 
         return symbolBuilder.build();
 
@@ -330,4 +357,31 @@ public class JsonDictoinaryDiffBuilder {
         return fileBuilder.build();
     }
 
+    private static JsonObjectBuilder getExcelRefJson( ExcelRef excel) {
+        JsonObjectBuilder fileBuilder = Json.createObjectBuilder();
+        fileBuilder.add(KEY_SHEET, excel.getSheet());
+        fileBuilder.add(KEY_FILENAME, excel.getFilename());
+        JsonArrayBuilder infoListBuilder = Json.createArrayBuilder();
+
+        for (Triple<List<String>, String, String> info : excel.getCellRangeInformation()) {
+            JsonObjectBuilder infoBuilder = Json.createObjectBuilder();
+
+            if (!info.a.isEmpty()) {
+                JsonArrayBuilder indexBuilder = Json.createArrayBuilder();
+                for (String indexName : info.a) {
+                    indexBuilder.add(indexName);
+                }
+                infoBuilder.add(KEY_INDEXES, indexBuilder);
+            }
+            infoBuilder.add(KEY_CELLRANGE, info.b);
+            if (info.c != null)
+                infoBuilder.add(KEY_SERIES, info.c);
+
+            infoListBuilder.add(infoBuilder);
+        }
+        fileBuilder.add(KEY_INFO, infoListBuilder);
+
+
+        return fileBuilder;
+    }
 }

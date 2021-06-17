@@ -1,4 +1,4 @@
-package es.uva.locomotion.model;
+package es.uva.locomotion.model.symbol;
 
 import org.antlr.v4.runtime.misc.Triple;
 

@@ -4,7 +4,7 @@ package es.uva.locomotion.rules;
 import es.uva.locomotion.model.symbol.Symbol;
 import es.uva.locomotion.model.symbol.SymbolTable;
 import es.uva.locomotion.model.symbol.SymbolType;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import org.sonar.check.Rule;
 
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Rule(key= SymbolWithoutUnitsCheck.CHECK_KEY, name = SymbolWithoutUnitsCheck.NAME, description = SymbolWithoutUnitsCheck.HTML_DESCRIPTION)
-public class SymbolWithoutUnitsCheck extends AbstractVensimCheck{
+public class SymbolWithoutUnitsCheck extends VensimCheck{
 
     public static final String CHECK_KEY = "symbol-without-units" ;
     public static final String HTML_DESCRIPTION = "" +

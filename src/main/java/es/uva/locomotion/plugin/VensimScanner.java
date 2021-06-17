@@ -11,7 +11,7 @@ import es.uva.locomotion.parser.ModelLexer;
 import es.uva.locomotion.parser.ModelParser;
 import es.uva.locomotion.parser.MultiChannelTokenStream;
 import es.uva.locomotion.parser.VensimErrorListener;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.rules.VensimCheck;
 import es.uva.locomotion.service.ServiceController;
 import es.uva.locomotion.utilities.OutputFilesGenerator;
@@ -94,7 +94,6 @@ public class VensimScanner {
 
     public void scanFile(InputFile inputFile) {
 
-        String viewPrefix = context.config().get(VIEW_PREFIX).orElse("");
         String moduleName = context.config().get(MODULE_NAME).orElse("");
         String inject = context.config().get(INJECT).orElse("false");
 
@@ -107,13 +106,13 @@ public class VensimScanner {
 
             ViewTable viewTable = getViewTable(root, table);
 
-            if(!moduleName.isEmpty()){
-                viewTable.setModules(Set.of(new Module(moduleName)));
-            }
 
             DataBaseRepresentation dbData = getDataBaseRepresentation(table);
 
-            filterSymbols(viewPrefix, moduleName, table);
+            if (!moduleName.isEmpty()) {
+                ViewTableUtility.filterModule(table, moduleName);
+                viewTable.setModules(Set.of(new Module(moduleName)));
+            }
 
             VensimVisitorContext visitorContext = new VensimVisitorContext(root, table, viewTable, context, dbData);
             checkIssues(visitorContext);
@@ -170,13 +169,7 @@ public class VensimScanner {
         }
     }
 
-    private void filterSymbols(String viewPrefix, String moduleName, SymbolTable table) {
-        if (!viewPrefix.isBlank()) {
-            ViewTableUtility.filterPrefix(table, viewPrefix);
-        } else if (!moduleName.isEmpty()) {
-            ViewTableUtility.filterPrefix(table, moduleName);
-        }
-    }
+
 
     private ViewTable getViewTable(ModelParser.FileContext root, SymbolTable table) {
         String moduleSeparator = context.config().get(MODULE_SEPARATOR).orElse("");

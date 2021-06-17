@@ -2,7 +2,7 @@ package es.uva.locomotion.rules;
 
 
 import es.uva.locomotion.model.category.Category;
-import es.uva.locomotion.parser.visitors.VensimVisitorContext;
+import es.uva.locomotion.model.VensimVisitorContext;
 import es.uva.locomotion.plugin.Issue;
 import es.uva.locomotion.utilities.logs.VensimLogger;
 import org.sonar.check.Rule;
@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @Rule(key = CategoryDuplicatedCheck.CHECK_KEY, name = CategoryDuplicatedCheck.NAME, description = CategoryDuplicatedCheck.HTML_DESCRIPTION)
-public class CategoryDuplicatedCheck extends AbstractVensimCheck {
+public class CategoryDuplicatedCheck extends VensimCheck {
     protected static final VensimLogger logger = VensimLogger.getInstance();
 
     public static final String CHECK_KEY = "category_duplicated";
@@ -47,17 +47,14 @@ public class CategoryDuplicatedCheck extends AbstractVensimCheck {
         }
         List<Category> alreadyInDB = new ArrayList<>();
         while (!subcategoryList.isEmpty()) {
-            Category actual = subcategoryList.remove(0);
-            if (dbSubcategoryList.contains(actual)) {
-                alreadyInDB.add(actual);
+            Category currentSubcategory = subcategoryList.remove(0);
+            if (dbSubcategoryList.contains(currentSubcategory)) {
+                alreadyInDB.add(currentSubcategory);
             } else {
-                if (subcategoryList.stream().anyMatch(subcat -> subcat.getName().equalsIgnoreCase(actual.getName())) ||
-                        dbCategoryList.stream().anyMatch(dbCategory -> dbCategory.getName().equalsIgnoreCase(actual.getName())) ||
-                        categoryList.stream().anyMatch(category -> category.getName().equalsIgnoreCase(actual.getName())) ||
-                        alreadyInDB.stream().anyMatch(alreadyInDBItem -> alreadyInDBItem.getName().equalsIgnoreCase(actual.getName()))) {
-                    actual.setAsInvalid(this.getClass().getSimpleName());
-                    for (int line : actual.getLines()) {
-                        Issue issue = new Issue(this, line, "The subcategory '" + actual.getName() + "' already exists in the model as a category or a subcategory.");
+                if (generateIssue(subcategoryList, categoryList, dbCategoryList, alreadyInDB, currentSubcategory)) {
+                    currentSubcategory.setAsInvalid(this.getClass().getSimpleName());
+                    for (int line : currentSubcategory.getLines()) {
+                        Issue issue = new Issue(this, line, "The subcategory '" + currentSubcategory.getName() + "' already exists in the model as a category or a subcategory.");
                         addIssue(context, issue, false);
                     }
                 }
@@ -73,6 +70,13 @@ public class CategoryDuplicatedCheck extends AbstractVensimCheck {
                 }
             }
         }
+    }
+
+    private boolean generateIssue(List<Category> subcategoryList, List<Category> categoryList, List<Category> dbCategoryList, List<Category> alreadyInDB, Category actual) {
+        return subcategoryList.stream().anyMatch(subcat -> subcat.getName().equalsIgnoreCase(actual.getName())) ||
+                dbCategoryList.stream().anyMatch(dbCategory -> dbCategory.getName().equalsIgnoreCase(actual.getName())) ||
+                categoryList.stream().anyMatch(category -> category.getName().equalsIgnoreCase(actual.getName())) ||
+                alreadyInDB.stream().anyMatch(alreadyInDBItem -> alreadyInDBItem.getName().equalsIgnoreCase(actual.getName()));
     }
 
 
