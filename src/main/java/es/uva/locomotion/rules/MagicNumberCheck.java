@@ -75,7 +75,7 @@ public class MagicNumberCheck extends VensimCheck {
 
     }
 
-    public static final String DEFAULT_IGNORED_NUMBERS = "0;1;100;-1";
+    public static final String DEFAULT_IGNORED_NUMBERS = "0;1;2;3;4;5;6;7;8;9;10;-1;100";
 
     @RuleProperty(
             key = "ignored-numbers",
