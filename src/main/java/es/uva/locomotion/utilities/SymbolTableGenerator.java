@@ -53,8 +53,12 @@ public class SymbolTableGenerator {
             Set<Symbol> remainingSymbolsAfter = table.getUndeterminedSymbols();
 
             if(remainingSymbolsAfter.equals(remainingSymbols)) {
-                String unresolvableSymbol = remainingSymbols.stream().map(Symbol::getToken).collect(Collectors.joining(", "));
-                throw new IllegalStateException("Can't resolve symbols: " + unresolvableSymbol);
+                for (Symbol symbol : remainingSymbolsAfter) {
+                    symbol.setType(SymbolType.VARIABLE);
+                }
+                break;
+                //String unresolvableSymbol = remainingSymbols.stream().map(Symbol::getToken).collect(Collectors.joining(", "));
+                //throw new IllegalStateException("Can't resolve symbols: " + unresolvableSymbol);
             }
 
 
